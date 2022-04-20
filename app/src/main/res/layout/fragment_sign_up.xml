@@ -18,7 +18,7 @@
                 android:id="@+id/signUpCreateNewAccount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_30sdp"
+                android:layout_marginTop="@dimen/_20sdp"
                 android:text="@string/signUpCreateNewAccount"
                 android:textStyle="bold"
                 android:textColor="@color/primary_text"
@@ -158,11 +158,33 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <CheckBox
+                    android:id="@+id/signUpAgreeToTerms"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/signUpConfirmPasswordError"/>
+
+                <TextView
+                    android:id="@+id/signUpTerms"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/signInToContinue"
+                    android:textStyle="bold|italic"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="@dimen/_12ssp"
+                    android:background="?attr/selectableItemBackground"
+                    app:layout_constraintStart_toEndOf="@+id/signUpAgreeToTerms"
+                    app:layout_constraintTop_toTopOf="@+id/signUpAgreeToTerms"
+                    app:layout_constraintBottom_toBottomOf="@+id/signUpAgreeToTerms"/>
+
+
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/signUpButton"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_50sdp"
-                    android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
                     android:text="@string/signUpButton"
                     android:textStyle="bold"
                     android:textAllCaps="false"
@@ -171,7 +193,7 @@
                     style="@style/Widget.MaterialComponents.Button"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/signUpConfirmPasswordError"/>
+                    app:layout_constraintTop_toBottomOf="@id/signUpAgreeToTerms"/>
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
