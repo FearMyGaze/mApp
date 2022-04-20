@@ -79,6 +79,7 @@ public class SignUp extends Fragment {
     private void signUp() {
         showToast("Just passing by: ->", 0);
         startActivity(new Intent(requireActivity(), Main.class));
+        requireActivity().finish();
     }
 
     private void showToast(String message, int length){
