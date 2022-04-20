@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.fearmygaze.mApp">
 
     <application
@@ -10,8 +11,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MApp">
         <activity
-            android:name=".MainActivity"
-            android:exported="true">
+            android:name=".view.activity.Main"
+            android:exported="false" />
+        <activity
+            android:name=".view.activity.Starting"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

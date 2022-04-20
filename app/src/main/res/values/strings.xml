@@ -1,4 +1,27 @@
 <resources>
     <!-- App name -->
     <string name="app_name">mApp</string>
+
+    <!-- Activities / fragments name -->
+    <string name="fragmentSignIn">Sign In</string>
+    <string name="fragmentsSignUp">Sign Up</string>
+
+    <!-- Sign In fragment -->
+    <string name="signInWelcome">Welcome back</string>
+    <string name="signInToContinue">Sign In to continue</string>
+    <string name="signInEmailAddress">Email</string>
+    <string name="signInPassword">Password</string>
+    <string name="signInButton">Sign In</string>
+    <string name="signInCreateNewAccount">Create New Account!</string>
+
+    <!-- Sign Up fragment -->
+    <string name="signUpCreateNewAccount">Create New Account</string>
+    <string name="signUpAddImage">Add image</string>
+    <string name="signUpEmailAddress">Email</string>
+    <string name="signUpName">Name</string>
+    <string name="signUpPassword">Password</string>
+    <string name="signUpConfirmPassword">Confirm Password</string>
+    <string name="signUpButton">Sign Up</string>
+    <string name="signUpHaveAccount">Sign In</string>
+
 </resources>
