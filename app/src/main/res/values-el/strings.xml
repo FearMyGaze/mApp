@@ -7,6 +7,10 @@
     <string name="fragmentSignIn">Sign In</string>
     <string name="fragmentsSignUp">Sign Up</string>
 
+    <!-- TextHandler-->
+    <string name="textHandlerEmpty">Παρακαλώ γεμίστε το κελί</string>
+    <string name="textHandlerNotEqual">Τα κελία δεν ταιρίαζουν</string>
+
     <!-- Sign In fragment -->
     <string name="signInWelcome">Καλώς ήρθες πίσω</string>
     <string name="signInToContinue">Sign In to continue</string>

@@ -6,6 +6,10 @@
     <string name="fragmentSignIn">Sign In</string>
     <string name="fragmentsSignUp">Sign Up</string>
 
+    <!-- TextHandler-->
+    <string name="textHandlerEmpty">Fill the empty cell</string>
+    <string name="textHandlerNotEqual">Cells not the same</string>
+
     <!-- Sign In fragment -->
     <string name="signInWelcome">Welcome back</string>
     <string name="signInToContinue">Sign In to continue</string>

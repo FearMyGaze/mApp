@@ -31,6 +31,9 @@ public class Main extends AppCompatActivity {
                 startActivity(new Intent(this,Starting.class));
                 finish();
             });
+        }else{
+            startActivity(new Intent(this, Starting.class));
+            finish();
         }
     }
     private void showToast(String message, int length){
