@@ -18,7 +18,6 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Objects;
 
@@ -32,14 +31,12 @@ public class SignIn extends Fragment {
     MaterialButton signInButton;
 
     FirebaseAuth auth;
-    FirebaseUser user;
 
     View view;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_sign_in, container, false);
         auth = FirebaseAuth.getInstance();
-        user = auth.getCurrentUser();
 
         signInEmailAddress = view.findViewById(R.id.signInEmailAddress);
         signInEmailAddressError = view.findViewById(R.id.signInEmailAddressError);
@@ -60,7 +57,6 @@ public class SignIn extends Fragment {
     }
 
     private void signIn() {
-        //showToast("Sign In",1);
         auth = FirebaseAuth.getInstance();
         auth.signInWithEmailAndPassword(
                 Objects.requireNonNull(signInEmailAddress.getText()).toString(),
