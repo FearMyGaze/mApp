@@ -63,7 +63,6 @@ public class SignIn extends Fragment {
                 Objects.requireNonNull(signInPassword.getText()).toString())
                 .addOnFailureListener(e -> showToast(e.getMessage(),1))
                 .addOnSuccessListener(authResult -> {
-                    showToast(authResult.toString(),0);
                     startActivity(new Intent(requireActivity(), Main.class));
                     requireActivity().finish();
                 });

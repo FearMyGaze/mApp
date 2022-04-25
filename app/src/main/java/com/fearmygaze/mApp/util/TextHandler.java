@@ -3,8 +3,10 @@ package com.fearmygaze.mApp.util;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.widget.Toast;
 
 import com.fearmygaze.mApp.R;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -32,9 +34,9 @@ public class TextHandler implements TextWatcher {
         if (!input1.equals(input2)) {
             textInputLayout.setError(context.getString(R.string.textHandlerNotEqual));
             textInputLayout.setErrorEnabled(true);
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     @Override

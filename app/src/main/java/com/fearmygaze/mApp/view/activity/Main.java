@@ -26,7 +26,13 @@ public class Main extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null){
             Task<Void> auth = user.reload();
-            auth.addOnFailureListener(e -> {
+            auth.addOnSuccessListener(unused -> {
+                if (!user.isEmailVerified()){
+                    showToast(getResources().getString(R.string.mainEmailVerificationError),1);
+                    startActivity(new Intent(this,Starting.class));
+                    finish();
+                }
+            }).addOnFailureListener(e -> {
                 showToast(e.getMessage(),1);
                 startActivity(new Intent(this,Starting.class));
                 finish();
