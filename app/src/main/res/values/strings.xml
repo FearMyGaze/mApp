@@ -30,6 +30,9 @@
     <string name="signUpHaveAccount">Sign In</string>
     <string name="signUpEmailVerification">Email verification send at: </string>
 
+    <!-- RegEx -->
+    <string name="regExPasswordError">* Λιγότεροο 8 χαρακτήρες \n* 1 μικρό χαρακτήρα \n* 1 κεφαλαίο χαρακτήρα \n* 1 αριθμό \n* 1 ειδικό χαρακτήρα</string>
+
     <!-- Main Activity -->
     <string name="mainEmailVerificationError">You need to verify your email to continue</string>
 
