@@ -13,7 +13,7 @@
     <!-- Sign In fragment -->
     <string name="signInWelcome">Welcome back</string>
     <string name="signInToContinue">Sign In to continue</string>
-    <string name="signInEmailAddress">Email</string>
+    <string name="signInWithCredentials">Email or username</string>
     <string name="signInPassword">Password</string>
     <string name="signInButton">Sign In</string>
     <string name="signInCreateNewAccount">Create New Account!</string>
@@ -21,6 +21,7 @@
     <!-- Sign Up fragment -->
     <string name="signUpCreateNewAccount">Create New Account</string>
     <string name="signUpAddImage">Add image</string>
+    <string name="signUpUserName">Username</string>
     <string name="signUpEmailAddress">Email</string>
     <string name="signUpName">Name</string>
     <string name="signUpPassword">Password</string>
@@ -30,10 +31,27 @@
     <string name="signUpHaveAccount">Sign In</string>
     <string name="signUpEmailVerification">Email verification send at: </string>
 
+
     <!-- RegEx -->
     <string name="regExPasswordError">* Λιγότεροο 8 χαρακτήρες \n* 1 μικρό χαρακτήρα \n* 1 κεφαλαίο χαρακτήρα \n* 1 αριθμό \n* 1 ειδικό χαρακτήρα</string>
 
     <!-- Main Activity -->
     <string name="mainEmailVerificationError">You need to verify your email to continue</string>
+    <string name="mainSearchQuerry">Search…</string>
 
+    <!-- Adapter Conversation -->
+    <string name="adapterConversationDiv" translatable="false">·</string>
+
+    <!-- sample Data -->
+    <string name="sampleName" translatable="false">Lorem ipsum</string>
+    <string name="sampleUsername" translatable="false">Username</string>
+    <string name="sampleLastMessage" translatable="false">You: is message true;</string>
+    <string name="sampleTime" translatable="false">22:03</string>
+
+
+    <!-- Database -->
+    <string-array name="url">
+        <item>http://localhost/mApp/userRegister.php</item>
+        <item>https://localhost/mApp/userDelete.php</item>
+    </string-array>
 </resources>

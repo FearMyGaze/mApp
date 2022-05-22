@@ -14,7 +14,7 @@
     <!-- Sign In fragment -->
     <string name="signInWelcome">Καλώς ήρθες πίσω</string>
     <string name="signInToContinue">Sign In to continue</string>
-    <string name="signInEmailAddress">Email</string>
+    <string name="signInWithCredentials">Email ή όνομα χρήστη</string>
     <string name="signInPassword">Κωδικός</string>
     <string name="signInButton">Σύνδεση</string>
     <string name="signInCreateNewAccount">Δημιουργία λογαριασμού!</string>
@@ -22,11 +22,12 @@
     <!-- Sign Up fragment -->
     <string name="signUpCreateNewAccount">Δημιουργία λογαριασμού</string>
     <string name="signUpAddImage">Προσθ. εικόνας</string>
+    <string name="signUpUserName">Όνομα χρήστη</string>
     <string name="signUpEmailAddress">Email</string>
-    <string name="signUpName">Name</string>
+    <string name="signUpName">Όνομα</string>
     <string name="signUpPassword">Κωδικός</string>
     <string name="signUpConfirmPassword">Επιβεβαίωση κωδικόυ</string>
-    <string name="signUpTerms">Terms</string>
+    <string name="signUpTerms">Όροι</string>
     <string name="signUpButton">Εγραφή</string>
     <string name="signUpHaveAccount">Σύνδεση</string>
     <string name="signUpEmailVerification">Απεστάλη email επιβεβαίωσης λογαριασμού στο: </string>
@@ -36,5 +37,6 @@
 
     <!-- Main Activity -->
     <string name="mainEmailVerificationError">Πρέπει να επιβαιβεώσεις το email σου για να συνεχείσεις</string>
+    <string name="mainSearchQuerry">Αναζήτηση…</string>
 
 </resources>

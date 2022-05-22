@@ -64,11 +64,11 @@
                 app:layout_constraintTop_toBottomOf="@+id/signUpImage">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/signUpEmailAddressError"
+                    android:id="@+id/signUpUsernameError"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:hint="@string/signUpEmailAddress"
+                    android:hint="@string/signUpUserName"
                     app:endIconMode="clear_text"
                     app:boxCornerRadiusTopStart="13dp"
                     app:boxCornerRadiusTopEnd="13dp"
@@ -80,12 +80,14 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/signUpEmailAddress"
+                        android:id="@+id/signUpUsername"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textEmailAddress|textAutoComplete"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- TODO: Add datePicker -->
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/signUpNameError"
@@ -101,13 +103,37 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/signUpEmailAddressError">
+                    app:layout_constraintTop_toBottomOf="@id/signUpUsernameError">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/signUpName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textPersonName|textAutoComplete"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/signUpEmailAddressError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="@string/signUpEmailAddress"
+                    app:endIconMode="clear_text"
+                    app:boxCornerRadiusTopStart="13dp"
+                    app:boxCornerRadiusTopEnd="13dp"
+                    app:boxCornerRadiusBottomStart="13dp"
+                    app:boxCornerRadiusBottomEnd="13dp"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/signUpNameError">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/signUpEmailAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress|textAutoComplete"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -125,7 +151,7 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/signUpNameError">
+                    app:layout_constraintTop_toBottomOf="@id/signUpEmailAddressError">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/signUpPassword"
@@ -184,12 +210,11 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/signUpButton"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="60dp"
                     android:layout_marginTop="10dp"
                     android:text="@string/signUpButton"
                     android:textStyle="bold"
                     android:textAllCaps="false"
-                    android:textSize="13sp"
                     app:cornerRadius="13dp"
                     android:enabled="false"
                     style="@style/Widget.MaterialComponents.Button"

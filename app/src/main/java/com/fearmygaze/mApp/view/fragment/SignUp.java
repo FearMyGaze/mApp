@@ -28,6 +28,7 @@ import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -36,8 +37,8 @@ public class SignUp extends Fragment {
     ShapeableImageView signUpImage;
     TextView signUpAddImage;
 
-    TextInputEditText signUpEmail, signUpName, signUpPassword, signUpConfirmPassword;
-    TextInputLayout signUpEmailError, signUpNameError, signUpPasswordError, signUpConfirmPasswordError;
+    TextInputEditText signUpUsername, signUpEmail, signUpName, signUpPassword, signUpConfirmPassword;
+    TextInputLayout signUpUsernameError, signUpEmailError, signUpNameError, signUpPasswordError, signUpConfirmPasswordError;
 
     CheckBox signUpAgreeToTerms;
     TextView signUpTerms;
@@ -46,7 +47,7 @@ public class SignUp extends Fragment {
 
     TextView signUpToSignIn;
 
-    Uri imageUri;
+    String stringConvertedImage;
 
     View view;
     @Override
@@ -56,11 +57,18 @@ public class SignUp extends Fragment {
         signUpImage = view.findViewById(R.id.signUpImage);
         signUpAddImage = view.findViewById(R.id.signUpAddImage);
 
-        signUpEmail = view.findViewById(R.id.signUpEmailAddress);
-        signUpEmailError = view.findViewById(R.id.signUpEmailAddressError);
+        signUpUsername = view.findViewById(R.id.signUpUsername);
+        signUpUsernameError = view.findViewById(R.id.signUpUsernameError);
 
         signUpName = view.findViewById(R.id.signUpName);
         signUpNameError = view.findViewById(R.id.signUpNameError);
+
+        signUpEmail = view.findViewById(R.id.signUpEmailAddress);
+        signUpEmailError = view.findViewById(R.id.signUpEmailAddressError);
+
+        /*
+        * TODO: DatePicker stuff
+        * */
 
         signUpPassword = view.findViewById(R.id.signUpPassword);
         signUpPasswordError = view.findViewById(R.id.signUpPasswordError);
@@ -77,7 +85,7 @@ public class SignUp extends Fragment {
 
         stateOfCells(false);
 
-        signUpTerms.setOnClickListener(view1 -> openDialog());
+        signUpTerms.setOnClickListener(view1 -> openTermsDialog());
 
         signUpToSignIn.setOnClickListener(view1 -> ((Starting) requireActivity()).replaceFragment(((Starting) requireActivity()).signIn));
 
@@ -89,6 +97,7 @@ public class SignUp extends Fragment {
          * The moment the TextInputEditText is filled with a text after an error occurred the error
          *   vanishes from the text that was changed
          * */
+        signUpUsername.addTextChangedListener(new TextHandler(signUpUsernameError));
         signUpEmail.addTextChangedListener(new TextHandler(signUpEmailError));
         signUpName.addTextChangedListener(new TextHandler(signUpNameError));
         signUpPassword.addTextChangedListener(new TextHandler(signUpPasswordError));
@@ -121,14 +130,21 @@ public class SignUp extends Fragment {
         new ActivityResultContracts.StartActivityForResult(),
         result -> {
             if (result.getResultCode() == RESULT_OK && result.getData() != null){
-                imageUri = result.getData().getData();
+                Uri uri = result.getData().getData();
                 try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(),imageUri);
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(),uri);
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.WEBP,100,stream);
+
+                    stringConvertedImage = null;
+                    stringConvertedImage = stream.toString();
+
                     signUpAddImage.setVisibility(View.GONE);
                     signUpImage.setImageBitmap(bitmap);
+
                     stateOfCells(true);
                 } catch (IOException e) {
-                   showToast(e.getMessage(),0);
+                   showToast(e.getMessage(),1);
                 }
             }
         }
@@ -143,18 +159,19 @@ public class SignUp extends Fragment {
         signUpTerms.setEnabled(state);
     }
 
-    private void openDialog(){
+    private void openTermsDialog(){
         showToast("Open Dialog",0);
     }
 
     private void checkForErrors(){
+        TextHandler.isTextInputEmpty(signUpUsername,signUpUsernameError,requireActivity());
         TextHandler.isTextInputEmpty(signUpEmail, signUpEmailError,requireActivity());
         TextHandler.isTextInputEmpty(signUpName,signUpNameError,requireActivity());
         TextHandler.isTextInputEmpty(signUpPassword,signUpPasswordError,requireActivity());
         TextHandler.isTextInputEmpty(signUpConfirmPassword,signUpConfirmPasswordError,requireActivity());
 
-        if (!signUpEmailError.isErrorEnabled() || !signUpNameError.isErrorEnabled()
-                || !signUpPasswordError.isErrorEnabled() || !signUpConfirmPasswordError.isErrorEnabled() || imageUri != null) {
+        if (!signUpUsernameError.isErrorEnabled() || !signUpEmailError.isErrorEnabled() || !signUpNameError.isErrorEnabled()
+                || !signUpPasswordError.isErrorEnabled() || !signUpConfirmPasswordError.isErrorEnabled() || !stringConvertedImage.isEmpty() ){
             if (TextHandler.IsTextInputsEqual(signUpPassword, signUpConfirmPassword, signUpPasswordError, requireActivity())) {
                 if (RegEx.isPasswordValid(Objects.requireNonNull(signUpPassword.getText()).toString(), signUpPasswordError, getContext())){
                     showToast("True",0);

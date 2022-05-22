@@ -6,7 +6,7 @@
     tools:context=".view.activity.Starting">
 
     <FrameLayout
-        android:id="@+id/mainFrame"
+        android:id="@+id/startingFrame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

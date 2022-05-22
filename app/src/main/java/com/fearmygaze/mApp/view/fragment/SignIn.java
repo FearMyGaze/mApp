@@ -20,8 +20,8 @@ import com.google.android.material.textfield.TextInputLayout;
 
 public class SignIn extends Fragment {
 
-    TextInputLayout signInEmailAddressError, signInPasswordError;
-    TextInputEditText signInEmailAddress, signInPassword;
+    TextInputLayout signInWithCredentialsError, signInPasswordError;
+    TextInputEditText signInWithCredentials, signInPassword;
 
     TextView signInCreateNewAccount;
 
@@ -32,8 +32,8 @@ public class SignIn extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_sign_in, container, false);
 
-        signInEmailAddress = view.findViewById(R.id.signInEmailAddress);
-        signInEmailAddressError = view.findViewById(R.id.signInEmailAddressError);
+        signInWithCredentials = view.findViewById(R.id.signInWithCredentials);
+        signInWithCredentialsError = view.findViewById(R.id.signInWithCredentialsError);
 
         signInPassword = view.findViewById(R.id.signInPassword);
         signInPasswordError = view.findViewById(R.id.signInPasswordError);

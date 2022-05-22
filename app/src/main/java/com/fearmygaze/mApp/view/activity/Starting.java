@@ -29,7 +29,7 @@ public class Starting extends AppCompatActivity {
     public void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.mainFrame, fragment);
+        fragmentTransaction.replace(R.id.startingFrame, fragment);
         fragmentTransaction.commit();
     }
 }

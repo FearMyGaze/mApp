@@ -47,11 +47,11 @@
             android:paddingEnd="20dp">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/signInEmailAddressError"
+                android:id="@+id/signInWithCredentialsError"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:hint="@string/signInEmailAddress"
+                android:hint="@string/signInWithCredentials"
                 app:endIconMode="clear_text"
                 app:boxCornerRadiusTopStart="13dp"
                 app:boxCornerRadiusTopEnd="13dp"
@@ -63,7 +63,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/signInEmailAddress"
+                    android:id="@+id/signInWithCredentials"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textEmailAddress|textAutoComplete"/>
@@ -84,7 +84,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/signInEmailAddressError">
+                app:layout_constraintTop_toBottomOf="@id/signInWithCredentialsError">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/signInPassword"
@@ -97,12 +97,11 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/signInButton"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="60dp"
                 android:layout_marginTop="20dp"
                 android:text="@string/signInButton"
                 android:textStyle="bold"
                 android:textAllCaps="false"
-                android:textSize="13sp"
                 app:cornerRadius="13dp"
                 style="@style/Widget.MaterialComponents.Button"
                 app:layout_constraintStart_toStartOf="parent"
