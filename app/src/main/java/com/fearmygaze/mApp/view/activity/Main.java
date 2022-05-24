@@ -101,15 +101,11 @@ public class Main extends AppCompatActivity {
         conversationList.add(conversation3);
 
 
-
         adapterConversation = new AdapterConversation(conversationList);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(Main.this, LinearLayoutManager.VERTICAL, false);
         recyclerViewCon.setLayoutManager(layoutManager);
         recyclerViewCon.setAdapter(adapterConversation);
-
-
-
 
         refreshLayout.setOnRefreshListener(() -> refreshLayout.setRefreshing(false));
 

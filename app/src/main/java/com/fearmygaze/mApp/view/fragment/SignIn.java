@@ -12,11 +12,15 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.fearmygaze.mApp.R;
+import com.fearmygaze.mApp.util.RegEx;
+import com.fearmygaze.mApp.util.TextHandler;
 import com.fearmygaze.mApp.view.activity.Main;
 import com.fearmygaze.mApp.view.activity.Starting;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
+import java.util.Objects;
 
 public class SignIn extends Fragment {
 
@@ -42,13 +46,33 @@ public class SignIn extends Fragment {
 
         signInButton = view.findViewById(R.id.signInButton);
 
+        /*
+         * The moment the TextInputEditText is filled with a text after an error occurred the error
+         *   vanishes from the text that was changed
+         * */
+        signInWithCredentials.addTextChangedListener(new TextHandler(signInWithCredentialsError));
+        signInPassword.addTextChangedListener(new TextHandler(signInPasswordError));
+
         signInButton.setOnClickListener(view1 -> startActivity(new Intent(getActivity(), Main.class)));
+
 
         signInCreateNewAccount.setOnClickListener(view1 -> ((Starting) requireActivity()).replaceFragment(((Starting) requireActivity()).signUp));
 
 
         return view;
     }
+
+    private void userCreate(){
+        TextHandler.isTextInputEmpty(signInWithCredentials,signInWithCredentialsError, getContext());
+        TextHandler.isTextInputEmpty(signInPassword,signInPasswordError, getContext());
+
+        if (!signInWithCredentialsError.isErrorEnabled() || !signInPasswordError.isErrorEnabled()){
+            if (RegEx.isPasswordValid(Objects.requireNonNull(signInPassword.getText()).toString(),signInPasswordError,getContext())){
+                showToast("User logged in",0); //TODO: User sign In
+            }
+        }
+    }
+
 
     private void showToast(String message, int length){
         Toast.makeText(getContext(), message, length).show();

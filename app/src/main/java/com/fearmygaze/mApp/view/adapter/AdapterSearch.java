@@ -5,15 +5,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.fearmygaze.mApp.R;
-import com.fearmygaze.mApp.model.User;
-import com.fearmygaze.mApp.model.miniUser;
+import com.fearmygaze.mApp.model.SearchedUser;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
 
@@ -21,10 +19,10 @@ import java.util.List;
 
 public class AdapterSearch extends RecyclerView.Adapter<AdapterSearch.MyViewHolder> {
 
-    List<miniUser> miniUserList;
+    List<SearchedUser> searchedUserList;
 
-    public AdapterSearch(List<miniUser> miniUserList) {
-        this.miniUserList = miniUserList;
+    public AdapterSearch(List<SearchedUser> searchedUserList) {
+        this.searchedUserList = searchedUserList;
     }
 
     @NonNull
@@ -36,14 +34,15 @@ public class AdapterSearch extends RecyclerView.Adapter<AdapterSearch.MyViewHold
     @Override
     public void onBindViewHolder(@NonNull AdapterSearch.MyViewHolder holder, int position) {
 
-        String id = miniUserList.get(position).getId();
-        String image = miniUserList.get(position).getImage();
-        String username = miniUserList.get(position).getUsername();
-        String name = miniUserList.get(position).getName();
+        String id = searchedUserList.get(position).getId();
+        String image = searchedUserList.get(position).getImage();
+        String username = searchedUserList.get(position).getUsername();
+        String name = searchedUserList.get(position).getName();
 
         Glide.with(holder.itemView.getRootView())
                 .load(image)
                 .placeholder(R.drawable.ic_launcher_background)
+                .circleCrop()
                 .apply(RequestOptions.centerCropTransform())
                 .into(holder.image);
 
@@ -55,13 +54,9 @@ public class AdapterSearch extends RecyclerView.Adapter<AdapterSearch.MyViewHold
         });
     }
 
-    public List<miniUser> getMiniUserList() {
-        return miniUserList;
-    }
-
     @Override
     public int getItemCount() {
-        return miniUserList.size();
+        return searchedUserList.size();
     }
 
     protected static class MyViewHolder extends RecyclerView.ViewHolder{

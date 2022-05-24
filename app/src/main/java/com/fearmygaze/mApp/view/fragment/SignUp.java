@@ -174,7 +174,7 @@ public class SignUp extends Fragment {
                 || !signUpPasswordError.isErrorEnabled() || !signUpConfirmPasswordError.isErrorEnabled() || !stringConvertedImage.isEmpty() ){
             if (TextHandler.IsTextInputsEqual(signUpPassword, signUpConfirmPassword, signUpPasswordError, requireActivity())) {
                 if (RegEx.isPasswordValid(Objects.requireNonNull(signUpPassword.getText()).toString(), signUpPasswordError, getContext())){
-                    showToast("True",0);
+                    showToast("True",0); //TODO: Create user
                 }
             }
         }

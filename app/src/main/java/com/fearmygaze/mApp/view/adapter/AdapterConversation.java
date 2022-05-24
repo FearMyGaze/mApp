@@ -46,6 +46,7 @@ public class AdapterConversation extends RecyclerView.Adapter<AdapterConversatio
         Glide.with(holder.itemView.getRootView())
                 .load(image)
                 .placeholder(R.drawable.ic_launcher_background)
+                .circleCrop()
                 .apply(RequestOptions.centerCropTransform())
                 .into(holder.image);
 
