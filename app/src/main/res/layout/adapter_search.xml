@@ -47,6 +47,19 @@
         app:layout_constraintTop_toBottomOf="@+id/adapterSearchName"
         app:layout_constraintBottom_toBottomOf="@id/adapterSearchImage"/>
 
+    <ImageButton
+        android:id="@+id/adapterSearchStartConv"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="30dp"
+        android:src="@drawable/ic_send_24"
+        android:contentDescription="Start Conversation"
+        android:background="@android:color/transparent"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
     <FrameLayout
         android:id="@+id/adapterSearchRoot"
         android:layout_width="0dp"

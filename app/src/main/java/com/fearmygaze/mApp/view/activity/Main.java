@@ -1,161 +1,152 @@
 package com.fearmygaze.mApp.view.activity;
 
+import android.annotation.SuppressLint;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.TypedValue;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.preference.PreferenceActivity;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.fearmygaze.mApp.R;
-import com.fearmygaze.mApp.model.Conversation;
-import com.fearmygaze.mApp.view.adapter.AdapterConversation;
+import com.fearmygaze.mApp.view.fragment.Friends;
+import com.fearmygaze.mApp.view.fragment.Home;
+import com.fearmygaze.mApp.view.fragment.Search;
 import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 
 public class Main extends AppCompatActivity {
 
-    SwipeRefreshLayout refreshLayout;
+    public Fragment friends, home, search;
+
+    DrawerLayout drawerLayout;
 
     MaterialToolbar toolbar;
 
-    RecyclerView recyclerViewCon;
+    BottomNavigationView bottomNavigationView;
 
-    AdapterConversation adapterConversation;
+    NavigationView navigationView;
 
-    ConstraintLayout behaviourLayout;
+    boolean notifications = true;
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        refreshLayout = findViewById(R.id.mainRefresh);
+        drawerLayout = findViewById(R.id.mainDrawer);
         toolbar = findViewById(R.id.mainToolbar);
-        recyclerViewCon = findViewById(R.id.mainConversation);
+        bottomNavigationView = findViewById(R.id.mainBottomNavigation);
+        navigationView = findViewById(R.id.mainNavigation);
 
-        setSupportActionBar(toolbar);
+       // setSupportActionBar(toolbar); //If i use this then the button is not showing
 
-        behaviourLayout = findViewById(R.id.bottomSheetDialogRoot);
-
-        TypedValue tv = new TypedValue();
-
-        int actionBarHeight = 0;
-
-        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
-            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data,getResources().getDisplayMetrics());
-
-        ViewGroup.LayoutParams params = behaviourLayout.getLayoutParams();
-        params.height = getResources().getDisplayMetrics().heightPixels - actionBarHeight;
-        behaviourLayout.setLayoutParams(params);
-
-        BottomSheetBehavior<ConstraintLayout> behavior = BottomSheetBehavior.from(behaviourLayout);
-        behavior.setSkipCollapsed(true);
-        behavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-                    refreshLayout.setEnabled(false);
-                } else if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                    refreshLayout.setEnabled(true);
-                }
-            }
-
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-
-            }
-        });
+        //TODO: Clear up the main (just create a method with the setting up of the toolbar)
 
         toolbar.setOnMenuItemClickListener(item -> {
-            if (item.getItemId() == R.id.mainMenuItem1){
-                behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            if (item.getItemId() == R.id.mainToolbarItemNotifications){
+                if (notifications){
+                    notifications = false;
+                    item.setIcon(R.drawable.ic_notifications_off_24);
+                }else{
+                    notifications = true;
+                    item.setIcon(R.drawable.ic_notifications_active_24);
+                }
             }
-            return false;
+            return true;
         });
 
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout,toolbar,R.string.navigation_drawer_open , R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
 
-        List<Conversation> conversationList = new ArrayList<>();
+        View header = navigationView.getHeaderView(0);
 
-        Conversation conversation = new Conversation("1","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png",
-                "Username","is this a bool ??","22:20");
-        Conversation conversation2 = new Conversation("2","https://static-cdn.jtvnw.net/jtv_user_pictures/fl0m-profile_image-efa66f8f4aa42f40-70x70.png",
-                "Username","is this a String ??","22:20");
-        Conversation conversation3 = new Conversation("3","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png",
-                "Username","is this an int ??","22:20");
+        header.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(Main.this, "Ahh niko ahh", Toast.LENGTH_SHORT).show();
+//                navigationView.getMenu().clear();
+//                navigationView.inflateMenu(R.menu.main_navigation);
 
-        conversationList.add(conversation);
-        conversationList.add(conversation2);
-        conversationList.add(conversation3);
+            }
+        });
 
+        Glide.with(this)
+                .asDrawable()
+                .circleCrop()
+                .load("https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png")
+                .into(new CustomTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        toolbar.setNavigationIcon(resource);
+                    }
 
-        adapterConversation = new AdapterConversation(conversationList);
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(Main.this, LinearLayoutManager.VERTICAL, false);
-        recyclerViewCon.setLayoutManager(layoutManager);
-        recyclerViewCon.setAdapter(adapterConversation);
+                    }
+                });
 
-        refreshLayout.setOnRefreshListener(() -> refreshLayout.setRefreshing(false));
+        /*
+        * BottomNavigation
+        * */
 
+        friends = new Friends();
+        home = new Home();
+        search = new Search();
+
+        replaceFragment(home);
+        bottomNavigationView.setSelectedItemId(R.id.mainNavigationItemHome);
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()){
+                case R.id.mainNavigationItemFriends:
+                    replaceFragment(friends);
+                    return true;
+                case R.id.mainNavigationItemHome:
+                    replaceFragment(home);
+                    return true;
+                case R.id.mainNavigationItemSearch:
+                    replaceFragment(search);
+                    return true;
+                default:
+                    return false;
+            }
+        });
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-
-        MenuItem menuItem = menu.findItem(R.id.mainMenuItem1);
-        SearchView searchView = (SearchView) menuItem.getActionView();
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                showToast(query,0);
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                if (newText.length() >= 3){
-                    showToast(newText,1);
-                }
-                return true;
-            }
-        });
-
-        menuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem menuItem) {
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-                behaviourLayout = findViewById(R.id.bottomSheetDialogRoot);
-
-                BottomSheetBehavior<ConstraintLayout> behavior = BottomSheetBehavior.from(behaviourLayout);
-
-                behavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
-                return true;
-            }
-        });
-
-        return true;
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)){
+            drawerLayout.closeDrawer(GravityCompat.START);
+        }else{
+            super.onBackPressed();
+            finish();
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        }
     }
 
-    private void showToast(String message, int duration){
-        Toast.makeText(this, message, duration).show();
+    public void replaceFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.mainFrame, fragment);
+        fragmentTransaction.commit();
     }
+
 }

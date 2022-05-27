@@ -3,9 +3,10 @@ package com.fearmygaze.mApp.view.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentContainerView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -50,7 +51,7 @@ public class AdapterSearch extends RecyclerView.Adapter<AdapterSearch.MyViewHold
         holder.name.setText(name);
 
         holder.root.setOnClickListener(view -> {
-
+            Toast.makeText(view.getContext(), "Clicked" + username, Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -60,9 +61,10 @@ public class AdapterSearch extends RecyclerView.Adapter<AdapterSearch.MyViewHold
     }
 
     protected static class MyViewHolder extends RecyclerView.ViewHolder{
-        FragmentContainerView root;
+        FrameLayout root;
         ShapeableImageView image;
         MaterialTextView name, username;
+
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);

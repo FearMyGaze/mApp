@@ -4,11 +4,13 @@
 
     <!-- Activities / fragments name -->
     <string name="fragmentSignIn">Sign In</string>
-    <string name="fragmentsSignUp">Sign Up</string>
+    <string name="fragmentSignUp">Sign Up</string>
+    <string name="fragmentFriends">Friends</string>
+    <string name="fragmentHome">Home</string>
+    <string name="fragmentSearch">Search</string>
 
-    <!-- TextHandler-->
-    <string name="textHandlerEmpty">Fill the empty cell</string>
-    <string name="textHandlerNotEqual">Cells not the same</string>
+    <!-- Main Activity -->
+    <string name="mainSearchQuery">Search…</string>
 
     <!-- Sign In fragment -->
     <string name="signInWelcome">Welcome back</string>
@@ -31,16 +33,36 @@
     <string name="signUpHaveAccount">Sign In</string>
     <string name="signUpEmailVerification">Email verification send at: </string>
 
+    <!-- Home fragment -->
+
+
+    <!-- HomeMessages fragments -->
+    <string name="homeMessagesConversationNotFound">Conversations not Found</string>
+
+    <!-- Search fragment -->
+    <string name="searchUsersNotFound">No users with the criteria you gave found…!</string>
+    <string name="searchSearchViewHint">Start conversation with…</string>
+
+    <!-- Tabs -->
+    <string name="friendsTab0">Friends</string>
+    <string name="friendsTab1">Friend Requests</string>
+    <string name="homeTab0">Messages</string>
+    <string name="homeTab1">Message Requests</string>
+
+    <!-- Main Toolbar (Menu) -->
+    <string name="mainToolbarItemNotifications">Notifications</string>
+
+
+    <!-- Adapter Conversation -->
+    <string name="adapterConversationDiv" translatable="false">·</string>
+
 
     <!-- RegEx -->
     <string name="regExPasswordError">* Λιγότεροο 8 χαρακτήρες \n* 1 μικρό χαρακτήρα \n* 1 κεφαλαίο χαρακτήρα \n* 1 αριθμό \n* 1 ειδικό χαρακτήρα</string>
 
-    <!-- Main Activity -->
-    <string name="mainEmailVerificationError">You need to verify your email to continue</string>
-    <string name="mainSearchQuerry">Search…</string>
-
-    <!-- Adapter Conversation -->
-    <string name="adapterConversationDiv" translatable="false">·</string>
+    <!-- TextHandler-->
+    <string name="textHandlerEmpty">Fill the empty cell</string>
+    <string name="textHandlerNotEqual">Cells not the same</string>
 
     <!-- sample Data -->
     <string name="sampleName" translatable="false">Lorem ipsum</string>
@@ -48,10 +70,12 @@
     <string name="sampleLastMessage" translatable="false">You: is message true;</string>
     <string name="sampleTime" translatable="false">22:03</string>
 
-
     <!-- Database -->
     <string-array name="url">
         <item>http://localhost/mApp/userRegister.php</item>
         <item>https://localhost/mApp/userDelete.php</item>
     </string-array>
+
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 </resources>

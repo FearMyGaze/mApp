@@ -4,12 +4,14 @@
     <string name="app_name">mApp</string>
 
     <!-- Activities / fragments name -->
-    <string name="fragmentSignIn">Sign In</string>
-    <string name="fragmentsSignUp">Sign Up</string>
+    <string name="fragmentSignIn">Σύνδεση</string>
+    <string name="fragmentSignUp">Εγραφή</string>
+    <string name="fragmentFriends">Φίλοι</string>
+    <string name="fragmentHome">Κεντρική</string>
+    <string name="fragmentSearch">Αναζήτηση</string>
 
-    <!-- TextHandler-->
-    <string name="textHandlerEmpty">Παρακαλώ γεμίστε το κελί</string>
-    <string name="textHandlerNotEqual">Τα κελία δεν ταιρίαζουν</string>
+    <!-- Main Activity -->
+    <string name="mainSearchQuery">Αναζήτηση…</string>
 
     <!-- Sign In fragment -->
     <string name="signInWelcome">Καλώς ήρθες πίσω</string>
@@ -32,11 +34,32 @@
     <string name="signUpHaveAccount">Σύνδεση</string>
     <string name="signUpEmailVerification">Απεστάλη email επιβεβαίωσης λογαριασμού στο: </string>
 
+    <!-- Home fragment -->
+
+    <!-- HomeMessages fragment -->
+
+    <string name="homeMessagesConversationNotFound">Δεν βρέθηκαν συνομιλίες</string>
+
+    <!-- Search fragment -->
+    <string name="searchUsersNotFound">Δεν βρέθηκαν χρήστες με τα στοιχεία που δώσατε…!</string>
+    <string name="searchSearchViewHint">Ξεκίνα συζήτηση με…</string>
+
+    <!-- Tabs -->
+    <string name="friendsTab0">Φίλοι</string>
+    <string name="friendsTab1">Αιτήματα φιλίας</string>
+    <string name="homeTab0">Μηνύματα</string>
+    <string name="homeTab1">Αιτήματα μηνυμάτων</string>
+
+
+    <!-- Main Toolbar (Menu) -->
+    <string name="mainToolbarItemNotifications">Ειδοποιήσεις</string>
+
     <!-- RegEx -->
     <string name="regExPasswordError">* Λιγότεροο 8 χαρακτήρες \n* 1 μικρό χαρακτήρα \n* 1 κεφαλαίο χαρακτήρα \n* 1 αριθμό \n* 1 ειδικό χαρακτήρα</string>
 
-    <!-- Main Activity -->
-    <string name="mainEmailVerificationError">Πρέπει να επιβαιβεώσεις το email σου για να συνεχείσεις</string>
-    <string name="mainSearchQuerry">Αναζήτηση…</string>
+    <!-- TextHandler-->
+    <string name="textHandlerEmpty">Παρακαλώ γεμίστε το κελί</string>
+    <string name="textHandlerNotEqual">Τα κελία δεν ταιρίαζουν</string>
+
 
 </resources>

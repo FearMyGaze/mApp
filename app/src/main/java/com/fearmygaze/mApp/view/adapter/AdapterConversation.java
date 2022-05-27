@@ -1,5 +1,7 @@
 package com.fearmygaze.mApp.view.adapter;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,13 +9,13 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.fearmygaze.mApp.R;
 import com.fearmygaze.mApp.model.Conversation;
+import com.fearmygaze.mApp.view.activity.ChatRoom;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
 
@@ -22,9 +24,11 @@ import java.util.List;
 public class AdapterConversation extends RecyclerView.Adapter<AdapterConversation.MyViewHolder> {
 
     List<Conversation> conversations;
+    Activity activity;
 
-    public AdapterConversation(List<Conversation> conversations) {
+    public AdapterConversation(List<Conversation> conversations , Activity activity) {
         this.conversations = conversations;
+        this.activity = activity;
     }
 
     @NonNull
@@ -55,7 +59,9 @@ public class AdapterConversation extends RecyclerView.Adapter<AdapterConversatio
         holder.time.setText(time);
 
         holder.frameLayout.setOnClickListener(view -> {
-            Toast.makeText(view.getContext(), "asd", Toast.LENGTH_SHORT).show();
+            view.getContext().startActivity(new Intent(activity, ChatRoom.class));
+            activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            Toast.makeText(view.getContext(), conversations.get(position).getUsername(), Toast.LENGTH_SHORT).show();
         });
 
     }

@@ -53,7 +53,10 @@ public class SignIn extends Fragment {
         signInWithCredentials.addTextChangedListener(new TextHandler(signInWithCredentialsError));
         signInPassword.addTextChangedListener(new TextHandler(signInPasswordError));
 
-        signInButton.setOnClickListener(view1 -> startActivity(new Intent(getActivity(), Main.class)));
+        signInButton.setOnClickListener(view1 -> {
+            startActivity(new Intent(getActivity(), Main.class));
+            requireActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        });
 
 
         signInCreateNewAccount.setOnClickListener(view1 -> ((Starting) requireActivity()).replaceFragment(((Starting) requireActivity()).signUp));

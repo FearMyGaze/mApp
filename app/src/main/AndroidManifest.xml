@@ -11,6 +11,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MApp">
+
+        <activity
+            android:name=".view.activity.ChatRoom"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|adjustPan"
+            tools:ignore="LockedOrientationActivity"/>
+        <activity
+            android:name=".view.activity.Settings"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|adjustPan"
+            tools:ignore="LockedOrientationActivity"/>
         <activity
             android:name=".view.activity.Main"
             android:exported="false"
