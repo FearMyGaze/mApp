@@ -6,8 +6,8 @@
     <!-- Activities / fragments name -->
     <string name="fragmentSignIn">Σύνδεση</string>
     <string name="fragmentSignUp">Εγραφή</string>
-    <string name="fragmentFriends">Φίλοι</string>
-    <string name="fragmentHome">Κεντρική</string>
+    <string name="fragmentPeople">Φίλοι</string>
+    <string name="fragmentChat">Κεντρική</string>
     <string name="fragmentSearch">Αναζήτηση</string>
 
     <!-- Main Activity -->
@@ -26,23 +26,29 @@
     <string name="signUpAddImage">Προσθ. εικόνας</string>
     <string name="signUpUserName">Όνομα χρήστη</string>
     <string name="signUpEmailAddress">Email</string>
-    <string name="signUpName">Όνομα</string>
     <string name="signUpPassword">Κωδικός</string>
     <string name="signUpConfirmPassword">Επιβεβαίωση κωδικόυ</string>
-    <string name="signUpTerms">Όροι</string>
+    <string name="signUpDate">Ημ. Γέννησης</string>
+    <string name="signUpTerms">Όροι χρήσης</string>
     <string name="signUpButton">Εγραφή</string>
     <string name="signUpHaveAccount">Σύνδεση</string>
     <string name="signUpEmailVerification">Απεστάλη email επιβεβαίωσης λογαριασμού στο: </string>
 
     <!-- Home fragment -->
-
-    <!-- HomeMessages fragment -->
-
-    <string name="homeMessagesConversationNotFound">Δεν βρέθηκαν συνομιλίες</string>
+    <string name="adapterChatFriendsNotFound">Δεν βρέθηκαν φίλοι</string>
+    <string name="adapterChatConversationNotFound">Δεν βρέθηκαν συνομιλίες</string>
 
     <!-- Search fragment -->
     <string name="searchUsersNotFound">Δεν βρέθηκαν χρήστες με τα στοιχεία που δώσατε…!</string>
     <string name="searchSearchViewHint">Ξεκίνα συζήτηση με…</string>
+
+    <!-- Adapter Conversation -->
+    <string name="adapterConversationDiv">·</string>
+
+
+
+
+
 
     <!-- Tabs -->
     <string name="friendsTab0">Φίλοι</string>
@@ -50,12 +56,26 @@
     <string name="homeTab0">Μηνύματα</string>
     <string name="homeTab1">Αιτήματα μηνυμάτων</string>
 
-
     <!-- Main Toolbar (Menu) -->
+    <string name="mainToolbarItemSearch">Αναζήτηση</string>
     <string name="mainToolbarItemNotifications">Ειδοποιήσεις</string>
 
+    <!-- Navigation Drawer Menu -->
+    <string name="navigationDrawerMenuItemProfile">Προφίλ</string>
+    <string name="navigationDrawerMenuItemFriendRequests">Αιτήματα φιλίας</string>
+    <string name="navigationDrawerMenuItemMessageRequests">Αιτήματα μηνυμάτων</string>
+    <string name="navigationDrawerMenuItemNotifications">Ειδοποιήσεις</string>
+    <string name="navigationDrawerMenuItemSettings">Προφίλ</string>
+    <string name="navigationDrawerMenuItemTerms">Όροι χρήσης</string>
+    <string name="navigationDrawerMenuItemSignOut">Έξοδος</string>
+
+    <!-- BottomNavigationView -->
+    <string name="mainBottomNavigationViewChoice1">Μηνύματα</string>
+    <string name="mainBottomNavigationViewChoice2">Φίλοι</string>
+    <string name="mainBottomNavigationViewChoice3">Αναζήτηση</string>
+
     <!-- RegEx -->
-    <string name="regExPasswordError">* Λιγότεροο 8 χαρακτήρες \n* 1 μικρό χαρακτήρα \n* 1 κεφαλαίο χαρακτήρα \n* 1 αριθμό \n* 1 ειδικό χαρακτήρα</string>
+    <string name="regExPasswordError">* Μεγαλύτερο 8 χαρακτήρες \n* 1 μικρό χαρακτήρα \n* 1 κεφαλαίο χαρακτήρα \n* 1 αριθμό \n* 1 ειδικό χαρακτήρα</string>
 
     <!-- TextHandler-->
     <string name="textHandlerEmpty">Παρακαλώ γεμίστε το κελί</string>

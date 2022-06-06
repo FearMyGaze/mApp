@@ -57,12 +57,12 @@ public class Search extends Fragment {
 
 
         List<SearchedUser> searchedUserList = new ArrayList<>();
-        searchedUserList.add(new SearchedUser("1", "https://static-cdn.jtvnw.net/jtv_user_pictures/a7f1c81b-6f00-41fc-8da9-18aabf169e75-profile_image-70x70.png",
-                "Lorem Ipsum","@LoremIpsum"));
-        searchedUserList.add(new SearchedUser("2", "https://static-cdn.jtvnw.net/jtv_user_pictures/a7f1c81b-6f00-41fc-8da9-18aabf169e75-profile_image-70x70.png",
-                "Lorem Ipsum","@LoremIpsum #5467"));
-        searchedUserList.add(new SearchedUser("3", "https://static-cdn.jtvnw.net/jtv_user_pictures/a7f1c81b-6f00-41fc-8da9-18aabf169e75-profile_image-70x70.png",
-                "Lorem Ipsum","#2345"));
+        searchedUserList.add(new SearchedUser("1", "https://static-cdn.jtvnw.net/jtv_user_pictures/a7f1c81b-6f00-41fc-8da9-18aabf169e75-profile_image-70x70.png"
+                ,"LoremIpsum"));
+        searchedUserList.add(new SearchedUser("2", "https://static-cdn.jtvnw.net/jtv_user_pictures/a7f1c81b-6f00-41fc-8da9-18aabf169e75-profile_image-70x70.png"
+                ,"LoremIpsum"));
+        searchedUserList.add(new SearchedUser("3", "https://static-cdn.jtvnw.net/jtv_user_pictures/a7f1c81b-6f00-41fc-8da9-18aabf169e75-profile_image-70x70.png"
+                ,"LoremIpsum"));
 
         adapterSearch = new AdapterSearch(searchedUserList);
 

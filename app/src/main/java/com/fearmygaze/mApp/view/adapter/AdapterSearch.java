@@ -38,7 +38,6 @@ public class AdapterSearch extends RecyclerView.Adapter<AdapterSearch.MyViewHold
         String id = searchedUserList.get(position).getId();
         String image = searchedUserList.get(position).getImage();
         String username = searchedUserList.get(position).getUsername();
-        String name = searchedUserList.get(position).getName();
 
         Glide.with(holder.itemView.getRootView())
                 .load(image)
@@ -48,7 +47,6 @@ public class AdapterSearch extends RecyclerView.Adapter<AdapterSearch.MyViewHold
                 .into(holder.image);
 
         holder.username.setText(username);
-        holder.name.setText(name);
 
         holder.root.setOnClickListener(view -> {
             Toast.makeText(view.getContext(), "Clicked" + username, Toast.LENGTH_SHORT).show();
@@ -63,7 +61,7 @@ public class AdapterSearch extends RecyclerView.Adapter<AdapterSearch.MyViewHold
     protected static class MyViewHolder extends RecyclerView.ViewHolder{
         FrameLayout root;
         ShapeableImageView image;
-        MaterialTextView name, username;
+        MaterialTextView username;
 
 
         public MyViewHolder(@NonNull View itemView) {
@@ -71,7 +69,6 @@ public class AdapterSearch extends RecyclerView.Adapter<AdapterSearch.MyViewHold
 
             root = itemView.findViewById(R.id.adapterSearchRoot);
             image = itemView.findViewById(R.id.adapterSearchImage);
-            name = itemView.findViewById(R.id.adapterSearchName);
             username = itemView.findViewById(R.id.adapterSearchUsername);
         }
     }

@@ -1,11 +1,11 @@
 package com.fearmygaze.mApp.model;
 
-public class SearchedUser {
+public class Friend {
     private final String id;
     private final String image;
     private final String username;
 
-    public SearchedUser(String id, String image, String username) {
+    public Friend(String id, String image, String username) {
         this.id = id;
         this.image = image;
         this.username = username;

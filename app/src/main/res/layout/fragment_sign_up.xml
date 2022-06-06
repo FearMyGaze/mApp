@@ -87,32 +87,6 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- TODO: Add datePicker -->
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/signUpNameError"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:hint="@string/signUpName"
-                    app:endIconMode="clear_text"
-                    app:boxCornerRadiusTopStart="13dp"
-                    app:boxCornerRadiusTopEnd="13dp"
-                    app:boxCornerRadiusBottomStart="13dp"
-                    app:boxCornerRadiusBottomEnd="13dp"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/signUpUsernameError">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/signUpName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textPersonName|textAutoComplete"/>
-
-                </com.google.android.material.textfield.TextInputLayout>
-
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/signUpEmailAddressError"
                     android:layout_width="match_parent"
@@ -127,7 +101,7 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/signUpNameError">
+                    app:layout_constraintTop_toBottomOf="@id/signUpUsernameError">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/signUpEmailAddress"
@@ -185,13 +159,40 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/signUpBirthdayError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:hint="@string/signUpDate"
+                    app:endIconDrawable="@drawable/ic_calendar_24"
+                    app:endIconMode="custom"
+                    app:boxCornerRadiusTopStart="13dp"
+                    app:boxCornerRadiusTopEnd="13dp"
+                    app:boxCornerRadiusBottomStart="13dp"
+                    app:boxCornerRadiusBottomEnd="13dp"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/signUpConfirmPasswordError">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/signUpBirthday"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="date"
+                        android:enabled="false"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
                 <CheckBox
                     android:id="@+id/signUpAgreeToTerms"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/signUpConfirmPasswordError"/>
+                    app:layout_constraintTop_toBottomOf="@+id/signUpBirthdayError"/>
 
                 <TextView
                     android:id="@+id/signUpTerms"

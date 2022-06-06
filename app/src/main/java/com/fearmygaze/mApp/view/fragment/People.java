@@ -13,7 +13,7 @@ import com.fearmygaze.mApp.view.adapter.TabAdapterFriend;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
-public class Friends extends Fragment {
+public class People extends Fragment {
 
     View view;
 
@@ -23,7 +23,7 @@ public class Friends extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_friends, container, false);
+        view = inflater.inflate(R.layout.fragment_people, container, false);
 
         tabLayout = view.findViewById(R.id.friendsTabLayout);
         pager2 = view.findViewById(R.id.friendsViewPager2);

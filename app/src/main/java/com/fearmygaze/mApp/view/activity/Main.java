@@ -1,11 +1,10 @@
 package com.fearmygaze.mApp.view.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
 import android.view.View;
-import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,8 +21,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.fearmygaze.mApp.R;
-import com.fearmygaze.mApp.view.fragment.Friends;
-import com.fearmygaze.mApp.view.fragment.Home;
+import com.fearmygaze.mApp.view.fragment.People;
+import com.fearmygaze.mApp.view.fragment.Chat;
 import com.fearmygaze.mApp.view.fragment.Search;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -31,7 +30,7 @@ import com.google.android.material.navigation.NavigationView;
 
 public class Main extends AppCompatActivity {
 
-    public Fragment friends, home, search;
+    public Fragment friends, chat, search;
 
     DrawerLayout drawerLayout;
 
@@ -40,6 +39,8 @@ public class Main extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
 
     NavigationView navigationView;
+
+    View header;
 
     boolean notifications = true;
 
@@ -54,10 +55,83 @@ public class Main extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.mainBottomNavigation);
         navigationView = findViewById(R.id.mainNavigation);
 
-       // setSupportActionBar(toolbar); //If i use this then the button is not showing
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
 
-        //TODO: Clear up the main (just create a method with the setting up of the toolbar)
+        header = navigationView.getHeaderView(0);
 
+        navigationView.setNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()){
+                case R.id.navigationMenuItemProfile:
+                    startActivity(new Intent(Main.this, Profile.class));
+                    return true;
+                case R.id.navigationMenuItemNotifications:
+                    startActivity(new Intent(Main.this, Notifications.class));
+                    return true;
+                case R.id.navigationMenuItemSettings:
+                    startActivity(new Intent(Main.this, Settings.class));
+                    return true;
+                case R.id.navigationMenuItemTerms:
+                    Toast.makeText(this, "This will open a dialog", Toast.LENGTH_SHORT).show();
+                    return true;
+                case R.id.navigationMenuItemSignOut:
+                    Toast.makeText(this, "This will sign out the user", Toast.LENGTH_SHORT).show();
+                    return true;
+                default:
+                    return false;
+            }
+        });
+
+        initializeToolbar(toolbar);
+
+        /*
+        * BottomNavigation
+        * */
+
+        friends = new People();
+        chat = new Chat();
+        search = new Search();
+
+        replaceFragment(chat);
+        bottomNavigationView.setSelectedItemId(R.id.mainNavigationItemChoice1);
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()){
+                case R.id.mainNavigationItemChoice1:
+                    replaceFragment(chat);
+                    return true;
+                case R.id.mainNavigationItemChoice2:
+                    replaceFragment(friends);
+                    return true;
+                case R.id.mainNavigationItemChoice3:
+                    replaceFragment(search);
+                    return true;
+                default:
+                    return false;
+            }
+        });
+    }
+    
+    private void initializeToolbar(MaterialToolbar toolbar){
+        /*This add the icon of the user*/
+        Glide.with(this)
+                .asDrawable()
+                .circleCrop()
+                .placeholder(R.drawable.ic_person_24)
+                .load("https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png")
+                .into(new CustomTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        toolbar.setNavigationIcon(resource);
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+
+                    }
+                });
+        /* This changes the icon when you click it */
         toolbar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.mainToolbarItemNotifications){
                 if (notifications){
@@ -71,64 +145,7 @@ public class Main extends AppCompatActivity {
             return true;
         });
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout,toolbar,R.string.navigation_drawer_open , R.string.navigation_drawer_close);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
-
-        View header = navigationView.getHeaderView(0);
-
-        header.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(Main.this, "Ahh niko ahh", Toast.LENGTH_SHORT).show();
-//                navigationView.getMenu().clear();
-//                navigationView.inflateMenu(R.menu.main_navigation);
-
-            }
-        });
-
-        Glide.with(this)
-                .asDrawable()
-                .circleCrop()
-                .load("https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png")
-                .into(new CustomTarget<Drawable>() {
-                    @Override
-                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                        toolbar.setNavigationIcon(resource);
-                    }
-
-                    @Override
-                    public void onLoadCleared(@Nullable Drawable placeholder) {
-
-                    }
-                });
-
-        /*
-        * BottomNavigation
-        * */
-
-        friends = new Friends();
-        home = new Home();
-        search = new Search();
-
-        replaceFragment(home);
-        bottomNavigationView.setSelectedItemId(R.id.mainNavigationItemHome);
-
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            switch (item.getItemId()){
-                case R.id.mainNavigationItemFriends:
-                    replaceFragment(friends);
-                    return true;
-                case R.id.mainNavigationItemHome:
-                    replaceFragment(home);
-                    return true;
-                case R.id.mainNavigationItemSearch:
-                    replaceFragment(search);
-                    return true;
-                default:
-                    return false;
-            }
-        });
+        
     }
 
     @Override
@@ -148,5 +165,6 @@ public class Main extends AppCompatActivity {
         fragmentTransaction.replace(R.id.mainFrame, fragment);
         fragmentTransaction.commit();
     }
+
 
 }

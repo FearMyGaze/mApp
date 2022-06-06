@@ -1,27 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/mainDrawerGroup1"
+        android:checkableBehavior="none">
+
         <item
-            android:id="@+id/nav_message"
-            android:title="Message" />
+            android:id="@+id/navigationMenuItemProfile"
+            android:title="@string/navigationDrawerMenuItemProfile"
+            android:icon="@drawable/ic_person_24"
+            android:contentDescription="@string/navigationDrawerMenuItemProfile"/>
+
         <item
-            android:id="@+id/nav_chat"
-            android:title="Chat" />
+            android:id="@+id/navigationMenuItemNotifications"
+            android:title="@string/navigationDrawerMenuItemNotifications"
+            android:icon="@drawable/ic_notifications_active_24"
+            android:contentDescription="@string/navigationDrawerMenuItemNotifications"/>
+
         <item
-            android:id="@+id/nav_profile"
-            android:title="Profile" />
+            android:id="@+id/navigationMenuItemSettings"
+            android:title="@string/navigationDrawerMenuItemSettings"
+            android:icon="@drawable/ic_settings_24"
+            android:contentDescription="@string/navigationDrawerMenuItemSettings"/>
+
     </group>
 
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/mainDrawerGroup2"
+        android:checkableBehavior="none">
+
         <item
-            android:id="@+id/nav_share"
-            android:title="Share" />
+            android:id="@+id/navigationMenuItemFriendRequests"
+            android:title="@string/navigationDrawerMenuItemFriendRequests"
+            android:icon="@drawable/ic_person_add_24"
+            android:contentDescription="@string/navigationDrawerMenuItemFriendRequests"
+            app:actionViewClass="android.widget.TextView"/>
+
         <item
-            android:id="@+id/nav_send"
-            android:title="Send" />
+            android:id="@+id/navigationMenuItemMessageRequests"
+            android:title="@string/navigationDrawerMenuItemMessageRequests"
+            android:icon="@drawable/ic_email_24"
+            android:contentDescription="@string/navigationDrawerMenuItemMessageRequests"
+            app:actionViewClass="android.widget.TextView"/>
+
+    </group>
+
+    <group
+        android:id="@+id/mainDrawerGroup3"
+        android:checkableBehavior="none">
+
+        <item
+            android:id="@+id/navigationMenuItemTerms"
+            android:title="@string/navigationDrawerMenuItemTerms"
+            android:contentDescription="@string/navigationDrawerMenuItemTerms"/>
+
+        <item
+            android:id="@+id/navigationMenuItemSignOut"
+            android:title="@string/navigationDrawerMenuItemSignOut"
+            android:contentDescription="@string/navigationDrawerMenuItemSignOut"/>
+
     </group>
 
 

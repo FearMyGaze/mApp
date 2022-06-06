@@ -5,8 +5,8 @@
     <!-- Activities / fragments name -->
     <string name="fragmentSignIn">Sign In</string>
     <string name="fragmentSignUp">Sign Up</string>
-    <string name="fragmentFriends">Friends</string>
-    <string name="fragmentHome">Home</string>
+    <string name="fragmentPeople">People</string>
+    <string name="fragmentChat">Chat</string>
     <string name="fragmentSearch">Search</string>
 
     <!-- Main Activity -->
@@ -25,23 +25,34 @@
     <string name="signUpAddImage">Add image</string>
     <string name="signUpUserName">Username</string>
     <string name="signUpEmailAddress">Email</string>
-    <string name="signUpName">Name</string>
     <string name="signUpPassword">Password</string>
     <string name="signUpConfirmPassword">Confirm Password</string>
+    <string name="signUpDate">Birthday</string>
     <string name="signUpTerms">Terms</string>
     <string name="signUpButton">Sign Up</string>
     <string name="signUpHaveAccount">Sign In</string>
     <string name="signUpEmailVerification">Email verification send at: </string>
 
-    <!-- Home fragment -->
+    <!-- Chat fragment -->
+    <string name="adapterChatFriendsNotFound">Friends not found</string>
+    <string name="adapterChatConversationNotFound">Conversations not found</string>
 
 
-    <!-- HomeMessages fragments -->
-    <string name="homeMessagesConversationNotFound">Conversations not Found</string>
 
     <!-- Search fragment -->
     <string name="searchUsersNotFound">No users with the criteria you gave found…!</string>
     <string name="searchSearchViewHint">Start conversation with…</string>
+
+    <!-- Adapter Conversation -->
+    <string name="adapterConversationDiv">·</string>
+
+
+
+
+
+
+
+
 
     <!-- Tabs -->
     <string name="friendsTab0">Friends</string>
@@ -50,15 +61,27 @@
     <string name="homeTab1">Message Requests</string>
 
     <!-- Main Toolbar (Menu) -->
+    <string name="mainToolbarItemSearch">Search</string>
     <string name="mainToolbarItemNotifications">Notifications</string>
 
+    <!-- Navigation Drawer Menu -->
+    <string name="navigationDrawerMenuItemProfile">Profile</string>
+    <string name="navigationDrawerMenuItemFriendRequests">Friend Requests</string>
+    <string name="navigationDrawerMenuItemMessageRequests">Message Requests</string>
+    <string name="navigationDrawerMenuItemNotifications">Notifications</string>
+    <string name="navigationDrawerMenuItemSettings">Settings</string>
+    <string name="navigationDrawerMenuItemTerms">Terms</string>
+    <string name="navigationDrawerMenuItemSignOut">Sign Out</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 
-    <!-- Adapter Conversation -->
-    <string name="adapterConversationDiv" translatable="false">·</string>
-
+    <!-- BottomNavigationView -->
+    <string name="mainBottomNavigationViewChoice1">Chats</string>
+    <string name="mainBottomNavigationViewChoice2">People</string>
+    <string name="mainBottomNavigationViewChoice3">Search</string>
 
     <!-- RegEx -->
-    <string name="regExPasswordError">* Λιγότεροο 8 χαρακτήρες \n* 1 μικρό χαρακτήρα \n* 1 κεφαλαίο χαρακτήρα \n* 1 αριθμό \n* 1 ειδικό χαρακτήρα</string>
+    <string name="regExPasswordError">* Bigger than 8 characters \n* 1 Uppercase character \n* 1 number \n* 1 special character</string>
 
     <!-- TextHandler-->
     <string name="textHandlerEmpty">Fill the empty cell</string>
@@ -76,6 +99,4 @@
         <item>https://localhost/mApp/userDelete.php</item>
     </string-array>
 
-    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
-    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
 </resources>

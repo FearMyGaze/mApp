@@ -8,7 +8,10 @@ import com.fearmygaze.mApp.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 public class TextHandler implements TextWatcher {
 
@@ -37,6 +40,38 @@ public class TextHandler implements TextWatcher {
         return true;
     }
 
+    public static void isAdultOr(TextInputEditText textInputEditText, TextInputLayout textInputLayout, Calendar age, Context context){
+        textInputLayout.setErrorIconDrawable(null);
+        if (Objects.requireNonNull(textInputEditText.getText()).toString().isEmpty()){
+            textInputLayout.setError(context.getString(R.string.textHandlerEmpty));
+            textInputLayout.setErrorEnabled(true);
+        }else{
+            long years = getDateDiff(new Date(age.getTimeInMillis()), new Date(Calendar.getInstance().getTimeInMillis()), TimeUnit.DAYS);
+            if (years < 18){
+                textInputLayout.setError("Underage");
+                textInputLayout.setErrorEnabled(true);
+            }
+        }
+    }
+
+    /*
+    * if (signUpBirthday.getText().toString().isEmpty()){
+                    signUpBirthdayError.setErrorIconDrawable(null);
+                    signUpBirthdayError.setError("ASD");
+                    signUpBirthdayError.setErrorEnabled(true);
+                }else{
+                    long years = getDateDiff(new Date(calendar.getTimeInMillis()),new Date(Calendar.getInstance().getTimeInMillis()),TimeUnit.DAYS);
+                    if (years >= 18){
+                        showToast("Yeet",1);
+                    }
+                }
+    }
+    *
+    * */
+     public static long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
+        long diffInMillis = date2.getTime() - date1.getTime();
+        return timeUnit.convert(diffInMillis,TimeUnit.MILLISECONDS) / 368;
+     }
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
