@@ -1,2 +1,2 @@
 # mApp
- An invitation only real time messaging app
+An real time messaging app

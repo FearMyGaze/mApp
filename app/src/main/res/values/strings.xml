@@ -27,8 +27,8 @@
     <string name="signUpEmailAddress">Email</string>
     <string name="signUpPassword">Password</string>
     <string name="signUpConfirmPassword">Confirm Password</string>
-    <string name="signUpDate">Birthday</string>
     <string name="signUpTerms">Terms</string>
+    <string name="signUpAgreeToAdultAge">I am 18+ years old</string>
     <string name="signUpButton">Sign Up</string>
     <string name="signUpHaveAccount">Sign In</string>
     <string name="signUpEmailVerification">Email verification send at: </string>

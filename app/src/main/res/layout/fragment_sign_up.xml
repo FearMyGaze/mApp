@@ -159,40 +159,13 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/signUpBirthdayError"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:hint="@string/signUpDate"
-                    app:endIconDrawable="@drawable/ic_calendar_24"
-                    app:endIconMode="custom"
-                    app:boxCornerRadiusTopStart="13dp"
-                    app:boxCornerRadiusTopEnd="13dp"
-                    app:boxCornerRadiusBottomStart="13dp"
-                    app:boxCornerRadiusBottomEnd="13dp"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/signUpConfirmPasswordError">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/signUpBirthday"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="date"
-                        android:enabled="false"/>
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-
                 <CheckBox
                     android:id="@+id/signUpAgreeToTerms"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/signUpBirthdayError"/>
+                    app:layout_constraintTop_toBottomOf="@+id/signUpConfirmPasswordError"/>
 
                 <TextView
                     android:id="@+id/signUpTerms"
@@ -207,6 +180,25 @@
                     app:layout_constraintTop_toTopOf="@+id/signUpAgreeToTerms"
                     app:layout_constraintBottom_toBottomOf="@+id/signUpAgreeToTerms"/>
 
+                <CheckBox
+                    android:id="@+id/signUpAgreeToAdultAge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/signUpAgreeToTerms"/>
+
+                <TextView
+                    android:id="@+id/signUpAdultAge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/signUpAgreeToAdultAge"
+                    android:textStyle="bold|italic"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="12sp"
+                    android:background="?attr/selectableItemBackground"
+                    app:layout_constraintStart_toEndOf="@+id/signUpAgreeToAdultAge"
+                    app:layout_constraintTop_toTopOf="@id/signUpAgreeToAdultAge"
+                    app:layout_constraintBottom_toBottomOf="@id/signUpAgreeToAdultAge"/>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/signUpButton"
@@ -221,7 +213,7 @@
                     style="@style/Widget.MaterialComponents.Button"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/signUpAgreeToTerms"/>
+                    app:layout_constraintTop_toBottomOf="@id/signUpAgreeToAdultAge"/>
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

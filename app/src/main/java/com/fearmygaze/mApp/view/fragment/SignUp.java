@@ -24,17 +24,12 @@ import com.fearmygaze.mApp.util.RegEx;
 import com.fearmygaze.mApp.util.TextHandler;
 import com.fearmygaze.mApp.view.activity.Starting;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.datepicker.CalendarConstraints;
-import com.google.android.material.datepicker.DateValidatorPointBackward;
-import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.util.Calendar;
 import java.util.Objects;
 
 public class SignUp extends Fragment {
@@ -42,11 +37,14 @@ public class SignUp extends Fragment {
     ShapeableImageView signUpImage;
     TextView signUpAddImage;
 
-    TextInputEditText signUpUsername, signUpEmail, signUpPassword, signUpConfirmPassword, signUpBirthday;
-    TextInputLayout signUpUsernameError, signUpEmailError, signUpPasswordError, signUpConfirmPasswordError, signUpBirthdayError;
+    TextInputEditText signUpUsername, signUpEmail, signUpPassword, signUpConfirmPassword;
+    TextInputLayout signUpUsernameError, signUpEmailError, signUpPasswordError, signUpConfirmPasswordError;
 
     CheckBox signUpAgreeToTerms;
     TextView signUpTerms;
+
+    CheckBox signUpAgreeToAdultAge;
+    TextView signUpAdultAge;
 
     MaterialButton signUpButton;
 
@@ -54,19 +52,8 @@ public class SignUp extends Fragment {
 
     String stringConvertedImage;
 
-    Calendar calendar;
-
-    CalendarConstraints.Builder calendarConstraints;
-    MaterialDatePicker.Builder<Long> materialDateBuilder;
-    MaterialDatePicker<Long> materialDatePicker;
-
     View view;
 
-
-    /*
-    * TODO: Fix error when changing Fragment i cant add picture or control everything else
-    *  FIX: Make the User to not choose the image from here and ask them later just add gravatar
-    * */
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -87,11 +74,11 @@ public class SignUp extends Fragment {
         signUpConfirmPassword = view.findViewById(R.id.signUpConfirmPassword);
         signUpConfirmPasswordError = view.findViewById(R.id.signUpConfirmPasswordError);
 
-        signUpBirthday = view.findViewById(R.id.signUpBirthday);
-        signUpBirthdayError = view.findViewById(R.id.signUpBirthdayError);
-
         signUpAgreeToTerms = view.findViewById(R.id.signUpAgreeToTerms);
         signUpTerms = view.findViewById(R.id.signUpTerms);
+
+        signUpAgreeToAdultAge = view.findViewById(R.id.signUpAgreeToAdultAge);
+        signUpAdultAge = view.findViewById(R.id.signUpAdultAge);
 
         signUpButton = view.findViewById(R.id.signUpButton);
 
@@ -99,13 +86,22 @@ public class SignUp extends Fragment {
 
         stateOfCells(false);
 
-        signUpTerms.setOnClickListener(view1 -> openTermsDialog());
+        signUpTerms.setOnClickListener(v -> openTermsDialog());
 
-        signUpToSignIn.setOnClickListener(view1 -> ((Starting) requireActivity()).replaceFragment(((Starting) requireActivity()).signIn));
+        signUpAdultAge.setOnClickListener(v -> openAdultAgeDialog());
 
-        signUpButton.setOnClickListener(view1 -> checkForErrors());
+        signUpToSignIn.setOnClickListener(v -> ((Starting) requireActivity()).replaceFragment(((Starting) requireActivity()).reInitiateFragmentSignIn()));
 
-        signUpAgreeToTerms.setOnCheckedChangeListener((compoundButton, b) -> signUpButton.setEnabled(b));
+        signUpButton.setOnClickListener(v -> checkForErrors());
+
+        signUpAgreeToTerms.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            signUpAgreeToAdultAge.setEnabled(isChecked);
+            if (!isChecked){
+                signUpAgreeToAdultAge.setChecked(false);
+            }
+        });
+
+        signUpAgreeToAdultAge.setOnCheckedChangeListener((buttonView, isChecked) -> signUpButton.setEnabled(isChecked && signUpAgreeToTerms.isChecked()));
 
         /*
          * The moment the TextInputEditText is filled with a text after an error occurred the error
@@ -116,40 +112,21 @@ public class SignUp extends Fragment {
         signUpPassword.addTextChangedListener(new TextHandler(signUpPasswordError));
         signUpConfirmPassword.addTextChangedListener(new TextHandler(signUpConfirmPasswordError));
 
-        initializeDatePicker();
-
-        signUpImage.setOnClickListener(view1 -> {
+        signUpImage.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             pickImage.launch(intent);
         });
 
-        signUpBirthdayError.setEndIconOnClickListener(v -> materialDatePicker.show(requireActivity().getSupportFragmentManager(),"tag"));
-
-        materialDatePicker.addOnPositiveButtonClickListener(selection -> {
-            calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(selection);
-            String currentDateString = DateFormat.getDateInstance(DateFormat.SHORT).format(calendar.getTime());
-            signUpBirthday.setText(currentDateString);
-            signUpBirthdayError.setErrorEnabled(false);
-        });
-
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                clearCells();
-                ((Starting) requireActivity()).replaceFragment(((Starting) requireActivity()).signIn);
+                ((Starting) requireActivity()).replaceFragment(((Starting) requireActivity()).reInitiateFragmentSignIn());
             }
         };
 
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),callback);
         return view;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        signUpAgreeToTerms.setChecked(false);
     }
 
     private final ActivityResultLauncher<Intent> pickImage = registerForActivityResult(
@@ -176,36 +153,24 @@ public class SignUp extends Fragment {
         }
     );
 
-    private void stateOfCells(Boolean state){ //TODO: Fix
+    private void stateOfCells(Boolean state){
         signUpUsername.setEnabled(state);
         signUpEmail.setEnabled(state);
         signUpPassword.setEnabled(state);
         signUpConfirmPassword.setEnabled(state);
         signUpAgreeToTerms.setEnabled(state);
         signUpTerms.setEnabled(state);
+        signUpAgreeToAdultAge.setEnabled(state);
+        signUpAdultAge.setEnabled(state);
     }
 
-    private void clearCells(){
-        signUpUsername.setText("");
-        signUpEmail.setText("");
-        signUpPassword.setText("");
-        signUpConfirmPassword.setText("");
-        signUpBirthday.setText("");
-        stringConvertedImage = null;
-    }
-
-    private void initializeDatePicker(){
-        calendarConstraints = new CalendarConstraints.Builder();
-        calendarConstraints.setValidator(DateValidatorPointBackward.now());
-        materialDateBuilder = MaterialDatePicker.Builder.datePicker();
-        materialDateBuilder.setCalendarConstraints(calendarConstraints.build());
-        materialDateBuilder.setTitleText("Ημερομηνία Γέννησης");// TODO: Fix it
-        materialDateBuilder.setTheme(R.style.DatePickerTheme);
-        materialDatePicker = materialDateBuilder.build();
-    }
 
     private void openTermsDialog(){
         showToast("Open Dialog",0);
+    }
+
+    private void openAdultAgeDialog(){
+        showToast("open Dialog",1);
     }
 
     private void checkForErrors(){
@@ -213,15 +178,12 @@ public class SignUp extends Fragment {
         TextHandler.isTextInputEmpty(signUpEmail, signUpEmailError,requireActivity());
         TextHandler.isTextInputEmpty(signUpPassword,signUpPasswordError,requireActivity());
         TextHandler.isTextInputEmpty(signUpConfirmPassword,signUpConfirmPasswordError,requireActivity());
-        TextHandler.isAdultOr(signUpBirthday, signUpBirthdayError, calendar,requireActivity());
 
-        if (!signUpBirthdayError.isErrorEnabled()) {
-            if (!signUpUsernameError.isErrorEnabled() || !signUpEmailError.isErrorEnabled() || !signUpPasswordError.isErrorEnabled()
-                    || !signUpConfirmPasswordError.isErrorEnabled() || !stringConvertedImage.isEmpty()) {
-                if (TextHandler.IsTextInputsEqual(signUpPassword, signUpConfirmPassword, signUpPasswordError, requireActivity())) {
-                    if (RegEx.isPasswordValid(Objects.requireNonNull(signUpPassword.getText()).toString(), signUpPasswordError, getContext())){
-                        showToast("True",0); //TODO: Create user
-                    }
+        if (!signUpUsernameError.isErrorEnabled() || !signUpEmailError.isErrorEnabled() || !signUpPasswordError.isErrorEnabled()
+                || !signUpConfirmPasswordError.isErrorEnabled() || !stringConvertedImage.isEmpty()) {
+            if (TextHandler.IsTextInputsEqual(signUpPassword, signUpConfirmPassword, signUpPasswordError, requireActivity())) {
+                if (RegEx.isPasswordValid(Objects.requireNonNull(signUpPassword.getText()).toString(), signUpPasswordError, getContext())){
+                    showToast("True",0); //TODO: Create user
                 }
             }
         }

@@ -32,4 +32,12 @@ public class Starting extends AppCompatActivity {
         fragmentTransaction.replace(R.id.startingFrame, fragment);
         fragmentTransaction.commit();
     }
+
+    public Fragment reInitiateFragmentSignIn(){
+        return signIn = new SignIn();
+    }
+
+    public Fragment reInitiateFragmentSignUp(){
+        return signUp = new SignUp();
+    }
 }

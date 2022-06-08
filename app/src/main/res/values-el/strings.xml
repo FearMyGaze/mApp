@@ -28,8 +28,8 @@
     <string name="signUpEmailAddress">Email</string>
     <string name="signUpPassword">Κωδικός</string>
     <string name="signUpConfirmPassword">Επιβεβαίωση κωδικόυ</string>
-    <string name="signUpDate">Ημ. Γέννησης</string>
     <string name="signUpTerms">Όροι χρήσης</string>
+    <string name="signUpAgreeToAdultAge">Είμαι 18+ ετών</string>
     <string name="signUpButton">Εγραφή</string>
     <string name="signUpHaveAccount">Σύνδεση</string>
     <string name="signUpEmailVerification">Απεστάλη email επιβεβαίωσης λογαριασμού στο: </string>
