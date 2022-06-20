@@ -3,7 +3,6 @@ package com.fearmygaze.mApp.view.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -13,6 +12,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.fearmygaze.mApp.R;
 import com.fearmygaze.mApp.model.SearchedUser;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
 
@@ -48,8 +48,8 @@ public class AdapterSearch extends RecyclerView.Adapter<AdapterSearch.MyViewHold
 
         holder.username.setText(username);
 
-        holder.root.setOnClickListener(view -> {
-            Toast.makeText(view.getContext(), "Clicked" + username, Toast.LENGTH_SHORT).show();
+        holder.button.setOnClickListener(view -> {//TODO: ADD Friend func here
+            Toast.makeText(view.getContext(), "Clicked ->" + username, Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -59,17 +59,17 @@ public class AdapterSearch extends RecyclerView.Adapter<AdapterSearch.MyViewHold
     }
 
     protected static class MyViewHolder extends RecyclerView.ViewHolder{
-        FrameLayout root;
         ShapeableImageView image;
         MaterialTextView username;
+        MaterialButton button;
 
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            root = itemView.findViewById(R.id.adapterSearchRoot);
             image = itemView.findViewById(R.id.adapterSearchImage);
             username = itemView.findViewById(R.id.adapterSearchUsername);
+            button = itemView.findViewById(R.id.adapterSearchButton);
         }
     }
 }

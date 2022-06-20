@@ -31,6 +31,7 @@
         app:layout_constraintTop_toBottomOf="@+id/signInWelcome"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+    <!-- TODO: Fix the TextViews not showing on dark mode -->
 
     <ScrollView
         android:id="@+id/signInForm"
@@ -52,6 +53,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
                 android:hint="@string/signInWithCredentials"
+                app:counterEnabled="true"
+                app:counterMaxLength="100"
                 app:endIconMode="clear_text"
                 app:boxCornerRadiusTopStart="13dp"
                 app:boxCornerRadiusTopEnd="13dp"
@@ -76,6 +79,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:hint="@string/signInPassword"
+                app:counterEnabled="true"
+                app:counterMaxLength="100"
                 app:endIconMode="password_toggle"
                 app:boxCornerRadiusTopStart="13dp"
                 app:boxCornerRadiusTopEnd="13dp"

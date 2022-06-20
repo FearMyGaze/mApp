@@ -49,6 +49,15 @@ public class Chat extends Fragment {
         friendList.add(new Friend("1","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png","Lorem Ipsum"));
         friendList.add(new Friend("1","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png","Lorem Lorem Ipsum"));
         friendList.add(new Friend("1","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png","Lorem Ipsum Ipsum"));
+        friendList.add(new Friend("1","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png","Lorem Ipsum Ipsum"));
+        friendList.add(new Friend("1","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png","Lorem Ipsum Ipsum"));
+        friendList.add(new Friend("1","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png","Lorem Ipsum Ipsum"));
+        friendList.add(new Friend("1","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png","Lorem Ipsum Ipsum"));
+        friendList.add(new Friend("1","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png","Lorem Ipsum Ipsum"));
+        friendList.add(new Friend("1","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png","Lorem Ipsum Ipsum"));
+        friendList.add(new Friend("1","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png","Lorem Ipsum Ipsum"));
+        friendList.add(new Friend("1","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png","Lorem Ipsum Ipsum"));
+        friendList.add(new Friend("1","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png","Lorem Ipsum Ipsum"));
 
         adapterFriend = new AdapterFriendMini(friendList, requireActivity());
 
@@ -61,6 +70,29 @@ public class Chat extends Fragment {
                 "Fl0m","is this a String ??","22:20"));
         conversationList.add(new Conversation("3","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png",
                 "AnneMunition","is this an int ??","22:20"));
+        conversationList.add(new Conversation("4","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png",
+                "AnneMunition","is this an int ??","22:20"));
+        conversationList.add(new Conversation("5","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png",
+                "AnneMunition","is this an int ??","22:20"));
+        conversationList.add(new Conversation("6","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png",
+                "AnneMunition","is this an int ??","22:20"));
+        conversationList.add(new Conversation("7","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png",
+                "AnneMunition","is this an int ??","22:20"));
+        conversationList.add(new Conversation("8","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png",
+                "AnneMunition","is this an int ??","22:20"));
+        conversationList.add(new Conversation("9","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png",
+                "AnneMunition","is this an int ??","22:20"));
+        conversationList.add(new Conversation("10","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png",
+                "AnneMunition","is this an int ??","22:20"));
+        conversationList.add(new Conversation("11","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png",
+                "AnneMunition","is this an int ??","22:20"));
+        conversationList.add(new Conversation("12","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png",
+                "AnneMunition","is this an int ??","22:20"));
+
+
+        if (conversationList.size() > 0){
+            conversationsNotFound.setVisibility(View.GONE);
+        }
 
         adapterConversation = new AdapterConversation(conversationList, requireActivity());
 

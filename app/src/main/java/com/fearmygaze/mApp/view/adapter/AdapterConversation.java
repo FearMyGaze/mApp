@@ -2,10 +2,13 @@ package com.fearmygaze.mApp.view.adapter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,6 +19,8 @@ import com.bumptech.glide.request.RequestOptions;
 import com.fearmygaze.mApp.R;
 import com.fearmygaze.mApp.model.Conversation;
 import com.fearmygaze.mApp.view.activity.ChatRoom;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
 
@@ -61,6 +66,25 @@ public class AdapterConversation extends RecyclerView.Adapter<AdapterConversatio
             view.getContext().startActivity(new Intent(activity, ChatRoom.class));
             activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             Toast.makeText(view.getContext(), conversations.get(position).getUsername(), Toast.LENGTH_SHORT).show();
+        });
+
+        holder.frameLayout.setOnLongClickListener(view -> {
+        /*
+            BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(view.getContext()); //TODO: ADD Theme
+            bottomSheetDialog.setContentView(R.layout.dialog_conversation);
+
+            MaterialButton option1 = bottomSheetDialog.findViewById(R.id.dialogConversationOption1);
+
+            option1.setOnClickListener(v -> {
+                Toast.makeText(v.getContext(), "eixame", Toast.LENGTH_SHORT).show();
+            });
+
+
+            bottomSheetDialog.show();
+
+        */
+            Toast.makeText(view.getContext(), "Add a dialog or bottomSheetDialog", Toast.LENGTH_SHORT).show();
+            return true;
         });
 
     }

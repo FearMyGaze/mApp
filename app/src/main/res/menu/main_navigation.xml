@@ -10,17 +10,16 @@
         app:showAsAction="ifRoom"/>
 
     <item
-        android:id="@+id/mainNavigationItemChoice2"
-        android:title="@string/mainBottomNavigationViewChoice2"
-        android:icon="@drawable/ic_people_24"
-        android:contentDescription="@string/mainBottomNavigationViewChoice2"
+        android:id="@+id/mainNavigationItemPlaceholder"
+        android:title=""
+        android:enabled="false"
         app:showAsAction="ifRoom"/>
 
-    <item
-        android:id="@+id/mainNavigationItemChoice3"
-        android:title="@string/mainBottomNavigationViewChoice3"
-        android:icon="@drawable/ic_search_24"
-        android:contentDescription="@string/mainBottomNavigationViewChoice3"
-        app:showAsAction="ifRoom"/>
+        <item
+            android:id="@+id/mainNavigationItemChoice2"
+            android:title="@string/mainBottomNavigationViewChoice2"
+            android:icon="@drawable/ic_people_24"
+            android:contentDescription="@string/mainBottomNavigationViewChoice2"
+            app:showAsAction="ifRoom"/>
 
 </menu>

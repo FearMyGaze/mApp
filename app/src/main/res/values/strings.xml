@@ -5,7 +5,7 @@
     <!-- Activities / fragments name -->
     <string name="fragmentSignIn">Sign In</string>
     <string name="fragmentSignUp">Sign Up</string>
-    <string name="fragmentPeople">People</string>
+    <string name="fragmentFriends">Friends</string>
     <string name="fragmentChat">Chat</string>
     <string name="fragmentSearch">Search</string>
 
@@ -33,52 +33,49 @@
     <string name="signUpHaveAccount">Sign In</string>
     <string name="signUpEmailVerification">Email verification send at: </string>
 
-    <!-- Chat fragment -->
-    <string name="adapterChatFriendsNotFound">Friends not found</string>
-    <string name="adapterChatConversationNotFound">Conversations not found</string>
-
-
-
-    <!-- Search fragment -->
-    <string name="searchUsersNotFound">No users with the criteria you gave found…!</string>
-    <string name="searchSearchViewHint">Start conversation with…</string>
-
-    <!-- Adapter Conversation -->
-    <string name="adapterConversationDiv">·</string>
-
-
-
-
-
-
-
-
-
-    <!-- Tabs -->
-    <string name="friendsTab0">Friends</string>
-    <string name="friendsTab1">Friend Requests</string>
-    <string name="homeTab0">Messages</string>
-    <string name="homeTab1">Message Requests</string>
-
     <!-- Main Toolbar (Menu) -->
     <string name="mainToolbarItemSearch">Search</string>
     <string name="mainToolbarItemNotifications">Notifications</string>
 
     <!-- Navigation Drawer Menu -->
     <string name="navigationDrawerMenuItemProfile">Profile</string>
-    <string name="navigationDrawerMenuItemFriendRequests">Friend Requests</string>
-    <string name="navigationDrawerMenuItemMessageRequests">Message Requests</string>
     <string name="navigationDrawerMenuItemNotifications">Notifications</string>
     <string name="navigationDrawerMenuItemSettings">Settings</string>
+    <string name="navigationDrawerMenuItemBug">Bug</string>
     <string name="navigationDrawerMenuItemTerms">Terms</string>
     <string name="navigationDrawerMenuItemSignOut">Sign Out</string>
-    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
-    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <!-- BottomNavigationView -->
     <string name="mainBottomNavigationViewChoice1">Chats</string>
-    <string name="mainBottomNavigationViewChoice2">People</string>
-    <string name="mainBottomNavigationViewChoice3">Search</string>
+    <string name="mainBottomNavigationViewChoice2">Friends</string>
+
+    <!-- FloatingActionButton -->
+    <string name="mainFloatingActionButton">Create chat</string>
+
+    <!-- Search sheet -->
+    <string name="searchUsersNotFound">No users with the criteria you gave found…!</string>
+    <string name="searchAddFriend">Add Friend</string>
+
+    <!-- Chat fragment -->
+    <string name="adapterChatFriendsNotFound">Friends not found</string>
+    <string name="adapterChatConversationNotFound">Conversations not found</string>
+
+    <!-- Tabs -->
+    <string name="friendsTab0">Friends</string>
+    <string name="friendsTab1">Friend Requests</string>
+
+    <!-- Dialog Bug -->
+    <string name="dialogConfirm">Confirm</string>
+    <string name="dialogHint">Update us for the bug you found</string>
+
+
+    <!-- Adapter Conversation -->
+    <string name="adapterConversationDiv">·</string>
+
+
+
 
     <!-- RegEx -->
     <string name="regExPasswordError">* Bigger than 8 characters \n* 1 Uppercase character \n* 1 number \n* 1 special character</string>
