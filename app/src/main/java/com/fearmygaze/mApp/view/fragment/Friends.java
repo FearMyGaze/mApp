@@ -35,7 +35,7 @@ public class Friends extends Fragment {
                     tab.setText(getResources().getText(R.string.friendsTab0));
                     break;
                 case 1:
-                    tab.setText(getResources().getText(R.string.friendsTab1));
+                    tab.setText(getResources().getText(R.string.friendsTab1)); //TODO: Add Number Badges
             }
         });
         mediator.attach();

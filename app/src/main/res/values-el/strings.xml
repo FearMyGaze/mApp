@@ -67,7 +67,9 @@
     <string name="friendsTab0">Φίλοι</string>
     <string name="friendsTab1">Αιτήματα φιλίας</string>
 
-    <!-- FriendList -->
+    <!-- Friend Requests -->
+    <string name="friendsRequestsAccept">Accept Request</string>
+    <string name="friendsRequestsDecline">Decline Request</string>
 
     <!-- Dialog Bug -->
     <string name="dialogConfirm">Επιβεβαίωση</string>

@@ -66,6 +66,10 @@
     <string name="friendsTab0">Friends</string>
     <string name="friendsTab1">Friend Requests</string>
 
+    <!-- Friend Requests -->
+    <string name="friendsRequestsAccept">Accept Request</string>
+    <string name="friendsRequestsDecline">Decline Request</string>
+
     <!-- Dialog Bug -->
     <string name="dialogConfirm">Confirm</string>
     <string name="dialogHint">Update us for the bug you found</string>

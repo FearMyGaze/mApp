@@ -8,7 +8,7 @@
     android:background="@drawable/conversation">
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/adapterSearchImage"
+        android:id="@+id/adapterFriendRequestImage"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:scaleType="centerCrop"
@@ -20,7 +20,7 @@
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/adapterSearchUsername"
+        android:id="@+id/adapterFriendRequestUsername"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/sampleUsername"
@@ -29,28 +29,33 @@
         android:layout_marginEnd="0dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="7dp"
-        app:layout_constraintStart_toEndOf="@+id/adapterSearchImage"
-        app:layout_constraintBottom_toBottomOf="@id/adapterSearchImage"/>
+        app:layout_constraintStart_toEndOf="@+id/adapterFriendRequestImage"
+        app:layout_constraintBottom_toBottomOf="@id/adapterFriendRequestImage"/>
 
     <ImageButton
-        android:id="@+id/adapterSearchStartConv"
+        android:id="@+id/adapterFriendRequestAccept"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginEnd="10dp"
         android:src="@drawable/ic_person_add_24"
+        app:tint="@android:color/holo_green_light"
         android:contentDescription="@string/searchAddFriend"
         android:background="@android:color/transparent"
         android:foreground="?attr/selectableItemBackgroundBorderless"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/adapterFriendRequestDecline"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <FrameLayout
-        android:id="@+id/adapterSearchRoot"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        app:layout_constraintStart_toStartOf="parent"
+    <ImageButton
+        android:id="@+id/adapterFriendRequestDecline"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/ic_person_remove_24"
+        app:tint="@android:color/holo_red_light"
+        android:contentDescription="@string/searchAddFriend"
+        android:background="@android:color/transparent"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
