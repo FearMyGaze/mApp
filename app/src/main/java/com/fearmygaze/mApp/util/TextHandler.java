@@ -8,10 +8,7 @@ import com.fearmygaze.mApp.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 public class TextHandler implements TextWatcher {
 

@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.fearmygaze.mApp.R;
 import com.fearmygaze.mApp.model.FriendRequest;
 import com.fearmygaze.mApp.view.adapter.AdapterFriendRequest;
-import com.fearmygaze.mApp.view.adapter.AdapterSearch;
 
 import java.util.ArrayList;
 import java.util.List;
