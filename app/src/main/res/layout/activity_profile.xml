@@ -1,8 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".view.activity.Profile">
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/profileHorizontalHalfScreen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/profileUserImage"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:scaleType="centerCrop"
+        android:src="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearance="@style/ShapeAppearance.App.CircleImageView" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/profileUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="33dp"
+        android:text="@string/sampleUsername"
+        android:textSize="22sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintEnd_toEndOf="@id/profileUserImage"
+        app:layout_constraintStart_toStartOf="@id/profileUserImage"
+        app:layout_constraintTop_toBottomOf="@id/profileUserImage" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/profileUserEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="33dp"
+        android:text="@string/sampleEmail"
+        android:textSize="22sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profileUsername"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/profileChangePassword"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/profileChangePassword"
+        android:textStyle="bold"
+        android:textAllCaps="false"
+        app:cornerRadius="13dp"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profileUserEmail"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/profileFAQ"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:text="@string/profileFAQ"
+        android:textSize="17sp"
+        android:textAlignment="center"
+        android:textStyle="bold|italic"
+        android:textAllCaps="false"
+        android:textColor="@color/primary"
+        android:background="?attr/selectableItemBackground"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

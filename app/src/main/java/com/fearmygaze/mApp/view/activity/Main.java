@@ -99,6 +99,8 @@ public class Main extends AppCompatActivity {
             switch (item.getItemId()){
                 case R.id.navigationMenuItemProfile:
                     startActivity(new Intent(Main.this, Profile.class));
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    drawerLayout.close();
                     return true;
                 case R.id.navigationMenuItemNotifications:
                     startActivity(new Intent(Main.this, Notifications.class));

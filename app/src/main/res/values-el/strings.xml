@@ -4,6 +4,9 @@
     <string name="app_name">mApp</string>
 
     <!-- Activities / fragments name -->
+    <string name="activityProfile">Προφίλ</string>
+    <string name="activityNotifications">Ειδοποιήσεις</string>
+    <string name="activitySettings">Ρυθμίσεις</string>
     <string name="fragmentSignIn">Σύνδεση</string>
     <string name="fragmentSignUp">Εγραφή</string>
     <string name="fragmentFriends">Φίλοι</string>
@@ -70,6 +73,10 @@
     <!-- Friend Requests -->
     <string name="friendsRequestsAccept">Accept Request</string>
     <string name="friendsRequestsDecline">Decline Request</string>
+
+    <!-- Profile Activity -->
+    <string name="profileChangePassword">Αλλαγή κωδικού</string>
+    <string name="profileFAQ">Δεν υποστηρίζουμε την αλλαγή email και όνοματος χρήστη \nΠατήστε εδώ για να δείτε το γιατί..!!</string>
 
     <!-- Dialog Bug -->
     <string name="dialogConfirm">Επιβεβαίωση</string>
