@@ -78,8 +78,9 @@
     <string name="profileFAQ">We don\'t support changing username or email \nPress here to see why..! </string>
 
     <!-- Dialog Bug -->
-    <string name="dialogConfirm">Confirm</string>
-    <string name="dialogHint">Update us for the bug you found</string>
+    <string name="dialogBugParagraph">If you found a bug or a problem with the app please write it bellow</string>
+    <string name="dialogBugHint">Update us for the bug you found</string>
+    <string name="dialogBugConfirm">Confirm</string>
 
 
     <!-- Adapter Conversation -->

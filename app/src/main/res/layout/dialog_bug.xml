@@ -6,21 +6,35 @@
     android:layout_height="wrap_content"
     android:padding="10dp">
 
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/dialogBugParagraph"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/dialogBugParagraph"
+        android:textSize="17sp"
+        android:textAllCaps="false"
+        android:textStyle="bold|italic"
+        android:textAlignment="center"
+        android:textColor="@color/primary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/dialogBugDescError"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="15dp"
         app:counterEnabled="true"
-        app:counterMaxLength="100"
+        app:counterMaxLength="250"
         app:boxCornerRadiusTopStart="13dp"
         app:boxCornerRadiusTopEnd="13dp"
         app:boxCornerRadiusBottomStart="13dp"
         app:boxCornerRadiusBottomEnd="13dp"
-        android:hint="@string/dialogHint"
+        android:hint="@string/dialogBugHint"
         app:endIconMode="clear_text"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/dialogBugParagraph">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/dialogBugDesc"
@@ -36,7 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="@string/dialogConfirm"
+        android:text="@string/dialogBugConfirm"
         app:cornerRadius="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
