@@ -20,7 +20,7 @@ public class Profile extends AppCompatActivity {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {// TODO: Add  the profile faq and add the change password dialog
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
