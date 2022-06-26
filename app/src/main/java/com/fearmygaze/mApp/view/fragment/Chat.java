@@ -34,7 +34,7 @@ public class Chat extends Fragment {
     AdapterConversation adapterConversation;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {// TODO: Start using threads for the images and start creating DB with room
         view = inflater.inflate(R.layout.fragment_chat, container, false);
 
         swipeRefreshLayout = view.findViewById(R.id.adapterChatRefresh);

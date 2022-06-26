@@ -75,13 +75,14 @@
     <string name="friendsRequestsDecline">Decline Request</string>
 
     <!-- Profile Activity -->
-    <string name="dialogBugParagraph">Αν έχετε πετύχει κάποιο σφάλμα ή πρόβλημα με την εφαρμογή παρακαλώ περιγράψετο παρακάτω</string>
     <string name="profileFAQ">Δεν υποστηρίζουμε την αλλαγή email και όνοματος χρήστη \nΠατήστε εδώ για να δείτε το γιατί..!!</string>
     <string name="profileChangePassword">Αλλαγή κωδικού</string>
 
     <!-- Dialog Bug -->
+    <string name="dialogBugParagraph">Αν έχετε πετύχει κάποιο σφάλμα ή πρόβλημα με την εφαρμογή παρακαλώ περιγράψετο παρακάτω</string>
+    <string name="dialogBugHint">Περιγραφή</string>
     <string name="dialogBugConfirm">Επιβεβαίωση</string>
-    <string name="dialogBugHint">Ενημέρωσε μας για το πρόβλημα οπου βρήκατε</string>
+    <string name="dialogBugError">Πάρα πολύ χαρακτήρες..!!</string>
 
     <!-- Adapter Conversation -->
     <string name="adapterConversationDiv">·</string>

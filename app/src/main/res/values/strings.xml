@@ -79,8 +79,9 @@
 
     <!-- Dialog Bug -->
     <string name="dialogBugParagraph">If you found a bug or a problem with the app please write it bellow</string>
-    <string name="dialogBugHint">Update us for the bug you found</string>
+    <string name="dialogBugHint">Description</string>
     <string name="dialogBugConfirm">Confirm</string>
+    <string name="dialogBugError">too many characters..!!</string>
 
 
     <!-- Adapter Conversation -->

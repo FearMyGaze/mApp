@@ -45,6 +45,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Main extends AppCompatActivity {
 
@@ -149,7 +150,7 @@ public class Main extends AppCompatActivity {
         });
     }
 
-    private void prepareForBugListing() { //TODO: We need to get some device and user identification
+    private void prepareForBugListing() { //TODO: Pass as an extra value the device model and the user data
         Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_bug);
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -159,13 +160,15 @@ public class Main extends AppCompatActivity {
         MaterialButton dialogBugButton = dialog.findViewById(R.id.dialogBugConfirm);
 
         dialogBugDesc.addTextChangedListener(new TextHandler(dialogBugDescError));
-
+                
         dialogBugButton.setOnClickListener(v -> {
-
-
-
-            dialog.dismiss();
-            drawerLayout.close();
+            if (Objects.requireNonNull(dialogBugDesc.getText()).toString().length() > 250){
+                dialogBugDescError.setError(getText(R.string.dialogBugError));
+            }else{
+                Toast.makeText(this, "Error posted... !", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+                drawerLayout.close();
+            }
         });
         dialog.show();
 
