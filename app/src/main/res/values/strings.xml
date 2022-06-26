@@ -15,6 +15,25 @@
     <!-- Main Activity -->
     <string name="mainSearchQuery">Search…</string>
 
+    <!-- Main Toolbar (Menu) -->
+    <string name="mainToolbarItemSearch">Search</string>
+    <string name="mainToolbarItemNotifications">Notifications</string>
+
+    <!-- Main BottomNavigationView (Menu) -->
+    <string name="mainBottomNavigationViewChoice1">Chats</string>
+    <string name="mainBottomNavigationViewChoice2">Friends</string>
+    <string name="mainFloatingActionButton">Create chat</string>
+
+    <!-- Main Navigation Drawer (Menu) -->
+    <string name="navigationDrawerMenuItemProfile">Profile</string>
+    <string name="navigationDrawerMenuItemNotifications">Notifications</string>
+    <string name="navigationDrawerMenuItemSettings">Settings</string>
+    <string name="navigationDrawerMenuItemBug">Bug</string>
+    <string name="navigationDrawerMenuItemTerms">Terms</string>
+    <string name="navigationDrawerMenuItemSignOut">Sign Out</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
     <!-- Sign In fragment -->
     <string name="signInWelcome">Welcome back</string>
     <string name="signInToContinue">Sign In to continue</string>
@@ -36,27 +55,6 @@
     <string name="signUpHaveAccount">Sign In</string>
     <string name="signUpEmailVerification">Email verification send at: </string>
 
-    <!-- Main Toolbar (Menu) -->
-    <string name="mainToolbarItemSearch">Search</string>
-    <string name="mainToolbarItemNotifications">Notifications</string>
-
-    <!-- Navigation Drawer Menu -->
-    <string name="navigationDrawerMenuItemProfile">Profile</string>
-    <string name="navigationDrawerMenuItemNotifications">Notifications</string>
-    <string name="navigationDrawerMenuItemSettings">Settings</string>
-    <string name="navigationDrawerMenuItemBug">Bug</string>
-    <string name="navigationDrawerMenuItemTerms">Terms</string>
-    <string name="navigationDrawerMenuItemSignOut">Sign Out</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-
-    <!-- BottomNavigationView -->
-    <string name="mainBottomNavigationViewChoice1">Chats</string>
-    <string name="mainBottomNavigationViewChoice2">Friends</string>
-
-    <!-- FloatingActionButton -->
-    <string name="mainFloatingActionButton">Create chat</string>
-
     <!-- Search sheet -->
     <string name="searchUsersNotFound">No users with the criteria you gave found…!</string>
     <string name="searchAddFriend">Add Friend</string>
@@ -64,6 +62,17 @@
     <!-- Chat fragment -->
     <string name="adapterChatFriendsNotFound">Friends not found</string>
     <string name="adapterChatConversationNotFound">Conversations not found</string>
+
+    <!-- Chat Adapter -->
+    <string name="adapterConversationDiv">·</string>
+
+    <!-- Chat Adapter Dialog -->
+    <string name="dialogConversationPinFalse">Pin Conversation</string>
+    <string name="dialogConversationPinTrue">Unpin Conversation</string>
+    <string name="dialogConversationDelete">Delete Conversation</string>
+    <string name="dialogConversationNotificationFalse">Notifications ON</string>
+    <string name="dialogConversationNotificationTrue">Notifications OFF</string>
+    <string name="dialogConversationReport">Report user</string>
 
     <!-- Tabs -->
     <string name="friendsTab0">Friends</string>
@@ -83,9 +92,11 @@
     <string name="dialogBugConfirm">Confirm</string>
     <string name="dialogBugError">too many characters..!!</string>
 
+    <!-- ChatRoom Toolbar (Menu) -->
+    <string name="chatRoomToolbarItemInfo">info</string>
 
-    <!-- Adapter Conversation -->
-    <string name="adapterConversationDiv">·</string>
+
+
 
 
 
