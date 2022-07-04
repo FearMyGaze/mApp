@@ -22,7 +22,6 @@
     <!-- Main BottomNavigationView (Menu) -->
     <string name="mainBottomNavigationViewChoice1">Chats</string>
     <string name="mainBottomNavigationViewChoice2">Friends</string>
-    <string name="mainFloatingActionButton">Create chat</string>
 
     <!-- Main Navigation Drawer (Menu) -->
     <string name="navigationDrawerMenuItemProfile">Profile</string>
@@ -73,6 +72,12 @@
     <string name="dialogConversationNotificationFalse">Notifications ON</string>
     <string name="dialogConversationNotificationTrue">Notifications OFF</string>
     <string name="dialogConversationReport">Report user</string>
+
+    <!-- ChatRoom Activity -->
+    <string name="chatRoomBottomBarChooseImage">Choose Image</string>
+    <string name="chatRoomBottomBarRecordSound">Record Sound</string>
+    <string name="chatRoomBottomBarHint">Message……</string>
+    <string name="chatRoomBottomBarSendMessage">Send Message</string>
 
     <!-- Tabs -->
     <string name="friendsTab0">Friends</string>

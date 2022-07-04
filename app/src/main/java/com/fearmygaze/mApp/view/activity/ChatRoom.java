@@ -1,17 +1,38 @@
 package com.fearmygaze.mApp.view.activity;
 
 import android.os.Bundle;
+import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.fearmygaze.mApp.R;
+import com.google.android.material.appbar.MaterialToolbar;
 
 public class ChatRoom extends AppCompatActivity {
+
+    MaterialToolbar toolbar;
+
+    RecyclerView recyclerView;
+
+    ImageButton imageButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_room);
+
+        toolbar = findViewById(R.id.chatRoomToolbar);
+        recyclerView = findViewById(R.id.chatRoomRecycler);
+        imageButton = findViewById(R.id.chatRoomSendMessage);
+
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+        toolbar.setTitle(getIntent().getStringExtra("username"));
+
+        imageButton.setOnClickListener(v -> {
+
+        });
+
     }
 
     @Override

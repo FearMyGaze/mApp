@@ -79,7 +79,6 @@ public class Main extends AppCompatActivity {
         toolbar = findViewById(R.id.mainToolbar);
         bottomNavigationView = findViewById(R.id.mainBottomNavigation);
         navigationView = findViewById(R.id.mainNavigation);
-        bottomNavigationView.setBackground(null);
 
         setSupportActionBar(toolbar);
 

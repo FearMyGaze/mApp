@@ -44,50 +44,15 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:paddingBottom="?attr/actionBarSize"/>
 
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:id="@+id/mainCoordinator"
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/mainBottomNavigation"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="?attr/actionBarSize"
+            app:menu="@menu/main_navigation"
+            style="@style/Widget.MaterialComponents.BottomNavigationView.PrimarySurface"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/mainFloatingActionButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_add_24"
-                android:contentDescription="@string/mainFloatingActionButton"
-                app:layout_anchor="@id/mainBottomAppBar"
-                app:backgroundTint="?attr/colorPrimary"
-                app:tint="@color/white"/>
-
-            <com.google.android.material.bottomappbar.BottomAppBar
-                android:id="@+id/mainBottomAppBar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                app:fabCradleMargin="10dp"
-                app:fabAlignmentMode="center"
-                app:fabCradleVerticalOffset="10dp"
-                app:fabCradleRoundedCornerRadius="50dp"
-                app:contentInsetStart="0dp"
-                app:contentInsetEnd="0dp"
-                style="@style/Widget.MaterialComponents.BottomAppBar.PrimarySurface">
-
-                <com.google.android.material.bottomnavigation.BottomNavigationView
-                    android:id="@+id/mainBottomNavigation"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:menu="@menu/main_navigation"
-                    android:background="@android:color/transparent"
-                    android:elevation="0dp"
-                    style="@style/Widget.MaterialComponents.BottomNavigationView.PrimarySurface"/>
-
-            </com.google.android.material.bottomappbar.BottomAppBar>
-
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <FrameLayout
             android:layout_width="match_parent"

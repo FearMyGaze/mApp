@@ -19,7 +19,6 @@
     <!-- Main Toolbar (Menu) -->
     <string name="mainToolbarItemSearch">Αναζήτηση</string>
     <string name="mainToolbarItemNotifications">Ειδοποιήσεις</string>
-    <string name="mainFloatingActionButton">Ξεκίνα συζήτηση</string>
 
     <!-- Main BottomNavigationView (Menu) -->
     <string name="mainBottomNavigationViewChoice1">Μηνύματα</string>
@@ -96,7 +95,11 @@
     <string name="dialogConversationNotificationTrue">Notifications OFF</string>
     <string name="dialogConversationReport">Report user</string>
 
-
+    <!-- ChatRoom Activity -->
+    <string name="chatRoomBottomBarChooseImage">Επίλεξε εικόνα </string>
+    <string name="chatRoomBottomBarRecordSound">Ηχογράφηση</string>
+    <string name="chatRoomBottomBarHint">Μύνημα……</string>
+    <string name="chatRoomBottomBarSendMessage">Αποστολή μυνήματος</string>
 
 
 

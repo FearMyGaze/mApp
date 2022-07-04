@@ -1,6 +1,7 @@
 package com.fearmygaze.mApp.view.adapter;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.fearmygaze.mApp.R;
 import com.fearmygaze.mApp.model.Conversation;
 import com.fearmygaze.mApp.view.activity.ChatRoom;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
 
@@ -39,7 +41,6 @@ public class AdapterConversation extends RecyclerView.Adapter<AdapterConversatio
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        String id = conversations.get(position).getId();
         String image = conversations.get(position).getImage();
         String username = conversations.get(position).getUsername();
         String lastMessage = conversations.get(position).getLastMessage();
@@ -57,28 +58,46 @@ public class AdapterConversation extends RecyclerView.Adapter<AdapterConversatio
         holder.lastMessage.setText(lastMessage);
         holder.time.setText(time);
 
-        holder.frameLayout.setOnClickListener(view -> {
-            view.getContext().startActivity(new Intent(activity, ChatRoom.class));
+        holder.frameLayout.setOnClickListener(view -> { //TODO: Maybe add the image download on background thread https://bumptech.github.io/glide/doc/getting-started.html#background-threads
+            Intent intent = new Intent(activity, ChatRoom.class); //TODO: Add a way to use SnackBars in every situation and found a way to remove from the adapter an elements
+            intent.putExtra("username",username);
+            view.getContext().startActivity(intent);
             activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-            Toast.makeText(view.getContext(), conversations.get(position).getUsername(), Toast.LENGTH_SHORT).show();
         });
 
         holder.frameLayout.setOnLongClickListener(view -> {
-        /*
-            BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(view.getContext()); //TODO: ADD Theme
-            bottomSheetDialog.setContentView(R.layout.dialog_conversation);
+            Dialog dialog = new Dialog(view.getContext());
+            dialog.setContentView(R.layout.dialog_conversation);
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-            MaterialButton option1 = bottomSheetDialog.findViewById(R.id.dialogConversationOption1);
+            MaterialButton optionPin = dialog.findViewById(R.id.dialogConversationPin);
+            MaterialButton optionDelete = dialog.findViewById(R.id.dialogConversationDelete);
+            MaterialButton optionNotification = dialog.findViewById(R.id.dialogConversationNotification);
+            MaterialButton optionReport = dialog.findViewById(R.id.dialogConversationReport);
 
-            option1.setOnClickListener(v -> {
-                Toast.makeText(v.getContext(), "eixame", Toast.LENGTH_SHORT).show();
+
+            optionPin.setOnClickListener(v -> {
+                Toast.makeText(v.getContext(), "Pin", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
             });
 
+            optionDelete.setOnClickListener(v -> {
+                Toast.makeText(v.getContext(), "Removed", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            });
 
-            bottomSheetDialog.show();
+            optionNotification.setOnClickListener(v -> {
+                Toast.makeText(v.getContext(), "Notification", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            });
 
-        */
-            Toast.makeText(view.getContext(), "Add a dialog or bottomSheetDialog", Toast.LENGTH_SHORT).show();
+            optionReport.setOnClickListener(v -> {
+                reportAndBlock();
+                dialog.dismiss();
+            });
+
+            dialog.show();
+
             return true;
         });
 
@@ -103,5 +122,8 @@ public class AdapterConversation extends RecyclerView.Adapter<AdapterConversatio
             lastMessage = itemView.findViewById(R.id.adapterConversationLastMessage);
             time = itemView.findViewById(R.id.adapterConversationTime);
         }
+    }
+    private void reportAndBlock(){
+        Toast.makeText(activity, "User reported and blocked", Toast.LENGTH_SHORT).show();
     }
 }

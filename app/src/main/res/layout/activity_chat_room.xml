@@ -3,6 +3,95 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".view.activity.ChatRoom">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/chatRoomAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/chatRoomToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/ic_arrow_back_24"
+            app:menu="@menu/chat_room_toolbar"
+            style="@style/Widget.MaterialComponents.Toolbar.PrimarySurface" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chatRoomRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/chatRoomAppBar"
+        app:layout_constraintBottom_toTopOf="@+id/chatRoomBottomBar"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/chatRoomBottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="?attr/colorPrimary">
+
+        <ImageButton
+            android:id="@+id/chatRoomChooseImage"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_image_24"
+            android:contentDescription="@string/chatRoomBottomBarChooseImage"
+            app:tint="@color/white"
+            android:background="@android:color/transparent"
+            android:foreground="?attr/selectableItemBackground"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageButton
+            android:id="@+id/chatRoomRecordAudio"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_mic_24"
+            android:contentDescription="@string/chatRoomBottomBarRecordSound"
+            app:tint="@color/white"
+            android:background="@android:color/transparent"
+            android:foreground="?attr/selectableItemBackground"
+            app:layout_constraintStart_toEndOf="@+id/chatRoomChooseImage"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/chatRoomBottomBarHint"
+            android:isScrollContainer="true"
+            android:autofillHints="emailAddress,phone"
+            android:inputType="text|textMultiLine|textLongMessage"
+            android:background="@android:color/holo_red_dark"
+            app:layout_constraintStart_toEndOf="@id/chatRoomRecordAudio"
+            app:layout_constraintEnd_toStartOf="@id/chatRoomSendMessage"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <ImageButton
+            android:id="@+id/chatRoomSendMessage"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_send_24"
+            android:contentDescription="@string/chatRoomBottomBarSendMessage"
+            app:tint="@color/white"
+            android:background="@android:color/transparent"
+            android:foreground="?attr/selectableItemBackground"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
