@@ -58,16 +58,10 @@
     <string name="searchUsersNotFound">No users with the criteria you gave found…!</string>
     <string name="searchAddFriend">Add Friend</string>
 
-    <!-- Chat fragment -->
-    <string name="adapterChatFriendsNotFound">Friends not found</string>
-    <string name="adapterChatConversationNotFound">Conversations not found</string>
-
     <!-- Chat Adapter -->
     <string name="adapterConversationDiv">·</string>
 
     <!-- Chat Adapter Dialog -->
-    <string name="dialogConversationPinFalse">Pin Conversation</string>
-    <string name="dialogConversationPinTrue">Unpin Conversation</string>
     <string name="dialogConversationDelete">Delete Conversation</string>
     <string name="dialogConversationNotificationFalse">Notifications ON</string>
     <string name="dialogConversationNotificationTrue">Notifications OFF</string>
@@ -78,6 +72,9 @@
     <string name="chatRoomBottomBarRecordSound">Record Sound</string>
     <string name="chatRoomBottomBarHint">Message……</string>
     <string name="chatRoomBottomBarSendMessage">Send Message</string>
+
+    <!-- ChatRoom Toolbar (Menu) -->
+    <string name="chatRoomToolbarItemInfo">info</string>
 
     <!-- Tabs -->
     <string name="friendsTab0">Friends</string>
@@ -96,15 +93,6 @@
     <string name="dialogBugHint">Description</string>
     <string name="dialogBugConfirm">Confirm</string>
     <string name="dialogBugError">too many characters..!!</string>
-
-    <!-- ChatRoom Toolbar (Menu) -->
-    <string name="chatRoomToolbarItemInfo">info</string>
-
-
-
-
-
-
 
     <!-- RegEx -->
     <string name="regExPasswordError">* Bigger than 8 characters \n* 1 Uppercase character \n* 1 number \n* 1 special character</string>

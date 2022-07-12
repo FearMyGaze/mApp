@@ -59,9 +59,23 @@
     <string name="searchUsersNotFound">Δεν βρέθηκαν χρήστες με τα στοιχεία που δώσατε…!</string>
     <string name="searchAddFriend">Προσθήκη φίλου</string>
 
-    <!-- Chat fragment -->
-    <string name="adapterChatFriendsNotFound">Δεν βρέθηκαν φίλοι</string>
-    <string name="adapterChatConversationNotFound">Δεν βρέθηκαν συνομιλίες</string>
+    <!-- Chat Adapter -->
+    <string name="adapterConversationDiv">·</string>
+
+    <!-- Chat Adapter Dialog -->
+    <string name="dialogConversationDelete">Delete Conversation</string>
+    <string name="dialogConversationNotificationFalse">Notifications ON</string>
+    <string name="dialogConversationNotificationTrue">Notifications OFF</string>
+    <string name="dialogConversationReport">Report user</string>
+
+    <!-- ChatRoom Activity -->
+    <string name="chatRoomBottomBarChooseImage">Επίλεξε εικόνα </string>
+    <string name="chatRoomBottomBarRecordSound">Ηχογράφηση</string>
+    <string name="chatRoomBottomBarHint">Μύνημα……</string>
+    <string name="chatRoomBottomBarSendMessage">Αποστολή μυνήματος</string>
+
+    <!-- ChatRoom Toolbar (Menu) -->
+    <string name="chatRoomToolbarItemInfo">Πληροφορίες</string>
 
     <!-- Tabs -->
     <string name="friendsTab0">Φίλοι</string>
@@ -80,27 +94,6 @@
     <string name="dialogBugHint">Περιγραφή</string>
     <string name="dialogBugConfirm">Επιβεβαίωση</string>
     <string name="dialogBugError">Πάρα πολύ χαρακτήρες..!!</string>
-
-    <!-- ChatRoom Toolbar (Menu) -->
-    <string name="chatRoomToolbarItemInfo">Πληροφορίες</string>
-
-    <!-- Chat Adapter -->
-    <string name="adapterConversationDiv">·</string>
-
-    <!-- Chat Adapter Dialog -->
-    <string name="dialogConversationPinFalse">Pin Conversation</string>
-    <string name="dialogConversationPinTrue">Unpin Conversation</string>
-    <string name="dialogConversationDelete">Delete Conversation</string>
-    <string name="dialogConversationNotificationFalse">Notifications ON</string>
-    <string name="dialogConversationNotificationTrue">Notifications OFF</string>
-    <string name="dialogConversationReport">Report user</string>
-
-    <!-- ChatRoom Activity -->
-    <string name="chatRoomBottomBarChooseImage">Επίλεξε εικόνα </string>
-    <string name="chatRoomBottomBarRecordSound">Ηχογράφηση</string>
-    <string name="chatRoomBottomBarHint">Μύνημα……</string>
-    <string name="chatRoomBottomBarSendMessage">Αποστολή μυνήματος</string>
-
 
 
     <!-- RegEx -->

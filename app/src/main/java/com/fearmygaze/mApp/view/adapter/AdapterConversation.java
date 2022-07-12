@@ -58,8 +58,8 @@ public class AdapterConversation extends RecyclerView.Adapter<AdapterConversatio
         holder.lastMessage.setText(lastMessage);
         holder.time.setText(time);
 
-        holder.frameLayout.setOnClickListener(view -> { //TODO: Maybe add the image download on background thread https://bumptech.github.io/glide/doc/getting-started.html#background-threads
-            Intent intent = new Intent(activity, ChatRoom.class); //TODO: Add a way to use SnackBars in every situation and found a way to remove from the adapter an elements
+        holder.frameLayout.setOnClickListener(view -> {
+            Intent intent = new Intent(activity, ChatRoom.class);
             intent.putExtra("username",username);
             view.getContext().startActivity(intent);
             activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
@@ -70,19 +70,13 @@ public class AdapterConversation extends RecyclerView.Adapter<AdapterConversatio
             dialog.setContentView(R.layout.dialog_conversation);
             dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
-            MaterialButton optionPin = dialog.findViewById(R.id.dialogConversationPin);
             MaterialButton optionDelete = dialog.findViewById(R.id.dialogConversationDelete);
             MaterialButton optionNotification = dialog.findViewById(R.id.dialogConversationNotification);
             MaterialButton optionReport = dialog.findViewById(R.id.dialogConversationReport);
 
-
-            optionPin.setOnClickListener(v -> {
-                Toast.makeText(v.getContext(), "Pin", Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
-            });
-
             optionDelete.setOnClickListener(v -> {
-                Toast.makeText(v.getContext(), "Removed", Toast.LENGTH_SHORT).show();
+                conversations.remove(holder.getAdapterPosition());
+                notifyItemChanged(holder.getAdapterPosition());
                 dialog.dismiss();
             });
 
@@ -92,7 +86,7 @@ public class AdapterConversation extends RecyclerView.Adapter<AdapterConversatio
             });
 
             optionReport.setOnClickListener(v -> {
-                reportAndBlock();
+                String reportedUser = conversations.get(position).getUsername();
                 dialog.dismiss();
             });
 
@@ -122,8 +116,5 @@ public class AdapterConversation extends RecyclerView.Adapter<AdapterConversatio
             lastMessage = itemView.findViewById(R.id.adapterConversationLastMessage);
             time = itemView.findViewById(R.id.adapterConversationTime);
         }
-    }
-    private void reportAndBlock(){
-        Toast.makeText(activity, "User reported and blocked", Toast.LENGTH_SHORT).show();
     }
 }
