@@ -21,6 +21,11 @@ public class Friends extends Fragment {
     ViewPager2 pager2;
     TabLayoutMediator mediator;
 
+    /*
+    * TODO: We need to add a way to press the back button and go to fragment Chat
+    *       to do that we need to add a fragment manager (i think ??)
+    * */
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_friends, container, false);

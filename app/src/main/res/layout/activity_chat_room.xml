@@ -53,28 +53,16 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <ImageButton
-            android:id="@+id/chatRoomRecordAudio"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/ic_mic_24"
-            android:contentDescription="@string/chatRoomBottomBarRecordSound"
-            app:tint="@color/white"
-            android:background="@android:color/transparent"
-            android:foreground="?attr/selectableItemBackground"
-            app:layout_constraintStart_toEndOf="@+id/chatRoomChooseImage"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
         <EditText
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="@string/chatRoomBottomBarHint"
+            android:maxLines="3"
             android:isScrollContainer="true"
             android:autofillHints="emailAddress,phone"
             android:inputType="text|textMultiLine|textLongMessage"
             android:background="@android:color/holo_red_dark"
-            app:layout_constraintStart_toEndOf="@id/chatRoomRecordAudio"
+            app:layout_constraintStart_toEndOf="@id/chatRoomChooseImage"
             app:layout_constraintEnd_toStartOf="@id/chatRoomSendMessage"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>

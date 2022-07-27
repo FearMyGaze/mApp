@@ -19,25 +19,36 @@ import com.fearmygaze.mApp.view.activity.Starting;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Locale;
 import java.util.Objects;
 
 public class SignIn extends Fragment {
 
-    TextInputLayout signInWithCredentialsError, signInPasswordError;
-    TextInputEditText signInWithCredentials, signInPassword;
+    TextInputLayout signInEmailError, signInPasswordError;
+    TextInputEditText signInEmail, signInPassword;
 
     TextView signInCreateNewAccount;
 
     MaterialButton signInButton;
+
+    FirebaseAuth firebaseAuth;
+    FirebaseUser user;
 
     View view;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_sign_in, container, false);
 
-        signInWithCredentials = view.findViewById(R.id.signInWithCredentials);
-        signInWithCredentialsError = view.findViewById(R.id.signInWithCredentialsError);
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseAuth.setLanguageCode(Locale.getDefault().getLanguage());
+        user = firebaseAuth.getCurrentUser();
+
+
+        signInEmail = view.findViewById(R.id.signInEmail);
+        signInEmailError = view.findViewById(R.id.signInWithCredentialsError);
 
         signInPassword = view.findViewById(R.id.signInPassword);
         signInPasswordError = view.findViewById(R.id.signInPasswordError);
@@ -50,36 +61,32 @@ public class SignIn extends Fragment {
          * The moment the TextInputEditText is filled with a text after an error occurred the error
          *   vanishes from the text that was changed
          * */
-        signInWithCredentials.addTextChangedListener(new TextHandler(signInWithCredentialsError));
+        signInEmail.addTextChangedListener(new TextHandler(signInEmailError));
         signInPassword.addTextChangedListener(new TextHandler(signInPasswordError));
 
-        signInButton.setOnClickListener(v -> {
-            startActivity(new Intent(getActivity(), Main.class));
-            requireActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-        });
-
+        signInButton.setOnClickListener(v -> userLogin());
 
         signInCreateNewAccount.setOnClickListener(v -> ((Starting) requireActivity()).replaceFragment(((Starting) requireActivity()).reInitiateFragmentSignUp()));
-
 
         return view;
     }
 
-    private void userCreate(){
-        TextHandler.isTextInputEmpty(signInWithCredentials,signInWithCredentialsError, getContext());
+    private void userLogin(){
+        TextHandler.isTextInputEmpty(signInEmail, signInEmailError, getContext());
         TextHandler.isTextInputEmpty(signInPassword,signInPasswordError, getContext());
 
-        if (!signInWithCredentialsError.isErrorEnabled() || !signInPasswordError.isErrorEnabled()){
+        if (!signInEmailError.isErrorEnabled() || !signInPasswordError.isErrorEnabled()){
             if (RegEx.isPasswordValid(Objects.requireNonNull(signInPassword.getText()).toString(),signInPasswordError,getContext())){
-                showToast("User logged in",0); //TODO: User sign In
+                firebaseAuth //TODO: Add email Verification
+                        .signInWithEmailAndPassword(Objects.requireNonNull(signInEmail.getText()).toString(), signInPassword.getText().toString())
+                        .addOnSuccessListener(authResult -> {
+                            startActivity(new Intent(getActivity(), Main.class));
+                            requireActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                            requireActivity().finish();
+                        })
+                        .addOnFailureListener(e -> Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show());
             }
         }
     }
-
-
-    private void showToast(String message, int length){
-        Toast.makeText(getContext(), message, length).show();
-    }
-
 
 }

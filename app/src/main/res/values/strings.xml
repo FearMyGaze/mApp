@@ -63,8 +63,6 @@
 
     <!-- Chat Adapter Dialog -->
     <string name="dialogConversationDelete">Delete Conversation</string>
-    <string name="dialogConversationNotificationFalse">Notifications ON</string>
-    <string name="dialogConversationNotificationTrue">Notifications OFF</string>
     <string name="dialogConversationReport">Report user</string>
 
     <!-- ChatRoom Activity -->
@@ -107,11 +105,5 @@
     <string name="sampleLastMessage" translatable="false">You: is message true;</string>
     <string name="sampleTime" translatable="false">22:03</string>
     <string name="sampleEmail" translatable="false">test@test.com</string>
-
-    <!-- Database -->
-    <string-array name="url">
-        <item>http://localhost/mApp/userRegister.php</item>
-        <item>https://localhost/mApp/userDelete.php</item>
-    </string-array>
 
 </resources>

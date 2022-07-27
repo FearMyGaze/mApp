@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,9 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -54,10 +58,16 @@ public class SignUp extends Fragment {
 
     View view;
 
+    FirebaseAuth firebaseAuth;
+
+    Bitmap bitmap;
+    Uri downloadLink;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_sign_up, container, false);
+
+        firebaseAuth = FirebaseAuth.getInstance();
 
         signUpImage = view.findViewById(R.id.signUpImage);
         signUpAddImage = view.findViewById(R.id.signUpAddImage);
@@ -134,20 +144,18 @@ public class SignUp extends Fragment {
         result -> {
             if (result.getResultCode() == RESULT_OK && result.getData() != null){
                 Uri uri = result.getData().getData();
+                Log.d("File",uri.toString());
                 try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(),uri);
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.WEBP,100,stream);
 
-                    stringConvertedImage = null;
-                    stringConvertedImage = stream.toString();
+                    bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(),uri);
+                    Log.d("File",bitmap.toString());
 
                     signUpAddImage.setVisibility(View.GONE);
-                    signUpImage.setImageBitmap(bitmap);
-
+                    signUpImage.setImageURI(uri);
                     stateOfCells(true);
+
                 } catch (IOException e) {
-                   showToast(e.getMessage(),1);
+                    e.printStackTrace();
                 }
             }
         }
@@ -164,14 +172,48 @@ public class SignUp extends Fragment {
         signUpAdultAge.setEnabled(state);
     }
 
-
     private void openTermsDialog(){
-        showToast("Open Dialog",0);
+        Toast.makeText(getContext(), "Open Dialog", Toast.LENGTH_SHORT).show();
     }
 
     private void openAdultAgeDialog(){
-        showToast("open Dialog",1);
+        Toast.makeText(getContext(), "Open Dialog", Toast.LENGTH_SHORT).show();
     }
+
+    private void uploadImage(Bitmap bitmap){
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference bitmapReference = storageRef.child("users/" + "_" +System.currentTimeMillis()/1000 +".webp");
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.WEBP,100,baos);
+        byte[] data = baos.toByteArray();
+        Log.d("File","" + data.toString());
+
+//        UploadTask uploadTask = bitmapReference.putBytes(data);
+//        uploadTask.addOnSuccessListener(taskSnapshot -> {
+//            uploadTask.continueWithTask(task -> {
+//                if (!task.isSuccessful()) {
+//                    throw task.getException();
+//                }
+//                return bitmapReference.getDownloadUrl();
+//            }).addOnCompleteListener(task -> {
+//                if (task.isSuccessful()) {
+//                    downloadLink = task.getResult();
+//
+//                    if (user != null){
+//                        UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
+//                                .setDisplayName(Objects.requireNonNull(signUpUsername.getText()).toString())
+//                                .setPhotoUri(downloadLink)
+//                                .build();
+//                        user.updateProfile(profileChangeRequest);
+//                    }
+//                }
+//            });
+//        }).addOnFailureListener(e -> Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+
 
     private void checkForErrors(){
         TextHandler.isTextInputEmpty(signUpUsername,signUpUsernameError,requireActivity());
@@ -183,13 +225,37 @@ public class SignUp extends Fragment {
                 || !signUpConfirmPasswordError.isErrorEnabled() || !stringConvertedImage.isEmpty()) {
             if (TextHandler.IsTextInputsEqual(signUpPassword, signUpConfirmPassword, signUpPasswordError, requireActivity())) {
                 if (RegEx.isPasswordValid(Objects.requireNonNull(signUpPassword.getText()).toString(), signUpPasswordError, getContext())){
-                    showToast("True",0); //TODO: Create user
+
+                                uploadImage(bitmap);
+                //TODO: Add emailVerification
+//                firebaseAuth.createUserWithEmailAndPassword(Objects.requireNonNull(signUpEmail.getText()).toString(), signUpPassword.getText().toString())
+//                        .addOnSuccessListener(authResult -> {
+//                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//                            if (user != null){
+//
+//
+////                                user.sendEmailVerification()
+////                                        .addOnSuccessListener(unused -> {
+////                                            Toast.makeText(getContext(), "Email send", Toast.LENGTH_SHORT).show();
+////                                        })
+////                                        .addOnFailureListener(e -> Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show());
+//
+//
+//
+//                                Log.d("Upload","Uploaded (success)-> " + user.getDisplayName() + " -> " + user.getPhotoUrl());
+//
+//                                startActivity(new Intent(getActivity(), Main.class));
+//                                requireActivity().finish();
+//
+//                                Intent intent = new Intent(requireContext(), Main.class);
+//                                startActivity(intent);
+//
+//                            }
+//                        }).addOnFailureListener(e -> Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show());
                 }
             }
         }
     }
 
-    private void showToast(String message, int length){
-        Toast.makeText(getContext(), message, length).show();
-    }
+
 }

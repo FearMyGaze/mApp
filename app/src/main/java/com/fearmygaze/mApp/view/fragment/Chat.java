@@ -23,15 +23,17 @@ public class Chat extends Fragment {
 
     SwipeRefreshLayout swipeRefreshLayout;
 
+
     RecyclerView conversationsRecycler;
 
     AdapterConversation adapterConversation;
 
     List<Conversation> conversationList;
+    List<Conversation> pinnedConversations;
 
     /*
-    * TODO: Find a way to cache the conversations(So the phone don't saturate the network
-    * TODO: When the conversation adapter is clicked, pass the appropriate information and maybe store them locally (Preferable) so the new device doesn't have the customisations from the old one
+    * TODO: When the conversation adapter is clicked, pass the appropriate information and maybe store them locally (Preferable)
+    *  so the new device doesn't have the customisations from the old one
     *
     * */
 
@@ -40,9 +42,10 @@ public class Chat extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_chat, container, false);
 
-        swipeRefreshLayout = view.findViewById(R.id.adapterChatRefresh);
+        swipeRefreshLayout = view.findViewById(R.id.fragmentChatRefresh);
         conversationsRecycler = view.findViewById(R.id.fragmentChatAllConversationsRecycler);
 
+        pinnedConversations = new ArrayList<>();
         conversationList = new ArrayList<>();
 
         conversationList.add(new Conversation("1", "https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png",

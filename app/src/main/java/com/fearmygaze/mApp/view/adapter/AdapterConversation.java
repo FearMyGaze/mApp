@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,7 +27,7 @@ public class AdapterConversation extends RecyclerView.Adapter<AdapterConversatio
     List<Conversation> conversations;
     Activity activity;
 
-    public AdapterConversation(List<Conversation> conversations , Activity activity) {
+    public AdapterConversation(List<Conversation> conversations, Activity activity) {
         this.conversations = conversations;
         this.activity = activity;
     }
@@ -71,17 +70,11 @@ public class AdapterConversation extends RecyclerView.Adapter<AdapterConversatio
             dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
             MaterialButton optionDelete = dialog.findViewById(R.id.dialogConversationDelete);
-            MaterialButton optionNotification = dialog.findViewById(R.id.dialogConversationNotification);
             MaterialButton optionReport = dialog.findViewById(R.id.dialogConversationReport);
 
             optionDelete.setOnClickListener(v -> {
-                conversations.remove(holder.getAdapterPosition());
+                conversations.remove(holder.getAdapterPosition()); //TODO: Make the deletion here
                 notifyItemChanged(holder.getAdapterPosition());
-                dialog.dismiss();
-            });
-
-            optionNotification.setOnClickListener(v -> {
-                Toast.makeText(v.getContext(), "Notification", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             });
 
@@ -115,6 +108,7 @@ public class AdapterConversation extends RecyclerView.Adapter<AdapterConversatio
             username = itemView.findViewById(R.id.adapterConversationUsername);
             lastMessage = itemView.findViewById(R.id.adapterConversationLastMessage);
             time = itemView.findViewById(R.id.adapterConversationTime);
+
         }
     }
 }

@@ -64,8 +64,6 @@
 
     <!-- Chat Adapter Dialog -->
     <string name="dialogConversationDelete">Delete Conversation</string>
-    <string name="dialogConversationNotificationFalse">Notifications ON</string>
-    <string name="dialogConversationNotificationTrue">Notifications OFF</string>
     <string name="dialogConversationReport">Report user</string>
 
     <!-- ChatRoom Activity -->
