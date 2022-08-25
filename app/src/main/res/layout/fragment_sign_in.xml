@@ -66,7 +66,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/signInEmail"
+                    android:id="@+id/signInWithCredentials"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textEmailAddress|textAutoComplete"/>
@@ -80,7 +80,7 @@
                 android:layout_marginTop="16dp"
                 android:hint="@string/signInPassword"
                 app:counterEnabled="true"
-                app:counterMaxLength="100"
+                app:counterMaxLength="300"
                 app:endIconMode="password_toggle"
                 app:boxCornerRadiusTopStart="13dp"
                 app:boxCornerRadiusTopEnd="13dp"

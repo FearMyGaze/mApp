@@ -7,11 +7,10 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,14 +20,19 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 
 import com.fearmygaze.mApp.R;
+import com.fearmygaze.mApp.controller.UserController;
+import com.fearmygaze.mApp.interfaces.IUser;
+import com.fearmygaze.mApp.model.User;
 import com.fearmygaze.mApp.util.RegEx;
 import com.fearmygaze.mApp.util.TextHandler;
 import com.fearmygaze.mApp.view.activity.Starting;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -40,22 +44,19 @@ public class SignUp extends Fragment {
     TextInputEditText signUpUsername, signUpEmail, signUpPassword, signUpConfirmPassword;
     TextInputLayout signUpUsernameError, signUpEmailError, signUpPasswordError, signUpConfirmPasswordError;
 
-    CheckBox signUpAgreeToTerms;
+    MaterialCheckBox signUpAgreeToTerms;
     TextView signUpTerms;
 
-    CheckBox signUpAgreeToAdultAge;
+    MaterialCheckBox signUpAgreeToAdultAge;
     TextView signUpAdultAge;
 
     MaterialButton signUpButton;
 
     TextView signUpToSignIn;
 
-    String stringConvertedImage;
-
     View view;
 
-    Bitmap bitmap;
-    Uri downloadLink;
+    String base64Image;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -95,11 +96,11 @@ public class SignUp extends Fragment {
 
         signUpToSignIn.setOnClickListener(v -> ((Starting) requireActivity()).replaceFragment(((Starting) requireActivity()).reInitiateFragmentSignIn()));
 
-        signUpButton.setOnClickListener(v -> checkForErrors());
+        signUpButton.setOnClickListener(v -> checkForErrorsAndRegister());
 
         signUpAgreeToTerms.setOnCheckedChangeListener((buttonView, isChecked) -> {
             signUpAgreeToAdultAge.setEnabled(isChecked);
-            if (!isChecked){
+            if (!isChecked) {
                 signUpAgreeToAdultAge.setChecked(false);
             }
         });
@@ -116,8 +117,12 @@ public class SignUp extends Fragment {
         signUpConfirmPassword.addTextChangedListener(new TextHandler(signUpConfirmPasswordError));
 
         signUpImage.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            Intent intent = new Intent(Intent.ACTION_PICK);
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,false);
             pickImage.launch(intent);
         });
 
@@ -128,33 +133,39 @@ public class SignUp extends Fragment {
             }
         };
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(),callback);
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
         return view;
     }
 
     private final ActivityResultLauncher<Intent> pickImage = registerForActivityResult(
-        new ActivityResultContracts.StartActivityForResult(),
-        result -> {
-            if (result.getResultCode() == RESULT_OK && result.getData() != null){
-                Uri uri = result.getData().getData();
-                Log.d("File",uri.toString());
-                try {
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    Uri uri = result.getData().getData();
+                    try {
 
-                    bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(),uri);
-                    Log.d("File",bitmap.toString());
+                        //Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), uri);
+                        Bitmap output =  Bitmap.createScaledBitmap(MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), uri),70,70,true);
 
-                    signUpAddImage.setVisibility(View.GONE);
-                    signUpImage.setImageURI(uri);
-                    stateOfCells(true);
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
-                } catch (IOException e) {
-                    e.printStackTrace();
+                        output.compress(Bitmap.CompressFormat.PNG, 100, stream);//TODO: Make a test of uploading the raw image and then the compressed
+
+                        base64Image = null;
+                        base64Image = Base64.encodeToString(stream.toByteArray(), Base64.DEFAULT);
+
+                        signUpAddImage.setVisibility(View.GONE);
+                        signUpImage.setImageURI(uri);
+                        stateOfCells(true);
+
+                    } catch (IOException e) {
+                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 }
             }
-        }
     );
 
-    private void stateOfCells(Boolean state){
+    private void stateOfCells(Boolean state) {
         signUpUsername.setEnabled(state);
         signUpEmail.setEnabled(state);
         signUpPassword.setEnabled(state);
@@ -165,27 +176,35 @@ public class SignUp extends Fragment {
         signUpAdultAge.setEnabled(state);
     }
 
-    private void openTermsDialog(){
+    private void openTermsDialog() {
         Toast.makeText(getContext(), "Open Dialog", Toast.LENGTH_SHORT).show();
     }
 
-    private void openAdultAgeDialog(){
+    private void openAdultAgeDialog() {
         Toast.makeText(getContext(), "Open Dialog", Toast.LENGTH_SHORT).show();
     }
 
+    private void checkForErrorsAndRegister() {
+        if (TextHandler.isTextInputLengthCorrect(signUpUsername, signUpUsernameError, 100, getContext()) &&
+                TextHandler.isTextInputLengthCorrect(signUpEmail, signUpEmailError, 100, getContext()) && !base64Image.isEmpty()) {
+            if (RegEx.isPasswordValidAndEqual(signUpPassword, signUpPasswordError, signUpConfirmPassword, signUpConfirmPasswordError, 300, getContext())) {
+                String username = Objects.requireNonNull(signUpUsername.getText()).toString().trim();
+                String email = Objects.requireNonNull(signUpEmail.getText()).toString().trim();
+                String password = Objects.requireNonNull(signUpPassword.getText()).toString().trim();
 
-    private void checkForErrors(){
-        TextHandler.isTextInputEmpty(signUpUsername,signUpUsernameError,requireActivity());
-        TextHandler.isTextInputEmpty(signUpEmail, signUpEmailError,requireActivity());
-        TextHandler.isTextInputEmpty(signUpPassword,signUpPasswordError,requireActivity());
-        TextHandler.isTextInputEmpty(signUpConfirmPassword,signUpConfirmPasswordError,requireActivity());
+                UserController.signUp(username, email, password, "base64Image", requireContext(), new IUser() {
+                    @Override
+                    public void onSuccess(User user, String message) {
+                        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
 
-        if (!signUpUsernameError.isErrorEnabled() || !signUpEmailError.isErrorEnabled() || !signUpPasswordError.isErrorEnabled()
-                || !signUpConfirmPasswordError.isErrorEnabled() || !stringConvertedImage.isEmpty()) {
-            if (TextHandler.IsTextInputsEqual(signUpPassword, signUpConfirmPassword, signUpPasswordError, requireActivity())) {
-                if (RegEx.isPasswordValid(Objects.requireNonNull(signUpPassword.getText()).toString(), signUpPasswordError, getContext())){
+                        ((Starting) requireActivity()).replaceFragment(((Starting) requireActivity()).reInitiateFragmentSignIn());
+                    }
 
-                }
+                    @Override
+                    public void onError(String message) {
+                        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         }
     }

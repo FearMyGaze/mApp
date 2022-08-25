@@ -33,11 +33,11 @@ public class Starting extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-    public Fragment reInitiateFragmentSignIn(){
+    public Fragment reInitiateFragmentSignIn() {
         return signIn = new SignIn();
     }
 
-    public Fragment reInitiateFragmentSignUp(){
+    public Fragment reInitiateFragmentSignUp() {
         return signUp = new SignUp();
     }
 }
