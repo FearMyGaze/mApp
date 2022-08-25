@@ -61,8 +61,32 @@
         app:cornerRadius="13dp"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/profileAdd2FA"
         app:layout_constraintTop_toBottomOf="@id/profileUserEmail"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/profileAdd2FA"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:text="Add 2FA"
+        android:textStyle="bold"
+        android:textAllCaps="false"
+        app:cornerRadius="13dp"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        app:layout_constraintTop_toTopOf="@id/profileChangePassword"
+        app:layout_constraintBottom_toBottomOf="@id/profileChangePassword"
+        app:layout_constraintStart_toEndOf="@id/profileChangePassword"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add QR code for the app Here"
+        android:textStyle="bold|italic"
+        android:textAlignment="center"
+        android:textSize="23sp"
+        app:layout_constraintTop_toBottomOf="@id/profileChangePassword"
+        app:layout_constraintBottom_toTopOf="@id/profileFAQ"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/profileFAQ"
