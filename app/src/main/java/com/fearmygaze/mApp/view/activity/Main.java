@@ -42,8 +42,6 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,8 +65,6 @@ public class Main extends AppCompatActivity {
     ConstraintLayout bottomSheetConstraint;
     AdapterSearch adapterSearch;
 
-    FirebaseUser user;
-
     boolean notifications = true;
 
     @SuppressLint("NonConstantResourceId")
@@ -76,8 +72,6 @@ public class Main extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        user = FirebaseAuth.getInstance().getCurrentUser();
 
         drawerLayout = findViewById(R.id.mainDrawer);
         toolbar = findViewById(R.id.mainToolbar);
