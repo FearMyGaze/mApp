@@ -29,6 +29,7 @@
     <string name="navigationDrawerMenuItemNotifications">Ειδοποιήσεις</string>
     <string name="navigationDrawerMenuItemSettings">Προφίλ</string>
     <string name="navigationDrawerMenuItemBug">Bug</string>
+    <string name="navigationDrawerMenuItemFeature">Feature Request</string>
     <string name="navigationDrawerMenuItemTerms">Όροι χρήσης</string>
     <string name="navigationDrawerMenuItemSignOut">Έξοδος</string>
     <string name="navigation_drawer_open">Άνοιξε το συρτάρι πλοήγης</string>
@@ -87,11 +88,28 @@
     <string name="profileFAQ">Δεν υποστηρίζουμε την αλλαγή email και όνοματος χρήστη \nΠατήστε εδώ για να δείτε το γιατί..!!</string>
     <string name="profileChangePassword">Αλλαγή κωδικού</string>
 
+    <!-- Dialog Update Password -->
+    <string name="dialogUpdatePasswordCurrentPassword">Τωρινός κωδικός πρόσβασης</string>
+    <string name="dialogUpdatePasswordNewPassword">Νέος κωδικός πρόσβασης</string>
+    <string name="dialogUpdatePassword">Κωδικός πρόσβασης</string>
+    <string name="dialogUpdatePasswordCancel">Ακύρωση</string>
+    <string name="dialogUpdatePasswordConfirm">Επιβεβαίωση</string>
+
     <!-- Dialog Bug -->
-    <string name="dialogBugParagraph">Αν έχετε πετύχει κάποιο σφάλμα ή πρόβλημα με την εφαρμογή παρακαλώ περιγράψετο παρακάτω</string>
+    <string name="dialogBugParagraph">Αν έχετε πετύχει κάποιο σφάλμα ή πρόβλημα με την εφαρμογή παρακαλώ περιγραψέτο παρακάτω.</string>
     <string name="dialogBugHint">Περιγραφή</string>
+    <string name="dialogDeviceParagraph">Εάν θέλετε γράψτε τι συσκευή χρησιμοποιείται</string>
+    <string name="dialogDeviceHint">Μοντέλο</string>
+    <string name="dialogBugCheckBox">Συμφωνείται στην περαιτέρω επικοινωνία μέσω email για τυχών ερωτήσεις?</string>
     <string name="dialogBugConfirm">Επιβεβαίωση</string>
-    <string name="dialogBugError">Πάρα πολύ χαρακτήρες..!!</string>
+    <string name="dialogBugCancel">Ακύρωση</string>
+
+    <!-- Dialog Feature -->
+    <string name="dialogFeatureParagraph">Αν πιστέυται ότι λείπει κάτι από την εφαρμογή γράψτε το εδώ !</string>
+    <string name="dialogFeatureHint">Περιγραφή</string>
+    <string name="dialogFeatureCheckBox">Συμφωνείται στην περαιτέρω επικοινωνία μέσω email για τυχών ερωτήσεις?</string>
+    <string name="dialogFeatureConfirm">Επιβεβαίωση</string>
+    <string name="dialogFeatureCancel">Ακύρωση</string>
 
 
     <!-- RegEx -->
@@ -100,6 +118,8 @@
     <!-- TextHandler-->
     <string name="textHandlerEmpty">Παρακαλώ γεμίστε το κελί</string>
     <string name="textHandlerNotEqual">Τα κελία δεν ταιρίαζουν</string>
+    <string name="textHandlerTooManyCharacters">Ξεπεράσατε το όριο χαρακτήρων!</string>
+    <string name="textHandlerSameCells">Δεν μπορούν και τα δύο κελία να έχουν την ίδια τιμή!</string>
 
 
 </resources>

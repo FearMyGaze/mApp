@@ -28,6 +28,7 @@
     <string name="navigationDrawerMenuItemNotifications">Notifications</string>
     <string name="navigationDrawerMenuItemSettings">Settings</string>
     <string name="navigationDrawerMenuItemBug">Bug</string>
+    <string name="navigationDrawerMenuItemFeature">Feature Request</string>
     <string name="navigationDrawerMenuItemTerms">Terms</string>
     <string name="navigationDrawerMenuItemSignOut">Sign Out</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -86,11 +87,28 @@
     <string name="profileChangePassword">Change Password</string>
     <string name="profileFAQ">We don\'t support changing username or email \nPress here to see why..! </string>
 
+    <!-- Dialog Update Password -->
+    <string name="dialogUpdatePasswordCurrentPassword">Current Password</string>
+    <string name="dialogUpdatePasswordNewPassword">New Password</string>
+    <string name="dialogUpdatePassword">Password</string>
+    <string name="dialogUpdatePasswordCancel">Cancel</string>
+    <string name="dialogUpdatePasswordConfirm">Confirm</string>
+
     <!-- Dialog Bug -->
-    <string name="dialogBugParagraph">If you found a bug or a problem with the app please write it bellow</string>
+    <string name="dialogBugParagraph">If you found a bug or a problem with the app please write it bellow.</string>
     <string name="dialogBugHint">Description</string>
+    <string name="dialogDeviceParagraph">If you want please tell us what device you are using.</string>
+    <string name="dialogDeviceHint">Device model</string>
+    <string name="dialogBugCheckBox">Do you want to send you an email for further questions?</string>
     <string name="dialogBugConfirm">Confirm</string>
-    <string name="dialogBugError">too many characters..!!</string>
+    <string name="dialogBugCancel">Cancel</string>
+
+    <!-- Dialog Feature -->
+    <string name="dialogFeatureParagraph">If you found a feature you want to be added say it here !</string>
+    <string name="dialogFeatureHint">Description</string>
+    <string name="dialogFeatureCheckBox">Do you want us to send you an email for further questions?</string>
+    <string name="dialogFeatureConfirm">Confirm</string>
+    <string name="dialogFeatureCancel">Cancel</string>
 
     <!-- RegEx -->
     <string name="regExPasswordError">* Bigger than 8 characters \n* 1 Uppercase character \n* 1 number \n* 1 special character</string>
@@ -98,6 +116,8 @@
     <!-- TextHandler-->
     <string name="textHandlerEmpty">Fill the empty cell</string>
     <string name="textHandlerNotEqual">Cells not the same</string>
+    <string name="textHandlerTooManyCharacters">You passed the amount of allowed characters!</string>
+    <string name="textHandlerSameCells">Cells can\'t have the same value!</string>
 
     <!-- sample Data -->
     <string name="sampleName" translatable="false">Lorem ipsum</string>
@@ -105,5 +125,27 @@
     <string name="sampleLastMessage" translatable="false">You: is message true;</string>
     <string name="sampleTime" translatable="false">22:03</string>
     <string name="sampleEmail" translatable="false">test@test.com</string>
+
+    <string-array name="user">
+        <item>register-user</item>
+        <item>login-user</item>
+        <item>update-user-password</item>
+        <item>update-user-image</item>
+        <item>user-status</item>
+        <item>disable-user</item>
+        <item>report-user</item><!-- TODO: This is going to be hard because we need to find first the HOW and then how to do it-->
+    </string-array>
+
+    <string-array name="issue">
+        <item>issue</item>
+    </string-array>
+
+    <string-array name="friends">
+        <item>search-user</item>
+        <item>send-friend-request</item>
+        <item>add-user</item>
+        <item>ignore-user</item>
+        <item>show-friends</item>
+    </string-array>
 
 </resources>
