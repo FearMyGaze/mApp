@@ -1,4 +1,4 @@
-package com.fearmygaze.mApp.controller;
+package com.fearmygaze.mApp.Controller;
 
 import android.content.Context;
 

@@ -8,10 +8,10 @@
     android:padding="10dp">
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/dialogBugParagraph"
+        android:id="@+id/dialogFeatureParagraph"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/dialogBugParagraph"
+        android:text="@string/dialogFeatureParagraph"
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textColor="@color/primary"
@@ -22,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/dialogBugDescError"
+        android:id="@+id/dialogFeatureDescError"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,82 +35,39 @@
         app:counterEnabled="true"
         app:counterMaxLength="300"
         app:endIconMode="clear_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dialogBugParagraph">
+        app:layout_constraintTop_toBottomOf="@+id/dialogFeatureParagraph">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/dialogBugDesc"
+            android:id="@+id/dialogFeatureDesc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textMultiLine" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/dialogBugParagraph1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15sp"
-        android:text="@string/dialogDeviceParagraph"
-        android:textAlignment="center"
-        android:textAllCaps="false"
-        android:textColor="@color/primary"
-        android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dialogBugDescError" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/dialogBugDeviceError"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:hint="@string/dialogDeviceHint"
-        app:boxCornerRadiusBottomEnd="13dp"
-        app:boxCornerRadiusBottomStart="13dp"
-        app:boxCornerRadiusTopEnd="13dp"
-        app:boxCornerRadiusTopStart="13dp"
-        app:counterEnabled="true"
-        app:counterMaxLength="100"
-        app:endIconMode="clear_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dialogBugParagraph1">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/dialogBugDevice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-
     <com.google.android.material.checkbox.MaterialCheckBox
-        android:id="@+id/dialogBugFurtherCommunication"
+        android:id="@+id/dialogFeatureFurtherCommunication"
         style="@style/ThemeOverlay.App.CheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/dialogBugCheckBox"
+        android:text="@string/dialogFeatureCheckBox"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dialogBugDeviceError" />
+        app:layout_constraintTop_toBottomOf="@id/dialogFeatureDescError" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/dialogBugCancel"
+        android:id="@+id/dialogFeatureCancel"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="@string/dialogBugCancel"
         app:cornerRadius="20dp"
-        app:layout_constraintEnd_toStartOf="@id/dialogBugConfirm"
+        app:layout_constraintEnd_toStartOf="@id/dialogFeatureConfirm"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dialogBugFurtherCommunication" />
+        app:layout_constraintTop_toBottomOf="@id/dialogFeatureFurtherCommunication" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/dialogBugConfirm"
+        android:id="@+id/dialogFeatureConfirm"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -118,7 +75,7 @@
         android:text="@string/dialogBugConfirm"
         app:cornerRadius="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/dialogBugCancel"
-        app:layout_constraintTop_toBottomOf="@id/dialogBugFurtherCommunication" />
+        app:layout_constraintStart_toEndOf="@id/dialogFeatureCancel"
+        app:layout_constraintTop_toBottomOf="@id/dialogFeatureFurtherCommunication" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

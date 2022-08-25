@@ -11,8 +11,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.fearmygaze.mApp.Controller.UserController;
 import com.fearmygaze.mApp.R;
-import com.fearmygaze.mApp.controller.UserController;
 import com.fearmygaze.mApp.interfaces.IUser;
 import com.fearmygaze.mApp.model.User;
 import com.fearmygaze.mApp.util.RegEx;

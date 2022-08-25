@@ -19,8 +19,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 
+import com.fearmygaze.mApp.Controller.UserController;
 import com.fearmygaze.mApp.R;
-import com.fearmygaze.mApp.controller.UserController;
 import com.fearmygaze.mApp.interfaces.IUser;
 import com.fearmygaze.mApp.model.User;
 import com.fearmygaze.mApp.util.RegEx;

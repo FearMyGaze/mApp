@@ -3,12 +3,15 @@ package com.fearmygaze.mApp.view.activity;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,8 +32,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.fearmygaze.mApp.Controller.FriendController;
+import com.fearmygaze.mApp.Controller.IssueController;
+import com.fearmygaze.mApp.Controller.UserController;
 import com.fearmygaze.mApp.R;
+import com.fearmygaze.mApp.interfaces.ISearch;
+import com.fearmygaze.mApp.interfaces.IVolley;
 import com.fearmygaze.mApp.model.SearchedUser;
+import com.fearmygaze.mApp.model.User;
+import com.fearmygaze.mApp.util.PrivatePreference;
 import com.fearmygaze.mApp.util.TextHandler;
 import com.fearmygaze.mApp.view.adapter.AdapterSearch;
 import com.fearmygaze.mApp.view.fragment.Chat;
@@ -39,6 +49,7 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -65,13 +76,38 @@ public class Main extends AppCompatActivity {
     ConstraintLayout bottomSheetConstraint;
     AdapterSearch adapterSearch;
 
+    RecyclerView searchRecycler;
+
+    TextView usersNotFound;
+    SearchView searchView;
+
     boolean notifications = true;
+
+    PrivatePreference preference;
+    User currentUser;
 
     @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+
+        preference = new PrivatePreference(Main.this);
+
+        if (getIntent().getParcelableExtra("user") != null) {
+            currentUser = getIntent().getParcelableExtra("user");
+        } else {
+
+            currentUser = new User(
+                    preference.getInt("id"), preference.getString("username"),
+                    preference.getString("image"), preference.getString("email"));
+
+        }
+
+
+        rememberMe();
 
         drawerLayout = findViewById(R.id.mainDrawer);
         toolbar = findViewById(R.id.mainToolbar);
@@ -81,8 +117,8 @@ public class Main extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         /*
-        * BottomSheet
-        * */
+         * BottomSheet
+         * */
 
         bottomSheetConstraint = findViewById(R.id.search);
 
@@ -93,7 +129,7 @@ public class Main extends AppCompatActivity {
         header = navigationView.getHeaderView(0);
 
         navigationView.setNavigationItemSelectedListener(item -> {
-            switch (item.getItemId()){
+            switch (item.getItemId()) {
                 case R.id.navigationMenuItemProfile:
                     startActivity(new Intent(Main.this, Profile.class));
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
@@ -108,11 +144,16 @@ public class Main extends AppCompatActivity {
                 case R.id.navigationMenuItemBug:
                     prepareForBugListing();
                     return true;
+                case R.id.navigationMenuItemFeature:
+                    prepareForFeatureListing();
+                    return true;
                 case R.id.navigationMenuItemTerms:
                     Toast.makeText(this, "This will open a dialog", Toast.LENGTH_SHORT).show();
                     return true;
                 case R.id.navigationMenuItemSignOut:
-                    Toast.makeText(this, "This will sign out the user", Toast.LENGTH_SHORT).show();
+                    preference.clear();
+                    finish();
+                    Toast.makeText(this, "User Signed out", Toast.LENGTH_SHORT).show();
                     return true;
                 default:
                     return false;
@@ -123,8 +164,8 @@ public class Main extends AppCompatActivity {
         initializeBottomSearch();
 
         /*
-        * BottomNavigation
-        * */
+         * BottomNavigation
+         * */
 
         friends = new Friends();
         chat = new Chat();
@@ -133,7 +174,7 @@ public class Main extends AppCompatActivity {
         bottomNavigationView.setSelectedItemId(R.id.mainNavigationItemChoice1);
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
-            switch (item.getItemId()){
+            switch (item.getItemId()) {
                 case R.id.mainNavigationItemChoice1:
                     replaceFragment(chat);
                     return true;
@@ -146,31 +187,125 @@ public class Main extends AppCompatActivity {
         });
     }
 
-    private void prepareForBugListing() { //TODO: Pass as an extra value the device model and the user data
+    private void rememberMe() {
+        PrivatePreference preference = new PrivatePreference(Main.this);
+        if (preference.getInt("id") == -1 || currentUser.getId() == -1) {
+            startActivity(new Intent(Main.this, Starting.class));
+            finish();
+            return;
+        }
+        UserController.statusCheck(currentUser.getId(), Main.this, new IVolley() {
+            @Override
+            public void onSuccess(String message) {
+                Toast.makeText(Main.this, message, Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onError(String message) {
+                Toast.makeText(Main.this, "message", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(Main.this, Starting.class));
+                finish();
+            }
+        });
+    }
+
+
+    private void prepareForBugListing() {//TODO: Add a textView so the user can input device name
         Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_bug);
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         TextInputLayout dialogBugDescError = dialog.findViewById(R.id.dialogBugDescError);
         TextInputEditText dialogBugDesc = dialog.findViewById(R.id.dialogBugDesc);
-        MaterialButton dialogBugButton = dialog.findViewById(R.id.dialogBugConfirm);
+
+        TextInputLayout dialogBugDeviceError = dialog.findViewById(R.id.dialogBugDeviceError);
+        TextInputEditText dialogBugDevice = dialog.findViewById(R.id.dialogBugDevice);
+
+        MaterialCheckBox checkBox = dialog.findViewById(R.id.dialogBugFurtherCommunication);
+
+        MaterialButton cancel = dialog.findViewById(R.id.dialogBugCancel);
+        MaterialButton confirm = dialog.findViewById(R.id.dialogBugConfirm);
+
 
         dialogBugDesc.addTextChangedListener(new TextHandler(dialogBugDescError));
-                
-        dialogBugButton.setOnClickListener(v -> {
-            if (Objects.requireNonNull(dialogBugDesc.getText()).toString().length() > 250){
-                dialogBugDescError.setError(getText(R.string.dialogBugError));
-            }else{
-                Toast.makeText(this, "Error posted... !", Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
-                drawerLayout.close();
+
+        cancel.setOnClickListener(v -> dialog.cancel());
+
+        confirm.setOnClickListener(v -> {
+            if (!dialogBugDescError.isErrorEnabled()) {
+                if (TextHandler.isTextInputLengthCorrect(dialogBugDesc, dialogBugDescError, 300, v.getContext()) &&
+                        TextHandler.isTextInputLengthCorrect(dialogBugDevice, dialogBugDeviceError, 100, v.getContext())) {
+
+                    String desc = Objects.requireNonNull(dialogBugDesc.getText()).toString().trim();
+                    String device = Objects.requireNonNull(dialogBugDevice.getText()).toString().trim();
+
+                    IssueController.uploadBug(20, desc, device, checkBox.isChecked(), getApplicationContext(), new IVolley() {//TODO: get userID
+                        @Override
+                        public void onSuccess(String message) {
+                            Toast.makeText(Main.this, message, Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                            drawerLayout.close();
+                        }
+
+                        @Override
+                        public void onError(String message) {
+                            Toast.makeText(Main.this, message, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                }
             }
         });
         dialog.show();
 
     }
 
-    private void initializeToolbar(MaterialToolbar toolbar){ //TODO: We need to optimize the glide stuff and the order of operations
+    private void prepareForFeatureListing() {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_feature);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        TextInputLayout dialogBugDescError = dialog.findViewById(R.id.dialogFeatureDescError);
+        TextInputEditText dialogBugDesc = dialog.findViewById(R.id.dialogFeatureDesc);
+
+        MaterialCheckBox checkBox = dialog.findViewById(R.id.dialogFeatureFurtherCommunication);
+
+        MaterialButton cancel = dialog.findViewById(R.id.dialogFeatureCancel);
+        MaterialButton confirm = dialog.findViewById(R.id.dialogFeatureConfirm);
+
+
+        dialogBugDesc.addTextChangedListener(new TextHandler(dialogBugDescError));
+
+        cancel.setOnClickListener(v -> dialog.cancel());
+
+        confirm.setOnClickListener(v -> {
+            if (!dialogBugDescError.isErrorEnabled()) {
+                if (TextHandler.isTextInputLengthCorrect(dialogBugDesc, dialogBugDescError, 300, v.getContext())) {
+                    String desc = Objects.requireNonNull(dialogBugDesc.getText()).toString().trim();
+                    IssueController.uploadFeature(20, desc, checkBox.isChecked(), getApplicationContext(), new IVolley() {//TODO: get userID
+                        @Override
+                        public void onSuccess(String message) {
+                            Toast.makeText(Main.this, message, Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                            drawerLayout.close();
+                        }
+
+                        @Override
+                        public void onError(String message) {
+                            Toast.makeText(Main.this, message, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                }
+            }
+        });
+        dialog.show();
+
+    }
+
+    private void initializeToolbar(MaterialToolbar toolbar) { //TODO: We need to optimize the glide stuff and the order of operations
         /*This add the icon of the user*/
         Glide.with(this)
                 .asDrawable()
@@ -190,11 +325,11 @@ public class Main extends AppCompatActivity {
                 });
         /* This changes the icon when you click it */
         toolbar.setOnMenuItemClickListener(item -> {
-            if (item.getItemId() == R.id.mainToolbarItemNotifications){
-                if (notifications){
+            if (item.getItemId() == R.id.mainToolbarItemNotifications) {
+                if (notifications) {
                     notifications = false;
                     item.setIcon(R.drawable.ic_notifications_off_24);
-                }else{
+                } else {
                     notifications = true;
                     item.setIcon(R.drawable.ic_notifications_active_24);
                 }
@@ -204,54 +339,94 @@ public class Main extends AppCompatActivity {
 
     }
 
-    private void initializeBottomSearch(){
-        RecyclerView searchRecycler = bottomSheetConstraint.findViewById(R.id.searchRecycler);
-        TextView userNotFound = bottomSheetConstraint.findViewById(R.id.searchUsersNotFound);
+    private void initializeBottomSearch() {
+        searchRecycler = bottomSheetConstraint.findViewById(R.id.searchRecycler);
+        usersNotFound = bottomSheetConstraint.findViewById(R.id.searchUsersNotFound);
+
+        List<SearchedUser> searchedUserList = new ArrayList<>();
+        adapterSearch = new AdapterSearch(searchedUserList);
 
         sheetBehavior = BottomSheetBehavior.from(bottomSheetConstraint);
         sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         sheetBehavior.setExpandedOffset(1);
         sheetBehavior.setSkipCollapsed(true);
+        sheetBehavior.setDraggable(false);
 
-        List<SearchedUser> searchedUserList = new ArrayList<>();
-
-        searchedUserList.add(new SearchedUser("1","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png","Niko"));
-        searchedUserList.add(new SearchedUser("1","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png","Niko"));
-        searchedUserList.add(new SearchedUser("1","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png","Niko"));
-        searchedUserList.add(new SearchedUser("1","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png","Niko"));
-        searchedUserList.add(new SearchedUser("1","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png","Niko"));
-
-        if (searchedUserList.size() > 0){
-            userNotFound.setVisibility(View.GONE);
-        }
-
-        adapterSearch = new AdapterSearch(searchedUserList);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(Main.this, LinearLayoutManager.VERTICAL, false);
         searchRecycler.setLayoutManager(layoutManager);
         searchRecycler.setAdapter(adapterSearch);
+
+
+        searchRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+
+                int lastVisibleItemPosition = layoutManager.findLastCompletelyVisibleItemPosition();
+
+                if (dy >= 0 && lastVisibleItemPosition >= adapterSearch.getItemCount() - 1) {
+                    fetchRows();
+                }
+
+            }
+
+            private void fetchRows() { //TODO: IF query == new query do nothing
+                adapterSearch.setOffset(adapterSearch.getOffset() + 10);
+                FriendController.searchUser(searchView.getQuery().toString().trim(), adapterSearch.getOffset(), searchView.getContext(), new ISearch() {
+                    @Override
+                    public void onSuccess(List<SearchedUser> searchedUserList) {
+                        usersNotFound.setVisibility(View.GONE);
+                        adapterSearch.addResultAndRefreshAdapter(searchedUserList);
+                        // System.out.println("offset : " + adapterSearch.getOffset() + "\nlimit : " + 10);
+                        // System.out.println("list size : " + adapterSearch.getItemCount());
+                        // System.out.println("=======================");
+                    }
+
+                    @Override
+                    public void onError(String message) {
+
+                    }
+                });
+
+            }
+        });
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         getMenuInflater().inflate(R.menu.main_toolbar, menu);
 
         MenuItem menuItem = menu.findItem(R.id.mainToolbarItemSearch);
         MenuItem menuItem1 = menu.findItem(R.id.mainToolbarItemNotifications);
-        SearchView searchView = (SearchView) menuItem.getActionView();
+        searchView = (SearchView) menuItem.getActionView();
+
+        int offset = 0;
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                showToast(query,0);
+                adapterSearch.setOffset(offset);
+                if (!query.isEmpty()) {
+                    FriendController.searchUser(query.trim(), adapterSearch.getOffset(), searchView.getContext(), new ISearch() {
+                        @Override
+                        public void onSuccess(List<SearchedUser> searchedUserList) {
+                            usersNotFound.setVisibility(View.GONE);
+                            adapterSearch.refillList(searchedUserList);
+                        }
+
+                        @Override
+                        public void onError(String message) {
+                            adapterSearch.clearListAndRefreshAdapter();
+                            usersNotFound.setVisibility(View.VISIBLE);
+                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (newText.length() >= 3){
-                    showToast(newText,1); //TODO: MAKE THINGS WORK
-                }
-                return true;
+                return false;
             }
         });
 
@@ -266,6 +441,8 @@ public class Main extends AppCompatActivity {
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 menuItem1.setVisible(true);
+                adapterSearch.clearListAndRefreshAdapter();
+                usersNotFound.setVisibility(View.VISIBLE);
                 sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 return true;
             }
@@ -274,12 +451,13 @@ public class Main extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)){
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
-        }else{
+        } else {
             finish();
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         }
@@ -292,7 +470,4 @@ public class Main extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-    private void showToast(String message, int duration){
-        Toast.makeText(this, message, duration).show();
-    }
 }
