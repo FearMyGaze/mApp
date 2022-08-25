@@ -1,5 +1,6 @@
 package com.fearmygaze.mApp.view.adapter;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,9 +9,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
+import com.fearmygaze.mApp.Controller.FriendController;
 import com.fearmygaze.mApp.R;
+import com.fearmygaze.mApp.interfaces.IVolley;
 import com.fearmygaze.mApp.model.SearchedUser;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -21,9 +22,12 @@ import java.util.List;
 public class AdapterSearch extends RecyclerView.Adapter<AdapterSearch.MyViewHolder> {
 
     List<SearchedUser> searchedUserList;
+    private int offset;
+
 
     public AdapterSearch(List<SearchedUser> searchedUserList) {
         this.searchedUserList = searchedUserList;
+        this.offset = 0;
     }
 
     @NonNull
@@ -35,22 +39,63 @@ public class AdapterSearch extends RecyclerView.Adapter<AdapterSearch.MyViewHold
     @Override
     public void onBindViewHolder(@NonNull AdapterSearch.MyViewHolder holder, int position) {
 
-        String id = searchedUserList.get(position).getId();
+        int id = searchedUserList.get(position).getId();
         String image = searchedUserList.get(position).getImage();
         String username = searchedUserList.get(position).getUsername();
+        boolean friend = searchedUserList.get(position).isFriend();
 
-        Glide.with(holder.itemView.getRootView())
-                .load(image)
-                .placeholder(R.drawable.ic_launcher_background)
-                .circleCrop()
-                .apply(RequestOptions.centerCropTransform())
-                .into(holder.image);
+//        Glide.with(holder.itemView.getRootView())
+//                .load(image)
+//                .placeholder(R.drawable.ic_launcher_background)
+//                .circleCrop()
+//                .apply(RequestOptions.centerCropTransform())
+//                .into(holder.image);
 
         holder.username.setText(username);
 
-        holder.button.setOnClickListener(view -> {//TODO: ADD Friend func here
-            Toast.makeText(view.getContext(), "Clicked ->" + username, Toast.LENGTH_SHORT).show();
+        if (friend) {
+            holder.button.setVisibility(View.INVISIBLE);
+        }
+
+        holder.button.setOnClickListener(v -> {
+            FriendController.sendFriendRequest(20, id, v.getContext(), new IVolley() {
+                @Override
+                public void onSuccess(String message) {
+                    Toast.makeText(v.getContext(), message, Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onError(String message) {
+                    Toast.makeText(v.getContext(), message, Toast.LENGTH_LONG).show();
+                }
+            });
         });
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void refillList(List<SearchedUser> searchedUserList) {
+        this.searchedUserList = searchedUserList;
+        notifyDataSetChanged();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void clearListAndRefreshAdapter() {
+        this.searchedUserList.clear();
+        notifyDataSetChanged();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void addResultAndRefreshAdapter(List<SearchedUser> searchedUserList) {
+        this.searchedUserList.addAll(searchedUserList);
+        notifyDataSetChanged();
+    }
+
+    public int getOffset() {
+        return offset;
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
     }
 
     @Override
@@ -58,7 +103,7 @@ public class AdapterSearch extends RecyclerView.Adapter<AdapterSearch.MyViewHold
         return searchedUserList.size();
     }
 
-    protected static class MyViewHolder extends RecyclerView.ViewHolder{
+    protected static class MyViewHolder extends RecyclerView.ViewHolder {
         ShapeableImageView image;
         MaterialTextView username;
         MaterialButton button;

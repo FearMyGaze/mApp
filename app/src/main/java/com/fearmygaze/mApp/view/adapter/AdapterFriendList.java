@@ -1,5 +1,6 @@
 package com.fearmygaze.mApp.view.adapter;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +22,11 @@ import java.util.List;
 public class AdapterFriendList extends RecyclerView.Adapter<AdapterFriendList.MyViewHolder>{
 
     List<Friend> friendList;
+    private int offset;
 
     public AdapterFriendList(List<Friend> friendList) {
         this.friendList = friendList;
+        this.offset = 0;
     }
 
     @NonNull
@@ -55,6 +58,26 @@ public class AdapterFriendList extends RecyclerView.Adapter<AdapterFriendList.My
             return true;
         });
 
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void refillList(List<Friend> friendList) {
+        this.friendList = friendList;
+        notifyDataSetChanged();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void addResultAndRefreshAdapter(List<Friend> friendList) {
+        this.friendList.addAll(friendList);
+        notifyDataSetChanged();
+    }
+
+    public int getOffset() {
+        return offset;
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
     }
 
     @Override

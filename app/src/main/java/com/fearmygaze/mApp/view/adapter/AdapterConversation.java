@@ -3,6 +3,8 @@ package com.fearmygaze.mApp.view.adapter;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,34 +59,35 @@ public class AdapterConversation extends RecyclerView.Adapter<AdapterConversatio
         holder.lastMessage.setText(lastMessage);
         holder.time.setText(time);
 
-        holder.frameLayout.setOnClickListener(view -> {
+        holder.frameLayout.setOnClickListener(v -> {
             Intent intent = new Intent(activity, ChatRoom.class);
             intent.putExtra("username",username);
-            view.getContext().startActivity(intent);
+            v.getContext().startActivity(intent);
             activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
 
-        holder.frameLayout.setOnLongClickListener(view -> {
-            Dialog dialog = new Dialog(view.getContext());
+        holder.frameLayout.setOnLongClickListener(v -> {
+            Dialog dialog = new Dialog(v.getContext());
             dialog.setContentView(R.layout.dialog_conversation);
             dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
             MaterialButton optionDelete = dialog.findViewById(R.id.dialogConversationDelete);
             MaterialButton optionReport = dialog.findViewById(R.id.dialogConversationReport);
 
-            optionDelete.setOnClickListener(v -> {
+            optionDelete.setOnClickListener(v1 -> {
                 conversations.remove(holder.getAdapterPosition()); //TODO: Make the deletion here
                 notifyItemChanged(holder.getAdapterPosition());
                 dialog.dismiss();
             });
 
-            optionReport.setOnClickListener(v -> {
+            optionReport.setOnClickListener(v1 -> {//TODO: Add a dialog
                 String reportedUser = conversations.get(position).getUsername();
+                //UserController.report();
                 dialog.dismiss();
             });
 
             dialog.show();
-
             return true;
         });
 
