@@ -18,20 +18,52 @@ public class TextHandler implements TextWatcher {
         this.textInputLayout = textInputLayout;
     }
 
-    public static void isTextInputEmpty(TextInputEditText textInputEditText, TextInputLayout textInputLayout, Context context) {
-        if (Objects.requireNonNull(textInputEditText.getText()).toString().isEmpty()) {
+    public static boolean isTextInputFilled(TextInputEditText textInputEditText, TextInputLayout textInputLayout, Context context) {
+        if (Objects.requireNonNull(textInputEditText.getText()).toString().trim().isEmpty()) {
             textInputLayout.setError(context.getString(R.string.textHandlerEmpty));
             textInputLayout.setErrorEnabled(true);
+            return false;
         }
+        return true;
     }
 
-    public static boolean IsTextInputsEqual(TextInputEditText textInputEditText, TextInputEditText textInputEditText2, TextInputLayout textInputLayout, Context context) {
-        String input1 = Objects.requireNonNull(textInputEditText.getText()).toString().trim();
-        String input2 = Objects.requireNonNull(textInputEditText2.getText()).toString().trim();
+    public static boolean isTextInputLengthCorrect(TextInputEditText textInputEditText, TextInputLayout textInputLayout, int number, Context context) {
+        if (isTextInputFilled(textInputEditText, textInputLayout, context)) {
+            if (Objects.requireNonNull(textInputEditText.getText()).toString().length() > number) {
+                textInputLayout.setError(context.getString(R.string.textHandlerTooManyCharacters));
+                textInputLayout.setErrorEnabled(true);
+                return false;
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
 
-        if (!input1.equals(input2)) {
+    public static boolean isTextInputsEqual(TextInputEditText textInputEditText, TextInputEditText textInputEditText2, TextInputLayout textInputLayout, TextInputLayout textInputLayout2, Context context) {
+        String firstInput = Objects.requireNonNull(textInputEditText.getText()).toString().trim();
+        String secondInput = Objects.requireNonNull(textInputEditText2.getText()).toString().trim();
+
+        if (!firstInput.equals(secondInput)) {
             textInputLayout.setError(context.getString(R.string.textHandlerNotEqual));
             textInputLayout.setErrorEnabled(true);
+            textInputLayout2.setError(context.getString(R.string.textHandlerNotEqual));
+            textInputLayout2.setErrorEnabled(true);
+            return false;
+        }
+        return true;
+    }
+
+
+    public static boolean isTextInputsDifferent(TextInputEditText textInputEditText1, TextInputLayout textInputLayout1, TextInputEditText textInputEditText2, TextInputLayout textInputLayout2, Context context) {
+        String firstInput = Objects.requireNonNull(textInputEditText1.getText()).toString().trim();
+        String secondInput = Objects.requireNonNull(textInputEditText2.getText()).toString().trim();
+
+        if (firstInput.equals(secondInput)) {
+            textInputLayout1.setError(context.getString(R.string.textHandlerSameCells));
+            textInputLayout1.setErrorEnabled(true);
+            textInputLayout2.setError(context.getString(R.string.textHandlerSameCells));
+            textInputLayout2.setErrorEnabled(true);
             return false;
         }
         return true;
