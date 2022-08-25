@@ -36,6 +36,11 @@
             android:title="@string/navigationDrawerMenuItemBug"
             android:contentDescription="@string/navigationDrawerMenuItemBug"/>
 
+        <item
+            android:id="@+id/navigationMenuItemFeature"
+            android:title="@string/navigationDrawerMenuItemFeature"
+            android:contentDescription="@string/navigationDrawerMenuItemFeature"/>
+
     </group>
 
     <group
