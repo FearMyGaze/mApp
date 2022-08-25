@@ -1,17 +1,19 @@
 package com.fearmygaze.mApp.model;
 
 public class SearchedUser {
-    private final String id;
+    private final int id;
     private final String image;
     private final String username;
+    private final boolean friend;
 
-    public SearchedUser(String id, String image, String username) {
+    public SearchedUser(int id, String image, String username, boolean friend) {
         this.id = id;
         this.image = image;
         this.username = username;
+        this.friend = friend;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
@@ -21,5 +23,10 @@ public class SearchedUser {
 
     public String getUsername() {
         return username;
+    }
+
+
+    public boolean isFriend() {
+        return friend;
     }
 }

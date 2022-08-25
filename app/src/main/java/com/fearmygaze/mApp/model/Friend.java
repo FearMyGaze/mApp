@@ -1,17 +1,17 @@
 package com.fearmygaze.mApp.model;
 
 public class Friend {
-    private final String id;
+    private final int id;
     private final String image;
     private final String username;
 
-    public Friend(String id, String image, String username) {
+    public Friend(int id, String image, String username) {
         this.id = id;
         this.image = image;
         this.username = username;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 

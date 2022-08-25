@@ -33,10 +33,10 @@ public class FriendRequests extends Fragment {
 
         friendRequestsList = new ArrayList<>();
 
-        friendRequestsList.add(new FriendRequest("1","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png","Niko"));
-        friendRequestsList.add(new FriendRequest("1","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png","Niko"));
-        friendRequestsList.add(new FriendRequest("1","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png","Niko"));
-        friendRequestsList.add(new FriendRequest("1","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png","Niko"));
+        friendRequestsList.add(new FriendRequest(1,"https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png","Niko"));
+        friendRequestsList.add(new FriendRequest(1,"https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png","Niko"));
+        friendRequestsList.add(new FriendRequest(1,"https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png","Niko"));
+        friendRequestsList.add(new FriendRequest(1,"https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png","Niko"));
 
 
 

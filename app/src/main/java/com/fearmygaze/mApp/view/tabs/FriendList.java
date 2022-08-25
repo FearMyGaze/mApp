@@ -34,11 +34,11 @@ public class FriendList extends Fragment {
 
         friendList = new ArrayList<>();
 
-        friendList.add(new Friend("1","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png","Lorem_Ipsum"));
-        friendList.add(new Friend("1","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png","Lorem_Ipsum"));
-        friendList.add(new Friend("1","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png","Lorem_Ipsum"));
-        friendList.add(new Friend("1","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png","Lorem_Ipsum"));
-        friendList.add(new Friend("1","https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png","Lorem_Ipsum"));
+        friendList.add(new Friend(1,"https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png","Lorem_Ipsum"));
+        friendList.add(new Friend(1,"https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png","Lorem_Ipsum"));
+        friendList.add(new Friend(1,"https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png","Lorem_Ipsum"));
+        friendList.add(new Friend(1,"https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png","Lorem_Ipsum"));
+        friendList.add(new Friend(1,"https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png","Lorem_Ipsum"));
 
         adapterFriendList = new AdapterFriendList(friendList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL, false);
