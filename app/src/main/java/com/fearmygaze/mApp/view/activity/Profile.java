@@ -79,13 +79,13 @@ public class Profile extends AppCompatActivity {
                     UserController.updatePassword(20, _newPassword, _oldPassword, getApplicationContext(), new IVolley() {
                         @Override
                         public void onSuccess(String message) {
-                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Profile.this, message, Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
                         }
 
                         @Override
                         public void onError(String message) {
-                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Profile.this, message, Toast.LENGTH_SHORT).show();
                         }
                     });
 

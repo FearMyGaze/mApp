@@ -1,7 +1,6 @@
 package com.fearmygaze.mApp.Controller;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -52,9 +51,6 @@ public class FriendController {
                             String user2_id = array.getJSONObject(i).getString("user2_id");
 
 
-
-                            Log.d("Logger",friendshipState + user1_id + user2_id +" ->" + i);
-
                             if ((user1_id.equals(String.valueOf(user)) || user2_id.equals(String.valueOf(user))) && friendshipState.equals("true")){
                                 searchedUserList.add(new SearchedUser(id, imagePath, name, true));
                             }else{
@@ -72,7 +68,6 @@ public class FriendController {
 
             } catch (JSONException e) {
                 iSearch.onError(e.getMessage());
-                Log.d("Logger",e.getMessage());
             }
         }, error -> iSearch.onError(error.getMessage())) {
 

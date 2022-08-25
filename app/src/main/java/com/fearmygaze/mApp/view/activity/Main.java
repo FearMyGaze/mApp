@@ -417,7 +417,7 @@ public class Main extends AppCompatActivity {
                         public void onError(String message) {
                             adapterSearch.clearListAndRefreshAdapter();
                             usersNotFound.setVisibility(View.VISIBLE);
-                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                            Toast.makeText(Main.this, message, Toast.LENGTH_LONG).show();
                         }
                     });
                 }
