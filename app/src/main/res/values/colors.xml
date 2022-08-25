@@ -7,9 +7,14 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFF</color>
-    <color name="input_background">#ECECEC</color>
-    <color name="primary_text">#212121</color>
-    <color name="secondary_text">#757575</color>
-    <color name="primary">#1C2E46</color>
+    <color name="transparent">#00000000</color>
+
+    <color name="input_background">#ECECEC</color> <!-- Background Image-->
+    <color name="primary_text">#212121</color> <!-- Sign in Welcome and Sign up Create New Account-->
+    <color name="secondary_text">#757575</color> <!-- -->
+    <color name="primary">#1C2E46</color> <!-- -->
+
+    <color name="adapter_background">#FCFCFC</color>
+    <color name="adapter_background_stroke">#FDFDFD</color>
 
 </resources>
