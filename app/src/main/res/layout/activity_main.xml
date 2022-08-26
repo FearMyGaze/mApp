@@ -49,7 +49,7 @@
             android:id="@+id/mainBottomNavigation"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:menu="@menu/main_navigation"
+            app:menu="@menu/main_bottom_navigation"
             style="@style/Widget.MaterialComponents.BottomNavigationView.PrimarySurface"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -73,7 +73,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:headerLayout="@layout/nav_header"
-        app:menu="@menu/main_drawer"
+        app:menu="@menu/main_navigation_drawer"
         app:itemRippleColor="@color/purple_200"
         android:overScrollMode="never">
 
