@@ -369,9 +369,9 @@ public class Main extends AppCompatActivity {
 
             }
 
-            private void fetchRows() { //TODO: IF query == new query do nothing
+            private void fetchRows() {
                 adapterSearch.setOffset(adapterSearch.getOffset() + 10);
-                FriendController.searchUser(searchView.getQuery().toString().trim(), adapterSearch.getOffset(), searchView.getContext(), new ISearch() {
+                FriendController.searchUser(currentUser, searchView.getQuery().toString().trim(), adapterSearch.getOffset(), searchView.getContext(), new ISearch() {
                     @Override
                     public void onSuccess(List<SearchedUser> searchedUserList) {
                         usersNotFound.setVisibility(View.GONE);
@@ -403,10 +403,10 @@ public class Main extends AppCompatActivity {
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
+            public boolean onQueryTextSubmit(String query) { //TODO: IF query == new query do nothing
                 adapterSearch.setOffset(offset);
                 if (!query.isEmpty()) {
-                    FriendController.searchUser(query.trim(), adapterSearch.getOffset(), searchView.getContext(), new ISearch() {
+                    FriendController.searchUser(currentUser, query.trim(), adapterSearch.getOffset(), searchView.getContext(), new ISearch() {
                         @Override
                         public void onSuccess(List<SearchedUser> searchedUserList) {
                             usersNotFound.setVisibility(View.GONE);

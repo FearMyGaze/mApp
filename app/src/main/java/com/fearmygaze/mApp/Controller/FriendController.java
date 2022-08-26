@@ -11,6 +11,7 @@ import com.fearmygaze.mApp.interfaces.ISearch;
 import com.fearmygaze.mApp.interfaces.IVolley;
 import com.fearmygaze.mApp.model.Friend;
 import com.fearmygaze.mApp.model.SearchedUser;
+import com.fearmygaze.mApp.model.User;
 import com.fearmygaze.mApp.util.RequestSingleton;
 
 import org.json.JSONArray;
@@ -24,13 +25,11 @@ import java.util.Map;
 
 public class FriendController {
 
-    public static void searchUser(String username, int offset, Context context, ISearch iSearch) {//TODO: We need to check if the user is already friends with the user
+    public static void searchUser(User user, String username, int offset, Context context, ISearch iSearch) {//TODO: We need to check if the user is already friends with the user
         Map<String, Object> body = new HashMap<>();
         body.put("username", username);
         body.put("limit", 10);
         body.put("offset", offset);
-
-        int user = 20;
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url(0, context), new JSONObject(body), response -> {
             try {
@@ -50,11 +49,12 @@ public class FriendController {
                             String user1_id = array.getJSONObject(i).getString("user1_id");
                             String user2_id = array.getJSONObject(i).getString("user2_id");
 
-
-                            if ((user1_id.equals(String.valueOf(user)) || user2_id.equals(String.valueOf(user))) && friendshipState.equals("true")){
-                                searchedUserList.add(new SearchedUser(id, imagePath, name, true));
-                            }else{
-                                searchedUserList.add(new SearchedUser(id, imagePath, name, false));
+                            if (!user.getUsername().equals(name)){//This is removing our name from the list
+                                if ((user1_id.equals(String.valueOf(user.getId())) || user2_id.equals(String.valueOf(user.getId()))) && friendshipState.equals("true")){
+                                    searchedUserList.add(new SearchedUser(id, imagePath, name, true));
+                                }else{
+                                    searchedUserList.add(new SearchedUser(id, imagePath, name, false));
+                                }
                             }
 
                         }
