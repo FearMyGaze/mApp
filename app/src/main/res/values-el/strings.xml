@@ -30,6 +30,7 @@
     <string name="navigationDrawerMenuItemSettings">Προφίλ</string>
     <string name="navigationDrawerMenuItemBug">Bug</string>
     <string name="navigationDrawerMenuItemFeature">Feature Request</string>
+    <string name="navigationDrawerMenuItemChangelog">Ιστορικό αλλαγών</string>
     <string name="navigationDrawerMenuItemTerms">Όροι χρήσης</string>
     <string name="navigationDrawerMenuItemSignOut">Έξοδος</string>
     <string name="navigation_drawer_open">Άνοιξε το συρτάρι πλοήγης</string>

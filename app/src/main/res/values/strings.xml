@@ -29,6 +29,7 @@
     <string name="navigationDrawerMenuItemSettings">Settings</string>
     <string name="navigationDrawerMenuItemBug">Bug</string>
     <string name="navigationDrawerMenuItemFeature">Feature Request</string>
+    <string name="navigationDrawerMenuItemChangelog">Changelog</string>
     <string name="navigationDrawerMenuItemTerms">Terms</string>
     <string name="navigationDrawerMenuItemSignOut">Sign Out</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>

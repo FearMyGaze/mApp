@@ -147,6 +147,9 @@ public class Main extends AppCompatActivity {
                 case R.id.navigationMenuItemFeature:
                     prepareForFeatureListing();
                     return true;
+                case R.id.navigationMenuItemChangelog:
+                    Toast.makeText(Main.this, "This will open a dialog with MarkDown Support", Toast.LENGTH_LONG).show();
+                    return true;
                 case R.id.navigationMenuItemTerms:
                     Toast.makeText(this, "This will open a dialog", Toast.LENGTH_SHORT).show();
                     return true;

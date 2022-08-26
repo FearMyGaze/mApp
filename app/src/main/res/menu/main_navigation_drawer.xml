@@ -48,9 +48,20 @@
         android:checkableBehavior="none">
 
         <item
+            android:id="@+id/navigationMenuItemChangelog"
+            android:title="@string/navigationDrawerMenuItemChangelog"
+            android:contentDescription="@string/navigationDrawerMenuItemChangelog"/>
+
+        <item
             android:id="@+id/navigationMenuItemTerms"
             android:title="@string/navigationDrawerMenuItemTerms"
             android:contentDescription="@string/navigationDrawerMenuItemTerms"/>
+
+    </group>
+
+    <group
+        android:id="@+id/mainDrawerGroup4"
+        android:checkableBehavior="none">
 
         <item
             android:id="@+id/navigationMenuItemSignOut"
@@ -58,4 +69,5 @@
             android:contentDescription="@string/navigationDrawerMenuItemSignOut"/>
 
     </group>
+
 </menu>
