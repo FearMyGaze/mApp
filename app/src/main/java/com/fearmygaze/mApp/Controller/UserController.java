@@ -82,15 +82,14 @@ public class UserController {
                         String email = response.getJSONObject("data").getString("email");
                         String image = response.getJSONObject("data").getString("imagePath");
 
-                        User user = new User(id, username, image, email);
+                        User user = new User(id, username,  BuildConfig.PROFILE + image, email);
 
                         PrivatePreference preference = new PrivatePreference(context);
 
                         preference.putInt("id", id);
                         preference.putString("username", username);
                         preference.putString("email", email);
-                        preference.putString("image", image);
-
+                        preference.putString("image", BuildConfig.PROFILE + image);
 
                         iUser.onSuccess(user, message);
                         break;

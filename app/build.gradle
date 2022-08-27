@@ -21,6 +21,7 @@ android {
         properties.load(project.rootProject.file("local.properties").newDataInputStream())
 
         buildConfigField ("String", "SERVER", "\"${properties.getProperty("SERVER")}\"")
+        buildConfigField ("String", "PROFILE", "\"${properties.getProperty("PROFILE")}\"")
     }
     buildTypes {
         release {
