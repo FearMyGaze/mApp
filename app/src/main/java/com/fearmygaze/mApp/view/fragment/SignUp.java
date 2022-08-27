@@ -184,14 +184,14 @@ public class SignUp extends Fragment {
     }
 
     private void checkForErrorsAndRegister() {
-        if (TextHandler.isTextInputLengthCorrect(signUpUsername, signUpUsernameError, 100, getContext()) &&
-                TextHandler.isTextInputLengthCorrect(signUpEmail, signUpEmailError, 100, getContext()) && !base64Image.isEmpty()) {
+        if (TextHandler.isTextInputLengthCorrect(signUpUsername, signUpUsernameError, 50, getContext()) &&
+                TextHandler.isTextInputLengthCorrect(signUpEmail, signUpEmailError, 50, getContext()) && !base64Image.isEmpty()) {
             if (RegEx.isPasswordValidAndEqual(signUpPassword, signUpPasswordError, signUpConfirmPassword, signUpConfirmPasswordError, 300, getContext())) {
                 String username = Objects.requireNonNull(signUpUsername.getText()).toString().trim();
                 String email = Objects.requireNonNull(signUpEmail.getText()).toString().trim();
                 String password = Objects.requireNonNull(signUpPassword.getText()).toString().trim();
 
-                UserController.signUp(username, email, password, "base64Image", requireContext(), new IVolley() {
+                UserController.signUp(username, email, password, base64Image, requireContext(), new IVolley() {
                     @Override
                     public void onSuccess(String message) {
                         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();

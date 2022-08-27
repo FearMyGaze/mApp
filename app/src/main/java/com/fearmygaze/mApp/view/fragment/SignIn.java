@@ -61,7 +61,7 @@ public class SignIn extends Fragment {
     }
 
     private void userLogin() {
-        if (TextHandler.isTextInputLengthCorrect(signInCredentials, signInCredentialsError, 100, getContext()) &&
+        if (TextHandler.isTextInputLengthCorrect(signInCredentials, signInCredentialsError, 50, getContext()) &&
                 TextHandler.isTextInputLengthCorrect(signInPassword, signInPasswordError, 300, getContext())) {
             if (RegEx.isPasswordValid(Objects.requireNonNull(signInPassword.getText()).toString(), signInPasswordError, getContext())) {
                 if (!signInCredentialsError.isErrorEnabled() && !signInPasswordError.isErrorEnabled()) {
@@ -86,8 +86,6 @@ public class SignIn extends Fragment {
                             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
                         }
                     });
-
-
                 }
             }
         }

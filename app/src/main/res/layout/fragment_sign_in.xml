@@ -54,7 +54,7 @@
                 android:layout_marginTop="30dp"
                 android:hint="@string/signInWithCredentials"
                 app:counterEnabled="true"
-                app:counterMaxLength="100"
+                app:counterMaxLength="50"
                 app:endIconMode="clear_text"
                 app:boxCornerRadiusTopStart="13dp"
                 app:boxCornerRadiusTopEnd="13dp"
