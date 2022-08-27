@@ -456,9 +456,6 @@ public class Main extends AppCompatActivity {
 
     public void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("user", currentUser);
-        fragment.setArguments(bundle);
         fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
     }
 

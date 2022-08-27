@@ -5,7 +5,6 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.fearmygaze.mApp.R;
 import com.fearmygaze.mApp.view.fragment.SignIn;
@@ -28,9 +27,7 @@ public class Starting extends AppCompatActivity {
 
     public void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.startingFrame, fragment);
-        fragmentTransaction.commit();
+        fragmentManager.beginTransaction().replace(R.id.startingFrame, fragment).commit();
     }
 
     public Fragment reInitiateFragmentSignIn() {
