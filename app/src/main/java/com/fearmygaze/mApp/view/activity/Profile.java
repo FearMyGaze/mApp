@@ -14,6 +14,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.fearmygaze.mApp.Controller.UserController;
 import com.fearmygaze.mApp.R;
 import com.fearmygaze.mApp.interfaces.IVolley;
+import com.fearmygaze.mApp.model.User;
 import com.fearmygaze.mApp.util.RegEx;
 import com.fearmygaze.mApp.util.TextHandler;
 import com.google.android.material.button.MaterialButton;
@@ -30,11 +31,14 @@ public class Profile extends AppCompatActivity {
     MaterialTextView username, userEmail, faq;
     MaterialButton changePassword, add2FA;
 
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {// TODO: Add  the profile faq add 2FA and the QR image
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        user = getIntent().getParcelableExtra("user");
 
         userImage = findViewById(R.id.profileUserImage);
         username = findViewById(R.id.profileUsername);
@@ -43,8 +47,11 @@ public class Profile extends AppCompatActivity {
         add2FA = findViewById(R.id.profileAdd2FA);
         faq = findViewById(R.id.profileFAQ);
 
+        username.setText(user.getUsername());
+        userEmail.setText(user.getEmail());
+
         Glide.with(this)
-                .load("https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png")
+                .load(user.getImageUrl())
                 .placeholder(R.drawable.ic_launcher_background)
                 .circleCrop()
                 .apply(RequestOptions.centerCropTransform())
@@ -76,7 +83,7 @@ public class Profile extends AppCompatActivity {
                 String _newPassword = Objects.requireNonNull(newPassword.getText()).toString();
 
                 if (RegEx.isPasswordValidAndDifferent(oldPassword, oldPasswordError, newPassword, newPasswordError, 300, getApplicationContext())) {
-                    UserController.updatePassword(20, _newPassword, _oldPassword, getApplicationContext(), new IVolley() {
+                    UserController.updatePassword(user.getId(), _newPassword, _oldPassword, getApplicationContext(), new IVolley() {
                         @Override
                         public void onSuccess(String message) {
                             Toast.makeText(Profile.this, message, Toast.LENGTH_SHORT).show();
