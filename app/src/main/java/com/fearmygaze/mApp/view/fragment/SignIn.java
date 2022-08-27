@@ -61,7 +61,6 @@ public class SignIn extends Fragment {
     }
 
     private void userLogin() {
-
         if (TextHandler.isTextInputLengthCorrect(signInCredentials, signInCredentialsError, 100, getContext()) &&
                 TextHandler.isTextInputLengthCorrect(signInPassword, signInPasswordError, 300, getContext())) {
             if (RegEx.isPasswordValid(Objects.requireNonNull(signInPassword.getText()).toString(), signInPasswordError, getContext())) {
@@ -84,7 +83,7 @@ public class SignIn extends Fragment {
 
                         @Override
                         public void onError(String message) {
-                            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
                         }
                     });
 
