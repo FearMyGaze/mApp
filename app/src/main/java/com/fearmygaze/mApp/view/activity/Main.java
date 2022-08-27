@@ -123,7 +123,9 @@ public class Main extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.navigationMenuItemProfile:
-                    startActivity(new Intent(Main.this, Profile.class));
+                    Intent intent = new Intent(Main.this, Profile.class);
+                    intent.putExtra("user",currentUser);
+                    startActivity(intent);
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     drawerLayout.close();
                     return true;
@@ -206,7 +208,7 @@ public class Main extends AppCompatActivity {
     }
 
 
-    private void prepareForBugListing() {//TODO: Add a textView so the user can input device name
+    private void prepareForBugListing() {
         Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_bug);
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -444,8 +446,7 @@ public class Main extends AppCompatActivity {
 
 
     @Override
-    public void onBackPressed() {//TODO: This is not working
-        super.onBackPressed();
+    public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
