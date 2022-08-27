@@ -27,7 +27,7 @@ import java.util.Map;
 
 public class UserController {
 
-    public static void signUp(String username, String email, String password, String image, Context context, IUser iUser) {
+    public static void signUp(String username, String email, String password, String image, Context context, IVolley iVolley) {
         Map<String, String> body = new HashMap<>();
         body.put("username", username);
         body.put("email", email);
@@ -41,25 +41,18 @@ public class UserController {
 
                 switch (error) {
                     case "200":
-                        int id = response.getJSONObject("data").getInt("id");
-                        String _username = response.getJSONObject("data").getString("username");
-                        String _email = response.getJSONObject("data").getString("email");
-                        String _image = response.getJSONObject("data").getString("imagePath");
-                        //TODO: Here create the user
-                        User user = new User(id, _username, _image, _email);
-
-                        iUser.onSuccess(user, message);
+                        iVolley.onSuccess(message);
                         break;
                     case "404":
                     case "405":
-                        iUser.onError(message);
+                        iVolley.onError(message);
                         break;
                 }
 
             } catch (JSONException e) {
-                iUser.onError(e.getMessage());
+                iVolley.onError(e.getMessage());
             }
-        }, error -> iUser.onError(error.getMessage())) {
+        }, error -> iVolley.onError(error.getMessage())) {
 
             @Override
             public Map<String, String> getHeaders() {

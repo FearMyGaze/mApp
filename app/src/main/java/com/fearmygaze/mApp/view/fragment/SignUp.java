@@ -21,8 +21,7 @@ import androidx.fragment.app.Fragment;
 
 import com.fearmygaze.mApp.Controller.UserController;
 import com.fearmygaze.mApp.R;
-import com.fearmygaze.mApp.interfaces.IUser;
-import com.fearmygaze.mApp.model.User;
+import com.fearmygaze.mApp.interfaces.IVolley;
 import com.fearmygaze.mApp.util.RegEx;
 import com.fearmygaze.mApp.util.TextHandler;
 import com.fearmygaze.mApp.view.activity.Starting;
@@ -192,11 +191,10 @@ public class SignUp extends Fragment {
                 String email = Objects.requireNonNull(signUpEmail.getText()).toString().trim();
                 String password = Objects.requireNonNull(signUpPassword.getText()).toString().trim();
 
-                UserController.signUp(username, email, password, "base64Image", requireContext(), new IUser() {
+                UserController.signUp(username, email, password, "base64Image", requireContext(), new IVolley() {
                     @Override
-                    public void onSuccess(User user, String message) {
+                    public void onSuccess(String message) {
                         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-
                         ((Starting) requireActivity()).replaceFragment(((Starting) requireActivity()).reInitiateFragmentSignIn());
                     }
 
