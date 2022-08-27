@@ -12,6 +12,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.fearmygaze.mApp.R;
 import com.fearmygaze.mApp.model.Conversation;
+import com.fearmygaze.mApp.model.User;
 import com.fearmygaze.mApp.view.adapter.AdapterConversation;
 
 import java.util.ArrayList;
@@ -19,17 +20,20 @@ import java.util.List;
 
 public class Chat extends Fragment {
 
+    public Chat(User user){
+        this.user = user;
+    }
+
     View view;
+    User user;
 
     SwipeRefreshLayout swipeRefreshLayout;
-
 
     RecyclerView conversationsRecycler;
 
     AdapterConversation adapterConversation;
 
     List<Conversation> conversationList;
-    List<Conversation> pinnedConversations;
 
     /*
     * TODO: When the conversation adapter is clicked, pass the appropriate information and maybe store them locally (Preferable)
@@ -45,7 +49,6 @@ public class Chat extends Fragment {
         swipeRefreshLayout = view.findViewById(R.id.fragmentChatRefresh);
         conversationsRecycler = view.findViewById(R.id.fragmentChatAllConversationsRecycler);
 
-        pinnedConversations = new ArrayList<>();
         conversationList = new ArrayList<>();
 
         conversationList.add(new Conversation("1", "https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png",
@@ -75,7 +78,7 @@ public class Chat extends Fragment {
 
 
         adapterConversation = new AdapterConversation(conversationList, requireActivity());
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false);
         conversationsRecycler.setLayoutManager(layoutManager);
         conversationsRecycler.setAdapter(adapterConversation);
 

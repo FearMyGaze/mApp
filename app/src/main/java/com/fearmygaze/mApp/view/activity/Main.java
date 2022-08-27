@@ -25,11 +25,11 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.fearmygaze.mApp.Controller.FriendController;
@@ -99,13 +99,10 @@ public class Main extends AppCompatActivity {
         if (getIntent().getParcelableExtra("user") != null) {
             currentUser = getIntent().getParcelableExtra("user");
         } else {
-
             currentUser = new User(
                     preference.getInt("id"), preference.getString("username"),
                     preference.getString("image"), preference.getString("email"));
-
         }
-
 
         rememberMe();
 
@@ -113,14 +110,9 @@ public class Main extends AppCompatActivity {
         toolbar = findViewById(R.id.mainToolbar);
         bottomNavigationView = findViewById(R.id.mainBottomNavigation);
         navigationView = findViewById(R.id.mainNavigation);
+        bottomSheetConstraint = findViewById(R.id.search);
 
         setSupportActionBar(toolbar);
-
-        /*
-         * BottomSheet
-         * */
-
-        bottomSheetConstraint = findViewById(R.id.search);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
@@ -170,8 +162,8 @@ public class Main extends AppCompatActivity {
          * BottomNavigation
          * */
 
-        friends = new Friends();
-        chat = new Chat();
+        friends = new Friends(currentUser);
+        chat = new Chat(currentUser);
 
         replaceFragment(chat);
         bottomNavigationView.setSelectedItemId(R.id.mainNavigationItemChoice1);
@@ -190,9 +182,10 @@ public class Main extends AppCompatActivity {
         });
     }
 
-    private void rememberMe() {
-        PrivatePreference preference = new PrivatePreference(Main.this);
+    private void rememberMe() {//TODO: Maybe we need to bring the data back if there are new changes
+        preference = new PrivatePreference(Main.this);
         if (preference.getInt("id") == -1 || currentUser.getId() == -1) {
+            preference.clear();
             startActivity(new Intent(Main.this, Starting.class));
             finish();
             return;
@@ -243,7 +236,7 @@ public class Main extends AppCompatActivity {
                     String desc = Objects.requireNonNull(dialogBugDesc.getText()).toString().trim();
                     String device = Objects.requireNonNull(dialogBugDevice.getText()).toString().trim();
 
-                    IssueController.uploadBug(20, desc, device, checkBox.isChecked(), getApplicationContext(), new IVolley() {//TODO: get userID
+                    IssueController.uploadBug(currentUser.getId(), desc, device, checkBox.isChecked(), getApplicationContext(), new IVolley() {
                         @Override
                         public void onSuccess(String message) {
                             Toast.makeText(Main.this, message, Toast.LENGTH_SHORT).show();
@@ -278,7 +271,6 @@ public class Main extends AppCompatActivity {
         MaterialButton cancel = dialog.findViewById(R.id.dialogFeatureCancel);
         MaterialButton confirm = dialog.findViewById(R.id.dialogFeatureConfirm);
 
-
         dialogBugDesc.addTextChangedListener(new TextHandler(dialogBugDescError));
 
         cancel.setOnClickListener(v -> dialog.cancel());
@@ -287,7 +279,7 @@ public class Main extends AppCompatActivity {
             if (!dialogBugDescError.isErrorEnabled()) {
                 if (TextHandler.isTextInputLengthCorrect(dialogBugDesc, dialogBugDescError, 300, v.getContext())) {
                     String desc = Objects.requireNonNull(dialogBugDesc.getText()).toString().trim();
-                    IssueController.uploadFeature(20, desc, checkBox.isChecked(), getApplicationContext(), new IVolley() {//TODO: get userID
+                    IssueController.uploadFeature(currentUser.getId(), desc, checkBox.isChecked(), getApplicationContext(), new IVolley() {
                         @Override
                         public void onSuccess(String message) {
                             Toast.makeText(Main.this, message, Toast.LENGTH_SHORT).show();
@@ -314,7 +306,8 @@ public class Main extends AppCompatActivity {
                 .asDrawable()
                 .circleCrop()
                 .placeholder(R.drawable.ic_person_24)
-                .load("https://static-cdn.jtvnw.net/jtv_user_pictures/0d5d4ba9-881f-4d04-a9ae-b1ebe618442d-profile_image-70x70.png")
+                .apply(new RequestOptions().override(70, 70))
+                .load(currentUser.getImageUrl())
                 .into(new CustomTarget<Drawable>() {
                     @Override
                     public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
@@ -379,9 +372,6 @@ public class Main extends AppCompatActivity {
                     public void onSuccess(List<SearchedUser> searchedUserList) {
                         usersNotFound.setVisibility(View.GONE);
                         adapterSearch.addResultAndRefreshAdapter(searchedUserList);
-                        // System.out.println("offset : " + adapterSearch.getOffset() + "\nlimit : " + 10);
-                        // System.out.println("list size : " + adapterSearch.getItemCount());
-                        // System.out.println("=======================");
                     }
 
                     @Override
@@ -402,12 +392,10 @@ public class Main extends AppCompatActivity {
         MenuItem menuItem1 = menu.findItem(R.id.mainToolbarItemNotifications);
         searchView = (SearchView) menuItem.getActionView();
 
-        int offset = 0;
-
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) { //TODO: IF query == new query do nothing
-                adapterSearch.setOffset(offset);
+                adapterSearch.setOffset(0);
                 if (!query.isEmpty()) {
                     FriendController.searchUser(currentUser, query.trim(), adapterSearch.getOffset(), searchView.getContext(), new ISearch() {
                         @Override
@@ -456,7 +444,7 @@ public class Main extends AppCompatActivity {
 
 
     @Override
-    public void onBackPressed() {
+    public void onBackPressed() {//TODO: This is not working
         super.onBackPressed();
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
@@ -468,9 +456,10 @@ public class Main extends AppCompatActivity {
 
     public void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.mainFrame, fragment);
-        fragmentTransaction.commit();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("user", currentUser);
+        fragment.setArguments(bundle);
+        fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
     }
 
 }

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.fearmygaze.mApp.R;
 import com.fearmygaze.mApp.model.FriendRequest;
+import com.fearmygaze.mApp.model.User;
 import com.fearmygaze.mApp.view.adapter.AdapterFriendRequest;
 
 import java.util.ArrayList;
@@ -18,12 +19,18 @@ import java.util.List;
 
 public class FriendRequests extends Fragment {
 
+    public FriendRequests(User user){
+        this.user = user;
+    }
+
     RecyclerView friendRequestRecycler;
 
     List<FriendRequest> friendRequestsList;
     AdapterFriendRequest adapterFriendRequest;
 
     View view;
+
+    User user;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
