@@ -61,7 +61,6 @@ public class SignUp extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_sign_up, container, false);
 
-
         signUpImage = view.findViewById(R.id.signUpImage);
         signUpAddImage = view.findViewById(R.id.signUpAddImage);
 
@@ -106,10 +105,6 @@ public class SignUp extends Fragment {
 
         signUpAgreeToAdultAge.setOnCheckedChangeListener((buttonView, isChecked) -> signUpButton.setEnabled(isChecked && signUpAgreeToTerms.isChecked()));
 
-        /*
-         * The moment the TextInputEditText is filled with a text after an error occurred the error
-         *   vanishes from the text that was changed
-         * */
         signUpUsername.addTextChangedListener(new TextHandler(signUpUsernameError));
         signUpEmail.addTextChangedListener(new TextHandler(signUpEmailError));
         signUpPassword.addTextChangedListener(new TextHandler(signUpPasswordError));
@@ -143,12 +138,11 @@ public class SignUp extends Fragment {
                     Uri uri = result.getData().getData();
                     try {
 
-                        //Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), uri);
-                        Bitmap output =  Bitmap.createScaledBitmap(MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), uri),70,70,true);
+                        Bitmap output =  Bitmap.createScaledBitmap(MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), uri),1024,1024,true); //TODO: Subject to change
 
                         ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
-                        output.compress(Bitmap.CompressFormat.PNG, 100, stream);//TODO: Make a test of uploading the raw image and then the compressed
+                        output.compress(Bitmap.CompressFormat.PNG, 100, stream);
 
                         base64Image = null;
                         base64Image = Base64.encodeToString(stream.toByteArray(), Base64.DEFAULT);
@@ -158,7 +152,7 @@ public class SignUp extends Fragment {
                         stateOfCells(true);
 
                     } catch (IOException e) {
-                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(requireContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -176,11 +170,11 @@ public class SignUp extends Fragment {
     }
 
     private void openTermsDialog() {
-        Toast.makeText(getContext(), "Open Dialog", Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), "Open Dialog", Toast.LENGTH_SHORT).show();
     }
 
     private void openAdultAgeDialog() {
-        Toast.makeText(getContext(), "Open Dialog", Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), "Open Dialog", Toast.LENGTH_SHORT).show();
     }
 
     private void checkForErrorsAndRegister() {
@@ -200,7 +194,7 @@ public class SignUp extends Fragment {
 
                     @Override
                     public void onError(String message) {
-                        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
                     }
                 });
             }
