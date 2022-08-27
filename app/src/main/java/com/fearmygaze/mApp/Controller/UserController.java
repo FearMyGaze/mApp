@@ -82,7 +82,7 @@ public class UserController {
                         String email = response.getJSONObject("data").getString("email");
                         String image = response.getJSONObject("data").getString("imagePath");
 
-                        User user = new User(id, username,  BuildConfig.PROFILE + image, email);
+                        User user = new User(id, username, BuildConfig.PROFILE + image, email);
 
                         PrivatePreference preference = new PrivatePreference(context);
 
@@ -190,7 +190,7 @@ public class UserController {
         RequestSingleton.getInstance(context).addToRequestQueue(request);
     }
 
-    public static void statusCheck(int id, Context context, IVolley iVolley) { //TODO: This will be for checking if the user is banned, OK or disabled
+    public static void statusCheck(int id, Context context, IUser iUser) {
         Map<String, Object> body = new HashMap<>();
         body.put("userID", id);
 
@@ -201,18 +201,30 @@ public class UserController {
 
                 switch (error) {
                     case "200":
-                        //iVolley.onSuccess(message);
+                        int _id = response.getJSONObject("data").getInt("id");
+                        String username = response.getJSONObject("data").getString("username");
+                        String image = response.getJSONObject("data").getString("imagePath");
+                        String email = response.getJSONObject("data").getString("email");
+
+                        PrivatePreference preference = new PrivatePreference(context);
+                        preference.putInt("id", _id);
+                        preference.putString("username", username);
+                        preference.putString("image", image);
+                        preference.putString("email", email);
+
+                        User user = new User(_id, username, BuildConfig.PROFILE + image, email);
+                        iUser.onSuccess(user, message);
                         break;
                     case "404":
                     case "405":
-                        iVolley.onError(message);
+                        iUser.onError(message);
                         break;
                 }
 
             } catch (JSONException e) {
-                iVolley.onError(e.getMessage());
+                iUser.onError(e.getMessage());
             }
-        }, error -> iVolley.onError(error.getMessage())) {
+        }, error -> iUser.onError(error.getMessage())) {
 
             @Override
             public Map<String, String> getHeaders() {
@@ -227,7 +239,7 @@ public class UserController {
 
     public static void delete(int id, Context context, IVolley iVolley) {//TODO: This will be inside the settings activity
         Map<String, Object> body = new HashMap<>();
-        body.put("userID", 20);
+        body.put("userID", id);
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url(5, context), new JSONObject(body), response -> {
             try {

@@ -37,6 +37,7 @@ import com.fearmygaze.mApp.Controller.IssueController;
 import com.fearmygaze.mApp.Controller.UserController;
 import com.fearmygaze.mApp.R;
 import com.fearmygaze.mApp.interfaces.ISearch;
+import com.fearmygaze.mApp.interfaces.IUser;
 import com.fearmygaze.mApp.interfaces.IVolley;
 import com.fearmygaze.mApp.model.SearchedUser;
 import com.fearmygaze.mApp.model.User;
@@ -124,7 +125,7 @@ public class Main extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigationMenuItemProfile:
                     Intent intent = new Intent(Main.this, Profile.class);
-                    intent.putExtra("user",currentUser);
+                    intent.putExtra("user", currentUser);
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     drawerLayout.close();
@@ -184,7 +185,7 @@ public class Main extends AppCompatActivity {
         });
     }
 
-    private void rememberMe() {//TODO: Maybe we need to bring the data back if there are new changes
+    private void rememberMe() {
         preference = new PrivatePreference(Main.this);
         if (preference.getInt("id") == -1 || currentUser.getId() == -1) {
             preference.clear();
@@ -192,15 +193,15 @@ public class Main extends AppCompatActivity {
             finish();
             return;
         }
-        UserController.statusCheck(currentUser.getId(), Main.this, new IVolley() {
+        UserController.statusCheck(currentUser.getId(), Main.this, new IUser() {
             @Override
-            public void onSuccess(String message) {
-                Toast.makeText(Main.this, message, Toast.LENGTH_LONG).show();
+            public void onSuccess(User user, String message) {
+                currentUser = user;
             }
 
             @Override
             public void onError(String message) {
-                Toast.makeText(Main.this, "message", Toast.LENGTH_LONG).show();
+                Toast.makeText(Main.this, message, Toast.LENGTH_LONG).show();
                 startActivity(new Intent(Main.this, Starting.class));
                 finish();
             }
