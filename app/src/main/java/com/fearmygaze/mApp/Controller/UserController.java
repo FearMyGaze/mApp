@@ -91,8 +91,8 @@ public class UserController {
 
                         preference.putInt("id", id);
                         preference.putString("username", username);
-                        preference.putString("email", email);
                         preference.putString("image", BuildConfig.PROFILE + image);
+                        preference.putString("email", email);
 
                         iUser.onSuccess(user, message);
                         break;
@@ -223,12 +223,13 @@ public class UserController {
                         String email = response.getJSONObject("data").getString("email");
 
                         PrivatePreference preference = new PrivatePreference(context);
-                        preference.putInt("id", _id);
+                        preference.putInt("id", id);
                         preference.putString("username", username);
-                        preference.putString("image", image);
+                        preference.putString("image", BuildConfig.PROFILE + image);
                         preference.putString("email", email);
 
                         User user = new User(_id, username, BuildConfig.PROFILE + image, email);
+                        
                         iUserStatus.onSuccess(user);
                         break;
                     case "404":
