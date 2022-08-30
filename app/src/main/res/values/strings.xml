@@ -150,9 +150,9 @@
     <string-array name="friends">
         <item>search-user</item>
         <item>send-friend-request</item>
-        <item>add-user</item>
-        <item>ignore-user</item>
         <item>show-friends</item>
+        <item>answer-friend-request</item>
+        <item>delete-friend</item>
     </string-array>
 
 </resources>

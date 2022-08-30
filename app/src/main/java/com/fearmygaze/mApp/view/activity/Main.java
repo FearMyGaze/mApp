@@ -37,7 +37,7 @@ import com.fearmygaze.mApp.Controller.IssueController;
 import com.fearmygaze.mApp.Controller.UserController;
 import com.fearmygaze.mApp.R;
 import com.fearmygaze.mApp.interfaces.ISearch;
-import com.fearmygaze.mApp.interfaces.IStatus;
+import com.fearmygaze.mApp.interfaces.IUserStatus;
 import com.fearmygaze.mApp.interfaces.IVolley;
 import com.fearmygaze.mApp.model.SearchedUser;
 import com.fearmygaze.mApp.model.User;
@@ -193,7 +193,7 @@ public class Main extends AppCompatActivity {
             finish();
             return;
         }
-        UserController.statusCheck(currentUser.getId(), Main.this, new IStatus() {
+        UserController.statusCheck(currentUser.getId(), Main.this, new IUserStatus() {
             @Override
             public void onSuccess(User user) {
                 currentUser = user;

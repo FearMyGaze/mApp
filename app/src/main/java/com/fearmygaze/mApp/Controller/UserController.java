@@ -6,8 +6,8 @@ import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.fearmygaze.mApp.BuildConfig;
 import com.fearmygaze.mApp.R;
-import com.fearmygaze.mApp.interfaces.IStatus;
 import com.fearmygaze.mApp.interfaces.IUser;
+import com.fearmygaze.mApp.interfaces.IUserStatus;
 import com.fearmygaze.mApp.interfaces.IVolley;
 import com.fearmygaze.mApp.model.User;
 import com.fearmygaze.mApp.util.NetworkConnection;
@@ -169,6 +169,7 @@ public class UserController {
     public static void updateImage(String email, String image, Context context, IVolley iVolley) {
         Map<String, String> body = new HashMap<>();
         body.put("email", email);
+        body.put("image", image);
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url(3, context), new JSONObject(body), response -> {
             try {
@@ -205,7 +206,7 @@ public class UserController {
         }
     }
 
-    public static void statusCheck(int id, Context context, IStatus iStatus) {
+    public static void statusCheck(int id, Context context, IUserStatus iUserStatus) {
         Map<String, Object> body = new HashMap<>();
         body.put("userID", id);
 
@@ -228,18 +229,18 @@ public class UserController {
                         preference.putString("email", email);
 
                         User user = new User(_id, username, BuildConfig.PROFILE + image, email);
-                        iStatus.onSuccess(user);
+                        iUserStatus.onSuccess(user);
                         break;
                     case "404":
                     case "405":
-                        iStatus.onExit(message);
+                        iUserStatus.onExit(message);
                         break;
                 }
 
             } catch (JSONException e) {
-                iStatus.onError(context.getString(R.string.jsonError));
+                iUserStatus.onError(context.getString(R.string.jsonError));
             }
-        }, error -> iStatus.onError(context.getString(R.string.volleyError))) {
+        }, error -> iUserStatus.onError(context.getString(R.string.volleyError))) {
 
             @Override
             public Map<String, String> getHeaders() {
@@ -253,7 +254,7 @@ public class UserController {
         if (NetworkConnection.isConnectionAlive(context)){
             RequestSingleton.getInstance(context).addToRequestQueue(request);
         }else {
-            iStatus.onError(context.getString(R.string.networkError));
+            iUserStatus.onError(context.getString(R.string.networkError));
         }
     }
 
