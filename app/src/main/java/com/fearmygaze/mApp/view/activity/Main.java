@@ -37,7 +37,7 @@ import com.fearmygaze.mApp.Controller.IssueController;
 import com.fearmygaze.mApp.Controller.UserController;
 import com.fearmygaze.mApp.R;
 import com.fearmygaze.mApp.interfaces.ISearch;
-import com.fearmygaze.mApp.interfaces.IUser;
+import com.fearmygaze.mApp.interfaces.IStatus;
 import com.fearmygaze.mApp.interfaces.IVolley;
 import com.fearmygaze.mApp.model.SearchedUser;
 import com.fearmygaze.mApp.model.User;
@@ -185,7 +185,7 @@ public class Main extends AppCompatActivity {
         });
     }
 
-    private void rememberMe() {
+    private void rememberMe() {//TODO: Maybe we need to first contact the server and then disconnect the user
         preference = new PrivatePreference(Main.this);
         if (preference.getInt("id") == -1 || currentUser.getId() == -1) {
             preference.clear();
@@ -193,17 +193,23 @@ public class Main extends AppCompatActivity {
             finish();
             return;
         }
-        UserController.statusCheck(currentUser.getId(), Main.this, new IUser() {
+        UserController.statusCheck(currentUser.getId(), Main.this, new IStatus() {
             @Override
-            public void onSuccess(User user, String message) {
+            public void onSuccess(User user) {
                 currentUser = user;
+            }
+
+            @Override
+            public void onExit(String message) {
+                preference.clear();
+                Toast.makeText(Main.this, message, Toast.LENGTH_LONG).show();
+                startActivity(new Intent(Main.this, Starting.class));
+                finish();
             }
 
             @Override
             public void onError(String message) {
                 Toast.makeText(Main.this, message, Toast.LENGTH_LONG).show();
-                startActivity(new Intent(Main.this, Starting.class));
-                finish();
             }
         });
     }
@@ -397,7 +403,7 @@ public class Main extends AppCompatActivity {
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) { //TODO: IF query == new query do nothing
+            public boolean onQueryTextSubmit(String query) {
                 adapterSearch.setOffset(0);
                 if (!query.isEmpty()) {
                     FriendController.searchUser(currentUser, query.trim(), adapterSearch.getOffset(), searchView.getContext(), new ISearch() {
@@ -444,7 +450,6 @@ public class Main extends AppCompatActivity {
 
         return super.onCreateOptionsMenu(menu);
     }
-
 
     @Override
     public void onBackPressed() {

@@ -86,8 +86,9 @@
     <string name="friendsRequestsDecline">Decline Request</string>
 
     <!-- Profile Activity -->
-    <string name="profileFAQ">Δεν υποστηρίζουμε την αλλαγή email και όνοματος χρήστη \nΠατήστε εδώ για να δείτε το γιατί..!!</string>
+    <string name="profileChangeImage">Αλλαγή εικόνας</string>
     <string name="profileChangePassword">Αλλαγή κωδικού</string>
+    <string name="profileFAQ">Δεν υποστηρίζουμε την αλλαγή email και όνοματος χρήστη \nΠατήστε εδώ για να δείτε το γιατί..!!</string>
 
     <!-- Dialog Update Password -->
     <string name="dialogUpdatePasswordCurrentPassword">Τωρινός κωδικός πρόσβασης</string>
@@ -112,7 +113,6 @@
     <string name="dialogFeatureConfirm">Επιβεβαίωση</string>
     <string name="dialogFeatureCancel">Ακύρωση</string>
 
-
     <!-- RegEx -->
     <string name="regExPasswordError">* Μεγαλύτερο 8 χαρακτήρες \n* 1 μικρό χαρακτήρα \n* 1 κεφαλαίο χαρακτήρα \n* 1 αριθμό \n* 1 ειδικό χαρακτήρα</string>
 
@@ -122,5 +122,9 @@
     <string name="textHandlerTooManyCharacters">Ξεπεράσατε το όριο χαρακτήρων!</string>
     <string name="textHandlerSameCells">Δεν μπορούν και τα δύο κελία να έχουν την ίδια τιμή!</string>
 
+    <!-- Controller Error -->
+    <string name="volleyError">Σφάλμα: κατα την επικοινωνία με τον server</string>
+    <string name="jsonError">Σφάλμα: κατα την αναλυση δεδομένων</string>
+    <string name="networkError">Σφάλμα: το δίκτυο είναι απενεργοποιημένο</string>
 
 </resources>

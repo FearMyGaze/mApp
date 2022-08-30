@@ -6,9 +6,11 @@ import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.fearmygaze.mApp.BuildConfig;
 import com.fearmygaze.mApp.R;
+import com.fearmygaze.mApp.interfaces.IStatus;
 import com.fearmygaze.mApp.interfaces.IUser;
 import com.fearmygaze.mApp.interfaces.IVolley;
 import com.fearmygaze.mApp.model.User;
+import com.fearmygaze.mApp.util.NetworkConnection;
 import com.fearmygaze.mApp.util.PrivatePreference;
 import com.fearmygaze.mApp.util.RequestSingleton;
 
@@ -50,9 +52,9 @@ public class UserController {
                 }
 
             } catch (JSONException e) {
-                iVolley.onError(e.getMessage());
+                iVolley.onError(context.getString(R.string.jsonError));
             }
-        }, error -> iVolley.onError(error.getMessage())) {
+        }, error -> iVolley.onError(context.getString(R.string.volleyError))) {
 
             @Override
             public Map<String, String> getHeaders() {
@@ -62,7 +64,11 @@ public class UserController {
             }
 
         };
-        RequestSingleton.getInstance(context).addToRequestQueue(request);
+        if (NetworkConnection.isConnectionAlive(context)) {
+            RequestSingleton.getInstance(context).addToRequestQueue(request);
+        } else {
+            iVolley.onError(context.getString(R.string.networkError));
+        }
     }
 
     public static void signIn(String credential, String password, Context context, IUser iUser) {
@@ -100,9 +106,9 @@ public class UserController {
                 }
 
             } catch (JSONException e) {
-                iUser.onError(e.getMessage());
+                iUser.onError(context.getString(R.string.jsonError));
             }
-        }, error -> iUser.onError(error.getMessage())) {
+        }, error -> iUser.onError(context.getString(R.string.volleyError))) {
 
             @Override
             public Map<String, String> getHeaders() {
@@ -112,7 +118,11 @@ public class UserController {
             }
 
         };
-        RequestSingleton.getInstance(context).addToRequestQueue(request);
+        if (NetworkConnection.isConnectionAlive(context)) {
+            RequestSingleton.getInstance(context).addToRequestQueue(request);
+        } else {
+            iUser.onError(context.getString(R.string.networkError));
+        }
     }
 
     public static void updatePassword(int id, String newPassword, String oldPassword, Context context, IVolley iVolley) {
@@ -137,9 +147,9 @@ public class UserController {
                 }
 
             } catch (JSONException e) {
-                iVolley.onError(e.getMessage());
+                iVolley.onError(context.getString(R.string.jsonError));
             }
-        }, error -> iVolley.onError(error.getMessage())) {
+        }, error -> iVolley.onError(context.getString(R.string.volleyError))) {
 
             @Override
             public Map<String, String> getHeaders() {
@@ -149,7 +159,11 @@ public class UserController {
             }
 
         };
-        RequestSingleton.getInstance(context).addToRequestQueue(request);
+        if (NetworkConnection.isConnectionAlive(context)) {
+            RequestSingleton.getInstance(context).addToRequestQueue(request);
+        } else {
+            iVolley.onError(context.getString(R.string.networkError));
+        }
     }
 
     /*
@@ -175,9 +189,9 @@ public class UserController {
                 }
 
             } catch (JSONException e) {
-                iVolley.onError(e.getMessage());
+                iVolley.onError(context.getString(R.string.jsonError));
             }
-        }, error -> iVolley.onError(error.getMessage())) {
+        }, error -> iVolley.onError(context.getString(R.string.volleyError))) {
 
             @Override
             public Map<String, String> getHeaders() {
@@ -187,10 +201,14 @@ public class UserController {
             }
 
         };
-        RequestSingleton.getInstance(context).addToRequestQueue(request);
+        if (NetworkConnection.isConnectionAlive(context)) {
+            RequestSingleton.getInstance(context).addToRequestQueue(request);
+        } else {
+            iVolley.onError(context.getString(R.string.networkError));
+        }
     }
 
-    public static void statusCheck(int id, Context context, IUser iUser) {
+    public static void statusCheck(int id, Context context, IStatus iStatus) {
         Map<String, Object> body = new HashMap<>();
         body.put("userID", id);
 
@@ -213,18 +231,18 @@ public class UserController {
                         preference.putString("email", email);
 
                         User user = new User(_id, username, BuildConfig.PROFILE + image, email);
-                        iUser.onSuccess(user, message);
+                        iStatus.onSuccess(user);
                         break;
                     case "404":
                     case "405":
-                        iUser.onError(message);
+                        iStatus.onExit(message);
                         break;
                 }
 
             } catch (JSONException e) {
-                iUser.onError(e.getMessage());
+                iStatus.onError(context.getString(R.string.jsonError));
             }
-        }, error -> iUser.onError(error.getMessage())) {
+        }, error -> iStatus.onError(context.getString(R.string.volleyError))) {
 
             @Override
             public Map<String, String> getHeaders() {
@@ -234,7 +252,12 @@ public class UserController {
             }
 
         };
-        RequestSingleton.getInstance(context).addToRequestQueue(request);
+
+        if (NetworkConnection.isConnectionAlive(context)){
+            RequestSingleton.getInstance(context).addToRequestQueue(request);
+        }else {
+            iStatus.onError(context.getString(R.string.networkError));
+        }
     }
 
     public static void delete(int id, Context context, IVolley iVolley) {//TODO: This will be inside the settings activity
@@ -257,9 +280,9 @@ public class UserController {
                 }
 
             } catch (JSONException e) {
-                iVolley.onError(e.getMessage());
+                iVolley.onError(context.getString(R.string.jsonError));
             }
-        }, error -> iVolley.onError(error.getMessage())) {
+        }, error -> iVolley.onError(context.getString(R.string.volleyError))) {
 
             @Override
             public Map<String, String> getHeaders() {
@@ -269,7 +292,11 @@ public class UserController {
             }
 
         };
-        RequestSingleton.getInstance(context).addToRequestQueue(request);
+        if (NetworkConnection.isConnectionAlive(context)) {
+            RequestSingleton.getInstance(context).addToRequestQueue(request);
+        } else {
+            iVolley.onError(context.getString(R.string.networkError));
+        }
     }
 
     public static void report(int id, String reportedUserID, String reason, Context context, IVolley iVolley) {
@@ -294,7 +321,7 @@ public class UserController {
                 }
 
             } catch (JSONException e) {
-                iVolley.onError(e.getMessage());
+                iVolley.onError(context.getString(R.string.jsonError));
             }
         }, error -> iVolley.onError(error.getMessage())) {
 
@@ -306,7 +333,11 @@ public class UserController {
             }
 
         };
-        RequestSingleton.getInstance(context).addToRequestQueue(request);
+        if (NetworkConnection.isConnectionAlive(context)) {
+            RequestSingleton.getInstance(context).addToRequestQueue(request);
+        } else {
+            iVolley.onError(context.getString(R.string.networkError));
+        }
     }
 
     private static String url(int pos, Context con) {

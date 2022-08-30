@@ -7,6 +7,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.fearmygaze.mApp.BuildConfig;
 import com.fearmygaze.mApp.R;
 import com.fearmygaze.mApp.interfaces.IVolley;
+import com.fearmygaze.mApp.util.NetworkConnection;
 import com.fearmygaze.mApp.util.RequestSingleton;
 
 import org.json.JSONException;
@@ -41,9 +42,9 @@ public class IssueController {
                 }
 
             } catch (JSONException e) {
-                iVolley.onError(e.getMessage());
+                iVolley.onError(context.getString(R.string.jsonError));
             }
-        }, error -> iVolley.onError(error.getMessage())) {
+        }, error -> iVolley.onError(context.getString(R.string.volleyError))) {
 
             @Override
             public Map<String, String> getHeaders() {
@@ -53,10 +54,12 @@ public class IssueController {
             }
 
         };
-        RequestSingleton.getInstance(context).addToRequestQueue(request);
-
+        if (NetworkConnection.isConnectionAlive(context)) {
+            RequestSingleton.getInstance(context).addToRequestQueue(request);
+        } else {
+            iVolley.onError(context.getString(R.string.sampleLastMessage));
+        }
     }
-
 
     public static void uploadFeature(int id, String description, boolean consent, Context context, IVolley iVolley) {
         Map<String, Object> body = new HashMap<>();
@@ -81,9 +84,9 @@ public class IssueController {
                 }
 
             } catch (JSONException e) {
-                iVolley.onError(e.getMessage());
+                iVolley.onError(context.getString(R.string.jsonError));
             }
-        }, error -> iVolley.onError(error.getMessage())) {
+        }, error -> iVolley.onError(context.getString(R.string.volleyError))) {
 
             @Override
             public Map<String, String> getHeaders() {
@@ -93,7 +96,11 @@ public class IssueController {
             }
 
         };
-        RequestSingleton.getInstance(context).addToRequestQueue(request);
+        if (NetworkConnection.isConnectionAlive(context)) {
+            RequestSingleton.getInstance(context).addToRequestQueue(request);
+        } else {
+            iVolley.onError(context.getString(R.string.sampleLastMessage));
+        }
     }
 
     private static String url(int pos, Context con) {

@@ -12,6 +12,7 @@ import com.fearmygaze.mApp.interfaces.IVolley;
 import com.fearmygaze.mApp.model.Friend;
 import com.fearmygaze.mApp.model.SearchedUser;
 import com.fearmygaze.mApp.model.User;
+import com.fearmygaze.mApp.util.NetworkConnection;
 import com.fearmygaze.mApp.util.RequestSingleton;
 
 import org.json.JSONArray;
@@ -49,10 +50,10 @@ public class FriendController {
                             String user1_id = array.getJSONObject(i).getString("user1_id");
                             String user2_id = array.getJSONObject(i).getString("user2_id");
 
-                            if (!user.getUsername().equals(name)){//This is removing our name from the list
-                                if ((user1_id.equals(String.valueOf(user.getId())) || user2_id.equals(String.valueOf(user.getId()))) && friendshipState.equals("true")){
+                            if (!user.getUsername().equals(name)) {//This is removing our name from the list
+                                if ((user1_id.equals(String.valueOf(user.getId())) || user2_id.equals(String.valueOf(user.getId()))) && friendshipState.equals("true")) {
                                     searchedUserList.add(new SearchedUser(id, imagePath, name, true));
-                                }else{
+                                } else {
                                     searchedUserList.add(new SearchedUser(id, imagePath, name, false));
                                 }
                             }
@@ -67,9 +68,9 @@ public class FriendController {
                 }
 
             } catch (JSONException e) {
-                iSearch.onError(e.getMessage());
+                iSearch.onError(context.getString(R.string.jsonError));
             }
-        }, error -> iSearch.onError(error.getMessage())) {
+        }, error -> iSearch.onError(context.getString(R.string.volleyError))) {
 
             @Override
             public Map<String, String> getHeaders() {
@@ -78,13 +79,17 @@ public class FriendController {
                 return headers;
             }
         };
-        RequestSingleton.getInstance(context).addToRequestQueue(request);
+        if (NetworkConnection.isConnectionAlive(context)) {
+            RequestSingleton.getInstance(context).addToRequestQueue(request);
+        } else {
+            iSearch.onError(context.getString(R.string.networkError));
+        }
     }
 
     public static void sendFriendRequest(int userID, int friendID, Context context, IVolley iVolley) {
         Map<String, Object> body = new HashMap<>();
         body.put("id", userID);
-        body.put("friendID",friendID);
+        body.put("friendID", friendID);
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url(1, context), new JSONObject(body), response -> {
             try {
@@ -102,9 +107,9 @@ public class FriendController {
                 }
 
             } catch (JSONException e) {
-                iVolley.onError(e.getMessage());
+                iVolley.onError(context.getString(R.string.jsonError));
             }
-        }, error -> iVolley.onError(error.getMessage())) {
+        }, error -> iVolley.onError(context.getString(R.string.volleyError))) {
 
             @Override
             public Map<String, String> getHeaders() {
@@ -113,8 +118,11 @@ public class FriendController {
                 return headers;
             }
         };
-        RequestSingleton.getInstance(context).addToRequestQueue(request);
-
+        if (NetworkConnection.isConnectionAlive(context)) {
+            RequestSingleton.getInstance(context).addToRequestQueue(request);
+        } else {
+            iVolley.onError(context.getString(R.string.networkError));
+        }
     }
 
     public static void showFriends(int userID, int offset, Context context, IFriend iFriend) {
@@ -148,9 +156,9 @@ public class FriendController {
                 }
 
             } catch (JSONException e) {
-                iFriend.onError(e.getMessage());
+                iFriend.onError(context.getString(R.string.jsonError));
             }
-        }, error -> iFriend.onError(error.getMessage())) {
+        }, error -> iFriend.onError(context.getString(R.string.volleyError))) {
 
             @Override
             public Map<String, String> getHeaders() {
@@ -159,7 +167,11 @@ public class FriendController {
                 return headers;
             }
         };
-        RequestSingleton.getInstance(context).addToRequestQueue(request);
+        if (NetworkConnection.isConnectionAlive(context)) {
+            RequestSingleton.getInstance(context).addToRequestQueue(request);
+        } else {
+            iFriend.onError(context.getString(R.string.networkError));
+        }
     }
 
     public static void acceptOrDenyFriendRequest(int userID, String friendID, boolean choice, Context context, IVolley iVolley) {

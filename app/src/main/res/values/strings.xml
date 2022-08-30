@@ -85,6 +85,7 @@
     <string name="friendsRequestsDecline">Decline Request</string>
 
     <!-- Profile Activity -->
+    <string name="profileChangeImage">Change Picture</string>
     <string name="profileChangePassword">Change Password</string>
     <string name="profileFAQ">We don\'t support changing username or email \nPress here to see why..! </string>
 
@@ -126,6 +127,11 @@
     <string name="sampleLastMessage" translatable="false">You: is message true;</string>
     <string name="sampleTime" translatable="false">22:03</string>
     <string name="sampleEmail" translatable="false">test@test.com</string>
+
+    <!-- Controller Error -->
+    <string name="volleyError">Error: while communicating with the server</string>
+    <string name="jsonError">Error: while parsing data</string>
+    <string name="networkError">Error: network connection is offline</string>
 
     <string-array name="user">
         <item>register-user</item>
