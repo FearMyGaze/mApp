@@ -131,7 +131,7 @@ public class FriendController {
         body.put("limit", 10);
         body.put("offset", offset);
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url(4, context), new JSONObject(body), response -> {
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url(2, context), new JSONObject(body), response -> {
             try {
                 String message = response.getString("message");
                 String code = response.getString("code");
@@ -174,9 +174,83 @@ public class FriendController {
         }
     }
 
-    public static void acceptOrDenyFriendRequest(int userID, String friendID, boolean choice, Context context, IVolley iVolley) {
+    public static void answerFriendRequest(int userID, int friendID, String choice, Context context, IVolley iVolley) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("id", userID);
+        body.put("friendID", friendID);
+        body.put("choice", choice);
 
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url(3, context), new JSONObject(body), response -> {
+            try {
+                String message = response.getString("message");
+                String code = response.getString("code");
 
+                switch (code) {
+                    case "200":
+                        iVolley.onSuccess(message);
+                        break;
+                    case "404":
+                    case "405":
+                        iVolley.onError(message);
+                        break;
+                }
+
+            } catch (JSONException e) {
+                iVolley.onError(context.getString(R.string.jsonError));
+            }
+        }, error -> iVolley.onError(context.getString(R.string.volleyError))) {
+
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+        };
+        if (NetworkConnection.isConnectionAlive(context)) {
+            RequestSingleton.getInstance(context).addToRequestQueue(request);
+        } else {
+            iVolley.onError(context.getString(R.string.networkError));
+        }
+    }
+
+    public static void deleteFriend(int userID, int friendID, Context context, IVolley iVolley) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("id", userID);
+        body.put("friendID", friendID);
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url(4, context), new JSONObject(body), response -> {
+            try {
+                String message = response.getString("message");
+                String code = response.getString("code");
+
+                switch (code) {
+                    case "200":
+                        iVolley.onSuccess(message);
+                        break;
+                    case "404":
+                    case "405":
+                        iVolley.onError(message);
+                        break;
+                }
+
+            } catch (JSONException e) {
+                iVolley.onError(context.getString(R.string.jsonError));
+            }
+        }, error -> iVolley.onError(context.getString(R.string.volleyError))) {
+
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("Content-Type", "application/json");
+                return headers;
+            }
+        };
+        if (NetworkConnection.isConnectionAlive(context)) {
+            RequestSingleton.getInstance(context).addToRequestQueue(request);
+        } else {
+            iVolley.onError(context.getString(R.string.networkError));
+        }
     }
 
     private static String url(int pos, Context con) {

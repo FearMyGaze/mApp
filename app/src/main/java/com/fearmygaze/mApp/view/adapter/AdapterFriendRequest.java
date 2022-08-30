@@ -11,7 +11,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.fearmygaze.mApp.Controller.FriendController;
 import com.fearmygaze.mApp.R;
+import com.fearmygaze.mApp.interfaces.IVolley;
 import com.fearmygaze.mApp.model.FriendRequest;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
@@ -34,7 +36,7 @@ public class AdapterFriendRequest extends RecyclerView.Adapter<AdapterFriendRequ
 
     @Override
     public void onBindViewHolder(@NonNull AdapterFriendRequest.MyViewHolder holder, int position) {
-
+        int id = friendRequestList.get(position).getId();
         String image = friendRequestList.get(position).getImage();
         String username = friendRequestList.get(position).getUsername();
 
@@ -47,13 +49,29 @@ public class AdapterFriendRequest extends RecyclerView.Adapter<AdapterFriendRequ
 
         holder.username.setText(username);
 
-        holder.accept.setOnClickListener(v -> { //TODO: Add Accept Func
-            Toast.makeText(v.getContext(), "Friend Accepted", Toast.LENGTH_SHORT).show();
-        });
+        holder.accept.setOnClickListener(v -> FriendController.answerFriendRequest(20, id, "true", v.getContext(), new IVolley() {
+            @Override
+            public void onSuccess(String message) {
+                Toast.makeText(v.getContext(), message, Toast.LENGTH_LONG).show();
+            }
 
-        holder.decline.setOnClickListener(v -> { // TODO: Add Decline Func
-            Toast.makeText(v.getContext(), "Friend Declined", Toast.LENGTH_SHORT).show();
-        });
+            @Override
+            public void onError(String message) {
+                Toast.makeText(v.getContext(), message, Toast.LENGTH_LONG).show();
+            }
+        }));
+
+        holder.decline.setOnClickListener(v -> FriendController.answerFriendRequest(20, id, "false", v.getContext(), new IVolley() {
+            @Override
+            public void onSuccess(String message) {
+                Toast.makeText(v.getContext(), message, Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onError(String message) {
+                Toast.makeText(v.getContext(), message, Toast.LENGTH_LONG).show();
+            }
+        }));
 
     }
 
@@ -62,8 +80,7 @@ public class AdapterFriendRequest extends RecyclerView.Adapter<AdapterFriendRequ
         return friendRequestList.size();
     }
 
-    protected static class MyViewHolder extends RecyclerView.ViewHolder{
-
+    protected static class MyViewHolder extends RecyclerView.ViewHolder {
         ShapeableImageView image;
         MaterialTextView username;
         ImageButton accept, decline;
