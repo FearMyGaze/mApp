@@ -21,9 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /*
- * TODO: I don't know if we need the user Model if we write all the stuff on sharedPreferences maybe
- *           after writing it in sharedPreferences then we pass them to the Model ? so we can simply call user.get..();
- *           like the FirebaseUser(???)
  * TODO: Maybe add the error codes as an enum ?? so the server has to send only the number
  * */
 
