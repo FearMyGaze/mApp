@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RegEx {//TODO: remove @ and fix isPasswordValid to accept both Diff end Same
+public class RegEx {//TODO: Change the special characters that we allow
     public static boolean isPasswordValid(String passwd, TextInputLayout textInputLayout, Context context) {
         Pattern pattern = Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!#@$%&._])(?=\\S+$).{8,}$");
         Matcher matcher = pattern.matcher(passwd);
@@ -25,11 +25,12 @@ public class RegEx {//TODO: remove @ and fix isPasswordValid to accept both Diff
     }
 
     /*
-     * Length >= n < 0
+     * Explanation of the following methods
+     * Length > 0 <= n
      * !errorEnabled()
      * RegEx validation
      * !errorEnabled()
-     * Input1 != Input2
+     * Input1 != Input2 OR Input1 == Input2
      * */
 
     public static boolean isPasswordValidAndDifferent(TextInputEditText textInputEditText1, TextInputLayout textInputLayout1, TextInputEditText textInputEditText2, TextInputLayout textInputLayout2, int length, Context context) {

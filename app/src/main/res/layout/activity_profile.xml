@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".view.activity.Profile">
 
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/profileHorizontalHalfScreen"
         android:layout_width="match_parent"
@@ -34,15 +33,15 @@
         android:text="@string/sampleUsername"
         android:textSize="22sp"
         android:textStyle="bold|italic"
-        app:layout_constraintEnd_toEndOf="@id/profileUserImage"
-        app:layout_constraintStart_toStartOf="@id/profileUserImage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/profileUserImage" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/profileUserEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="33dp"
+        android:layout_marginTop="22dp"
         android:text="@string/sampleEmail"
         android:textSize="22sp"
         android:textStyle="bold|italic"
@@ -61,22 +60,22 @@
         app:cornerRadius="13dp"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/profileAdd2FA"
+        app:layout_constraintEnd_toStartOf="@+id/profileChangeImage"
         app:layout_constraintTop_toBottomOf="@id/profileUserEmail"/>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/profileAdd2FA"
+        android:id="@+id/profileChangeImage"
         android:layout_width="wrap_content"
         android:layout_height="60dp"
-        android:text="Add 2FA"
+        android:text="@string/profileChangeImage"
         android:textStyle="bold"
         android:textAllCaps="false"
         app:cornerRadius="13dp"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        app:layout_constraintTop_toTopOf="@id/profileChangePassword"
-        app:layout_constraintBottom_toBottomOf="@id/profileChangePassword"
         app:layout_constraintStart_toEndOf="@id/profileChangePassword"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/profileChangePassword"
+        app:layout_constraintBottom_toBottomOf="@id/profileChangePassword"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"

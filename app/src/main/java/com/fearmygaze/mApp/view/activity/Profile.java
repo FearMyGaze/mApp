@@ -29,7 +29,7 @@ public class Profile extends AppCompatActivity {
 
     ShapeableImageView userImage;
     MaterialTextView username, userEmail, faq;
-    MaterialButton changePassword, add2FA;
+    MaterialButton changePassword;
 
     User user;
 
@@ -44,7 +44,6 @@ public class Profile extends AppCompatActivity {
         username = findViewById(R.id.profileUsername);
         userEmail = findViewById(R.id.profileUserEmail);
         changePassword = findViewById(R.id.profileChangePassword);
-        add2FA = findViewById(R.id.profileAdd2FA);
         faq = findViewById(R.id.profileFAQ);
 
         username.setText(user.getUsername());
@@ -102,10 +101,6 @@ public class Profile extends AppCompatActivity {
 
         });
 
-        add2FA.setOnClickListener(v -> {
-
-        });
-
         faq.setOnClickListener(v -> {
             Toast.makeText(this, "This will open a dialog", Toast.LENGTH_SHORT).show();
         });
@@ -115,7 +110,6 @@ public class Profile extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         finish();
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }

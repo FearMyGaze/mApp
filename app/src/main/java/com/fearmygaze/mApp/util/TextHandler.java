@@ -54,7 +54,6 @@ public class TextHandler implements TextWatcher {
         return true;
     }
 
-
     public static boolean isTextInputsDifferent(TextInputEditText textInputEditText1, TextInputLayout textInputLayout1, TextInputEditText textInputEditText2, TextInputLayout textInputLayout2, Context context) {
         String firstInput = Objects.requireNonNull(textInputEditText1.getText()).toString().trim();
         String secondInput = Objects.requireNonNull(textInputEditText2.getText()).toString().trim();
