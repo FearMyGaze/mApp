@@ -23,7 +23,7 @@ public class IssueController {
         body.put("userID", id);
         body.put("description", description);
         body.put("device", device);
-        body.put("consent", String.valueOf(consent));
+        body.put("consent", consent);
         body.put("state", "bug");
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url(0, context), new JSONObject(body), response -> {
@@ -65,7 +65,7 @@ public class IssueController {
         Map<String, Object> body = new HashMap<>();
         body.put("userID", id);
         body.put("description", description);
-        body.put("consent", String.valueOf(consent));
+        body.put("consent", consent);
         body.put("state", "feature");
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url(0, context), new JSONObject(body), response -> {
