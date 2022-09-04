@@ -13,6 +13,7 @@ import com.fearmygaze.mApp.Controller.FriendController;
 import com.fearmygaze.mApp.R;
 import com.fearmygaze.mApp.interfaces.IVolley;
 import com.fearmygaze.mApp.model.SearchedUser;
+import com.fearmygaze.mApp.model.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
@@ -23,10 +24,12 @@ public class AdapterSearch extends RecyclerView.Adapter<AdapterSearch.MyViewHold
 
     List<SearchedUser> searchedUserList;
     private int offset;
+    User user;
 
 
-    public AdapterSearch(List<SearchedUser> searchedUserList) {
+    public AdapterSearch(List<SearchedUser> searchedUserList, User user) {
         this.searchedUserList = searchedUserList;
+        this.user = user;
         this.offset = 0;
     }
 
@@ -44,12 +47,14 @@ public class AdapterSearch extends RecyclerView.Adapter<AdapterSearch.MyViewHold
         String username = searchedUserList.get(position).getUsername();
         boolean friend = searchedUserList.get(position).isFriend();
 
-//        Glide.with(holder.itemView.getRootView())
-//                .load(image)
-//                .placeholder(R.drawable.ic_launcher_background)
-//                .circleCrop()
-//                .apply(RequestOptions.centerCropTransform())
-//                .into(holder.image);
+        /* TODO: Remove this when the users have images
+        Glide.with(holder.itemView.getRootView())
+                .load(image)
+                .placeholder(R.drawable.ic_launcher_background)
+                .circleCrop()
+                .apply(RequestOptions.centerCropTransform())
+                .into(holder.image);
+        */
 
         holder.username.setText(username);
 
@@ -58,7 +63,7 @@ public class AdapterSearch extends RecyclerView.Adapter<AdapterSearch.MyViewHold
         }
 
         holder.button.setOnClickListener(v -> {
-            FriendController.sendFriendRequest(20, id, v.getContext(), new IVolley() {
+            FriendController.sendFriendRequest(user.getId(), id, v.getContext(), new IVolley() {
                 @Override
                 public void onSuccess(String message) {
                     Toast.makeText(v.getContext(), message, Toast.LENGTH_LONG).show();

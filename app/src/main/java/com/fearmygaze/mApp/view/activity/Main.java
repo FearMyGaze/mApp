@@ -349,7 +349,7 @@ public class Main extends AppCompatActivity {
         usersNotFound = bottomSheetConstraint.findViewById(R.id.searchUsersNotFound);
 
         List<SearchedUser> searchedUserList = new ArrayList<>();
-        adapterSearch = new AdapterSearch(searchedUserList);
+        adapterSearch = new AdapterSearch(searchedUserList, currentUser);
 
         sheetBehavior = BottomSheetBehavior.from(bottomSheetConstraint);
         sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
