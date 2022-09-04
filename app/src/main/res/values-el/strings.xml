@@ -81,9 +81,13 @@
     <string name="friendsTab0">Φίλοι</string>
     <string name="friendsTab1">Αιτήματα φιλίας</string>
 
+    <!-- Friend List -->
+    <string name="friendListError">Δεν έχεις φίλους ακόμα!</string>
+
     <!-- Friend Requests -->
-    <string name="friendsRequestsAccept">Accept Request</string>
-    <string name="friendsRequestsDecline">Decline Request</string>
+    <string name="friendsRequestsError">Δεν βρέθηκα αιτήματα φιλίας</string>
+    <string name="friendsRequestsAccept">Αποδοχή αιτήματος</string>
+    <string name="friendsRequestsDecline">Απόριψη αιτήματος</string>
 
     <!-- Profile Activity -->
     <string name="profileChangeImage">Αλλαγή εικόνας</string>

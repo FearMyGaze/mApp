@@ -4,11 +4,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.fearmygaze.mApp.Controller.FriendController;
 import com.fearmygaze.mApp.R;
@@ -16,7 +18,9 @@ import com.fearmygaze.mApp.interfaces.IFriend;
 import com.fearmygaze.mApp.model.Friend;
 import com.fearmygaze.mApp.model.User;
 import com.fearmygaze.mApp.view.adapter.AdapterFriendList;
+import com.google.android.material.textview.MaterialTextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FriendList extends Fragment {
@@ -25,8 +29,11 @@ public class FriendList extends Fragment {
         this.user = user;
     }
 
+    SwipeRefreshLayout refreshLayout;
+    MaterialTextView friendError;
     RecyclerView friendRecycler;
 
+    List<Friend> friendLists;
     AdapterFriendList adapterFriendList;
 
     View view;
@@ -34,28 +41,36 @@ public class FriendList extends Fragment {
     User user;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) { //TODO :We need to get the user data
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_friend_list, container, false);
 
-        System.out.println(user);
+        refreshLayout = view.findViewById(R.id.friendListUpdate);
+        friendError = view.findViewById(R.id.friendListError);
         friendRecycler = view.findViewById(R.id.friendListRecycler);
+
+        friendLists = new ArrayList<>();
+        adapterFriendList = new AdapterFriendList(friendLists, user);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL, false);
         friendRecycler.setLayoutManager(layoutManager);
         friendRecycler.setAdapter(adapterFriendList);
 
-//        FriendController.showFriends(user.getID(), adapterFriendList.getOffset(), requireContext(), new IFriend() {
-//            @Override
-//            public void onSuccess(List<Friend> friendList) {
-//                adapterFriendList.refillList(friendList);
-//            }
-//
-//            @Override
-//            public void onError(String message) {
-//                Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
-//            }
-//        });
+        FriendController.showFriends(user, adapterFriendList.getOffset(), requireContext(), new IFriend() {
+            @Override
+            public void onSuccess(List<Friend> friendList) {
+                adapterFriendList.refillList(friendList);
+                friendError.setVisibility(View.GONE);
+            }
 
+            @Override
+            public void onError(String message) {
+                adapterFriendList.clearListAndRefreshAdapter();
+                friendError.setVisibility(View.VISIBLE);
+                Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        refreshLayout.setOnRefreshListener(this::refresh);
 
         friendRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -72,7 +87,7 @@ public class FriendList extends Fragment {
 
             private void fetchRows() {
                 adapterFriendList.setOffset(adapterFriendList.getOffset() + 10);
-                FriendController.showFriends(user.getId(), adapterFriendList.getOffset(), getContext(), new IFriend() {
+                FriendController.showFriends(user, adapterFriendList.getOffset(), getContext(), new IFriend() {
                     @Override
                     public void onSuccess(List<Friend> friendList) {
                         adapterFriendList.addResultAndRefreshAdapter(friendList);
@@ -87,5 +102,27 @@ public class FriendList extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        refresh();
+    }
+
+    private void refresh(){
+        FriendController.showFriends(user, adapterFriendList.getOffset(), view.getContext(), new IFriend() {
+            @Override
+            public void onSuccess(List<Friend> friendList) {
+                adapterFriendList.refillList(friendList);
+                friendError.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onError(String message) {
+
+            }
+        });
+        refreshLayout.setRefreshing(false);
     }
 }

@@ -80,7 +80,11 @@
     <string name="friendsTab0">Friends</string>
     <string name="friendsTab1">Friend Requests</string>
 
+    <!-- Friend List -->
+    <string name="friendListError">You don\'t have friends yet!</string>
+
     <!-- Friend Requests -->
+    <string name="friendsRequestsError">No Friend requests found</string>
     <string name="friendsRequestsAccept">Accept Request</string>
     <string name="friendsRequestsDecline">Decline Request</string>
 
@@ -151,6 +155,7 @@
         <item>search-user</item>
         <item>send-friend-request</item>
         <item>show-friends</item>
+        <item>show-requests</item>
         <item>answer-friend-request</item>
         <item>delete-friend</item>
     </string-array>

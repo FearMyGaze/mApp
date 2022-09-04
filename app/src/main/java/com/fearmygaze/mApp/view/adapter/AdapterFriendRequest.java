@@ -1,5 +1,6 @@
 package com.fearmygaze.mApp.view.adapter;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.fearmygaze.mApp.Controller.FriendController;
 import com.fearmygaze.mApp.R;
 import com.fearmygaze.mApp.interfaces.IVolley;
 import com.fearmygaze.mApp.model.FriendRequest;
+import com.fearmygaze.mApp.model.User;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
 
@@ -23,9 +25,13 @@ import java.util.List;
 public class AdapterFriendRequest extends RecyclerView.Adapter<AdapterFriendRequest.MyViewHolder> {
 
     List<FriendRequest> friendRequestList;
+    User user;
+    private int offset;
 
-    public AdapterFriendRequest(List<FriendRequest> friendRequestList) {
+    public AdapterFriendRequest(List<FriendRequest> friendRequestList, User user) {
         this.friendRequestList = friendRequestList;
+        this.user = user;
+        this.offset = 0;
     }
 
     @NonNull
@@ -49,7 +55,7 @@ public class AdapterFriendRequest extends RecyclerView.Adapter<AdapterFriendRequ
 
         holder.username.setText(username);
 
-        holder.accept.setOnClickListener(v -> FriendController.answerFriendRequest(20, id, "true", v.getContext(), new IVolley() {
+        holder.accept.setOnClickListener(v -> FriendController.answerFriendRequest(user.getId(), id, "true", v.getContext(), new IVolley() {
             @Override
             public void onSuccess(String message) {
                 Toast.makeText(v.getContext(), message, Toast.LENGTH_LONG).show();
@@ -61,7 +67,7 @@ public class AdapterFriendRequest extends RecyclerView.Adapter<AdapterFriendRequ
             }
         }));
 
-        holder.decline.setOnClickListener(v -> FriendController.answerFriendRequest(20, id, "false", v.getContext(), new IVolley() {
+        holder.decline.setOnClickListener(v -> FriendController.answerFriendRequest(user.getId(), id, "false", v.getContext(), new IVolley() {
             @Override
             public void onSuccess(String message) {
                 Toast.makeText(v.getContext(), message, Toast.LENGTH_LONG).show();
@@ -74,6 +80,33 @@ public class AdapterFriendRequest extends RecyclerView.Adapter<AdapterFriendRequ
         }));
 
     }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void refillList(List<FriendRequest> friendRequests) {
+        this.friendRequestList = friendRequests;
+        notifyDataSetChanged();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void addResultAndRefreshAdapter(List<FriendRequest> friendRequests) {
+        this.friendRequestList.addAll(friendRequests);
+        notifyDataSetChanged();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void clearListAndRefreshAdapter() {
+        this.friendRequestList.clear();
+        notifyDataSetChanged();
+    }
+
+    public int getOffset() {
+        return offset;
+    }
+
+    public void setOffset(int offset) {
+        this.offset = offset;
+    }
+
 
     @Override
     public int getItemCount() {
