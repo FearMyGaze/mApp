@@ -229,7 +229,7 @@ public class UserController {
                         preference.putString("email", email);
 
                         User user = new User(_id, username, BuildConfig.PROFILE + image, email);
-                        
+
                         iUserStatus.onSuccess(user);
                         break;
                     case "404":
@@ -252,9 +252,9 @@ public class UserController {
 
         };
 
-        if (NetworkConnection.isConnectionAlive(context)){
+        if (NetworkConnection.isConnectionAlive(context)) {
             RequestSingleton.getInstance(context).addToRequestQueue(request);
-        }else {
+        } else {
             iUserStatus.onError(context.getString(R.string.networkError));
         }
     }
