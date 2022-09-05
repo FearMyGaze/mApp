@@ -16,7 +16,11 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 public class Friends extends Fragment {
 
-    public Friends(User user){
+    public Friends() {
+        //With out this the app crashes when changing from light mode to dark mode and the reverse
+    }
+
+    public Friends(User user) {
         this.user = user;
     }
 
@@ -29,9 +33,9 @@ public class Friends extends Fragment {
     TabLayoutMediator mediator;
 
     /*
-    * TODO: We need to add a way to press the back button and go to fragment Chat
-    *       to do that we need to add a fragment manager (i think ??)
-    * */
+     * TODO: We need to add a way to press the back button and go to fragment Chat
+     *       to do that we need to add a fragment manager (i think ??)
+     * */
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -42,7 +46,7 @@ public class Friends extends Fragment {
 
         pager2.setAdapter(new TabAdapterFriend(requireActivity(), user));
         mediator = new TabLayoutMediator(tabLayout, pager2, (tab, position) -> {
-            switch (position){
+            switch (position) {
                 case 0:
                     tab.setText(getResources().getText(R.string.friendsTab0));
                     break;

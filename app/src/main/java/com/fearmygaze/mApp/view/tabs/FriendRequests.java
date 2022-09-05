@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -25,7 +24,7 @@ import java.util.List;
 
 public class FriendRequests extends Fragment {
 
-    public FriendRequests(User user){
+    public FriendRequests(User user) {
         this.user = user;
     }
 
@@ -66,7 +65,6 @@ public class FriendRequests extends Fragment {
             public void onError(String message) {
                 adapterFriendRequest.clearListAndRefreshAdapter();
                 friendRequestError.setVisibility(View.VISIBLE);
-                Toast.makeText(view.getContext(), message, Toast.LENGTH_LONG).show();
             }
         });
 
@@ -108,16 +106,17 @@ public class FriendRequests extends Fragment {
         refresh();
     }
 
-    private void refresh(){
-        FriendController.showRequests(user.getId(), adapterFriendRequest.getOffset(), view.getContext(), new IFriendRequest() {
+    private void refresh() {
+        FriendController.showRequests(user.getId(), 0, view.getContext(), new IFriendRequest() {
             @Override
             public void onSuccess(List<FriendRequest> friendRequests) {
+                friendRequestError.setVisibility(View.GONE);
                 adapterFriendRequest.refillList(friendRequests);
             }
 
             @Override
             public void onError(String message) {
-
+                friendRequestError.setVisibility(View.VISIBLE);
             }
         });
         refreshLayout.setRefreshing(false);

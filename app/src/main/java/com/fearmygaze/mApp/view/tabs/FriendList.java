@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -25,7 +24,7 @@ import java.util.List;
 
 public class FriendList extends Fragment {
 
-    public FriendList(User user){
+    public FriendList(User user) {
         this.user = user;
     }
 
@@ -66,7 +65,6 @@ public class FriendList extends Fragment {
             public void onError(String message) {
                 adapterFriendList.clearListAndRefreshAdapter();
                 friendError.setVisibility(View.VISIBLE);
-                Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
             }
         });
 
@@ -110,8 +108,8 @@ public class FriendList extends Fragment {
         refresh();
     }
 
-    private void refresh(){
-        FriendController.showFriends(user, adapterFriendList.getOffset(), view.getContext(), new IFriend() {
+    private void refresh() {
+        FriendController.showFriends(user, 0, view.getContext(), new IFriend() {
             @Override
             public void onSuccess(List<Friend> friendList) {
                 adapterFriendList.refillList(friendList);
@@ -120,7 +118,7 @@ public class FriendList extends Fragment {
 
             @Override
             public void onError(String message) {
-
+                friendError.setVisibility(View.VISIBLE);
             }
         });
         refreshLayout.setRefreshing(false);
