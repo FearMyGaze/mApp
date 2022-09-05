@@ -16,10 +16,6 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 public class Friends extends Fragment {
 
-    public Friends() {
-        //With out this the app crashes when changing from light mode to dark mode and the reverse
-    }
-
     public Friends(User user) {
         this.user = user;
     }
