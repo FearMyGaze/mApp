@@ -20,6 +20,10 @@ import java.util.List;
 
 public class Chat extends Fragment {
 
+    public Chat() {
+         //With out this the app crashes when changing from light mode to dark mode and the reverse
+    }
+
     public Chat(User user) {
         this.user = user;
     }
