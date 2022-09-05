@@ -185,7 +185,7 @@ public class Main extends AppCompatActivity {
         });
     }
 
-    private void rememberMe() {//TODO: Maybe we need to first contact the server and then disconnect the user
+    private void rememberMe() {
         preference = new PrivatePreference(Main.this);
         if (preference.getInt("id") == -1 || currentUser.getId() == -1) {
             preference.clear();
@@ -400,6 +400,8 @@ public class Main extends AppCompatActivity {
         MenuItem menuItem = menu.findItem(R.id.mainToolbarItemSearch);
         MenuItem menuItem1 = menu.findItem(R.id.mainToolbarItemNotifications);
         searchView = (SearchView) menuItem.getActionView();
+
+        searchView.setQueryHint(getString(R.string.searchUserQuery));
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override

@@ -57,7 +57,10 @@
     <string name="signUpEmailVerification">Email verification send at: </string>
 
     <!-- Search sheet -->
+    <string name="searchUserQuery">Search user</string>
     <string name="searchUsersNotFound">No users with the criteria you gave found…!</string>
+
+    <!-- Search Adapter -->
     <string name="searchAddFriend">Add Friend</string>
 
     <!-- Chat Adapter -->

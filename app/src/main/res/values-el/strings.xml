@@ -58,7 +58,10 @@
     <string name="signUpEmailVerification">Απεστάλη email επιβεβαίωσης λογαριασμού στο: </string>
 
     <!-- Search sheet -->
+    <string name="searchUserQuery">Αναζήτηση χρήστη</string>
     <string name="searchUsersNotFound">Δεν βρέθηκαν χρήστες με τα στοιχεία που δώσατε…!</string>
+
+    <!-- Search Adapter -->
     <string name="searchAddFriend">Προσθήκη φίλου</string>
 
     <!-- Chat Adapter -->
