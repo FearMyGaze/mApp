@@ -38,6 +38,7 @@ public class AdapterFriendList extends RecyclerView.Adapter<AdapterFriendList.My
 
     @Override
     public void onBindViewHolder(@NonNull AdapterFriendList.MyViewHolder holder, int position) {
+        int id = friendList.get(position).getId();
         String image = friendList.get(position).getImage();
         String username = friendList.get(position).getUsername();
 

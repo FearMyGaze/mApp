@@ -22,9 +22,9 @@ import com.google.android.material.textview.MaterialTextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FriendList extends Fragment {
+public class FriendsList extends Fragment {
 
-    public FriendList(User user) {
+    public FriendsList(User user) {
         this.user = user;
     }
 
@@ -41,7 +41,7 @@ public class FriendList extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_friend_list, container, false);
+        view = inflater.inflate(R.layout.fragment_friends_list, container, false);
 
         refreshLayout = view.findViewById(R.id.friendListUpdate);
         friendError = view.findViewById(R.id.friendListError);

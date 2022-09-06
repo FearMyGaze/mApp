@@ -5,16 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.fearmygaze.mApp.Controller.FriendController;
 import com.fearmygaze.mApp.R;
-import com.fearmygaze.mApp.interfaces.IVolley;
+import com.fearmygaze.mApp.interfaces.IFriendRequestRecycler;
 import com.fearmygaze.mApp.model.FriendRequest;
 import com.fearmygaze.mApp.model.User;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -26,59 +22,35 @@ public class AdapterFriendRequest extends RecyclerView.Adapter<AdapterFriendRequ
 
     List<FriendRequest> friendRequestList;
     User user;
+    private final IFriendRequestRecycler iRecycler;
     private int offset;
 
-    public AdapterFriendRequest(List<FriendRequest> friendRequestList, User user) {
+    public AdapterFriendRequest(List<FriendRequest> friendRequestList, User user, IFriendRequestRecycler iRecycler) {
         this.friendRequestList = friendRequestList;
         this.user = user;
+        this.iRecycler = iRecycler;
         this.offset = 0;
     }
 
     @NonNull
     @Override
     public AdapterFriendRequest.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_friend_request, parent, false));
+        return new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_friend_request, parent, false), iRecycler);
     }
 
     @Override
     public void onBindViewHolder(@NonNull AdapterFriendRequest.MyViewHolder holder, int position) {
-        int id = friendRequestList.get(position).getId();
         String image = friendRequestList.get(position).getImage();
         String username = friendRequestList.get(position).getUsername();
 
-        Glide.with(holder.itemView.getRootView())
-                .load(image)
-                .placeholder(R.drawable.ic_launcher_background)
-                .circleCrop()
-                .apply(RequestOptions.centerCropTransform())
-                .into(holder.image);
+//        Glide.with(holder.itemView.getRootView())
+//                .load(image)
+//                .placeholder(R.drawable.ic_launcher_background)
+//                .circleCrop()
+//                .apply(RequestOptions.centerCropTransform())
+//                .into(holder.image);
 
         holder.username.setText(username);
-
-        holder.accept.setOnClickListener(v -> FriendController.answerFriendRequest(user.getId(), id, "true", v.getContext(), new IVolley() {
-            @Override
-            public void onSuccess(String message) {
-                Toast.makeText(v.getContext(), message, Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onError(String message) {
-                Toast.makeText(v.getContext(), message, Toast.LENGTH_LONG).show();
-            }
-        }));
-
-        holder.decline.setOnClickListener(v -> FriendController.answerFriendRequest(user.getId(), id, "false", v.getContext(), new IVolley() {
-            @Override
-            public void onSuccess(String message) {
-                Toast.makeText(v.getContext(), message, Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onError(String message) {
-                Toast.makeText(v.getContext(), message, Toast.LENGTH_LONG).show();
-            }
-        }));
-
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -99,6 +71,15 @@ public class AdapterFriendRequest extends RecyclerView.Adapter<AdapterFriendRequ
         notifyDataSetChanged();
     }
 
+    public void removeItemAndRefresh(int position){
+        this.friendRequestList.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public int getFriendID(int pos){
+        return friendRequestList.get(pos).getId();
+    }
+
     public int getOffset() {
         return offset;
     }
@@ -106,7 +87,6 @@ public class AdapterFriendRequest extends RecyclerView.Adapter<AdapterFriendRequ
     public void setOffset(int offset) {
         this.offset = offset;
     }
-
 
     @Override
     public int getItemCount() {
@@ -118,12 +98,31 @@ public class AdapterFriendRequest extends RecyclerView.Adapter<AdapterFriendRequ
         MaterialTextView username;
         ImageButton accept, decline;
 
-        public MyViewHolder(@NonNull View itemView) {
+        public MyViewHolder(@NonNull View itemView, IFriendRequestRecycler iRecycler) {
             super(itemView);
             image = itemView.findViewById(R.id.adapterFriendRequestImage);
             username = itemView.findViewById(R.id.adapterFriendRequestUsername);
             accept = itemView.findViewById(R.id.adapterFriendRequestAccept);
             decline = itemView.findViewById(R.id.adapterFriendRequestDecline);
+
+            accept.setOnClickListener(v -> {
+                if (iRecycler != null){
+                    int pos = getAdapterPosition();
+                    if (pos != RecyclerView.NO_POSITION){
+                        iRecycler.onItemClickAccept(pos);
+                    }
+                }
+            });
+
+            decline.setOnClickListener(v -> {
+                if (iRecycler != null){
+                    int pos = getAdapterPosition();
+                    if (pos != RecyclerView.NO_POSITION){
+                        iRecycler.onItemCLickIgnore(pos);
+                    }
+                }
+            });
+
         }
     }
 }

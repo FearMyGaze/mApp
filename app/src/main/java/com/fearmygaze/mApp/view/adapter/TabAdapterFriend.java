@@ -6,8 +6,8 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.fearmygaze.mApp.model.User;
-import com.fearmygaze.mApp.view.tabs.FriendList;
-import com.fearmygaze.mApp.view.tabs.FriendRequests;
+import com.fearmygaze.mApp.view.tabs.FriendsList;
+import com.fearmygaze.mApp.view.tabs.FriendsRequests;
 
 public class TabAdapterFriend extends FragmentStateAdapter {
 
@@ -22,9 +22,9 @@ public class TabAdapterFriend extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         if (position == 1) {
-            return new FriendRequests(user);
+            return new FriendsRequests(user);
         }
-        return new FriendList(user);
+        return new FriendsList(user);
     }
 
     @Override

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -14,6 +15,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.fearmygaze.mApp.Controller.FriendController;
 import com.fearmygaze.mApp.R;
 import com.fearmygaze.mApp.interfaces.IFriendRequest;
+import com.fearmygaze.mApp.interfaces.IFriendRequestRecycler;
+import com.fearmygaze.mApp.interfaces.IVolley;
 import com.fearmygaze.mApp.model.FriendRequest;
 import com.fearmygaze.mApp.model.User;
 import com.fearmygaze.mApp.view.adapter.AdapterFriendRequest;
@@ -22,9 +25,9 @@ import com.google.android.material.textview.MaterialTextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FriendRequests extends Fragment {
+public class FriendsRequests extends Fragment implements IFriendRequestRecycler {
 
-    public FriendRequests(User user) {
+    public FriendsRequests(User user) {
         this.user = user;
     }
 
@@ -41,14 +44,14 @@ public class FriendRequests extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_friend_requests, container, false);
+        view = inflater.inflate(R.layout.fragment_friends_requests, container, false);
 
         refreshLayout = view.findViewById(R.id.friendRequestUpdate);
         friendRequestError = view.findViewById(R.id.friendRequestError);
         friendRequestRecycler = view.findViewById(R.id.friendRequestRecycler);
 
         friendRequests = new ArrayList<>();
-        adapterFriendRequest = new AdapterFriendRequest(friendRequests, user);
+        adapterFriendRequest = new AdapterFriendRequest(friendRequests, user, this);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL, false);
         friendRequestRecycler.setLayoutManager(layoutManager);
@@ -122,4 +125,43 @@ public class FriendRequests extends Fragment {
         refreshLayout.setRefreshing(false);
     }
 
+    @Override
+    public void onItemClickAccept(int pos) {
+        FriendController.answerFriendRequest(user.getId(), adapterFriendRequest.getFriendID(pos), "true", view.getContext(), new IVolley() {
+            @Override
+            public void onSuccess(String message) {
+                Toast.makeText(view.getContext(), message, Toast.LENGTH_LONG).show();
+                adapterFriendRequest.removeItemAndRefresh(pos);
+
+                if (adapterFriendRequest.getItemCount() == 0){
+                    friendRequestError.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onError(String message) {
+                Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    @Override
+    public void onItemCLickIgnore(int pos) {
+        FriendController.answerFriendRequest(user.getId(), adapterFriendRequest.getFriendID(pos), "false", view.getContext(), new IVolley() {
+            @Override
+            public void onSuccess(String message) {
+                Toast.makeText(view.getContext(), message, Toast.LENGTH_LONG).show();
+                adapterFriendRequest.removeItemAndRefresh(pos);
+
+                if (adapterFriendRequest.getItemCount() == 0){
+                    friendRequestError.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onError(String message) {
+                Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 }
