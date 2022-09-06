@@ -107,6 +107,11 @@ public class Main extends AppCompatActivity {
 
         rememberMe();
 
+        friends = new Friends(currentUser);
+        chat = new Chat(currentUser);
+
+        replaceFragment(chat);
+
         drawerLayout = findViewById(R.id.mainDrawer);
         toolbar = findViewById(R.id.mainToolbar);
         bottomNavigationView = findViewById(R.id.mainBottomNavigation);
@@ -161,14 +166,6 @@ public class Main extends AppCompatActivity {
         initializeToolbar(toolbar);
         initializeBottomSearch();
 
-        /*
-         * BottomNavigation
-         * */
-
-        friends = new Friends(currentUser);
-        chat = new Chat(currentUser);
-
-        replaceFragment(chat);
         bottomNavigationView.setSelectedItemId(R.id.mainNavigationItemChoice1);
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
