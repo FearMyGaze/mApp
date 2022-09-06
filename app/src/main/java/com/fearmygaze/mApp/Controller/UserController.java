@@ -31,7 +31,7 @@ public class UserController {
         body.put("username", username);
         body.put("email", email);
         body.put("password", password);
-        body.put("imagePath", image);
+        body.put("image", image);
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url(0, context), new JSONObject(body), response -> {
             try {
@@ -83,7 +83,7 @@ public class UserController {
                         int id = response.getJSONObject("data").getInt("id");
                         String username = response.getJSONObject("data").getString("username");
                         String email = response.getJSONObject("data").getString("email");
-                        String image = response.getJSONObject("data").getString("imagePath");
+                        String image = response.getJSONObject("data").getString("image");
 
                         User user = new User(id, username, BuildConfig.PROFILE + image, email);
 
@@ -166,9 +166,9 @@ public class UserController {
     /*
      * TODO: We cant let the user to change the image all the time but only once a month
      * */
-    public static void updateImage(String email, String image, Context context, IVolley iVolley) {
+    public static void updateImage(String id, String image, Context context, IVolley iVolley) {
         Map<String, String> body = new HashMap<>();
-        body.put("email", email);
+        body.put("id", id);
         body.put("image", image);
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url(3, context), new JSONObject(body), response -> {
@@ -219,7 +219,7 @@ public class UserController {
                     case "200":
                         int _id = response.getJSONObject("data").getInt("id");
                         String username = response.getJSONObject("data").getString("username");
-                        String image = response.getJSONObject("data").getString("imagePath");
+                        String image = response.getJSONObject("data").getString("image");
                         String email = response.getJSONObject("data").getString("email");
 
                         PrivatePreference preference = new PrivatePreference(context);
@@ -297,6 +297,10 @@ public class UserController {
             iVolley.onError(context.getString(R.string.networkError));
         }
     }
+
+    /*
+    * TODO: This will change with more options and stuff
+    * */
 
     public static void report(int id, String reportedUserID, String reason, Context context, IVolley iVolley) {
         Map<String, Object> body = new HashMap<>();
