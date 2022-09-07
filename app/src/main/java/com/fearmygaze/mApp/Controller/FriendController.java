@@ -46,7 +46,7 @@ public class FriendController {
                         for (int i = 0; i < array.length(); i++) {
 
                             int id = array.getJSONObject(i).getInt("id");
-                            String imagePath = array.getJSONObject(i).getString("imagePath");
+                            String imagePath = array.getJSONObject(i).getString("image");
                             String name = array.getJSONObject(i).getString("username");
                             String friendshipState = array.getJSONObject(i).getString("state");
                             String user1_id = array.getJSONObject(i).getString("user1_id");
@@ -146,7 +146,7 @@ public class FriendController {
 
                             int id = array.getJSONObject(i).getInt("friendID");
                             String name = array.getJSONObject(i).getString("username");
-                            String image = array.getJSONObject(i).getString("imagePath");
+                            String image = array.getJSONObject(i).getString("image");
 
                             friendList.add(new Friend(id, image, name));
                         }
@@ -196,7 +196,7 @@ public class FriendController {
                         for (int i = 0; i < array.length(); i++) {
                             int id = array.getJSONObject(i).getInt("friendID");
                             String name = array.getJSONObject(i).getString("username");
-                            String image = array.getJSONObject(i).getString("imagePath");
+                            String image = array.getJSONObject(i).getString("image");
 
                             friendRequests.add(new FriendRequest(id, image, name));
                         }
