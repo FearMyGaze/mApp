@@ -144,7 +144,6 @@ public class SignUp extends Fragment {
 
                         output.compress(Bitmap.CompressFormat.PNG, 100, stream);
 
-                        base64Image = null;
                         base64Image = Base64.encodeToString(stream.toByteArray(), Base64.DEFAULT);
 
                         signUpAddImage.setVisibility(View.GONE);
