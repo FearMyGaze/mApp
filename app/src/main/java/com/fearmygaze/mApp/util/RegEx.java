@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RegEx {//TODO: Change the special characters that we allow
+public class RegEx {
     public static boolean isPasswordValid(String passwd, TextInputLayout textInputLayout, Context context) {
         Pattern pattern = Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!#@$%&._])(?=\\S+$).{8,}$");
         Matcher matcher = pattern.matcher(passwd);
@@ -22,15 +22,27 @@ public class RegEx {//TODO: Change the special characters that we allow
         }
 
         return matches;
+    }   //TODO: Set a better error message
+
+    public static boolean isUsernameValid(String username, TextInputLayout textInputLayout, Context context){
+        Pattern pattern = Pattern.compile("[a-zA-Z_]+");
+        Matcher matcher = pattern.matcher(username);
+        boolean matches = matcher.matches();
+
+        if (!matches){
+            textInputLayout.setError(context.getString(R.string.regExUsernameError));
+            textInputLayout.setErrorEnabled(true);
+        }
+        return matches;
     }
 
     /*
-     * Explanation of the following methods
+     * Explanation of the following method
      * Length > 0 <= n
      * !errorEnabled()
      * RegEx validation
      * !errorEnabled()
-     * Input1 != Input2 OR Input1 == Input2
+     * Input1 != Input2
      * */
 
     public static boolean isPasswordValidAndDifferent(TextInputEditText textInputEditText1, TextInputLayout textInputLayout1, TextInputEditText textInputEditText2, TextInputLayout textInputLayout2, int length, Context context) {
@@ -55,6 +67,15 @@ public class RegEx {//TODO: Change the special characters that we allow
             return false;
         }
     }
+
+    /*
+     * Explanation of the following method
+     * Length > 0 <= n
+     * !errorEnabled()
+     * RegEx validation
+     * !errorEnabled()
+     * Input1 == Input2
+     * */
 
     public static boolean isPasswordValidAndEqual(TextInputEditText textInputEditText1, TextInputLayout textInputLayout1, TextInputEditText textInputEditText2, TextInputLayout textInputLayout2, int length, Context context) {
         String input1 = Objects.requireNonNull(textInputEditText1.getText()).toString().trim();

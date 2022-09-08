@@ -127,6 +127,7 @@
 
     <!-- RegEx -->
     <string name="regExPasswordError">* Bigger than 8 characters \n* 1 Uppercase character \n* 1 number \n* 1 special character</string>
+    <string name="regExUsernameError">Username can\'t contain special characters or spaces</string>
 
     <!-- TextHandler-->
     <string name="textHandlerEmpty">Fill the empty cell</string>
@@ -167,6 +168,12 @@
         <item>show-requests</item>
         <item>answer-friend-request</item>
         <item>delete-friend</item>
+    </string-array>
+
+    <string-array name="chat">
+        <item>create-room</item>
+        <item>update-room</item>
+        <item>delete-room</item>
     </string-array>
 
 </resources>
