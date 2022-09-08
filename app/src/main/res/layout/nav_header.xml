@@ -17,7 +17,7 @@
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     <TextView
-        android:id="@+id/navHeaderName"
+        android:id="@+id/navHeaderUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/sampleName"
@@ -26,10 +26,10 @@
         android:layout_marginStart="10dp"
         app:layout_constraintStart_toEndOf="@id/navHeaderImage"
         app:layout_constraintTop_toTopOf="@id/navHeaderImage"
-        app:layout_constraintBottom_toTopOf="@id/navHeaderUsername"/>
+        app:layout_constraintBottom_toTopOf="@id/navHeaderEmail"/>
 
     <TextView
-        android:id="@+id/navHeaderUsername"
+        android:id="@+id/navHeaderEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/sampleUsername"
@@ -37,7 +37,7 @@
         android:textSize="15sp"
         android:layout_marginStart="10dp"
         app:layout_constraintStart_toEndOf="@+id/navHeaderImage"
-        app:layout_constraintTop_toBottomOf="@id/navHeaderName"
+        app:layout_constraintTop_toBottomOf="@id/navHeaderUsername"
         app:layout_constraintBottom_toBottomOf="@+id/navHeaderImage"/>
 
     <com.google.android.material.divider.MaterialDivider
