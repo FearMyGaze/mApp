@@ -68,8 +68,14 @@
     <string name="adapterConversationDiv">·</string>
 
     <!-- Chat Adapter Dialog -->
-    <string name="dialogConversationDelete">Delete Conversation</string>
-    <string name="dialogConversationReport">Report user</string>
+    <string name="dialogConversationDelete">Διαγραφή συνομιλίας</string>
+    <string name="dialogConversationRemove">Διαγραφή φίλου</string>
+    <string name="dialogConversationReport">Αναφορά χρήστη</string>
+
+    <!-- Chat Adapter SwipeAction -->
+    <string name="swipeActionOption1">Διαγραφή συνομιλίας</string>
+    <string name="swipeActionOption2">Διαγραφή φίλου</string>
+    <string name="swipeActionOption3">Αναφορά χρήστη</string>
 
     <!-- ChatRoom Activity -->
     <string name="chatRoomBottomBarChooseImage">Επίλεξε εικόνα </string>

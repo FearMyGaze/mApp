@@ -68,7 +68,13 @@
 
     <!-- Chat Adapter Dialog -->
     <string name="dialogConversationDelete">Delete Conversation</string>
+    <string name="dialogConversationRemove">Remove Friend</string>
     <string name="dialogConversationReport">Report user</string>
+
+    <!-- Chat Adapter SwipeAction -->
+    <string name="swipeActionOption1">Delete Conversation</string>
+    <string name="swipeActionOption2">Remove Friend</string>
+    <string name="swipeActionOption3">Report User</string>
 
     <!-- ChatRoom Activity -->
     <string name="chatRoomBottomBarChooseImage">Choose Image</string>
