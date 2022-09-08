@@ -116,7 +116,7 @@ public class SignUp extends Fragment {
             intent.setAction(Intent.ACTION_GET_CONTENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,false);
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
             pickImage.launch(intent);
         });
 
@@ -138,7 +138,7 @@ public class SignUp extends Fragment {
                     Uri uri = result.getData().getData();
                     try {
 
-                        Bitmap output =  Bitmap.createScaledBitmap(MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), uri),1024,1024,true); //TODO: Subject to change
+                        Bitmap output = Bitmap.createScaledBitmap(MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), uri), 1024, 1024, true); //TODO: Subject to change
 
                         ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
@@ -179,7 +179,7 @@ public class SignUp extends Fragment {
     private void checkForErrorsAndRegister() {
         if (TextHandler.isTextInputLengthCorrect(signUpUsername, signUpUsernameError, 50, getContext()) &&
                 TextHandler.isTextInputLengthCorrect(signUpEmail, signUpEmailError, 50, getContext()) && !base64Image.isEmpty()) {
-            if (RegEx.isPasswordValidAndEqual(signUpPassword, signUpPasswordError, signUpConfirmPassword, signUpConfirmPasswordError, 300, getContext())) {
+            if (RegEx.isSignUpFormValid(signUpUsername, signUpUsernameError, signUpPassword, signUpPasswordError, signUpConfirmPassword, signUpConfirmPasswordError, 300, getContext())) {
                 String username = Objects.requireNonNull(signUpUsername.getText()).toString().trim();
                 String email = Objects.requireNonNull(signUpEmail.getText()).toString().trim();
                 String password = Objects.requireNonNull(signUpPassword.getText()).toString().trim();

@@ -100,4 +100,15 @@ public class RegEx {
         }
     }
 
+    public static boolean isSignUpFormValid(TextInputEditText textInputEditText1, TextInputLayout textInputLayout1,
+                                            TextInputEditText textInputEditText2, TextInputLayout textInputLayout2,
+                                            TextInputEditText textInputEditText3, TextInputLayout textInputLayout3,
+                                            int length, Context context){
+
+        if (RegEx.isUsernameValid(Objects.requireNonNull(textInputEditText1.getText()).toString().trim(), textInputLayout1,context)){
+            return RegEx.isPasswordValidAndEqual(textInputEditText2, textInputLayout2, textInputEditText3, textInputLayout3, length, context);
+        }
+        return false;
+    }
+
 }
