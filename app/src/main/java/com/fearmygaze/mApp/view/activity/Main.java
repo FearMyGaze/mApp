@@ -51,6 +51,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -93,6 +94,14 @@ public class Main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        drawerLayout = findViewById(R.id.mainDrawer);
+        toolbar = findViewById(R.id.mainToolbar);
+        bottomNavigationView = findViewById(R.id.mainBottomNavigation);
+        navigationView = findViewById(R.id.mainNavigation);
+        header = navigationView.getHeaderView(0);
+        bottomSheetConstraint = findViewById(R.id.search);
+
+        setSupportActionBar(toolbar);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
 
         preference = new PrivatePreference(Main.this);
@@ -112,19 +121,11 @@ public class Main extends AppCompatActivity {
 
         replaceFragment(chat);
 
-        drawerLayout = findViewById(R.id.mainDrawer);
-        toolbar = findViewById(R.id.mainToolbar);
-        bottomNavigationView = findViewById(R.id.mainBottomNavigation);
-        navigationView = findViewById(R.id.mainNavigation);
-        bottomSheetConstraint = findViewById(R.id.search);
-
-        setSupportActionBar(toolbar);
-
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        header = navigationView.getHeaderView(0);
+        setUserComponents();
 
         navigationView.setNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
@@ -155,6 +156,7 @@ public class Main extends AppCompatActivity {
                     return true;
                 case R.id.navigationMenuItemSignOut:
                     preference.clear();
+                    startActivity(new Intent(this, Starting.class));
                     finish();
                     Toast.makeText(this, "User Signed out", Toast.LENGTH_SHORT).show();
                     return true;
@@ -163,7 +165,6 @@ public class Main extends AppCompatActivity {
             }
         });
 
-        initializeToolbar(toolbar);
         initializeBottomSearch();
 
         bottomNavigationView.setSelectedItemId(R.id.mainNavigationItemChoice1);
@@ -211,6 +212,55 @@ public class Main extends AppCompatActivity {
         });
     }
 
+    private void setUserComponents(){
+        ShapeableImageView imageView = header.findViewById(R.id.navHeaderImage);
+        TextView username = header.findViewById(R.id.navHeaderUsername);
+        TextView email = header.findViewById(R.id.navHeaderEmail);
+
+        Glide.with(this)
+                .asDrawable()
+                .circleCrop()
+                .placeholder(R.drawable.ic_person_24)
+                .apply(new RequestOptions().override(50, 50))
+                .load(currentUser.getImageUrl())
+                .into(imageView);
+
+        username.setText(currentUser.getUsername());
+        email.setText(currentUser.getEmail());
+
+        Glide.with(this)
+                .asDrawable()
+                .circleCrop()
+                .placeholder(R.drawable.ic_person_24)
+                .apply(new RequestOptions().override(70, 70))
+                .load(currentUser.getImageUrl())
+                .into(new CustomTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        toolbar.setNavigationIcon(resource);
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+
+                    }
+                });
+
+        /* This changes the icon when you click it */
+        toolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.mainToolbarItemNotifications) {
+                if (notifications) {
+                    notifications = false;
+                    item.setIcon(R.drawable.ic_notifications_off_24);
+                } else {
+                    notifications = true;
+                    item.setIcon(R.drawable.ic_notifications_active_24);
+                }
+            }
+            return true;
+        });
+
+    }
 
     private void prepareForBugListing() {
         Dialog dialog = new Dialog(this);
@@ -306,41 +356,6 @@ public class Main extends AppCompatActivity {
 
     }
 
-    private void initializeToolbar(MaterialToolbar toolbar) { //TODO: We need to optimize the glide stuff and the order of operations
-        /*This add the icon of the user*/
-        Glide.with(this)
-                .asDrawable()
-                .circleCrop()
-                .placeholder(R.drawable.ic_person_24)
-                .apply(new RequestOptions().override(70, 70))
-                .load(currentUser.getImageUrl())
-                .into(new CustomTarget<Drawable>() {
-                    @Override
-                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                        toolbar.setNavigationIcon(resource);
-                    }
-
-                    @Override
-                    public void onLoadCleared(@Nullable Drawable placeholder) {
-
-                    }
-                });
-        /* This changes the icon when you click it */
-        toolbar.setOnMenuItemClickListener(item -> {
-            if (item.getItemId() == R.id.mainToolbarItemNotifications) {
-                if (notifications) {
-                    notifications = false;
-                    item.setIcon(R.drawable.ic_notifications_off_24);
-                } else {
-                    notifications = true;
-                    item.setIcon(R.drawable.ic_notifications_active_24);
-                }
-            }
-            return true;
-        });
-
-    }
-
     private void initializeBottomSearch() {
         searchRecycler = bottomSheetConstraint.findViewById(R.id.searchRecycler);
         usersNotFound = bottomSheetConstraint.findViewById(R.id.searchUsersNotFound);
@@ -358,7 +373,6 @@ public class Main extends AppCompatActivity {
         searchRecycler.setLayoutManager(layoutManager);
         searchRecycler.setAdapter(adapterSearch);
 
-
         searchRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -373,7 +387,7 @@ public class Main extends AppCompatActivity {
 
             private void fetchRows() {
                 adapterSearch.setOffset(adapterSearch.getOffset() + 10);
-                FriendController.searchUser(currentUser, searchView.getQuery().toString().trim(), adapterSearch.getOffset(), searchView.getContext(), new ISearch() {
+                FriendController.searchUser(currentUser, searchView.getQuery().toString().trim(), adapterSearch.getOffset(), Main.this, new ISearch() {
                     @Override
                     public void onSuccess(List<SearchedUser> searchedUserList) {
                         usersNotFound.setVisibility(View.GONE);
@@ -405,7 +419,7 @@ public class Main extends AppCompatActivity {
             public boolean onQueryTextSubmit(String query) {
                 adapterSearch.setOffset(0);
                 if (!query.isEmpty()) {
-                    FriendController.searchUser(currentUser, query.trim(), adapterSearch.getOffset(), searchView.getContext(), new ISearch() {
+                    FriendController.searchUser(currentUser, query.trim(), adapterSearch.getOffset(), Main.this, new ISearch() {
                         @Override
                         public void onSuccess(List<SearchedUser> searchedUserList) {
                             usersNotFound.setVisibility(View.GONE);
