@@ -25,7 +25,7 @@ public class RegEx {
     }   //TODO: Set a better error message
 
     public static boolean isUsernameValid(String username, TextInputLayout textInputLayout, Context context){
-        Pattern pattern = Pattern.compile("[a-zA-Z_]+");
+        Pattern pattern = Pattern.compile("[a-zA-Z_0-9]+");
         Matcher matcher = pattern.matcher(username);
         boolean matches = matcher.matches();
 
