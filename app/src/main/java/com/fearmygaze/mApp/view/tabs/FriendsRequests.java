@@ -15,7 +15,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.fearmygaze.mApp.Controller.FriendController;
 import com.fearmygaze.mApp.R;
 import com.fearmygaze.mApp.interfaces.IFriendRequest;
-import com.fearmygaze.mApp.interfaces.IFriendRequestRecycler;
+import com.fearmygaze.mApp.interfaces.IFriendRequestAdapter;
 import com.fearmygaze.mApp.interfaces.IVolley;
 import com.fearmygaze.mApp.model.FriendRequest;
 import com.fearmygaze.mApp.model.User;
@@ -25,7 +25,7 @@ import com.google.android.material.textview.MaterialTextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FriendsRequests extends Fragment implements IFriendRequestRecycler {
+public class FriendsRequests extends Fragment implements IFriendRequestAdapter {
 
     public FriendsRequests(User user) {
         this.user = user;

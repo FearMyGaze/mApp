@@ -9,8 +9,10 @@ import android.widget.ImageButton;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.fearmygaze.mApp.R;
-import com.fearmygaze.mApp.interfaces.IFriendRequestRecycler;
+import com.fearmygaze.mApp.interfaces.IFriendRequestAdapter;
 import com.fearmygaze.mApp.model.FriendRequest;
 import com.fearmygaze.mApp.model.User;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -22,10 +24,10 @@ public class AdapterFriendRequest extends RecyclerView.Adapter<AdapterFriendRequ
 
     List<FriendRequest> friendRequestList;
     User user;
-    private final IFriendRequestRecycler iRecycler;
+    private final IFriendRequestAdapter iRecycler;
     private int offset;
 
-    public AdapterFriendRequest(List<FriendRequest> friendRequestList, User user, IFriendRequestRecycler iRecycler) {
+    public AdapterFriendRequest(List<FriendRequest> friendRequestList, User user, IFriendRequestAdapter iRecycler) {
         this.friendRequestList = friendRequestList;
         this.user = user;
         this.iRecycler = iRecycler;
@@ -43,12 +45,12 @@ public class AdapterFriendRequest extends RecyclerView.Adapter<AdapterFriendRequ
         String image = friendRequestList.get(position).getImage();
         String username = friendRequestList.get(position).getUsername();
 
-//        Glide.with(holder.itemView.getRootView())
-//                .load(image)
-//                .placeholder(R.drawable.ic_launcher_background)
-//                .circleCrop()
-//                .apply(RequestOptions.centerCropTransform())
-//                .into(holder.image);
+        Glide.with(holder.itemView.getRootView())
+                .load(image)
+                .placeholder(R.drawable.ic_launcher_background)
+                .circleCrop()
+                .apply(RequestOptions.centerCropTransform())
+                .into(holder.image);
 
         holder.username.setText(username);
     }
@@ -98,7 +100,7 @@ public class AdapterFriendRequest extends RecyclerView.Adapter<AdapterFriendRequ
         MaterialTextView username;
         ImageButton accept, decline;
 
-        public MyViewHolder(@NonNull View itemView, IFriendRequestRecycler iRecycler) {
+        public MyViewHolder(@NonNull View itemView, IFriendRequestAdapter iRecycler) {
             super(itemView);
             image = itemView.findViewById(R.id.adapterFriendRequestImage);
             username = itemView.findViewById(R.id.adapterFriendRequestUsername);
