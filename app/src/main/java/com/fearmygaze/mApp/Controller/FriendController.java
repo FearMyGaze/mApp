@@ -267,7 +267,7 @@ public class FriendController {
         }
     }
 
-    public static void deleteFriend(int userID, int friendID, Context context, IVolley iVolley) {
+    public static void removeFriend(int userID, int friendID, Context context, IVolley iVolley) {
         Map<String, Object> body = new HashMap<>();
         body.put("id", userID);
         body.put("friendID", friendID);
