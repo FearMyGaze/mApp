@@ -31,7 +31,6 @@
         app:layout_constraintTop_toBottomOf="@+id/signInWelcome"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
-    <!-- TODO: Fix the TextViews not showing on dark mode -->
 
     <ScrollView
         android:id="@+id/signInForm"

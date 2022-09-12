@@ -26,7 +26,7 @@
     </style>
 
     <style name="ThemeOverlay.App.CheckBox" parent="">
-        <item name="colorOnSurface">?attr/colorOnSecondary</item>
+        <item name="colorOnSurface">@color/white</item>
         <item name="colorSecondary">?attr/colorPrimary</item>
     </style>
 </resources>

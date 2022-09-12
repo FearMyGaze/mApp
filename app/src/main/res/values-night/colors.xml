@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="primary">#787878</color> <!-- TODO: Change colors -->
+    <color name="primary_text">#787878</color>
     <color name="adapter_background">#1E1E1E</color>
     <color name="adapter_background_stroke">#1F1F1F</color>
 
