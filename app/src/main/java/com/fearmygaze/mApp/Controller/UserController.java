@@ -21,9 +21,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /*
- * TODO: Maybe add the error codes as an enum ?? so the server has to send only the number
- * */
-
+ *  TODO: Maybe add the device language to send back the correct error messages in the appropriate
+ *   language
+ */
 public class UserController {
 
     public static void signUp(String username, String email, String password, String image, Context context, IVolley iVolley) {
@@ -163,11 +163,8 @@ public class UserController {
         }
     }
 
-    /*
-     * TODO: We cant let the user to change the image all the time but only once a month
-     * */
-    public static void updateImage(String id, String image, Context context, IVolley iVolley) {
-        Map<String, String> body = new HashMap<>();
+    public static void updateImage(int id, String image, Context context, IVolley iVolley) {
+        Map<String, Object> body = new HashMap<>();
         body.put("id", id);
         body.put("image", image);
 
