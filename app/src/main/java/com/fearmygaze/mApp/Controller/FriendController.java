@@ -148,7 +148,7 @@ public class FriendController {
                             String name = array.getJSONObject(i).getString("username");
                             String image = array.getJSONObject(i).getString("image");
 
-                            friendList.add(new Friend(id, image, name));
+                            friendList.add(new Friend(id, BuildConfig.PROFILE + image, name));
                         }
                         iFriend.onSuccess(friendList);
                         break;
@@ -198,7 +198,7 @@ public class FriendController {
                             String name = array.getJSONObject(i).getString("username");
                             String image = array.getJSONObject(i).getString("image");
 
-                            friendRequests.add(new FriendRequest(id, image, name));
+                            friendRequests.add(new FriendRequest(id, BuildConfig.PROFILE + image, name));
                         }
                         iFriendRequest.onSuccess(friendRequests);
                         break;

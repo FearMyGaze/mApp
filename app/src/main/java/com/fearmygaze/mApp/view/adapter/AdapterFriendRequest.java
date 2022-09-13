@@ -49,7 +49,7 @@ public class AdapterFriendRequest extends RecyclerView.Adapter<AdapterFriendRequ
                 .load(image)
                 .placeholder(R.drawable.ic_launcher_background)
                 .circleCrop()
-                .apply(RequestOptions.centerCropTransform())
+                .apply(RequestOptions.overrideOf(70, 70))
                 .into(holder.image);
 
         holder.username.setText(username);

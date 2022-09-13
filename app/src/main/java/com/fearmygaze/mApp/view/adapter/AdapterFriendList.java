@@ -10,6 +10,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.fearmygaze.mApp.R;
 import com.fearmygaze.mApp.model.Friend;
 import com.fearmygaze.mApp.model.User;
@@ -42,14 +44,12 @@ public class AdapterFriendList extends RecyclerView.Adapter<AdapterFriendList.My
         String image = friendList.get(position).getImage();
         String username = friendList.get(position).getUsername();
 
-        /* TODO: Remove this when the users have images
         Glide.with(holder.itemView.getRootView())
                 .load(image)
                 .placeholder(R.drawable.ic_launcher_background)
                 .circleCrop()
-                .apply(RequestOptions.centerCropTransform())
+                .apply(RequestOptions.overrideOf(70, 70))
                 .into(holder.image);
-         */
 
         holder.username.setText(username);
 
