@@ -110,6 +110,12 @@
     <string name="dialogUpdatePasswordCancel">Ακύρωση</string>
     <string name="dialogUpdatePasswordConfirm">Επιβεβαίωση</string>
 
+    <!-- Dialog Update Image -->
+    <string name="dialogUpdateImageString">Η εικόνα προφίλ μοιάζει έτσι</string>
+    <string name="dialogUpdateImageCancel">Ακύρωση</string>
+    <string name="dialogUpdateImageConfirm">Επιβεβαίωση</string>
+    <string name="dialogUpdateImageChoose">Επίλεξε</string>
+
     <!-- Dialog Bug -->
     <string name="dialogBugParagraph">Αν έχετε πετύχει κάποιο σφάλμα ή πρόβλημα με την εφαρμογή παρακαλώ περιγραψέτο παρακάτω.</string>
     <string name="dialogBugHint">Περιγραφή</string>

@@ -163,9 +163,10 @@ public class UserController {
         }
     }
 
-    public static void updateImage(int id, String image, Context context, IVolley iVolley) {
+    public static void updateImage(User user,String image, Context context, IUser iUser) {
         Map<String, Object> body = new HashMap<>();
-        body.put("id", id);
+        body.put("id", user.getId());
+        body.put("username",user.getUsername());
         body.put("image", image);
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url(3, context), new JSONObject(body), response -> {
@@ -175,18 +176,28 @@ public class UserController {
 
                 switch (error) {
                     case "200":
-                        iVolley.onSuccess(message);
+                        String mImage = response.getString("data");
+
+                        User mUser = new User(user.getId(), user.getUsername(), BuildConfig.PROFILE + mImage, user.getEmail());
+
+                        PrivatePreference pf = new PrivatePreference(context);
+                        pf.putInt("id", user.getId());
+                        pf.putString("username", user.getUsername());
+                        pf.putString("image", BuildConfig.PROFILE + mImage);
+                        pf.putString("email", user.getEmail());
+
+                        iUser.onSuccess(mUser, message);
                         break;
                     case "404":
                     case "405":
-                        iVolley.onError(message);
+                        iUser.onError(message);
                         break;
                 }
 
             } catch (JSONException e) {
-                iVolley.onError(context.getString(R.string.jsonError));
+                iUser.onError(context.getString(R.string.jsonError));
             }
-        }, error -> iVolley.onError(context.getString(R.string.volleyError))) {
+        }, error -> iUser.onError(context.getString(R.string.volleyError))) {
 
             @Override
             public Map<String, String> getHeaders() {
@@ -199,7 +210,7 @@ public class UserController {
         if (NetworkConnection.isConnectionAlive(context)) {
             RequestSingleton.getInstance(context).addToRequestQueue(request);
         } else {
-            iVolley.onError(context.getString(R.string.networkError));
+            iUser.onError(context.getString(R.string.networkError));
         }
     }
 

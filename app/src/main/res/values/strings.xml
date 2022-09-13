@@ -1,4 +1,4 @@
-<resources>
+<resources> <!-- TODO: Update string resources to remove redundant eg cancel confirm and more-->
     <!-- App name -->
     <string name="app_name">mApp</string>
 
@@ -108,6 +108,13 @@
     <string name="dialogUpdatePassword">Password</string>
     <string name="dialogUpdatePasswordCancel">Cancel</string>
     <string name="dialogUpdatePasswordConfirm">Confirm</string>
+
+    <!-- Dialog Update Image -->
+    <string name="dialogUpdateImageString">Your profile image looks like this</string>
+    <string name="dialogUpdateImageCancel">Cancel</string>
+    <string name="dialogUpdateImageConfirm">Confirm</string>
+    <string name="dialogUpdateImageChoose">Choose</string>
+
 
     <!-- Dialog Bug -->
     <string name="dialogBugParagraph">If you found a bug or a problem with the app please write it bellow.</string>
