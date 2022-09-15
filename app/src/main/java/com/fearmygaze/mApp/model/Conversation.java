@@ -1,13 +1,13 @@
 package com.fearmygaze.mApp.model;
 
 public class Conversation {
-    private final String id;
+    private final int id;
     private final String image;
     private final String username;
     private final String lastMessage;
     private final String lastMessageTime;
 
-    public Conversation(String id, String image, String username, String lastMessage, String lastMessageTime) {
+    public Conversation(int id, String image, String username, String lastMessage, String lastMessageTime) {
         this.id = id;
         this.image = image;
         this.username = username;
@@ -15,8 +15,7 @@ public class Conversation {
         this.lastMessageTime = lastMessageTime;
     }
 
-
-    public String getId() {
+    public int getId() {
         return id;
     }
 

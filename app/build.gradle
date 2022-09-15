@@ -42,7 +42,7 @@ android {
 
 dependencies {
 
-    implementation 'androidx.appcompat:appcompat:1.5.0'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
@@ -54,9 +54,9 @@ dependencies {
 
 
     //Socket.io
-//    implementation ('io.socket:socket.io-client:2.0.0') {
-//        exclude group: 'org.json', module: 'json'
-//    }
+    implementation ('io.socket:socket.io-client:2.0.0') {
+        exclude group: 'org.json', module: 'json'
+    }
 
     //Firebase
     implementation 'com.google.android.gms:play-services-gcm:17.0.0'

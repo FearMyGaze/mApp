@@ -310,11 +310,12 @@ public class UserController {
     * TODO: This will change with more options and stuff
     * */
 
-    public static void report(int id, String reportedUserID, String reason, Context context, IVolley iVolley) {
+    public static void report(int id, int reportedUserID, String reason, String description, Context context, IVolley iVolley) {
         Map<String, Object> body = new HashMap<>();
-        body.put("userID", id);
+        body.put("id", id);
         body.put("reportedUserID", reportedUserID);
         body.put("reason", reason);
+        body.put("description", description);
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url(6, context), new JSONObject(body), response -> {
             try {
