@@ -74,19 +74,15 @@ public class Main extends AppCompatActivity {
 
     BottomNavigationView bottomNavigationView;
 
-    //Navigation
     NavigationView navigationView;
-    View header;
-    TextView footerTerms, footerChangelog;
+    View navigationHeader;
+    TextView navigationFooterTerms, navigationFooterChangelog;
 
-    //Search
     BottomSheetBehavior<ConstraintLayout> sheetBehavior;
     ConstraintLayout bottomSheetConstraint;
     AdapterSearch adapterSearch;
-
     RecyclerView searchRecycler;
-
-    TextView usersNotFound;
+    TextView searchedUserNotFound;
     SearchView searchView;
 
     boolean notifications = true;
@@ -104,9 +100,9 @@ public class Main extends AppCompatActivity {
         toolbar = findViewById(R.id.mainToolbar);
         bottomNavigationView = findViewById(R.id.mainBottomNavigation);
         navigationView = findViewById(R.id.mainNavigation);
-        header = navigationView.getHeaderView(0);
-        footerTerms = findViewById(R.id.navFooterTerms);
-        footerChangelog = findViewById(R.id.navFooterChangelog);
+        navigationHeader = navigationView.getHeaderView(0);
+        navigationFooterTerms = findViewById(R.id.navFooterTerms);
+        navigationFooterChangelog = findViewById(R.id.navFooterChangelog);
         bottomSheetConstraint = findViewById(R.id.search);
 
         setSupportActionBar(toolbar);
@@ -169,12 +165,12 @@ public class Main extends AppCompatActivity {
             }
         });
 
-        footerTerms.setOnClickListener(v -> {
-            Toast.makeText(this, "This will open a dialog", Toast.LENGTH_SHORT).show();
+        navigationFooterTerms.setOnClickListener(v -> {
+            EventNotifier.event(v, "This will open a dialog");
         });
 
-        footerChangelog.setOnClickListener(v -> {
-            Toast.makeText(Main.this, "This will open a dialog with MarkDown Support", Toast.LENGTH_LONG).show();
+        navigationFooterChangelog.setOnClickListener(v -> {
+            EventNotifier.event(v, "This will open a dialog with MarkDown Support");
         });
 
         initializeBottomSearch();
@@ -225,10 +221,10 @@ public class Main extends AppCompatActivity {
     }
 
     private void setUserComponents() {
-        ShapeableImageView imageView = header.findViewById(R.id.navHeaderImage);
-        ImageButton moreAcc = header.findViewById(R.id.navHeaderMore);
-        TextView username = header.findViewById(R.id.navHeaderUsername);
-        TextView email = header.findViewById(R.id.navHeaderEmail);
+        ShapeableImageView imageView = navigationHeader.findViewById(R.id.navHeaderImage);
+        ImageButton moreAcc = navigationHeader.findViewById(R.id.navHeaderMore);
+        TextView username = navigationHeader.findViewById(R.id.navHeaderUsername);
+        TextView email = navigationHeader.findViewById(R.id.navHeaderEmail);
 
         Glide.with(this)
                 .asDrawable()
@@ -375,10 +371,10 @@ public class Main extends AppCompatActivity {
 
     private void initializeBottomSearch() {
         searchRecycler = bottomSheetConstraint.findViewById(R.id.searchRecycler);
-        usersNotFound = bottomSheetConstraint.findViewById(R.id.searchUsersNotFound);
+        searchedUserNotFound = bottomSheetConstraint.findViewById(R.id.searchUsersNotFound);
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(header.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(navigationHeader.getWindowToken(), 0);
 
         List<SearchedUser> searchedUserList = new ArrayList<>();
         adapterSearch = new AdapterSearch(searchedUserList, currentUser,
@@ -421,7 +417,7 @@ public class Main extends AppCompatActivity {
                 FriendController.searchUser(currentUser, searchView.getQuery().toString().trim(), adapterSearch.getOffset(), Main.this, new ISearch() {
                     @Override
                     public void onSuccess(List<SearchedUser> searchedUserList) {
-                        usersNotFound.setVisibility(View.GONE);
+                        searchedUserNotFound.setVisibility(View.GONE);
                         adapterSearch.addResultAndRefreshAdapter(searchedUserList);
                     }
 
@@ -453,14 +449,14 @@ public class Main extends AppCompatActivity {
                     FriendController.searchUser(currentUser, query.trim(), adapterSearch.getOffset(), Main.this, new ISearch() {
                         @Override
                         public void onSuccess(List<SearchedUser> searchedUserList) {
-                            usersNotFound.setVisibility(View.GONE);
+                            searchedUserNotFound.setVisibility(View.GONE);
                             adapterSearch.refillList(searchedUserList);
                         }
 
                         @Override
                         public void onError(String message) {
                             adapterSearch.clearListAndRefreshAdapter();
-                            usersNotFound.setVisibility(View.VISIBLE);
+                            searchedUserNotFound.setVisibility(View.VISIBLE);
                             Toast.makeText(Main.this, message, Toast.LENGTH_LONG).show();
                         }
                     });
@@ -486,7 +482,7 @@ public class Main extends AppCompatActivity {
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 menuItem1.setVisible(true);
                 adapterSearch.clearListAndRefreshAdapter();
-                usersNotFound.setVisibility(View.VISIBLE);
+                searchedUserNotFound.setVisibility(View.VISIBLE);
                 sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 return true;
             }
