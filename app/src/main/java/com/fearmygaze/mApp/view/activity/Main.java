@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,10 +74,12 @@ public class Main extends AppCompatActivity {
 
     BottomNavigationView bottomNavigationView;
 
+    //Navigation
     NavigationView navigationView;
-
     View header;
+    TextView footerTerms, footerChangelog;
 
+    //Search
     BottomSheetBehavior<ConstraintLayout> sheetBehavior;
     ConstraintLayout bottomSheetConstraint;
     AdapterSearch adapterSearch;
@@ -102,6 +105,8 @@ public class Main extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.mainBottomNavigation);
         navigationView = findViewById(R.id.mainNavigation);
         header = navigationView.getHeaderView(0);
+        footerTerms = findViewById(R.id.navFooterTerms);
+        footerChangelog = findViewById(R.id.navFooterChangelog);
         bottomSheetConstraint = findViewById(R.id.search);
 
         setSupportActionBar(toolbar);
@@ -153,12 +158,6 @@ public class Main extends AppCompatActivity {
                 case R.id.navigationMenuItemFeature:
                     prepareForFeatureListing();
                     return true;
-                case R.id.navigationMenuItemChangelog:
-                    Toast.makeText(Main.this, "This will open a dialog with MarkDown Support", Toast.LENGTH_LONG).show();
-                    return true;
-                case R.id.navigationMenuItemTerms:
-                    Toast.makeText(this, "This will open a dialog", Toast.LENGTH_SHORT).show();
-                    return true;
                 case R.id.navigationMenuItemSignOut:
                     preference.clear();
                     startActivity(new Intent(this, Starting.class));
@@ -168,6 +167,14 @@ public class Main extends AppCompatActivity {
                 default:
                     return false;
             }
+        });
+
+        footerTerms.setOnClickListener(v -> {
+            Toast.makeText(this, "This will open a dialog", Toast.LENGTH_SHORT).show();
+        });
+
+        footerChangelog.setOnClickListener(v -> {
+            Toast.makeText(Main.this, "This will open a dialog with MarkDown Support", Toast.LENGTH_LONG).show();
         });
 
         initializeBottomSearch();
@@ -219,6 +226,7 @@ public class Main extends AppCompatActivity {
 
     private void setUserComponents() {
         ShapeableImageView imageView = header.findViewById(R.id.navHeaderImage);
+        ImageButton moreAcc = header.findViewById(R.id.navHeaderMore);
         TextView username = header.findViewById(R.id.navHeaderUsername);
         TextView email = header.findViewById(R.id.navHeaderEmail);
 
@@ -263,6 +271,10 @@ public class Main extends AppCompatActivity {
                 }
             }
             return true;
+        });
+
+        moreAcc.setOnClickListener(v -> {
+            Toast.makeText(Main.this, "Eixame", Toast.LENGTH_LONG).show();
         });
 
     }

@@ -24,17 +24,22 @@
     <string name="mainBottomNavigationViewChoice1">Μηνύματα</string>
     <string name="mainBottomNavigationViewChoice2">Φίλοι</string>
 
+    <!-- Main Navigation Drawer (Header) -->
+    <string name="navigationHeaderMoreAccounts">Περισσότεροι λογαριασμοι</string>
+
     <!-- Main Navigation Drawer (Menu) -->
     <string name="navigationDrawerMenuItemProfile">Προφίλ</string>
     <string name="navigationDrawerMenuItemNotifications">Ειδοποιήσεις</string>
     <string name="navigationDrawerMenuItemSettings">Προφίλ</string>
     <string name="navigationDrawerMenuItemBug">Bug</string>
     <string name="navigationDrawerMenuItemFeature">Feature Request</string>
-    <string name="navigationDrawerMenuItemChangelog">Ιστορικό αλλαγών</string>
-    <string name="navigationDrawerMenuItemTerms">Όροι χρήσης</string>
     <string name="navigationDrawerMenuItemSignOut">Έξοδος</string>
     <string name="navigation_drawer_open">Άνοιξε το συρτάρι πλοήγης</string>
     <string name="navigation_drawer_close">Κλείσε το συρτάρι πλοήγης</string>
+
+    <!-- Main Navigation Drawer (Footer) -->
+    <string name="navigationFooterTerms">Όροι χρήσης</string>
+    <string name="navigationFooterChangelog">Ιστορικό αλλαγών</string>
 
     <!-- Sign In fragment -->
     <string name="signInWelcome">Καλώς ήρθες πίσω</string>

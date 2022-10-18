@@ -23,17 +23,23 @@
     <string name="mainBottomNavigationViewChoice1">Chats</string>
     <string name="mainBottomNavigationViewChoice2">Friends</string>
 
+    <!-- Main Navigation Drawer (Header) -->
+    <string name="navigationHeaderMoreAccounts">More accounts</string>
+
     <!-- Main Navigation Drawer (Menu) -->
     <string name="navigationDrawerMenuItemProfile">Profile</string>
     <string name="navigationDrawerMenuItemNotifications">Notifications</string>
     <string name="navigationDrawerMenuItemSettings">Settings</string>
     <string name="navigationDrawerMenuItemBug">Bug</string>
     <string name="navigationDrawerMenuItemFeature">Feature Request</string>
-    <string name="navigationDrawerMenuItemChangelog">Changelog</string>
-    <string name="navigationDrawerMenuItemTerms">Terms</string>
     <string name="navigationDrawerMenuItemSignOut">Sign Out</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!-- Main Navigation Drawer (Footer) -->
+    <string name="navigationFooterTerms">Terms</string>
+    <string name="navigationFooterAppVer" translatable="false">v0.0.1</string>
+    <string name="navigationFooterChangelog">Changelog</string>
 
     <!-- Sign In fragment -->
     <string name="signInWelcome">Welcome back</string>
