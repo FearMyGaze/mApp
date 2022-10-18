@@ -143,10 +143,12 @@ public class Main extends AppCompatActivity {
                 case R.id.navigationMenuItemNotifications:
                     drawerLayout.close();
                     startActivity(new Intent(Main.this, Notifications.class));
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     return true;
                 case R.id.navigationMenuItemSettings:
                     drawerLayout.close();
                     startActivity(new Intent(Main.this, Settings.class));
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     return true;
                 case R.id.navigationMenuItemBug:
                     prepareForBugListing();
