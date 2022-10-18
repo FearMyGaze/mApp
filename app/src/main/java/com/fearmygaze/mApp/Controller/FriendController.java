@@ -54,9 +54,9 @@ public class FriendController {
 
                             if (!user.getUsername().equals(name)) {//This is removing our name from the list
                                 if ((user1_id.equals(String.valueOf(user.getId())) || user2_id.equals(String.valueOf(user.getId()))) && friendshipState.equals("true")) {
-                                    searchedUserList.add(new SearchedUser(id, imagePath, name, true));
+                                    searchedUserList.add(new SearchedUser(id, BuildConfig.PROFILE + imagePath, name, true));
                                 } else {
-                                    searchedUserList.add(new SearchedUser(id, imagePath, name, false));
+                                    searchedUserList.add(new SearchedUser(id, BuildConfig.PROFILE + imagePath, name, false));
                                 }
                             }
 
