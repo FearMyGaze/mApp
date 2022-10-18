@@ -1,6 +1,7 @@
 package com.fearmygaze.mApp.view.activity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -12,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +38,7 @@ import com.fearmygaze.mApp.Controller.FriendController;
 import com.fearmygaze.mApp.Controller.IssueController;
 import com.fearmygaze.mApp.Controller.UserController;
 import com.fearmygaze.mApp.R;
+import com.fearmygaze.mApp.custom.EventNotifier;
 import com.fearmygaze.mApp.interfaces.ISearch;
 import com.fearmygaze.mApp.interfaces.IUserStatus;
 import com.fearmygaze.mApp.interfaces.IVolley;
@@ -132,14 +135,16 @@ public class Main extends AppCompatActivity {
                 case R.id.navigationMenuItemProfile:
                     Intent intent = new Intent(Main.this, Profile.class);
                     intent.putExtra("user", currentUser);
+                    drawerLayout.close();
                     startActivity(intent);
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    drawerLayout.close();
                     return true;
                 case R.id.navigationMenuItemNotifications:
+                    drawerLayout.close();
                     startActivity(new Intent(Main.this, Notifications.class));
                     return true;
                 case R.id.navigationMenuItemSettings:
+                    drawerLayout.close();
                     startActivity(new Intent(Main.this, Settings.class));
                     return true;
                 case R.id.navigationMenuItemBug:
@@ -212,7 +217,7 @@ public class Main extends AppCompatActivity {
         });
     }
 
-    private void setUserComponents(){
+    private void setUserComponents() {
         ShapeableImageView imageView = header.findViewById(R.id.navHeaderImage);
         TextView username = header.findViewById(R.id.navHeaderUsername);
         TextView email = header.findViewById(R.id.navHeaderEmail);
@@ -360,8 +365,22 @@ public class Main extends AppCompatActivity {
         searchRecycler = bottomSheetConstraint.findViewById(R.id.searchRecycler);
         usersNotFound = bottomSheetConstraint.findViewById(R.id.searchUsersNotFound);
 
+        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(header.getWindowToken(), 0);
+
         List<SearchedUser> searchedUserList = new ArrayList<>();
-        adapterSearch = new AdapterSearch(searchedUserList, currentUser);
+        adapterSearch = new AdapterSearch(searchedUserList, currentUser,
+                pos -> FriendController.sendFriendRequest(currentUser.getId(), adapterSearch.getSearchedUserID(pos), getApplicationContext(), new IVolley() {
+                    @Override
+                    public void onSuccess(String message) {
+                        EventNotifier.customEvent(toolbar, R.drawable.ic_check_24,  message);
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                        EventNotifier.errorEvent(toolbar, message);
+                    }
+                }));
 
         sheetBehavior = BottomSheetBehavior.from(bottomSheetConstraint);
         sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);

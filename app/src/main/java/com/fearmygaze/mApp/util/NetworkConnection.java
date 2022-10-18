@@ -5,9 +5,11 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
 
+import androidx.annotation.IntRange;
+
 public class NetworkConnection {
 
-    private static boolean isWifiConnected(Context context) {
+    private static boolean isWifiNetworkConnected(Context context) {
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         for (Network network : manager.getAllNetworks()) {
             NetworkInfo networkInfo = manager.getNetworkInfo(network);
@@ -16,7 +18,7 @@ public class NetworkConnection {
         return false;
     }
 
-    private static boolean isMobileConnected(Context context) {
+    private static boolean isMobileNetworkConnected(Context context) {
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         for (Network network : manager.getAllNetworks()) {
             NetworkInfo networkInfo = manager.getNetworkInfo(network);
@@ -26,7 +28,18 @@ public class NetworkConnection {
     }
 
     public static boolean isConnectionAlive(Context context) {
-        return isMobileConnected(context) || isWifiConnected(context);
+        return isWifiNetworkConnected(context) || isMobileNetworkConnected(context);
+    }
+
+    public static boolean preferredChoiceAlive(@IntRange(from = 1, to = 2) int choice, Context context) { //TODO: This will be the user choice and then we update them
+        switch (choice) {
+            case 1:
+                return isWifiNetworkConnected(context);
+            case 2:
+                return isMobileNetworkConnected(context);
+            default:
+                return isConnectionAlive(context);
+        }
     }
 
 }

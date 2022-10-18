@@ -23,6 +23,8 @@ import java.util.Map;
 /*
  *  TODO: Maybe add the device language to send back the correct error messages in the appropriate
  *   language
+ *
+ *  TODO: Construct the user preferences for the settings like {NetworkConnection class and more}
  */
 public class UserController {
 

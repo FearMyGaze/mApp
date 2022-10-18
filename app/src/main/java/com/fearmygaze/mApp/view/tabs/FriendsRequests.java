@@ -145,6 +145,8 @@ public class FriendsRequests extends Fragment implements IFriendRequestAdapter {
         });
     }
 
+    //TODO: Find a better way to handle the friend requests
+
     @Override
     public void onItemCLickIgnore(int pos) {
         FriendController.answerFriendRequest(user.getId(), adapterFriendRequest.getFriendID(pos), "false", view.getContext(), new IVolley() {
