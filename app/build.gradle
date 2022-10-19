@@ -5,14 +5,14 @@ plugins {
 
 android {
     namespace 'com.fearmygaze.mApp'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.fearmygaze.mApp"
         minSdk 23
-        targetSdk 32
+        targetSdk 33
         versionCode 1
-        versionName "1.0"
+        versionName "0.0.1"
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -60,7 +60,7 @@ dependencies {
 
     //Firebase
     implementation 'com.google.android.gms:play-services-gcm:17.0.0'
-    implementation 'com.google.firebase:firebase-messaging:23.0.8'
+    implementation 'com.google.firebase:firebase-messaging:23.1.0'
 
     //Test
     testImplementation 'junit:junit:4.13.2'
