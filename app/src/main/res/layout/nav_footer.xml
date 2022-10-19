@@ -21,7 +21,6 @@
         android:id="@+id/navFooterAppVer"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:text="@string/navigationFooterAppVer"
         android:textSize="14sp"
         android:textStyle="italic"
         app:layout_constraintStart_toEndOf="@id/navFooterTerms"

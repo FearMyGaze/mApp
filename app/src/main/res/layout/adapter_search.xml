@@ -40,6 +40,7 @@
         android:id="@+id/adapterSearchButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:text="@string/searchAddFriend"
         android:textColor="@android:color/holo_green_light"
         android:textAllCaps="false"
@@ -48,8 +49,9 @@
         app:cornerRadius="13dp"
         app:rippleColor="@android:color/holo_green_light"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+        app:layout_constraintStart_toEndOf="@id/adapterSearchUsername"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

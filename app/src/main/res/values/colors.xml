@@ -17,4 +17,6 @@
     <color name="adapter_background">#FCFCFC</color>
     <color name="adapter_background_stroke">#FDFDFD</color>
 
+    <color name="divider">@color/black</color>
+    
 </resources>
