@@ -38,7 +38,6 @@
 
     <!-- Main Navigation Drawer (Footer) -->
     <string name="navigationFooterTerms">Terms</string>
-    <string name="navigationFooterAppVer" translatable="false">v0.0.1</string>
     <string name="navigationFooterChangelog">Changelog</string>
 
     <!-- Sign In fragment -->
@@ -121,7 +120,6 @@
     <string name="dialogUpdateImageConfirm">Confirm</string>
     <string name="dialogUpdateImageChoose">Choose</string>
 
-
     <!-- Dialog Bug -->
     <string name="dialogBugParagraph">If you found a bug or a problem with the app please write it bellow.</string>
     <string name="dialogBugHint">Description</string>
@@ -137,6 +135,14 @@
     <string name="dialogFeatureCheckBox">Do you want us to send you an email for further questions?</string>
     <string name="dialogFeatureConfirm">Confirm</string>
     <string name="dialogFeatureCancel">Cancel</string>
+
+    <!-- More Accounts Dialog -->
+    <string name="dialogMoreAccountsAcc">Accounts</string>
+    <string name="dialogMoreAccountsCreateNew">Create New Account</string>
+    <string name="dialogMoreAccountsAddExisting">Add Existing Account</string>
+
+    <!-- More Accounts Adapter -->
+    <string name="adapterMoreAccountsCurrentAcc">Current Account</string>
 
     <!-- RegEx -->
     <string name="regExPasswordError">* Bigger than 8 characters \n* 1 Uppercase character \n* 1 number \n* 1 special character</string>

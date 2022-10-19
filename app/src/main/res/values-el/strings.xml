@@ -137,6 +137,14 @@
     <string name="dialogFeatureConfirm">Επιβεβαίωση</string>
     <string name="dialogFeatureCancel">Ακύρωση</string>
 
+    <!-- More Accounts Dialog -->
+    <string name="dialogMoreAccountsAcc">Λογαριασμοί</string>
+    <string name="dialogMoreAccountsCreateNew">Δημιουργία λογαριασμού</string>
+    <string name="dialogMoreAccountsAddExisting">Προθήκη προυπάρχοντα λογαριασμού</string>
+
+    <!-- More Accounts Adapter -->
+    <string name="adapterMoreAccountsCurrentAcc">Τωρινός Λογαριασμός</string>
+
     <!-- RegEx -->
     <string name="regExPasswordError">* Μεγαλύτερο 8 χαρακτήρες \n* 1 μικρό χαρακτήρα \n* 1 κεφαλαίο χαρακτήρα \n* 1 αριθμό \n* 1 ειδικό χαρακτήρα</string>
     <string name="regExUsernameError">Το όνομα χρήστη δεν πρέπει να περιέχει ειδικούς χαρακτήρες ή κενό</string>

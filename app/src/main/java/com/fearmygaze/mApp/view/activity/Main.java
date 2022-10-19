@@ -35,6 +35,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.fearmygaze.mApp.BuildConfig;
 import com.fearmygaze.mApp.Controller.FriendController;
 import com.fearmygaze.mApp.Controller.IssueController;
 import com.fearmygaze.mApp.Controller.UserController;
@@ -50,6 +51,7 @@ import com.fearmygaze.mApp.util.TextHandler;
 import com.fearmygaze.mApp.view.adapter.AdapterSearch;
 import com.fearmygaze.mApp.view.fragment.Chat;
 import com.fearmygaze.mApp.view.fragment.Friends;
+import com.fearmygaze.mApp.view.fragment.MoreAccounts;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -168,11 +170,11 @@ public class Main extends AppCompatActivity {
         });
 
         navigationFooterTerms.setOnClickListener(v -> {
-            EventNotifier.event(v, "This will open a dialog");
+            EventNotifier.event(v, "This will open a dialog", EventNotifier.LENGTH_SHORT);
         });
 
         navigationFooterChangelog.setOnClickListener(v -> {
-            EventNotifier.event(v, "This will open a dialog with MarkDown Support");
+            EventNotifier.event(v, "This will open a dialog with MarkDown Support", EventNotifier.LENGTH_SHORT);
         });
 
         initializeBottomSearch();
@@ -227,6 +229,7 @@ public class Main extends AppCompatActivity {
         ImageButton moreAcc = navigationHeader.findViewById(R.id.navHeaderMore);
         TextView username = navigationHeader.findViewById(R.id.navHeaderUsername);
         TextView email = navigationHeader.findViewById(R.id.navHeaderEmail);
+        TextView appVer = findViewById(R.id.navFooterAppVer);
 
         Glide.with(this)
                 .asDrawable()
@@ -238,6 +241,7 @@ public class Main extends AppCompatActivity {
 
         username.setText(currentUser.getUsername());
         email.setText(currentUser.getEmail());
+        appVer.setText(BuildConfig.VERSION_NAME);//TODO: Either get it from the buildConfig or get it from the server
 
         Glide.with(this)
                 .asDrawable()
@@ -272,7 +276,8 @@ public class Main extends AppCompatActivity {
         });
 
         moreAcc.setOnClickListener(v -> {
-            Toast.makeText(Main.this, "Eixame", Toast.LENGTH_LONG).show();
+            MoreAccounts moreAccounts = new MoreAccounts();
+            moreAccounts.show(getSupportFragmentManager(), "moreAccountsFrag");
         });
 
     }
