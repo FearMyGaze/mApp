@@ -380,6 +380,7 @@ public class Main extends AppCompatActivity {
         searchRecycler = bottomSheetConstraint.findViewById(R.id.searchRecycler);
         searchedUserNotFound = bottomSheetConstraint.findViewById(R.id.searchUsersNotFound);
 
+        //TODO: Why i have this here
         InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(navigationHeader.getWindowToken(), 0);
 
@@ -410,13 +411,9 @@ public class Main extends AppCompatActivity {
         searchRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-
-                int lastVisibleItemPosition = layoutManager.findLastCompletelyVisibleItemPosition();
-
-                if (dy >= 0 && lastVisibleItemPosition >= adapterSearch.getItemCount() - 1) {
+                if (dy >= 0 && layoutManager.findLastCompletelyVisibleItemPosition() >= adapterSearch.getItemCount() - 1) {
                     fetchRows();
                 }
-
             }
 
             private void fetchRows() {

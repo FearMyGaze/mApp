@@ -43,11 +43,21 @@ public class MoreAccounts extends BottomSheetDialogFragment {
 
         users = new ArrayList<>();
 
-        users.add(new User(1, "asd0", "asd0", "asd0@email.com"));
-        users.add(new User(20, "asd1", "asd1", "asd1@email.com"));
-        users.add(new User(22, "asd1", "asd1", "asd1@email.com"));
-        users.add(new User(22, "asd1", "asd1", "asd1@email.com"));
-        users.add(new User(22, "asd1", "asd1", "asd1@email.com"));
+        users.add(new User(11, "asd0", "http://192.168.1.5:3000/images/profile/image.png", "asd0@email.com"));
+        users.add(new User(20, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
+        users.add(new User(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
+        users.add(new User(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
+        users.add(new User(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
+        users.add(new User(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
+        users.add(new User(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
+        users.add(new User(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
+        users.add(new User(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
+        users.add(new User(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
+        users.add(new User(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
+        users.add(new User(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
+        users.add(new User(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
+        users.add(new User(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
+        users.add(new User(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
 
         accounts = new AdapterMoreAccounts(users, 20, pos -> {
             Toast.makeText(view.getContext(),accounts.getUser(pos).getEmail() , Toast.LENGTH_LONG).show();
@@ -60,6 +70,7 @@ public class MoreAccounts extends BottomSheetDialogFragment {
 
         return view;
     }
+
 
     @Override
     public int getTheme() {

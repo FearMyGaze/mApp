@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.fearmygaze.mApp.R;
 import com.fearmygaze.mApp.interfaces.IMoreAccountsAdapter;
 import com.fearmygaze.mApp.model.User;
@@ -38,6 +40,15 @@ public class AdapterMoreAccounts extends RecyclerView.Adapter<AdapterMoreAccount
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+
+        Glide.with(holder.itemView.getRootView())
+                .load(userList.get(position).getImageUrl())
+                .placeholder(R.drawable.ic_launcher_background)
+                .circleCrop()
+                .centerCrop()
+                .apply(new RequestOptions().override(70, 70))
+                .into(holder.image);
+
         holder.username.setText(userList.get(position).getUsername());
         holder.email.setText(userList.get(position).getEmail());
         holder.root.setEnabled(false);

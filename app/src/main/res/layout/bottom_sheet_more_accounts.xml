@@ -24,32 +24,28 @@
         android:textSize="20sp"
         android:textStyle="bold"
         android:textAllCaps="true"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/moreAccountsDivider"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/moreAccountsRecycler"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="210dp"
         android:layout_margin="10dp"
-        android:isScrollContainer="false"
-        android:overScrollMode="never"
-        app:layout_constraintTop_toBottomOf="@id/moreAccountsAcc" />
+        app:layout_constraintTop_toBottomOf="@id/moreAccountsAcc"
+        app:layout_constraintBottom_toTopOf="@id/moreAccountsAddExisting"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/moreAccountsAddExisting"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_margin="10dp"
         android:text="@string/dialogMoreAccountsAddExisting"
         android:textAllCaps="false"
         app:cornerRadius="15dp"
-        app:layout_constraintBottom_toTopOf="@+id/moreAccountsCreateNew"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/moreAccountsCreateNew"
         app:layout_constraintTop_toBottomOf="@id/moreAccountsRecycler" />
 
     <com.google.android.material.button.MaterialButton
@@ -57,15 +53,11 @@
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginEnd="10dp"
         android:text="@string/dialogMoreAccountsCreateNew"
         android:textAllCaps="false"
         app:cornerRadius="15dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="@id/moreAccountsAddExisting"
+        app:layout_constraintEnd_toEndOf="@id/moreAccountsAddExisting"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
