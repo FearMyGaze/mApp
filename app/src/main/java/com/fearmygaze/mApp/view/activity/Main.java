@@ -72,6 +72,8 @@ public class Main extends AppCompatActivity {
 
     DrawerLayout drawerLayout;
 
+    ConstraintLayout mainRoot;
+
     MaterialToolbar toolbar;
 
     BottomNavigationView bottomNavigationView;
@@ -99,6 +101,7 @@ public class Main extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         drawerLayout = findViewById(R.id.mainDrawer);
+        mainRoot = findViewById(R.id.mainRoot);
         toolbar = findViewById(R.id.mainToolbar);
         bottomNavigationView = findViewById(R.id.mainBottomNavigation);
         navigationView = findViewById(R.id.mainNavigation);
@@ -276,7 +279,9 @@ public class Main extends AppCompatActivity {
         });
 
         moreAcc.setOnClickListener(v -> {
-            MoreAccounts moreAccounts = new MoreAccounts();
+            ViewGroup.LayoutParams params = mainRoot.getLayoutParams();
+            params.height = (int) (getResources().getDisplayMetrics().heightPixels * 0.6);
+            MoreAccounts moreAccounts = new MoreAccounts(params);
             moreAccounts.show(getSupportFragmentManager(), "moreAccountsFrag");
         });
 
