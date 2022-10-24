@@ -20,8 +20,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.fearmygaze.mApp.Controller.UserController;
 import com.fearmygaze.mApp.R;
-import com.fearmygaze.mApp.interfaces.IUser;
-import com.fearmygaze.mApp.interfaces.IVolley;
+import com.fearmygaze.mApp.custom.EventNotifier;
+import com.fearmygaze.mApp.interfaces.forms.IFormUpdate;
 import com.fearmygaze.mApp.model.User;
 import com.fearmygaze.mApp.util.RegEx;
 import com.fearmygaze.mApp.util.TextHandler;
@@ -89,11 +89,16 @@ public class Profile extends AppCompatActivity {
                 String _newPassword = Objects.requireNonNull(newPassword.getText()).toString();
 
                 if (RegEx.isPasswordValidAndDifferent(oldPassword, oldPasswordError, newPassword, newPasswordError, 300, getApplicationContext())) {
-                    UserController.updatePassword(user.getId(), _newPassword, _oldPassword, getApplicationContext(), new IVolley() {
+                    UserController.updatePassword(user.getId(), _newPassword, _oldPassword, getApplicationContext(), new IFormUpdate() {
                         @Override
-                        public void onSuccess(String message) {
+                        public void onSuccess(User user, String message) {
                             Toast.makeText(Profile.this, message, Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
+                        }
+
+                        @Override
+                        public void onValidationError(String message) {
+
                         }
 
                         @Override
@@ -101,7 +106,6 @@ public class Profile extends AppCompatActivity {
                             Toast.makeText(Profile.this, message, Toast.LENGTH_SHORT).show();
                         }
                     });
-
                 }
             });
             dialog.show();
@@ -123,7 +127,7 @@ public class Profile extends AppCompatActivity {
                     .load(user.getImageUrl())
                     .placeholder(R.drawable.ic_launcher_background)
                     .circleCrop()
-                    .apply(RequestOptions.overrideOf(1024,1024))
+                    .apply(RequestOptions.overrideOf(1024, 1024))
                     .into(dialogImage);
 
             cancel.setOnClickListener(v1 -> dialog.cancel());
@@ -138,13 +142,18 @@ public class Profile extends AppCompatActivity {
                 pickImage.launch(intent);
             });
 
-            update.setOnClickListener(v1 -> UserController.updateImage(user, base64Image, v1.getContext(), new IUser() {
+            update.setOnClickListener(v1 -> UserController.updateImage(user, base64Image, v1.getContext(), new IFormUpdate() {
                 @Override
                 public void onSuccess(User user1, String message) {
                     user = user1;
                     Toast.makeText(Profile.this, message, Toast.LENGTH_LONG).show();
                     dialog.dismiss();
                     updateImage();
+                }
+
+                @Override
+                public void onValidationError(String message) {
+
                 }
 
                 @Override
@@ -166,7 +175,7 @@ public class Profile extends AppCompatActivity {
                 .load(user.getImageUrl())
                 .placeholder(R.drawable.ic_launcher_background)
                 .circleCrop()
-                .apply(RequestOptions.overrideOf(1024,1024))
+                .apply(RequestOptions.overrideOf(1024, 1024))
                 .into(userImage);
     }
 
@@ -176,14 +185,14 @@ public class Profile extends AppCompatActivity {
                 if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                     Uri uri = result.getData().getData();
                     try {
-                        Bitmap output = Bitmap.createScaledBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri), 1024, 1024, true); //TODO: Subject to change
+                        Bitmap output = Bitmap.createScaledBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri), 1024, 1024, true);
                         ByteArrayOutputStream stream = new ByteArrayOutputStream();
                         output.compress(Bitmap.CompressFormat.PNG, 100, stream);
                         base64Image = Base64.encodeToString(stream.toByteArray(), Base64.DEFAULT);
                         dialogImage.setImageURI(uri);
                         update.setEnabled(true);
                     } catch (IOException e) {
-                        Toast.makeText(Profile.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                        EventNotifier.event(faq, "Error: " + e.getMessage(), EventNotifier.LENGTH_LONG);
                     }
                 }
             }
