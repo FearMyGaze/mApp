@@ -14,12 +14,6 @@
             android:contentDescription="@string/navigationDrawerMenuItemProfile"/>
 
         <item
-            android:id="@+id/navigationMenuItemNotifications"
-            android:title="@string/navigationDrawerMenuItemNotifications"
-            android:icon="@drawable/ic_notifications_active_24"
-            android:contentDescription="@string/navigationDrawerMenuItemNotifications"/>
-
-        <item
             android:id="@+id/navigationMenuItemSettings"
             android:title="@string/navigationDrawerMenuItemSettings"
             android:icon="@drawable/ic_settings_24"

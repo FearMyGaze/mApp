@@ -22,14 +22,14 @@
 
     <!-- Main BottomNavigationView (Menu) -->
     <string name="mainBottomNavigationViewChoice1">Μηνύματα</string>
-    <string name="mainBottomNavigationViewChoice2">Φίλοι</string>
+    <string name="mainBottomNavigationViewChoice2">Ειδοποιήσεις</string>
+    <string name="mainBottomNavigationViewChoice3">Φίλοι</string>
 
     <!-- Main Navigation Drawer (Header) -->
     <string name="navigationHeaderMoreAccounts">Περισσότεροι λογαριασμοι</string>
 
     <!-- Main Navigation Drawer (Menu) -->
     <string name="navigationDrawerMenuItemProfile">Προφίλ</string>
-    <string name="navigationDrawerMenuItemNotifications">Ειδοποιήσεις</string>
     <string name="navigationDrawerMenuItemSettings">Προφίλ</string>
     <string name="navigationDrawerMenuItemBug">Bug</string>
     <string name="navigationDrawerMenuItemFeature">Feature Request</string>

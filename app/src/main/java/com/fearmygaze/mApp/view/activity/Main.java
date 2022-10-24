@@ -68,7 +68,7 @@ import java.util.Objects;
 
 public class Main extends AppCompatActivity {
 
-    public Fragment friends, chat;
+    public Fragment friends, chat, notification;
 
     DrawerLayout drawerLayout;
 
@@ -127,6 +127,7 @@ public class Main extends AppCompatActivity {
 
         friends = new Friends(currentUser);
         chat = new Chat(currentUser);
+        notification = new com.fearmygaze.mApp.view.fragment.Notifications();
 
         replaceFragment(chat);
 
@@ -143,11 +144,6 @@ public class Main extends AppCompatActivity {
                     intent.putExtra("user", currentUser);
                     drawerLayout.close();
                     startActivity(intent);
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    return true;
-                case R.id.navigationMenuItemNotifications:
-                    drawerLayout.close();
-                    startActivity(new Intent(Main.this, Notifications.class));
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     return true;
                 case R.id.navigationMenuItemSettings:
@@ -190,6 +186,9 @@ public class Main extends AppCompatActivity {
                     replaceFragment(chat);
                     return true;
                 case R.id.mainNavigationItemChoice2:
+                    replaceFragment(notification);
+                    return true;
+                case R.id.mainNavigationItemChoice3:
                     replaceFragment(friends);
                     return true;
                 default:
