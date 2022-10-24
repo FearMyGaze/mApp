@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment;
 
 import com.fearmygaze.mApp.Controller.UserController;
 import com.fearmygaze.mApp.R;
-import com.fearmygaze.mApp.interfaces.IUser;
+import com.fearmygaze.mApp.interfaces.forms.IFormSignIn;
 import com.fearmygaze.mApp.model.User;
 import com.fearmygaze.mApp.util.RegEx;
 import com.fearmygaze.mApp.util.TextHandler;
@@ -60,7 +60,7 @@ public class SignIn extends Fragment {
         return view;
     }
 
-    private void userLogin() {
+    private void userLogin() { //TODO: We need to add minimum and maximum characters on the Form
         if (TextHandler.isTextInputLengthCorrect(signInCredentials, signInCredentialsError, 50, getContext()) &&
                 TextHandler.isTextInputLengthCorrect(signInPassword, signInPasswordError, 300, getContext())) {
             if (RegEx.isPasswordValid(Objects.requireNonNull(signInPassword.getText()).toString(), signInPasswordError, getContext())) {
@@ -69,16 +69,21 @@ public class SignIn extends Fragment {
                     String credential = Objects.requireNonNull(signInCredentials.getText()).toString();
                     String password = Objects.requireNonNull(signInPassword.getText()).toString();
 
-                    UserController.signIn(credential, password, requireContext(), new IUser() {
+                    UserController.signIn(credential, password, requireContext(), new IFormSignIn() {
                         @Override
                         public void onSuccess(User user, String message) {
-
                             Intent intent = new Intent(requireContext(), Main.class);
                             intent.putExtra("user", user);
 
                             startActivity(intent);
                             requireActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                             requireActivity().finish();
+                        }
+
+                        @Override
+                        public void onValidationError(String message) {
+                            //TODO: ADD here the validation errors (Maybe with a "custom" textHandler to add the errors under the correct box)
+                            Toast.makeText(getContext(),message, Toast.LENGTH_LONG).show();
                         }
 
                         @Override

@@ -21,7 +21,7 @@ import androidx.fragment.app.Fragment;
 
 import com.fearmygaze.mApp.Controller.UserController;
 import com.fearmygaze.mApp.R;
-import com.fearmygaze.mApp.interfaces.IVolley;
+import com.fearmygaze.mApp.interfaces.forms.IFormSignUp;
 import com.fearmygaze.mApp.util.RegEx;
 import com.fearmygaze.mApp.util.TextHandler;
 import com.fearmygaze.mApp.view.activity.Starting;
@@ -176,7 +176,7 @@ public class SignUp extends Fragment {
         Toast.makeText(requireContext(), "Open Dialog", Toast.LENGTH_SHORT).show();
     }
 
-    private void checkForErrorsAndRegister() {
+    private void checkForErrorsAndRegister() {//TODO: We need to add minimum and maximum characters on the Form
         if (TextHandler.isTextInputLengthCorrect(signUpUsername, signUpUsernameError, 50, getContext()) &&
                 TextHandler.isTextInputLengthCorrect(signUpEmail, signUpEmailError, 50, getContext()) && !base64Image.isEmpty()) {
             if (RegEx.isSignUpFormValid(signUpUsername, signUpUsernameError, signUpPassword, signUpPasswordError, signUpConfirmPassword, signUpConfirmPasswordError, 300, getContext())) {
@@ -184,11 +184,17 @@ public class SignUp extends Fragment {
                 String email = Objects.requireNonNull(signUpEmail.getText()).toString().trim();
                 String password = Objects.requireNonNull(signUpPassword.getText()).toString().trim();
 
-                UserController.signUp(username, email, password, base64Image, requireContext(), new IVolley() {
+                UserController.signUp(username, email, password, base64Image, requireContext(), new IFormSignUp() {
                     @Override
                     public void onSuccess(String message) {
                         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                         ((Starting) requireActivity()).replaceFragment(((Starting) requireActivity()).reInitiateFragmentSignIn());
+                    }
+
+                    @Override
+                    public void onValidationError(String message) {
+                        //TODO: ADD here the validation errors (Maybe with a "custom" textHandler to add the errors under the correct box)
+                        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
                     }
 
                     @Override

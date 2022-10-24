@@ -6,9 +6,11 @@ import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.fearmygaze.mApp.BuildConfig;
 import com.fearmygaze.mApp.R;
-import com.fearmygaze.mApp.interfaces.IUser;
 import com.fearmygaze.mApp.interfaces.IUserStatus;
 import com.fearmygaze.mApp.interfaces.IVolley;
+import com.fearmygaze.mApp.interfaces.forms.IFormSignIn;
+import com.fearmygaze.mApp.interfaces.forms.IFormSignUp;
+import com.fearmygaze.mApp.interfaces.forms.IFormUpdate;
 import com.fearmygaze.mApp.model.User;
 import com.fearmygaze.mApp.util.NetworkConnection;
 import com.fearmygaze.mApp.util.PrivatePreference;
@@ -28,7 +30,7 @@ import java.util.Map;
  */
 public class UserController {
 
-    public static void signUp(String username, String email, String password, String image, Context context, IVolley iVolley) {
+    public static void signUp(String username, String email, String password, String image, Context context, IFormSignUp iFormSignUp) {
         Map<String, String> body = new HashMap<>();
         body.put("username", username);
         body.put("email", email);
@@ -42,18 +44,21 @@ public class UserController {
 
                 switch (error) {
                     case "200":
-                        iVolley.onSuccess(message);
+                        iFormSignUp.onSuccess(message);
                         break;
                     case "404":
                     case "405":
-                        iVolley.onError(message);
+                        iFormSignUp.onError(message);
+                        break;
+                    case "666":
+                        iFormSignUp.onValidationError(error);
                         break;
                 }
 
             } catch (JSONException e) {
-                iVolley.onError(context.getString(R.string.jsonError));
+                iFormSignUp.onError(context.getString(R.string.jsonError));
             }
-        }, error -> iVolley.onError(context.getString(R.string.volleyError))) {
+        }, error -> iFormSignUp.onError(context.getString(R.string.volleyError))) {
 
             @Override
             public Map<String, String> getHeaders() {
@@ -66,11 +71,11 @@ public class UserController {
         if (NetworkConnection.isConnectionAlive(context)) {
             RequestSingleton.getInstance(context).addToRequestQueue(request);
         } else {
-            iVolley.onError(context.getString(R.string.networkError));
+            iFormSignUp.onError(context.getString(R.string.networkError));
         }
     }
 
-    public static void signIn(String credential, String password, Context context, IUser iUser) {
+    public static void signIn(String credential, String password, Context context, IFormSignIn iFormSignIn) {
         Map<String, String> body = new HashMap<>();
         body.put("loginCredential", credential);
         body.put("password", password);
@@ -96,18 +101,21 @@ public class UserController {
                         preference.putString("image", BuildConfig.PROFILE + image);
                         preference.putString("email", email);
 
-                        iUser.onSuccess(user, message);
+                        iFormSignIn.onSuccess(user, message);
                         break;
                     case "404":
                     case "405":
-                        iUser.onError(message);
+                        iFormSignIn.onError(message);
+                        break;
+                    case "666":
+                        iFormSignIn.onValidationError(message);
                         break;
                 }
 
             } catch (JSONException e) {
-                iUser.onError(context.getString(R.string.jsonError));
+                iFormSignIn.onError(context.getString(R.string.jsonError));
             }
-        }, error -> iUser.onError(context.getString(R.string.volleyError))) {
+        }, error -> iFormSignIn.onError(context.getString(R.string.volleyError))) {
 
             @Override
             public Map<String, String> getHeaders() {
@@ -120,11 +128,11 @@ public class UserController {
         if (NetworkConnection.isConnectionAlive(context)) {
             RequestSingleton.getInstance(context).addToRequestQueue(request);
         } else {
-            iUser.onError(context.getString(R.string.networkError));
+            iFormSignIn.onError(context.getString(R.string.networkError));
         }
     }
 
-    public static void updatePassword(int id, String newPassword, String oldPassword, Context context, IVolley iVolley) {
+    public static void updatePassword(int id, String newPassword, String oldPassword, Context context, IFormUpdate iUpdate) {
         Map<String, Object> body = new HashMap<>();
         body.put("userID", id);
         body.put("newPassword", newPassword);
@@ -137,18 +145,21 @@ public class UserController {
 
                 switch (error) {
                     case "200":
-                        iVolley.onSuccess(message);
+                        iUpdate.onSuccess(null, message);
                         break;
                     case "404":
                     case "405":
-                        iVolley.onError(message);
+                        iUpdate.onError(message);
+                        break;
+                    case "666":
+                        iUpdate.onValidationError(message);
                         break;
                 }
 
             } catch (JSONException e) {
-                iVolley.onError(context.getString(R.string.jsonError));
+                iUpdate.onError(context.getString(R.string.jsonError));
             }
-        }, error -> iVolley.onError(context.getString(R.string.volleyError))) {
+        }, error -> iUpdate.onError(context.getString(R.string.volleyError))) {
 
             @Override
             public Map<String, String> getHeaders() {
@@ -161,11 +172,11 @@ public class UserController {
         if (NetworkConnection.isConnectionAlive(context)) {
             RequestSingleton.getInstance(context).addToRequestQueue(request);
         } else {
-            iVolley.onError(context.getString(R.string.networkError));
+            iUpdate.onError(context.getString(R.string.networkError));
         }
     }
 
-    public static void updateImage(User user,String image, Context context, IUser iUser) {
+    public static void updateImage(User user,String image, Context context, IFormUpdate iUpdate) {
         Map<String, Object> body = new HashMap<>();
         body.put("id", user.getId());
         body.put("username",user.getUsername());
@@ -188,18 +199,21 @@ public class UserController {
                         pf.putString("image", BuildConfig.PROFILE + mImage);
                         pf.putString("email", user.getEmail());
 
-                        iUser.onSuccess(mUser, message);
+                        iUpdate.onSuccess(mUser, message);
                         break;
                     case "404":
                     case "405":
-                        iUser.onError(message);
+                        iUpdate.onError(message);
+                        break;
+                    case "666":
+                        iUpdate.onValidationError(message);
                         break;
                 }
 
             } catch (JSONException e) {
-                iUser.onError(context.getString(R.string.jsonError));
+                iUpdate.onError(context.getString(R.string.jsonError));
             }
-        }, error -> iUser.onError(context.getString(R.string.volleyError))) {
+        }, error -> iUpdate.onError(context.getString(R.string.volleyError))) {
 
             @Override
             public Map<String, String> getHeaders() {
@@ -212,7 +226,7 @@ public class UserController {
         if (NetworkConnection.isConnectionAlive(context)) {
             RequestSingleton.getInstance(context).addToRequestQueue(request);
         } else {
-            iUser.onError(context.getString(R.string.networkError));
+            iUpdate.onError(context.getString(R.string.networkError));
         }
     }
 
