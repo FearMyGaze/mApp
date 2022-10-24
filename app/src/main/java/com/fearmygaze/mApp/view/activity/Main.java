@@ -130,6 +130,7 @@ public class Main extends AppCompatActivity {
         notification = new com.fearmygaze.mApp.view.fragment.Notifications();
 
         replaceFragment(chat);
+        bottomNavigationView.setSelectedItemId(R.id.mainNavigationItemChoice1);
 
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(drawerToggle);
@@ -197,8 +198,6 @@ public class Main extends AppCompatActivity {
             }
             return true;
         });
-
-        bottomNavigationView.setSelectedItemId(R.id.mainNavigationItemChoice1);
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
