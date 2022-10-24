@@ -131,9 +131,9 @@ public class Main extends AppCompatActivity {
 
         replaceFragment(chat);
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(drawerToggle);
+        drawerToggle.syncState();
 
         setUserComponents();
 
@@ -178,17 +178,46 @@ public class Main extends AppCompatActivity {
 
         initializeBottomSearch();
 
+        /* This changes the icon when you click it */
+        toolbar.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()){
+                case R.id.mainToolbarItemNotifications:
+                    if (notifications) {
+                        notifications = false;
+                        item.setIcon(R.drawable.ic_notifications_off_24);
+                    } else {
+                        notifications = true;
+                        item.setIcon(R.drawable.ic_notifications_active_24);
+                    }
+                    break;
+                case R.id.mainToolbarItemNotificationsSettings:
+                    startActivity(new Intent(Main.this, NotificationSettings.class));
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    break;
+            }
+            return true;
+        });
+
         bottomNavigationView.setSelectedItemId(R.id.mainNavigationItemChoice1);
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.mainNavigationItemChoice1:
+                    toolbar.setTitle(R.string.mainBottomNavigationViewChoice1);
+                    toolbar.getMenu().clear();
+                    toolbar.inflateMenu(R.menu.main_toolbar_chat);
                     replaceFragment(chat);
                     return true;
                 case R.id.mainNavigationItemChoice2:
+                    toolbar.setTitle(R.string.mainBottomNavigationViewChoice2);
+                    toolbar.getMenu().clear();
+                    toolbar.inflateMenu(R.menu.main_toolbar_nofication);
                     replaceFragment(notification);
                     return true;
                 case R.id.mainNavigationItemChoice3:
+                    toolbar.setTitle(R.string.mainBottomNavigationViewChoice3);
+                    toolbar.getMenu().clear();
+                    toolbar.inflateMenu(R.menu.main_toolbar_chat);
                     replaceFragment(friends);
                     return true;
                 default:
@@ -262,20 +291,6 @@ public class Main extends AppCompatActivity {
 
                     }
                 });
-
-        /* This changes the icon when you click it */
-        toolbar.setOnMenuItemClickListener(item -> {
-            if (item.getItemId() == R.id.mainToolbarItemNotifications) {
-                if (notifications) {
-                    notifications = false;
-                    item.setIcon(R.drawable.ic_notifications_off_24);
-                } else {
-                    notifications = true;
-                    item.setIcon(R.drawable.ic_notifications_active_24);
-                }
-            }
-            return true;
-        });
 
         moreAcc.setOnClickListener(v -> {
             ViewGroup.LayoutParams params = mainRoot.getLayoutParams();
@@ -441,7 +456,7 @@ public class Main extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(@NonNull Menu menu) {
-        getMenuInflater().inflate(R.menu.main_toolbar, menu);
+        getMenuInflater().inflate(R.menu.main_toolbar_chat, menu);
 
         MenuItem menuItem = menu.findItem(R.id.mainToolbarItemSearch);
         MenuItem menuItem1 = menu.findItem(R.id.mainToolbarItemNotifications);
