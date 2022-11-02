@@ -138,7 +138,7 @@ public class SignUp extends Fragment {
                     Uri uri = result.getData().getData();
                     try {
 
-                        Bitmap output = Bitmap.createScaledBitmap(MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), uri), 1024, 1024, true); //TODO: Subject to change
+                        Bitmap output = Bitmap.createScaledBitmap(MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), uri), 1024, 1024, true);
 
                         ByteArrayOutputStream stream = new ByteArrayOutputStream();
 

@@ -23,10 +23,6 @@ import java.util.List;
 
 public class Chat extends Fragment implements IConversationAdapter{
 
-    public Chat(User user) {
-        this.user = user;
-    }
-
     View view;
     User user;
 

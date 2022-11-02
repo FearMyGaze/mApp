@@ -9,20 +9,16 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.fearmygaze.mApp.R;
-import com.fearmygaze.mApp.model.User;
-import com.fearmygaze.mApp.view.adapter.TabAdapterFriend;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 public class Friends extends Fragment {
 
-    public Friends(User user) {
-        this.user = user;
-    }
+
 
     View view;
 
-    User user;
+//    User user;
 
     TabLayout tabLayout;
     ViewPager2 pager2;
@@ -40,17 +36,17 @@ public class Friends extends Fragment {
         tabLayout = view.findViewById(R.id.friendsTabLayout);
         pager2 = view.findViewById(R.id.friendsViewPager2);
 
-        pager2.setAdapter(new TabAdapterFriend(requireActivity(), user));
-        mediator = new TabLayoutMediator(tabLayout, pager2, (tab, position) -> {
-            switch (position) {
-                case 0:
-                    tab.setText(getResources().getText(R.string.friendsTab0));
-                    break;
-                case 1:
-                    tab.setText(getResources().getText(R.string.friendsTab1)); //TODO: Add Number Badges
-            }
-        });
-        mediator.attach();
+//        pager2.setAdapter(new TabAdapterFriend(requireActivity(), user));
+//        mediator = new TabLayoutMediator(tabLayout, pager2, (tab, position) -> {
+//            switch (position) {
+//                case 0:
+//                    tab.setText(getResources().getText(R.string.friendsTab0));
+//                    break;
+//                case 1:
+//                    tab.setText(getResources().getText(R.string.friendsTab1)); //TODO: Add Number Badges
+//            }
+//        });
+//        mediator.attach();
 
         return view;
     }

@@ -6,12 +6,14 @@ import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.fearmygaze.mApp.BuildConfig;
 import com.fearmygaze.mApp.R;
+import com.fearmygaze.mApp.database.UserDatabase;
 import com.fearmygaze.mApp.interfaces.IUserStatus;
 import com.fearmygaze.mApp.interfaces.IVolley;
 import com.fearmygaze.mApp.interfaces.forms.IFormSignIn;
 import com.fearmygaze.mApp.interfaces.forms.IFormSignUp;
 import com.fearmygaze.mApp.interfaces.forms.IFormUpdate;
 import com.fearmygaze.mApp.model.User;
+import com.fearmygaze.mApp.model.User1;
 import com.fearmygaze.mApp.util.NetworkConnection;
 import com.fearmygaze.mApp.util.PrivatePreference;
 import com.fearmygaze.mApp.util.RequestSingleton;
@@ -29,6 +31,7 @@ import java.util.Map;
  *  TODO: Construct the user preferences for the settings like {NetworkConnection class and more}
  */
 public class UserController {
+    public static UserDatabase database;
 
     public static void signUp(String username, String email, String password, String image, Context context, IFormSignUp iFormSignUp) {
         Map<String, String> body = new HashMap<>();
@@ -79,6 +82,7 @@ public class UserController {
         Map<String, String> body = new HashMap<>();
         body.put("loginCredential", credential);
         body.put("password", password);
+        database = UserDatabase.getInstance(context);
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url(1, context), new JSONObject(body), response -> {
             try {
@@ -92,16 +96,18 @@ public class UserController {
                         String email = response.getJSONObject("data").getString("email");
                         String image = response.getJSONObject("data").getString("image");
 
-                        User user = new User(id, username, BuildConfig.PROFILE + image, email);
+//                        User user = new User(id, username, BuildConfig.PROFILE + image, email);
 
-                        PrivatePreference preference = new PrivatePreference(context);
+                        database.userDao().insertUser(new User1(id, username, BuildConfig.PROFILE + image ,email));
+//
+//                        PrivatePreference preference = new PrivatePreference(context);
+//
+//                        preference.putInt("id", id);
+//                        preference.putString("username", username);
+//                        preference.putString("image", BuildConfig.PROFILE + image);
+//                        preference.putString("email", email);
 
-                        preference.putInt("id", id);
-                        preference.putString("username", username);
-                        preference.putString("image", BuildConfig.PROFILE + image);
-                        preference.putString("email", email);
-
-                        iFormSignIn.onSuccess(user, message);
+                        iFormSignIn.onSuccess(id,message);
                         break;
                     case "404":
                     case "405":
@@ -246,13 +252,13 @@ public class UserController {
                         String image = response.getJSONObject("data").getString("image");
                         String email = response.getJSONObject("data").getString("email");
 
-                        PrivatePreference preference = new PrivatePreference(context);
-                        preference.putInt("id", id);
-                        preference.putString("username", username);
-                        preference.putString("image", BuildConfig.PROFILE + image);
-                        preference.putString("email", email);
+//                        PrivatePreference preference = new PrivatePreference(context);
+//                        preference.putInt("id", id);
+//                        preference.putString("username", username);
+//                        preference.putString("image", BuildConfig.PROFILE + image);
+//                        preference.putString("email", email);
 
-                        User user = new User(_id, username, BuildConfig.PROFILE + image, email);
+                        User1 user = new User1(_id, username, BuildConfig.PROFILE + image, email);
 
                         iUserStatus.onSuccess(user);
                         break;
