@@ -95,13 +95,12 @@ public class UserController {
                         String email = response.getJSONObject("data").getString("email");
                         String image = response.getJSONObject("data").getString("image");
 
-                        database.userDao().insertUser(new User1(id, username, BuildConfig.PROFILE + image ,email));
+                        database.userDao().insertUser(new User1(id, username, BuildConfig.PROFILE + image, email));
 
                         PrivatePreference preference = new PrivatePreference(context);
-
                         preference.putInt("id", id);
 
-                        iFormSignIn.onSuccess(id,message);
+                        iFormSignIn.onSuccess(id, message);
                         break;
                     case "404":
                     case "405":
@@ -179,7 +178,7 @@ public class UserController {
     public static void updateImage(User1 user, String image, Context context, IFormUpdate iUpdate) {
         Map<String, Object> body = new HashMap<>();
         body.put("id", user.getId());
-        body.put("username",user.getUsername());
+        body.put("username", user.getUsername());
         body.put("image", image);
         database = UserDatabase.getInstance(context);
 
@@ -191,8 +190,7 @@ public class UserController {
                 switch (error) {
                     case "200":
                         String mImage = response.getString("data");
-                        database.userDao().updateImageByID(BuildConfig.PROFILE+mImage, user.getId());
-
+                        database.userDao().updateImageByID(BuildConfig.PROFILE + mImage, user.getId());
                         iUpdate.onSuccess(message);
                         break;
                     case "404":
@@ -227,6 +225,7 @@ public class UserController {
     public static void statusCheck(int id, Context context, IUserStatus iUserStatus) {
         Map<String, Object> body = new HashMap<>();
         body.put("userID", id);
+        database = UserDatabase.getInstance(context);
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url(4, context), new JSONObject(body), response -> {
             try {
@@ -239,14 +238,11 @@ public class UserController {
                         String username = response.getJSONObject("data").getString("username");
                         String image = response.getJSONObject("data").getString("image");
                         String email = response.getJSONObject("data").getString("email");
-
-//                        PrivatePreference preference = new PrivatePreference(context);
-//                        preference.putInt("id", id);
-//                        preference.putString("username", username);
-//                        preference.putString("image", BuildConfig.PROFILE + image);
-//                        preference.putString("email", email);
+                        PrivatePreference preference = new PrivatePreference(context);
+                        preference.putInt("id", id);
 
                         User1 user = new User1(_id, username, BuildConfig.PROFILE + image, email);
+                        database.userDao().updateUser(user);
 
                         iUserStatus.onSuccess(user);
                         break;
@@ -280,6 +276,7 @@ public class UserController {
     public static void delete(int id, Context context, IVolley iVolley) {//TODO: This will be inside the settings activity
         Map<String, Object> body = new HashMap<>();
         body.put("userID", id);
+        database = UserDatabase.getInstance(context);
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url(5, context), new JSONObject(body), response -> {
             try {
@@ -317,8 +314,8 @@ public class UserController {
     }
 
     /*
-    * TODO: This will change with more options and stuff
-    * */
+     * TODO: This will change with more options and stuff
+     * */
 
     public static void report(int id, int reportedUserID, String reason, String description, Context context, IVolley iVolley) {
         Map<String, Object> body = new HashMap<>();
