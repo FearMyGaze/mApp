@@ -71,9 +71,7 @@ public class SignIn extends Fragment {
                     UserController.signIn(credential, password, requireContext(), new IFormSignIn() {
                         @Override
                         public void onSuccess(int id, String message) {
-                            Intent intent = new Intent(requireContext(), Main.class);
-                            intent.putExtra("userID", id);
-                            startActivity(intent);
+                            startActivity(new Intent(requireActivity(), Main.class));
                             requireActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                             requireActivity().finish();
                         }

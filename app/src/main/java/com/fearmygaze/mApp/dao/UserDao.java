@@ -16,7 +16,7 @@ import java.util.List;
 public interface UserDao {
 
     @Query("SELECT * FROM users")
-    List<User1> getAllTestModel();
+    List<User1> getAllUsers();
 
     @Query("SELECT * FROM users WHERE id = :id")
     User1 getUserByID(int id);
@@ -24,11 +24,14 @@ public interface UserDao {
     @Query("SELECT * FROM users WHERE email = :email")
     User1 getUserByEmail(String email);
 
+    @Query("SELECT imageUrl FROM users WHERE id = :id")
+    String getImageUrl(int id);
+
     @Query("UPDATE users SET imageUrl= :url WHERE id = :id")
-    void update(String url, int id);
+    void updateImageByID(String url, int id);
 
     @Query("DELETE FROM users WHERE id= :id")
-    void delete(int id);
+    void deleteUserByID(int id);
 
     @Insert(onConflict = REPLACE)
     void insertUser(User1 user);

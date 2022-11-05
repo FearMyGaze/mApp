@@ -14,6 +14,7 @@ import com.fearmygaze.mApp.model.Friend;
 import com.fearmygaze.mApp.model.FriendRequest;
 import com.fearmygaze.mApp.model.SearchedUser;
 import com.fearmygaze.mApp.model.User;
+import com.fearmygaze.mApp.model.User1;
 import com.fearmygaze.mApp.util.NetworkConnection;
 import com.fearmygaze.mApp.util.RequestSingleton;
 
@@ -28,7 +29,7 @@ import java.util.Map;
 
 public class FriendController {
 
-    public static void searchUser(User user, String username, int offset, Context context, ISearch iSearch) {//TODO: We need to check if the user is already friends with the user
+    public static void searchUser(User1 user, String username, int offset, Context context, ISearch iSearch) {//TODO: We need to check if the user is already friends with the user
         Map<String, Object> body = new HashMap<>();
         body.put("username", username);
         body.put("limit", 10);

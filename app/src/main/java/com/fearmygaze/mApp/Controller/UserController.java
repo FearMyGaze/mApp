@@ -12,7 +12,6 @@ import com.fearmygaze.mApp.interfaces.IVolley;
 import com.fearmygaze.mApp.interfaces.forms.IFormSignIn;
 import com.fearmygaze.mApp.interfaces.forms.IFormSignUp;
 import com.fearmygaze.mApp.interfaces.forms.IFormUpdate;
-import com.fearmygaze.mApp.model.User;
 import com.fearmygaze.mApp.model.User1;
 import com.fearmygaze.mApp.util.NetworkConnection;
 import com.fearmygaze.mApp.util.PrivatePreference;
@@ -96,16 +95,11 @@ public class UserController {
                         String email = response.getJSONObject("data").getString("email");
                         String image = response.getJSONObject("data").getString("image");
 
-//                        User user = new User(id, username, BuildConfig.PROFILE + image, email);
-
                         database.userDao().insertUser(new User1(id, username, BuildConfig.PROFILE + image ,email));
-//
-//                        PrivatePreference preference = new PrivatePreference(context);
-//
-//                        preference.putInt("id", id);
-//                        preference.putString("username", username);
-//                        preference.putString("image", BuildConfig.PROFILE + image);
-//                        preference.putString("email", email);
+
+                        PrivatePreference preference = new PrivatePreference(context);
+
+                        preference.putInt("id", id);
 
                         iFormSignIn.onSuccess(id,message);
                         break;
@@ -151,7 +145,7 @@ public class UserController {
 
                 switch (error) {
                     case "200":
-                        iUpdate.onSuccess(null, message);
+                        iUpdate.onSuccess(message);
                         break;
                     case "404":
                     case "405":
@@ -182,11 +176,12 @@ public class UserController {
         }
     }
 
-    public static void updateImage(User user,String image, Context context, IFormUpdate iUpdate) {
+    public static void updateImage(User1 user, String image, Context context, IFormUpdate iUpdate) {
         Map<String, Object> body = new HashMap<>();
         body.put("id", user.getId());
         body.put("username",user.getUsername());
         body.put("image", image);
+        database = UserDatabase.getInstance(context);
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url(3, context), new JSONObject(body), response -> {
             try {
@@ -196,16 +191,9 @@ public class UserController {
                 switch (error) {
                     case "200":
                         String mImage = response.getString("data");
+                        database.userDao().updateImageByID(BuildConfig.PROFILE+mImage, user.getId());
 
-                        User mUser = new User(user.getId(), user.getUsername(), BuildConfig.PROFILE + mImage, user.getEmail());
-
-                        PrivatePreference pf = new PrivatePreference(context);
-                        pf.putInt("id", user.getId());
-                        pf.putString("username", user.getUsername());
-                        pf.putString("image", BuildConfig.PROFILE + mImage);
-                        pf.putString("email", user.getEmail());
-
-                        iUpdate.onSuccess(mUser, message);
+                        iUpdate.onSuccess(message);
                         break;
                     case "404":
                     case "405":
