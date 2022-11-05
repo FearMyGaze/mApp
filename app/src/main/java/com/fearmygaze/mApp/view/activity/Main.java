@@ -1,7 +1,6 @@
 package com.fearmygaze.mApp.view.activity;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -13,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +39,8 @@ import com.fearmygaze.mApp.Controller.IssueController;
 import com.fearmygaze.mApp.Controller.UserController;
 import com.fearmygaze.mApp.R;
 import com.fearmygaze.mApp.custom.EventNotifier;
+import com.fearmygaze.mApp.database.AppDatabase;
+import com.fearmygaze.mApp.database.UserDao;
 import com.fearmygaze.mApp.interfaces.ISearch;
 import com.fearmygaze.mApp.interfaces.IUserStatus;
 import com.fearmygaze.mApp.interfaces.IVolley;
@@ -52,6 +52,7 @@ import com.fearmygaze.mApp.view.adapter.AdapterSearch;
 import com.fearmygaze.mApp.view.fragment.Chat;
 import com.fearmygaze.mApp.view.fragment.Friends;
 import com.fearmygaze.mApp.view.fragment.MoreAccounts;
+import com.fearmygaze.mApp.view.fragment.Notifications;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -92,7 +93,9 @@ public class Main extends AppCompatActivity {
     boolean notifications = true;
 
     PrivatePreference preference;
-    User currentUser;
+    AppDatabase database;
+    UserDao userDao;
+    User user;
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -100,6 +103,7 @@ public class Main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        database = AppDatabase.getInstance(Main.this);
         drawerLayout = findViewById(R.id.mainDrawer);
         mainRoot = findViewById(R.id.mainRoot);
         toolbar = findViewById(R.id.mainToolbar);
@@ -114,20 +118,21 @@ public class Main extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
 
         preference = new PrivatePreference(Main.this);
+        userDao = database.userDao();
 
-        if (getIntent().getParcelableExtra("user") != null) {
-            currentUser = getIntent().getParcelableExtra("user");
-        } else {
-            currentUser = new User(
-                    preference.getInt("id"), preference.getString("username"),
-                    preference.getString("image"), preference.getString("email"));
+        if (preference.getInt("id") != -1){
+            user = userDao.getUserByID(preference.getInt("id"));
+        }else{
+            preference.clear();
+            startActivity(new Intent(Main.this, Starting.class));
+            finish();
         }
 
         rememberMe();
 
-        friends = new Friends(currentUser);
-        chat = new Chat(currentUser);
-        notification = new com.fearmygaze.mApp.view.fragment.Notifications();
+        friends = new Friends();
+        chat = new Chat();
+        notification = new Notifications();
 
         replaceFragment(chat);
         bottomNavigationView.setSelectedItemId(R.id.mainNavigationItemChoice1);
@@ -141,10 +146,8 @@ public class Main extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.navigationMenuItemProfile:
-                    Intent intent = new Intent(Main.this, Profile.class);
-                    intent.putExtra("user", currentUser);
                     drawerLayout.close();
-                    startActivity(intent);
+                    startActivity(new Intent(Main.this, Profile.class));
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     return true;
                 case R.id.navigationMenuItemSettings:
@@ -159,6 +162,7 @@ public class Main extends AppCompatActivity {
                     prepareForFeatureListing();
                     return true;
                 case R.id.navigationMenuItemSignOut:
+                    userDao.deleteUserByID(preference.getInt("id"));
                     preference.clear();
                     startActivity(new Intent(this, Starting.class));
                     finish();
@@ -225,23 +229,33 @@ public class Main extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (preference.getInt("id") != -1){
+            user = userDao.getUserByID(preference.getInt("id"));
+            setUserImageComponents(user);
+        }
+    }
+
     private void rememberMe() {
         preference = new PrivatePreference(Main.this);
-        if (preference.getInt("id") == -1 || currentUser.getId() == -1) {
+        if (preference.getInt("id") == -1) {
             preference.clear();
             startActivity(new Intent(Main.this, Starting.class));
             finish();
             return;
         }
-        UserController.statusCheck(currentUser.getId(), Main.this, new IUserStatus() {
+        UserController.statusCheck(user.getId(), Main.this, new IUserStatus() {
             @Override
             public void onSuccess(User user) {
-                currentUser = user;
+               Main.this.user = user;
             }
 
             @Override
             public void onExit(String message) {
                 preference.clear();
+                database.userDao().deleteUserByID(user.getId());
                 Toast.makeText(Main.this, message, Toast.LENGTH_LONG).show();
                 startActivity(new Intent(Main.this, Starting.class));
                 finish();
@@ -255,30 +269,45 @@ public class Main extends AppCompatActivity {
     }
 
     private void setUserComponents() {
-        ShapeableImageView imageView = navigationHeader.findViewById(R.id.navHeaderImage);
         ImageButton moreAcc = navigationHeader.findViewById(R.id.navHeaderMore);
         TextView username = navigationHeader.findViewById(R.id.navHeaderUsername);
         TextView email = navigationHeader.findViewById(R.id.navHeaderEmail);
         TextView appVer = findViewById(R.id.navFooterAppVer);
+
+        setUserImageComponents(user);
+
+        username.setText(user.getUsername());
+        email.setText(user.getEmail());
+        appVer.setText(BuildConfig.VERSION_NAME);
+
+        moreAcc.setOnClickListener(v -> {
+            ViewGroup.LayoutParams params = mainRoot.getLayoutParams();
+            params.height = (int) (getResources().getDisplayMetrics().heightPixels * 0.6);
+            MoreAccounts moreAccounts = new MoreAccounts(params);
+            moreAccounts.show(getSupportFragmentManager(), "moreAccountsFrag");
+        });
+    }
+
+    private void setUserImageComponents(User user){
+        ShapeableImageView imageView = navigationHeader.findViewById(R.id.navHeaderImage);
 
         Glide.with(this)
                 .asDrawable()
                 .circleCrop()
                 .placeholder(R.drawable.ic_person_24)
                 .apply(new RequestOptions().override(50, 50))
-                .load(currentUser.getImageUrl())
+                .load(user.getImageUrl())
+                .skipMemoryCache(true)
                 .into(imageView);
 
-        username.setText(currentUser.getUsername());
-        email.setText(currentUser.getEmail());
-        appVer.setText(BuildConfig.VERSION_NAME);//TODO: Either get it from the buildConfig or get it from the server
 
         Glide.with(this)
                 .asDrawable()
                 .circleCrop()
                 .placeholder(R.drawable.ic_person_24)
                 .apply(new RequestOptions().override(70, 70))
-                .load(currentUser.getImageUrl())
+                .load(user.getImageUrl())
+                .skipMemoryCache(true)
                 .into(new CustomTarget<Drawable>() {
                     @Override
                     public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
@@ -290,14 +319,6 @@ public class Main extends AppCompatActivity {
 
                     }
                 });
-
-        moreAcc.setOnClickListener(v -> {
-            ViewGroup.LayoutParams params = mainRoot.getLayoutParams();
-            params.height = (int) (getResources().getDisplayMetrics().heightPixels * 0.6);
-            MoreAccounts moreAccounts = new MoreAccounts(params);
-            moreAccounts.show(getSupportFragmentManager(), "moreAccountsFrag");
-        });
-
     }
 
     private void prepareForBugListing() {
@@ -330,7 +351,7 @@ public class Main extends AppCompatActivity {
                     String desc = Objects.requireNonNull(dialogBugDesc.getText()).toString().trim();
                     String device = Objects.requireNonNull(dialogBugDevice.getText()).toString().trim();
 
-                    IssueController.uploadBug(currentUser.getId(), desc, device, checkBox.isChecked(), getApplicationContext(), new IVolley() {
+                    IssueController.uploadBug(user.getId(), desc, device, checkBox.isChecked(), getApplicationContext(), new IVolley() {
                         @Override
                         public void onSuccess(String message) {
                             Toast.makeText(Main.this, message, Toast.LENGTH_SHORT).show();
@@ -373,7 +394,7 @@ public class Main extends AppCompatActivity {
             if (!dialogBugDescError.isErrorEnabled()) {
                 if (TextHandler.isTextInputLengthCorrect(dialogBugDesc, dialogBugDescError, 300, v.getContext())) {
                     String desc = Objects.requireNonNull(dialogBugDesc.getText()).toString().trim();
-                    IssueController.uploadFeature(currentUser.getId(), desc, checkBox.isChecked(), getApplicationContext(), new IVolley() {
+                    IssueController.uploadFeature(user.getId(), desc, checkBox.isChecked(), getApplicationContext(), new IVolley() {
                         @Override
                         public void onSuccess(String message) {
                             Toast.makeText(Main.this, message, Toast.LENGTH_SHORT).show();
@@ -391,20 +412,15 @@ public class Main extends AppCompatActivity {
             }
         });
         dialog.show();
-
     }
 
     private void initializeBottomSearch() {
         searchRecycler = bottomSheetConstraint.findViewById(R.id.searchRecycler);
         searchedUserNotFound = bottomSheetConstraint.findViewById(R.id.searchUsersNotFound);
 
-        //TODO: Why i have this here
-        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(navigationHeader.getWindowToken(), 0);
-
         List<SearchedUser> searchedUserList = new ArrayList<>();
-        adapterSearch = new AdapterSearch(searchedUserList, currentUser,
-                pos -> FriendController.sendFriendRequest(currentUser.getId(), adapterSearch.getSearchedUserID(pos), getApplicationContext(), new IVolley() {
+        adapterSearch = new AdapterSearch(searchedUserList, user,
+                pos -> FriendController.sendFriendRequest(user.getId(), adapterSearch.getSearchedUserID(pos), getApplicationContext(), new IVolley() {
                     @Override
                     public void onSuccess(String message) {
                         EventNotifier.customEvent(toolbar, R.drawable.ic_check_24,  message);
@@ -436,7 +452,7 @@ public class Main extends AppCompatActivity {
 
             private void fetchRows() {
                 adapterSearch.setOffset(adapterSearch.getOffset() + 10);
-                FriendController.searchUser(currentUser, searchView.getQuery().toString().trim(), adapterSearch.getOffset(), Main.this, new ISearch() {
+                FriendController.searchUser(user, searchView.getQuery().toString().trim(), adapterSearch.getOffset(), Main.this, new ISearch() {
                     @Override
                     public void onSuccess(List<SearchedUser> searchedUserList) {
                         searchedUserNotFound.setVisibility(View.GONE);
@@ -448,7 +464,6 @@ public class Main extends AppCompatActivity {
 
                     }
                 });
-
             }
         });
     }
@@ -468,7 +483,7 @@ public class Main extends AppCompatActivity {
             public boolean onQueryTextSubmit(String query) {
                 adapterSearch.setOffset(0);
                 if (!query.isEmpty()) {
-                    FriendController.searchUser(currentUser, query.trim(), adapterSearch.getOffset(), Main.this, new ISearch() {
+                    FriendController.searchUser(user, query.trim(), adapterSearch.getOffset(), Main.this, new ISearch() {
                         @Override
                         public void onSuccess(List<SearchedUser> searchedUserList) {
                             searchedUserNotFound.setVisibility(View.GONE);

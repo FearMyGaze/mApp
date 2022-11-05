@@ -1,14 +1,22 @@
 package com.fearmygaze.mApp.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
-import androidx.annotation.NonNull;
-
-public class User implements Parcelable {
+@Entity(tableName = "users")
+public class User {
+    @PrimaryKey
+    @ColumnInfo(name = "id")
     private final int id;
+
+    @ColumnInfo(name = "username")
     private final String username;
+
+    @ColumnInfo(name = "imageUrl")
     private final String imageUrl;
+
+    @ColumnInfo(name = "email")
     private final String email;
 
     public User(int id, String username, String imageUrl, String email) {
@@ -17,25 +25,6 @@ public class User implements Parcelable {
         this.imageUrl = imageUrl;
         this.email = email;
     }
-
-    protected User(Parcel in) {
-        id = in.readInt();
-        username = in.readString();
-        imageUrl = in.readString();
-        email = in.readString();
-    }
-
-    public static final Creator<User> CREATOR = new Creator<User>() {
-        @Override
-        public User createFromParcel(Parcel in) {
-            return new User(in);
-        }
-
-        @Override
-        public User[] newArray(int size) {
-            return new User[size];
-        }
-    };
 
     public int getId() {
         return id;
@@ -53,27 +42,13 @@ public class User implements Parcelable {
         return email;
     }
 
-    @NonNull
     @Override
     public String toString() {
-        return "User{" +
+        return "User1{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
                 ", email='" + email + '\'' +
                 '}';
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(username);
-        dest.writeString(imageUrl);
-        dest.writeString(email);
     }
 }

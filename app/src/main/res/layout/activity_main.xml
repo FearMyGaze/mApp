@@ -51,6 +51,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:menu="@menu/main_bottom_navigation"
+            app:labelVisibilityMode="selected"
+            app:itemRippleColor="@android:color/transparent"
             style="@style/Widget.MaterialComponents.BottomNavigationView.PrimarySurface"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

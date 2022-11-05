@@ -61,7 +61,7 @@ public class MoreAccounts extends BottomSheetDialogFragment {
 
         root.setLayoutParams(params);
 
-        users = new ArrayList<>();
+        users = new ArrayList<User>();
 
         users.add(new User(11, "asd0", "http://192.168.1.5:3000/images/profile/image.png", "asd0@email.com"));
         users.add(new User(20, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));

@@ -21,8 +21,10 @@ import com.bumptech.glide.request.RequestOptions;
 import com.fearmygaze.mApp.Controller.UserController;
 import com.fearmygaze.mApp.R;
 import com.fearmygaze.mApp.custom.EventNotifier;
+import com.fearmygaze.mApp.database.AppDatabase;
 import com.fearmygaze.mApp.interfaces.forms.IFormUpdate;
 import com.fearmygaze.mApp.model.User;
+import com.fearmygaze.mApp.util.PrivatePreference;
 import com.fearmygaze.mApp.util.RegEx;
 import com.fearmygaze.mApp.util.TextHandler;
 import com.google.android.material.button.MaterialButton;
@@ -41,6 +43,8 @@ public class Profile extends AppCompatActivity {
     MaterialTextView username, userEmail, faq;
     MaterialButton changePassword, changeProfilePicture, update;
 
+    PrivatePreference preference;
+    AppDatabase database;
     User user;
 
     String base64Image;
@@ -50,7 +54,9 @@ public class Profile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        user = getIntent().getParcelableExtra("user");
+        database = AppDatabase.getInstance(Profile.this);
+        preference = new PrivatePreference(Profile.this);
+        user = database.userDao().getUserByID(preference.getInt("id"));
 
         userImage = findViewById(R.id.profileUserImage);
         username = findViewById(R.id.profileUsername);
@@ -91,7 +97,7 @@ public class Profile extends AppCompatActivity {
                 if (RegEx.isPasswordValidAndDifferent(oldPassword, oldPasswordError, newPassword, newPasswordError, 300, getApplicationContext())) {
                     UserController.updatePassword(user.getId(), _newPassword, _oldPassword, getApplicationContext(), new IFormUpdate() {
                         @Override
-                        public void onSuccess(User user, String message) {
+                        public void onSuccess(String message) {
                             Toast.makeText(Profile.this, message, Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
                         }
@@ -144,8 +150,8 @@ public class Profile extends AppCompatActivity {
 
             update.setOnClickListener(v1 -> UserController.updateImage(user, base64Image, v1.getContext(), new IFormUpdate() {
                 @Override
-                public void onSuccess(User user1, String message) {
-                    user = user1;
+                public void onSuccess(String message) {
+                    user = database.userDao().getUserByID(preference.getInt("id"));
                     Toast.makeText(Profile.this, message, Toast.LENGTH_LONG).show();
                     dialog.dismiss();
                     updateImage();

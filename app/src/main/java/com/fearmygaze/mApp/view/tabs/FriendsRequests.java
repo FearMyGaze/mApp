@@ -14,11 +14,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.fearmygaze.mApp.Controller.FriendController;
 import com.fearmygaze.mApp.R;
+import com.fearmygaze.mApp.database.AppDatabase;
 import com.fearmygaze.mApp.interfaces.IFriendRequest;
 import com.fearmygaze.mApp.interfaces.IFriendRequestAdapter;
 import com.fearmygaze.mApp.interfaces.IVolley;
 import com.fearmygaze.mApp.model.FriendRequest;
 import com.fearmygaze.mApp.model.User;
+import com.fearmygaze.mApp.util.PrivatePreference;
 import com.fearmygaze.mApp.view.adapter.AdapterFriendRequest;
 import com.google.android.material.textview.MaterialTextView;
 
@@ -27,11 +29,10 @@ import java.util.List;
 
 public class FriendsRequests extends Fragment implements IFriendRequestAdapter {
 
-    public FriendsRequests(User user) {
-        this.user = user;
-    }
-
+    PrivatePreference preference;
+    AppDatabase database;
     User user;
+//    User user;
 
     SwipeRefreshLayout refreshLayout;
     MaterialTextView friendRequestError;
@@ -45,6 +46,10 @@ public class FriendsRequests extends Fragment implements IFriendRequestAdapter {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_friends_requests, container, false);
+
+        preference = new PrivatePreference(view.getContext());
+        database = AppDatabase.getInstance(view.getContext());
+        user = database.userDao().getUserByID(preference.getInt("id"));
 
         refreshLayout = view.findViewById(R.id.friendRequestUpdate);
         friendRequestError = view.findViewById(R.id.friendRequestError);

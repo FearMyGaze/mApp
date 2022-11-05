@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment;
 import com.fearmygaze.mApp.Controller.UserController;
 import com.fearmygaze.mApp.R;
 import com.fearmygaze.mApp.interfaces.forms.IFormSignIn;
-import com.fearmygaze.mApp.model.User;
 import com.fearmygaze.mApp.util.RegEx;
 import com.fearmygaze.mApp.util.TextHandler;
 import com.fearmygaze.mApp.view.activity.Main;
@@ -71,11 +70,8 @@ public class SignIn extends Fragment {
 
                     UserController.signIn(credential, password, requireContext(), new IFormSignIn() {
                         @Override
-                        public void onSuccess(User user, String message) {
-                            Intent intent = new Intent(requireContext(), Main.class);
-                            intent.putExtra("user", user);
-
-                            startActivity(intent);
+                        public void onSuccess(int id, String message) {
+                            startActivity(new Intent(requireActivity(), Main.class));
                             requireActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                             requireActivity().finish();
                         }
