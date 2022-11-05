@@ -12,7 +12,7 @@ import com.fearmygaze.mApp.interfaces.IVolley;
 import com.fearmygaze.mApp.interfaces.forms.IFormSignIn;
 import com.fearmygaze.mApp.interfaces.forms.IFormSignUp;
 import com.fearmygaze.mApp.interfaces.forms.IFormUpdate;
-import com.fearmygaze.mApp.model.User1;
+import com.fearmygaze.mApp.model.User;
 import com.fearmygaze.mApp.util.NetworkConnection;
 import com.fearmygaze.mApp.util.PrivatePreference;
 import com.fearmygaze.mApp.util.RequestSingleton;
@@ -95,7 +95,7 @@ public class UserController {
                         String email = response.getJSONObject("data").getString("email");
                         String image = response.getJSONObject("data").getString("image");
 
-                        database.userDao().insertUser(new User1(id, username, BuildConfig.PROFILE + image, email));
+                        database.userDao().insertUser(new User(id, username, BuildConfig.PROFILE + image, email));
 
                         PrivatePreference preference = new PrivatePreference(context);
                         preference.putInt("id", id);
@@ -175,7 +175,7 @@ public class UserController {
         }
     }
 
-    public static void updateImage(User1 user, String image, Context context, IFormUpdate iUpdate) {
+    public static void updateImage(User user, String image, Context context, IFormUpdate iUpdate) {
         Map<String, Object> body = new HashMap<>();
         body.put("id", user.getId());
         body.put("username", user.getUsername());
@@ -241,7 +241,7 @@ public class UserController {
                         PrivatePreference preference = new PrivatePreference(context);
                         preference.putInt("id", id);
 
-                        User1 user = new User1(_id, username, BuildConfig.PROFILE + image, email);
+                        User user = new User(_id, username, BuildConfig.PROFILE + image, email);
                         database.userDao().updateUser(user);
 
                         iUserStatus.onSuccess(user);

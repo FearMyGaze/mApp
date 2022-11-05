@@ -5,7 +5,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "users")
-public class User1 {
+public class User {
     @PrimaryKey
     @ColumnInfo(name = "id")
     private final int id;
@@ -19,7 +19,7 @@ public class User1 {
     @ColumnInfo(name = "email")
     private final String email;
 
-    public User1(int id, String username, String imageUrl, String email) {
+    public User(int id, String username, String imageUrl, String email) {
         this.id = id;
         this.username = username;
         this.imageUrl = imageUrl;

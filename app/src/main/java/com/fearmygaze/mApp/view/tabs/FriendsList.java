@@ -16,7 +16,7 @@ import com.fearmygaze.mApp.R;
 import com.fearmygaze.mApp.database.AppDatabase;
 import com.fearmygaze.mApp.interfaces.IFriend;
 import com.fearmygaze.mApp.model.Friend;
-import com.fearmygaze.mApp.model.User1;
+import com.fearmygaze.mApp.model.User;
 import com.fearmygaze.mApp.util.PrivatePreference;
 import com.fearmygaze.mApp.view.adapter.AdapterFriendList;
 import com.google.android.material.textview.MaterialTextView;
@@ -39,7 +39,7 @@ public class FriendsList extends Fragment {
 
     PrivatePreference preference;
     AppDatabase database;
-    User1 user;
+    User user;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

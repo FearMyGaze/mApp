@@ -23,7 +23,7 @@ import com.fearmygaze.mApp.R;
 import com.fearmygaze.mApp.custom.EventNotifier;
 import com.fearmygaze.mApp.database.AppDatabase;
 import com.fearmygaze.mApp.interfaces.forms.IFormUpdate;
-import com.fearmygaze.mApp.model.User1;
+import com.fearmygaze.mApp.model.User;
 import com.fearmygaze.mApp.util.PrivatePreference;
 import com.fearmygaze.mApp.util.RegEx;
 import com.fearmygaze.mApp.util.TextHandler;
@@ -45,7 +45,7 @@ public class Profile extends AppCompatActivity {
 
     PrivatePreference preference;
     AppDatabase database;
-    User1 user;
+    User user;
 
     String base64Image;
 

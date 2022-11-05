@@ -19,7 +19,7 @@ import com.fearmygaze.mApp.interfaces.IFriendRequest;
 import com.fearmygaze.mApp.interfaces.IFriendRequestAdapter;
 import com.fearmygaze.mApp.interfaces.IVolley;
 import com.fearmygaze.mApp.model.FriendRequest;
-import com.fearmygaze.mApp.model.User1;
+import com.fearmygaze.mApp.model.User;
 import com.fearmygaze.mApp.util.PrivatePreference;
 import com.fearmygaze.mApp.view.adapter.AdapterFriendRequest;
 import com.google.android.material.textview.MaterialTextView;
@@ -31,7 +31,7 @@ public class FriendsRequests extends Fragment implements IFriendRequestAdapter {
 
     PrivatePreference preference;
     AppDatabase database;
-    User1 user;
+    User user;
 //    User user;
 
     SwipeRefreshLayout refreshLayout;

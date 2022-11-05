@@ -13,7 +13,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.fearmygaze.mApp.R;
 import com.fearmygaze.mApp.interfaces.ISearchAdapter;
 import com.fearmygaze.mApp.model.SearchedUser;
-import com.fearmygaze.mApp.model.User1;
+import com.fearmygaze.mApp.model.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
@@ -23,11 +23,11 @@ import java.util.List;
 public class AdapterSearch extends RecyclerView.Adapter<AdapterSearch.MyViewHolder> {
 
     List<SearchedUser> searchedUserList;
-    User1 user;
+    User user;
     private final ISearchAdapter iSearchAdapter;
     private int offset;
 
-    public AdapterSearch(List<SearchedUser> searchedUserList, User1 user, ISearchAdapter iSearchAdapter) {
+    public AdapterSearch(List<SearchedUser> searchedUserList, User user, ISearchAdapter iSearchAdapter) {
         this.searchedUserList = searchedUserList;
         this.user = user;
         this.iSearchAdapter = iSearchAdapter;

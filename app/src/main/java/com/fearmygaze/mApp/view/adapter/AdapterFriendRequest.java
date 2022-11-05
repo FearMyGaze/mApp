@@ -14,7 +14,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.fearmygaze.mApp.R;
 import com.fearmygaze.mApp.interfaces.IFriendRequestAdapter;
 import com.fearmygaze.mApp.model.FriendRequest;
-import com.fearmygaze.mApp.model.User1;
+import com.fearmygaze.mApp.model.User;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
 
@@ -23,11 +23,11 @@ import java.util.List;
 public class AdapterFriendRequest extends RecyclerView.Adapter<AdapterFriendRequest.MyViewHolder> {
 
     List<FriendRequest> friendRequestList;
-    User1 user;
+    User user;
     private final IFriendRequestAdapter iRecycler;
     private int offset;
 
-    public AdapterFriendRequest(List<FriendRequest> friendRequestList, User1 user, IFriendRequestAdapter iRecycler) {
+    public AdapterFriendRequest(List<FriendRequest> friendRequestList, User user, IFriendRequestAdapter iRecycler) {
         this.friendRequestList = friendRequestList;
         this.user = user;
         this.iRecycler = iRecycler;

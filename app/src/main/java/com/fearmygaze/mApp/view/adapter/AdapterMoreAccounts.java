@@ -14,19 +14,19 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.fearmygaze.mApp.R;
 import com.fearmygaze.mApp.interfaces.IMoreAccountsAdapter;
-import com.fearmygaze.mApp.model.User1;
+import com.fearmygaze.mApp.model.User;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.List;
 
 public class AdapterMoreAccounts extends RecyclerView.Adapter<AdapterMoreAccounts.MyViewHolder> {
 
-    List<User1> userList;
+    List<User> userList;
     int currentUser;
 
     private final IMoreAccountsAdapter iMoreAccountsAdapter;
 
-    public AdapterMoreAccounts(List<User1> userList, int currentUser, IMoreAccountsAdapter iMoreAccountsAdapter) {
+    public AdapterMoreAccounts(List<User> userList, int currentUser, IMoreAccountsAdapter iMoreAccountsAdapter) {
         this.userList = userList;
         this.currentUser = currentUser;
         this.iMoreAccountsAdapter = iMoreAccountsAdapter;
@@ -59,7 +59,7 @@ public class AdapterMoreAccounts extends RecyclerView.Adapter<AdapterMoreAccount
         }
     }
 
-    public User1 getUser(int pos){
+    public User getUser(int pos){
         return userList.get(pos);
     }
 

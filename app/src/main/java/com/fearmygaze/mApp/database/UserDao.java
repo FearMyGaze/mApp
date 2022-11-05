@@ -8,7 +8,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.fearmygaze.mApp.model.User1;
+import com.fearmygaze.mApp.model.User;
 
 import java.util.List;
 
@@ -16,13 +16,13 @@ import java.util.List;
 public interface UserDao {
 
     @Query("SELECT * FROM users")
-    List<User1> getAllUsers();
+    List<User> getAllUsers();
 
     @Query("SELECT * FROM users WHERE id = :id")
-    User1 getUserByID(int id);
+    User getUserByID(int id);
 
     @Query("SELECT * FROM users WHERE email = :email")
-    User1 getUserByEmail(String email);
+    User getUserByEmail(String email);
 
     @Query("SELECT imageUrl FROM users WHERE id = :id")
     String getImageUrl(int id);
@@ -34,12 +34,12 @@ public interface UserDao {
     void deleteUserByID(int id);
 
     @Insert(onConflict = REPLACE)
-    void insertUser(User1 user);
+    void insertUser(User user);
 
     @Update
-    void updateUser(User1 user);
+    void updateUser(User user);
 
     @Delete
-    void deleteUser(User1 user);
+    void deleteUser(User user);
 
 }

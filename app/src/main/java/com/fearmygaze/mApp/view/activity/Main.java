@@ -45,7 +45,7 @@ import com.fearmygaze.mApp.interfaces.ISearch;
 import com.fearmygaze.mApp.interfaces.IUserStatus;
 import com.fearmygaze.mApp.interfaces.IVolley;
 import com.fearmygaze.mApp.model.SearchedUser;
-import com.fearmygaze.mApp.model.User1;
+import com.fearmygaze.mApp.model.User;
 import com.fearmygaze.mApp.util.PrivatePreference;
 import com.fearmygaze.mApp.util.TextHandler;
 import com.fearmygaze.mApp.view.adapter.AdapterSearch;
@@ -95,7 +95,7 @@ public class Main extends AppCompatActivity {
     PrivatePreference preference;
     AppDatabase database;
     UserDao userDao;
-    User1 user;
+    User user;
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -248,8 +248,8 @@ public class Main extends AppCompatActivity {
         }
         UserController.statusCheck(user.getId(), Main.this, new IUserStatus() {
             @Override
-            public void onSuccess(User1 user1) {
-               user = user1;
+            public void onSuccess(User user) {
+               Main.this.user = user;
             }
 
             @Override
@@ -288,7 +288,7 @@ public class Main extends AppCompatActivity {
         });
     }
 
-    private void setUserImageComponents(User1 user){
+    private void setUserImageComponents(User user){
         ShapeableImageView imageView = navigationHeader.findViewById(R.id.navHeaderImage);
 
         Glide.with(this)

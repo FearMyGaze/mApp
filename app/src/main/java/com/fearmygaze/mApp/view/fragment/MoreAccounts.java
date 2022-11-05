@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fearmygaze.mApp.R;
-import com.fearmygaze.mApp.model.User1;
+import com.fearmygaze.mApp.model.User;
 import com.fearmygaze.mApp.view.adapter.AdapterMoreAccounts;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -39,7 +39,7 @@ public class MoreAccounts extends BottomSheetDialogFragment {
 
     MaterialButton addExisting, createNew;
 
-    List<User1> users;
+    List<User> users;
 
     AdapterMoreAccounts accounts;
 
@@ -61,23 +61,23 @@ public class MoreAccounts extends BottomSheetDialogFragment {
 
         root.setLayoutParams(params);
 
-        users = new ArrayList<User1>();
+        users = new ArrayList<User>();
 
-        users.add(new User1(11, "asd0", "http://192.168.1.5:3000/images/profile/image.png", "asd0@email.com"));
-        users.add(new User1(20, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
-        users.add(new User1(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
-        users.add(new User1(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
-        users.add(new User1(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
-        users.add(new User1(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
-        users.add(new User1(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
-        users.add(new User1(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
-        users.add(new User1(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
-        users.add(new User1(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
-        users.add(new User1(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
-        users.add(new User1(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
-        users.add(new User1(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
-        users.add(new User1(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
-        users.add(new User1(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
+        users.add(new User(11, "asd0", "http://192.168.1.5:3000/images/profile/image.png", "asd0@email.com"));
+        users.add(new User(20, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
+        users.add(new User(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
+        users.add(new User(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
+        users.add(new User(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
+        users.add(new User(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
+        users.add(new User(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
+        users.add(new User(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
+        users.add(new User(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
+        users.add(new User(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
+        users.add(new User(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
+        users.add(new User(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
+        users.add(new User(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
+        users.add(new User(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
+        users.add(new User(22, "asd1", "http://192.168.1.5:3000/images/profile/image.png", "asd1@email.com"));
 
         accounts = new AdapterMoreAccounts(users, 20, pos -> {
             Toast.makeText(view.getContext(), accounts.getUser(pos).getEmail(), Toast.LENGTH_LONG).show();
