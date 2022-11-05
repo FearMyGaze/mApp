@@ -230,10 +230,11 @@ public class Main extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
         if (preference.getInt("id") != -1){
-            setUserComponents();
+            user = userDao.getUserByID(preference.getInt("id"));
+            setUserImageComponents(user);
         }
     }
 
@@ -273,7 +274,7 @@ public class Main extends AppCompatActivity {
         TextView email = navigationHeader.findViewById(R.id.navHeaderEmail);
         TextView appVer = findViewById(R.id.navFooterAppVer);
 
-        setUserImageComponents();
+        setUserImageComponents(user);
 
         username.setText(user.getUsername());
         email.setText(user.getEmail());
@@ -287,7 +288,7 @@ public class Main extends AppCompatActivity {
         });
     }
 
-    private void setUserImageComponents(){
+    private void setUserImageComponents(User1 user){
         ShapeableImageView imageView = navigationHeader.findViewById(R.id.navHeaderImage);
 
         Glide.with(this)
