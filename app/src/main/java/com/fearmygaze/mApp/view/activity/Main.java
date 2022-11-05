@@ -39,8 +39,8 @@ import com.fearmygaze.mApp.Controller.IssueController;
 import com.fearmygaze.mApp.Controller.UserController;
 import com.fearmygaze.mApp.R;
 import com.fearmygaze.mApp.custom.EventNotifier;
-import com.fearmygaze.mApp.dao.UserDao;
-import com.fearmygaze.mApp.database.UserDatabase;
+import com.fearmygaze.mApp.database.AppDatabase;
+import com.fearmygaze.mApp.database.UserDao;
 import com.fearmygaze.mApp.interfaces.ISearch;
 import com.fearmygaze.mApp.interfaces.IUserStatus;
 import com.fearmygaze.mApp.interfaces.IVolley;
@@ -93,7 +93,7 @@ public class Main extends AppCompatActivity {
     boolean notifications = true;
 
     PrivatePreference preference;
-    UserDatabase database;
+    AppDatabase database;
     UserDao userDao;
     User1 user;
 
@@ -103,7 +103,7 @@ public class Main extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        database = UserDatabase.getInstance(Main.this);
+        database = AppDatabase.getInstance(Main.this);
         drawerLayout = findViewById(R.id.mainDrawer);
         mainRoot = findViewById(R.id.mainRoot);
         toolbar = findViewById(R.id.mainToolbar);

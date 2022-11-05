@@ -1,4 +1,4 @@
-package com.fearmygaze.mApp.dao;
+package com.fearmygaze.mApp.database;
 
 import static androidx.room.OnConflictStrategy.REPLACE;
 

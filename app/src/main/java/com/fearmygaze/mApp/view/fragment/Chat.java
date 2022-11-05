@@ -14,7 +14,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.fearmygaze.mApp.R;
 import com.fearmygaze.mApp.interfaces.IConversationAdapter;
 import com.fearmygaze.mApp.model.Conversation;
-import com.fearmygaze.mApp.model.User;
 import com.fearmygaze.mApp.view.activity.ChatRoom;
 import com.fearmygaze.mApp.view.adapter.AdapterConversation;
 
@@ -24,7 +23,6 @@ import java.util.List;
 public class Chat extends Fragment implements IConversationAdapter{
 
     View view;
-    User user;
 
     SwipeRefreshLayout swipeRefreshLayout;
 
@@ -76,7 +74,7 @@ public class Chat extends Fragment implements IConversationAdapter{
     }
 
     @Override
-    public void onConversation(int pos) {
+    public void onConversation(int pos) {//TODO: We need to remove the putExtra()
         Intent intent = new Intent(getContext(), ChatRoom.class);
         intent.putExtra("username", conversationList.get(pos).getUsername());
         startActivity(intent);

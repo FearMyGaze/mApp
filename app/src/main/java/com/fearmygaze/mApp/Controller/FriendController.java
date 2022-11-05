@@ -13,7 +13,6 @@ import com.fearmygaze.mApp.interfaces.IVolley;
 import com.fearmygaze.mApp.model.Friend;
 import com.fearmygaze.mApp.model.FriendRequest;
 import com.fearmygaze.mApp.model.SearchedUser;
-import com.fearmygaze.mApp.model.User;
 import com.fearmygaze.mApp.model.User1;
 import com.fearmygaze.mApp.util.NetworkConnection;
 import com.fearmygaze.mApp.util.RequestSingleton;
@@ -128,7 +127,7 @@ public class FriendController {
         }
     }
 
-    public static void showFriends(User user, int offset, Context context, IFriend iFriend) {
+    public static void showFriends(User1 user, int offset, Context context, IFriend iFriend) {
         Map<String, Object> body = new HashMap<>();
         body.put("id", user.getId());
         body.put("limit", 10);

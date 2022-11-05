@@ -21,7 +21,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.fearmygaze.mApp.Controller.UserController;
 import com.fearmygaze.mApp.R;
 import com.fearmygaze.mApp.custom.EventNotifier;
-import com.fearmygaze.mApp.database.UserDatabase;
+import com.fearmygaze.mApp.database.AppDatabase;
 import com.fearmygaze.mApp.interfaces.forms.IFormUpdate;
 import com.fearmygaze.mApp.model.User1;
 import com.fearmygaze.mApp.util.PrivatePreference;
@@ -44,7 +44,7 @@ public class Profile extends AppCompatActivity {
     MaterialButton changePassword, changeProfilePicture, update;
 
     PrivatePreference preference;
-    UserDatabase database;
+    AppDatabase database;
     User1 user;
 
     String base64Image;
@@ -54,7 +54,7 @@ public class Profile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        database = UserDatabase.getInstance(Profile.this);
+        database = AppDatabase.getInstance(Profile.this);
         preference = new PrivatePreference(Profile.this);
         user = database.userDao().getUserByID(preference.getInt("id"));
 

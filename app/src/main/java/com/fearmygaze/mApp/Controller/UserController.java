@@ -6,7 +6,7 @@ import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.fearmygaze.mApp.BuildConfig;
 import com.fearmygaze.mApp.R;
-import com.fearmygaze.mApp.database.UserDatabase;
+import com.fearmygaze.mApp.database.AppDatabase;
 import com.fearmygaze.mApp.interfaces.IUserStatus;
 import com.fearmygaze.mApp.interfaces.IVolley;
 import com.fearmygaze.mApp.interfaces.forms.IFormSignIn;
@@ -30,7 +30,7 @@ import java.util.Map;
  *  TODO: Construct the user preferences for the settings like {NetworkConnection class and more}
  */
 public class UserController {
-    public static UserDatabase database;
+    public static AppDatabase database;
 
     public static void signUp(String username, String email, String password, String image, Context context, IFormSignUp iFormSignUp) {
         Map<String, String> body = new HashMap<>();
@@ -81,7 +81,7 @@ public class UserController {
         Map<String, String> body = new HashMap<>();
         body.put("loginCredential", credential);
         body.put("password", password);
-        database = UserDatabase.getInstance(context);
+        database = AppDatabase.getInstance(context);
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url(1, context), new JSONObject(body), response -> {
             try {
@@ -180,7 +180,7 @@ public class UserController {
         body.put("id", user.getId());
         body.put("username", user.getUsername());
         body.put("image", image);
-        database = UserDatabase.getInstance(context);
+        database = AppDatabase.getInstance(context);
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url(3, context), new JSONObject(body), response -> {
             try {
@@ -225,7 +225,7 @@ public class UserController {
     public static void statusCheck(int id, Context context, IUserStatus iUserStatus) {
         Map<String, Object> body = new HashMap<>();
         body.put("userID", id);
-        database = UserDatabase.getInstance(context);
+        database = AppDatabase.getInstance(context);
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url(4, context), new JSONObject(body), response -> {
             try {
@@ -276,7 +276,7 @@ public class UserController {
     public static void delete(int id, Context context, IVolley iVolley) {//TODO: This will be inside the settings activity
         Map<String, Object> body = new HashMap<>();
         body.put("userID", id);
-        database = UserDatabase.getInstance(context);
+        database = AppDatabase.getInstance(context);
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url(5, context), new JSONObject(body), response -> {
             try {

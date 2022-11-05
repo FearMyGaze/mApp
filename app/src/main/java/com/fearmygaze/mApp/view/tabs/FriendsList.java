@@ -13,9 +13,11 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.fearmygaze.mApp.Controller.FriendController;
 import com.fearmygaze.mApp.R;
+import com.fearmygaze.mApp.database.AppDatabase;
 import com.fearmygaze.mApp.interfaces.IFriend;
 import com.fearmygaze.mApp.model.Friend;
-import com.fearmygaze.mApp.model.User;
+import com.fearmygaze.mApp.model.User1;
+import com.fearmygaze.mApp.util.PrivatePreference;
 import com.fearmygaze.mApp.view.adapter.AdapterFriendList;
 import com.google.android.material.textview.MaterialTextView;
 
@@ -23,10 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FriendsList extends Fragment {
-
-    public FriendsList(User user) {
-        this.user = user;
-    }
 
     SwipeRefreshLayout refreshLayout;
     MaterialTextView friendError;
@@ -37,11 +35,19 @@ public class FriendsList extends Fragment {
 
     View view;
 
-    User user;
+//    User user;
+
+    PrivatePreference preference;
+    AppDatabase database;
+    User1 user;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_friends_list, container, false);
+
+        preference = new PrivatePreference(requireContext());
+        database = AppDatabase.getInstance(requireContext());
+        user = database.userDao().getUserByID(preference.getInt("id"));
 
         refreshLayout = view.findViewById(R.id.friendListUpdate);
         friendError = view.findViewById(R.id.friendListError);
