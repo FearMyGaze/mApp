@@ -162,6 +162,7 @@ public class Main extends AppCompatActivity {
                     prepareForFeatureListing();
                     return true;
                 case R.id.navigationMenuItemSignOut:
+                    userDao.deleteUserByID(preference.getInt("id"));
                     preference.clear();
                     startActivity(new Intent(this, Starting.class));
                     finish();
@@ -231,7 +232,9 @@ public class Main extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        setUserComponents();
+        if (preference.getInt("id") != -1){
+            setUserComponents();
+        }
     }
 
     private void rememberMe() {
