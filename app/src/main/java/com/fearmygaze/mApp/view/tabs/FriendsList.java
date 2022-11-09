@@ -35,8 +35,6 @@ public class FriendsList extends Fragment {
 
     View view;
 
-//    User user;
-
     PrivatePreference preference;
     AppDatabase database;
     User user;

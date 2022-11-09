@@ -32,7 +32,6 @@ public class FriendsRequests extends Fragment implements IFriendRequestAdapter {
     PrivatePreference preference;
     AppDatabase database;
     User user;
-//    User user;
 
     SwipeRefreshLayout refreshLayout;
     MaterialTextView friendRequestError;
