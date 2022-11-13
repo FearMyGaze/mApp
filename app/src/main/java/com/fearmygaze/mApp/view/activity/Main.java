@@ -24,8 +24,9 @@ import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -49,10 +50,7 @@ import com.fearmygaze.mApp.model.User;
 import com.fearmygaze.mApp.util.PrivatePreference;
 import com.fearmygaze.mApp.util.TextHandler;
 import com.fearmygaze.mApp.view.adapter.AdapterSearch;
-import com.fearmygaze.mApp.view.fragment.Chat;
-import com.fearmygaze.mApp.view.fragment.Friends;
 import com.fearmygaze.mApp.view.fragment.MoreAccounts;
-import com.fearmygaze.mApp.view.fragment.Notifications;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -68,8 +66,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class Main extends AppCompatActivity {
-
-    public Fragment friends, chat, notification;
 
     DrawerLayout drawerLayout;
 
@@ -89,6 +85,9 @@ public class Main extends AppCompatActivity {
     RecyclerView searchRecycler;
     TextView searchedUserNotFound;
     SearchView searchView;
+
+    //AppBarConfiguration appBarConfiguration;
+    NavController navController;
 
     boolean notifications = true;
 
@@ -120,22 +119,15 @@ public class Main extends AppCompatActivity {
         preference = new PrivatePreference(Main.this);
         userDao = database.userDao();
 
-        if (preference.getInt("id") != -1){
+        if (preference.getInt("id") != -1) {
             user = userDao.getUserByID(preference.getInt("id"));
-        }else{
+        } else {
             preference.clear();
             startActivity(new Intent(Main.this, Starting.class));
             finish();
         }
 
         rememberMe();
-
-        friends = new Friends();
-        chat = new Chat();
-        notification = new Notifications();
-
-        replaceFragment(chat);
-        bottomNavigationView.setSelectedItemId(R.id.mainNavigationItemChoice1);
 
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(drawerToggle);
@@ -185,43 +177,37 @@ public class Main extends AppCompatActivity {
 
         /* This changes the icon when you click it */
         toolbar.setOnMenuItemClickListener(item -> {
-            switch (item.getItemId()){
-                case R.id.mainToolbarItemNotifications:
-                    if (notifications) {
-                        notifications = false;
-                        item.setIcon(R.drawable.ic_notifications_off_24);
-                    } else {
-                        notifications = true;
-                        item.setIcon(R.drawable.ic_notifications_active_24);
-                    }
-                    break;
-                case R.id.mainToolbarItemNotificationsSettings:
-                    startActivity(new Intent(Main.this, NotificationSettings.class));
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    break;
+            if (item.getItemId() == R.id.mainToolbarItemNotifications) {
+                if (notifications) {
+                    notifications = false;
+                    item.setIcon(R.drawable.ic_notifications_off_24);
+                } else {
+                    notifications = true;
+                    item.setIcon(R.drawable.ic_notifications_active_24);
+                }
             }
             return true;
         });
 
+//        appBarConfiguration = new AppBarConfiguration
+//                .Builder(R.id.mainNavigationItemChoice1, R.id.mainNavigationItemChoice3)
+//                .build();
+        navController = Navigation.findNavController(this, R.id.mainNavHost);
+//        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavigationUI.setupWithNavController(bottomNavigationView, navController);
+
+        /*
+        * This has to be after the NavigationUI because if it is before it doesn't works
+        * Also i cant understand the way NavigationUI.setupActionBarWithNavController() works (yet)
+        *   soo until i know how to handle it with that way it will stay like this
+        * */
         bottomNavigationView.setOnItemSelectedListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.mainNavigationItemChoice1:
+            switch (item.getItemId()){
+                case R.id.mainNavigationItemChoiceChat:
                     toolbar.setTitle(R.string.mainBottomNavigationViewChoice1);
-                    toolbar.getMenu().clear();
-                    toolbar.inflateMenu(R.menu.main_toolbar_chat);
-                    replaceFragment(chat);
                     return true;
-                case R.id.mainNavigationItemChoice2:
-                    toolbar.setTitle(R.string.mainBottomNavigationViewChoice2);
-                    toolbar.getMenu().clear();
-                    toolbar.inflateMenu(R.menu.main_toolbar_nofication);
-                    replaceFragment(notification);
-                    return true;
-                case R.id.mainNavigationItemChoice3:
+                case R.id.mainNavigationItemChoiceFriends:
                     toolbar.setTitle(R.string.mainBottomNavigationViewChoice3);
-                    toolbar.getMenu().clear();
-                    toolbar.inflateMenu(R.menu.main_toolbar_chat);
-                    replaceFragment(friends);
                     return true;
                 default:
                     return false;
@@ -232,11 +218,16 @@ public class Main extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (preference.getInt("id") != -1){
+        if (preference.getInt("id") != -1) {
             user = userDao.getUserByID(preference.getInt("id"));
             setUserImageComponents(user);
         }
     }
+
+//    @Override
+//    public boolean onNavigateUp() {
+//        return NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp();
+//    }
 
     private void rememberMe() {
         preference = new PrivatePreference(Main.this);
@@ -249,7 +240,7 @@ public class Main extends AppCompatActivity {
         UserController.statusCheck(user.getId(), Main.this, new IUserStatus() {
             @Override
             public void onSuccess(User user) {
-               Main.this.user = user;
+                Main.this.user = user;
             }
 
             @Override
@@ -288,7 +279,7 @@ public class Main extends AppCompatActivity {
         });
     }
 
-    private void setUserImageComponents(User user){
+    private void setUserImageComponents(User user) {
         ShapeableImageView imageView = navigationHeader.findViewById(R.id.navHeaderImage);
 
         Glide.with(this)
@@ -423,7 +414,7 @@ public class Main extends AppCompatActivity {
                 pos -> FriendController.sendFriendRequest(user.getId(), adapterSearch.getSearchedUserID(pos), getApplicationContext(), new IVolley() {
                     @Override
                     public void onSuccess(String message) {
-                        EventNotifier.customEvent(toolbar, R.drawable.ic_check_24,  message);
+                        EventNotifier.customEvent(toolbar, R.drawable.ic_check_24, message);
                     }
 
                     @Override
@@ -533,14 +524,7 @@ public class Main extends AppCompatActivity {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            finish();
-            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+            super.onBackPressed();
         }
     }
-
-    public void replaceFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.mainFrame, fragment).commit();
-    }
-
 }

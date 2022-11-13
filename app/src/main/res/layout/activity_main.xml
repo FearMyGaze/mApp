@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".view.activity.Main"
-    tools:openDrawer="end"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -35,16 +34,20 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <FrameLayout
-            android:id="@+id/mainFrame"
+        <fragment
+            android:id="@+id/mainNavHost"
+            android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/main_navigation"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/mainAppBar"
-            app:layout_constraintBottom_toTopOf="@id/mainBottomNavigation"/>
+            app:layout_constraintBottom_toTopOf="@+id/mainBottomNavigation"
+            tools:ignore="FragmentTagUsage" />
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/mainBottomNavigation"
