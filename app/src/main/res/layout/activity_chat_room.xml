@@ -50,13 +50,16 @@
             android:background="@android:color/transparent"
             android:foreground="?attr/selectableItemBackground"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <!--TODO: Create Here a rounded view with an emote button that acts like a menu -->
 
         <EditText
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="@string/chatRoomBottomBarHint"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:maxLines="3"
             android:isScrollContainer="true"
             android:autofillHints="emailAddress,phone"
@@ -77,7 +80,6 @@
             android:background="@android:color/transparent"
             android:foreground="?attr/selectableItemBackground"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
