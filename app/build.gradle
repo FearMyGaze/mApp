@@ -4,16 +4,15 @@ plugins {
 }
 
 android {
-    namespace 'com.fearmygaze.mApp'
+    namespace 'com.github.fearmygaze.mercury'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.fearmygaze.mApp"
+        applicationId "com.github.fearmygaze.mercury"
         minSdk 23
         targetSdk 33
         versionCode 1
-        versionName "0.0.1"
-        multiDexEnabled true
+        versionName "0.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 

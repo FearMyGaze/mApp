@@ -1,6 +1,6 @@
-<resources> <!-- TODO: Update string resources to remove redundant eg cancel confirm and more-->
+<resources> <!-- TODO: Update string resources to remove redundant eg cancel confirm and more--> <!-- TODO: Remove Redundant resources -->
     <!-- App name -->
-    <string name="app_name">mApp</string>
+    <string name="app_name">Mercury</string>
 
     <!-- Activities / fragments name -->
     <string name="activityProfile">Profile</string>

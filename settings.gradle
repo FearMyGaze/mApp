@@ -12,5 +12,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "mApp"
+rootProject.name = "Mercury"
 include ':app'

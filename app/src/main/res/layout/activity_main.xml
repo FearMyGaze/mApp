@@ -28,7 +28,8 @@
                 android:id="@+id/mainToolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:title="@string/fragmentChat"
+                app:title="@string/app_name"
+                app:titleCentered="true"
                 app:menu="@menu/main_toolbar_chat"
                 style="@style/Widget.MaterialComponents.Toolbar.PrimarySurface"/>
 

@@ -7,13 +7,13 @@
 
     <fragment
         android:id="@+id/mainNavigationItemChoiceChat"
-        android:name="com.fearmygaze.mApp.view.fragment.Chat"
+        android:name="com.github.fearmygaze.mercury.view.fragment.Chat"
         android:label=""
         tools:layout="@layout/fragment_chat" />
 
     <fragment
         android:id="@+id/mainNavigationItemChoiceFriends"
-        android:name="com.fearmygaze.mApp.view.fragment.Friends"
+        android:name="com.github.fearmygaze.mercury.view.fragment.Friends"
         android:label=""
         tools:layout="@layout/fragment_friends"/>
 
