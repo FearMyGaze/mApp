@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
@@ -10,13 +9,5 @@
         android:contentDescription="@string/mainToolbarItemSearch"
         app:showAsAction="always|collapseActionView"
         app:actionViewClass="androidx.appcompat.widget.SearchView" />
-
-    <item
-        android:id="@+id/mainToolbarItemNotifications"
-        android:title="@string/mainToolbarItemNotifications"
-        android:icon="@drawable/ic_notifications_active_24"
-        android:contentDescription="@string/mainToolbarItemNotifications"
-        app:showAsAction="always"
-        tools:ignore="AlwaysShowAction" />
 
 </menu>
