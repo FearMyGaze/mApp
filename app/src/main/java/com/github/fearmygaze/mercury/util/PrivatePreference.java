@@ -35,6 +35,10 @@ public class PrivatePreference {
         editor.clear().apply();
     }
 
+    public Boolean contains(String value) {
+        return sharedPreferences.contains(value);
+    }
+
     public Boolean getBoolean(String key) {
         return sharedPreferences.getBoolean(key, false);
     }
