@@ -96,7 +96,7 @@ public class UserController {
                         String email = response.getJSONObject("data").getString("email");
                         String image = response.getJSONObject("data").getString("image");
 
-                        database.userDao().insertUser(new User(id, username, BuildConfig.PROFILE + image, email));
+                        database.userDao().insertUser(new User(id, username, userImageUrl(image), email));
 
                         PrivatePreference preference = new PrivatePreference(context);
                         preference.putInt("id", id);
@@ -191,7 +191,7 @@ public class UserController {
                 switch (error) {
                     case "200":
                         String mImage = response.getString("data");
-                        database.userDao().updateImageByID(BuildConfig.PROFILE + mImage, user.getId());
+                        database.userDao().updateImageByID(userImageUrl(mImage), user.getId());
                         iUpdate.onSuccess(message);
                         break;
                     case "404":
@@ -241,11 +241,9 @@ public class UserController {
                         String email = response.getJSONObject("data").getString("email");
                         PrivatePreference preference = new PrivatePreference(context);
                         preference.putInt("id", id);
-
-                        User user = new User(_id, username, BuildConfig.PROFILE + image, email);
-                        database.userDao().updateUser(user);
-
-                        iUserStatus.onSuccess(user);
+                        //TODO: IF something happened here i removed the update of user in the main
+                        database.userDao().updateUser(new User(_id, username, userImageUrl(image), email));
+                        iUserStatus.onSuccess();
                         break;
                     case "404":
                     case "405":
@@ -364,5 +362,9 @@ public class UserController {
         String server = BuildConfig.SERVER;
         String[] url = con.getResources().getStringArray(R.array.user);
         return server + url[pos];
+    }
+
+    private static String userImageUrl(String image){
+        return BuildConfig.PROFILE + image;
     }
 }
