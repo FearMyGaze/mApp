@@ -1,19 +1,5 @@
 package com.github.fearmygaze.mercury.view.activity;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
@@ -29,6 +15,20 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -86,10 +86,7 @@ public class Main extends AppCompatActivity {
     TextView searchedUserNotFound;
     SearchView searchView;
 
-    //AppBarConfiguration appBarConfiguration;
     NavController navController;
-
-    boolean notifications = true;
 
     PrivatePreference preference;
     AppDatabase database;
@@ -119,10 +116,10 @@ public class Main extends AppCompatActivity {
         preference = new PrivatePreference(Main.this);
         userDao = database.userDao();
 
-        if (preference.getInt("id") != -1) {
+        if (preference.contains("id") && preference.getInt("id") != -1) {
             user = userDao.getUserByID(preference.getInt("id"));
         } else {
-            preference.clear();
+            preference.clearAllValues();
             startActivity(new Intent(Main.this, Starting.class));
             finish();
         }
@@ -155,7 +152,7 @@ public class Main extends AppCompatActivity {
                     return true;
                 case R.id.navigationMenuItemSignOut:
                     userDao.deleteUserByID(preference.getInt("id"));
-                    preference.clear();
+                    preference.clearAllValues();
                     startActivity(new Intent(this, Starting.class));
                     finish();
                     Toast.makeText(this, "User Signed out", Toast.LENGTH_SHORT).show();
@@ -175,20 +172,6 @@ public class Main extends AppCompatActivity {
 
         initializeBottomSearch();
 
-        /* This changes the icon when you click it */
-        toolbar.setOnMenuItemClickListener(item -> {
-            if (item.getItemId() == R.id.mainToolbarItemNotifications) {
-                if (notifications) {
-                    notifications = false;
-                    item.setIcon(R.drawable.ic_notifications_off_24);
-                } else {
-                    notifications = true;
-                    item.setIcon(R.drawable.ic_notifications_active_24);
-                }
-            }
-            return true;
-        });
-
         navController = Navigation.findNavController(this, R.id.mainNavHost);
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
     }
@@ -196,7 +179,7 @@ public class Main extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (preference.getInt("id") != -1) {
+        if (preference.contains("id") && preference.getInt("id") != -1) {
             user = userDao.getUserByID(preference.getInt("id"));
             setUserImageComponents(user);
         }
@@ -205,20 +188,20 @@ public class Main extends AppCompatActivity {
     private void rememberMe() {
         preference = new PrivatePreference(Main.this);
         if (preference.getInt("id") == -1) {
-            preference.clear();
+            preference.clearAllValues();
             startActivity(new Intent(Main.this, Starting.class));
             finish();
             return;
         }
         UserController.statusCheck(user.getId(), Main.this, new IUserStatus() {
             @Override
-            public void onSuccess(User user) {
-                Main.this.user = user;
+            public void onSuccess() {
+
             }
 
             @Override
             public void onExit(String message) {
-                preference.clear();
+                preference.clearAllValues();
                 database.userDao().deleteUserByID(user.getId());
                 Toast.makeText(Main.this, message, Toast.LENGTH_LONG).show();
                 startActivity(new Intent(Main.this, Starting.class));
@@ -437,7 +420,6 @@ public class Main extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.main_toolbar_chat, menu);
 
         MenuItem menuItem = menu.findItem(R.id.mainToolbarItemSearch);
-        MenuItem menuItem1 = menu.findItem(R.id.mainToolbarItemNotifications);
         searchView = (SearchView) menuItem.getActionView();
 
         searchView.setQueryHint(getString(R.string.searchUserQuery));
@@ -474,14 +456,12 @@ public class Main extends AppCompatActivity {
         menuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                menuItem1.setVisible(false);
                 sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                menuItem1.setVisible(true);
                 adapterSearch.clearListAndRefreshAdapter();
                 searchedUserNotFound.setVisibility(View.VISIBLE);
                 sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
