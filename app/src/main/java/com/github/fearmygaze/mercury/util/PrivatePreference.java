@@ -9,6 +9,12 @@ import java.util.Map;
 
 public class PrivatePreference {
 
+    /*
+    * TODO:
+    *       We need to make a system to check how many users we have inside the app
+    *       so we can exchange the active userID with the other when it is need it
+    * */
+
     private final SharedPreferences sharedPreferences;
 
     public PrivatePreference(Context context) {
@@ -30,7 +36,12 @@ public class PrivatePreference {
         editor.putString(key, value).apply();
     }
 
-    public void clear() {
+    public void clearValue(String value){
+        SharedPreferences.Editor editor =sharedPreferences.edit();
+        editor.remove(value).apply();
+    }
+
+    public void clearAllValues() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear().apply();
     }
