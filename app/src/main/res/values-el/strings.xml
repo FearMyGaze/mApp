@@ -1,45 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources> <!-- TODO: Remove Redundant resources -->
-    <!-- App name -->
-    <string name="app_name">Mercury</string>
 
-    <!-- Activities / fragments name -->
-    <string name="activityProfile">Προφίλ</string>
-    <string name="activityNotifications">Ειδοποιήσεις</string>
-    <string name="activitySettings">Ρυθμίσεις</string>
-    <string name="fragmentSignIn">Σύνδεση</string>
-    <string name="fragmentSignUp">Εγραφή</string>
-    <string name="fragmentFriends">Φίλοι</string>
-    <string name="fragmentChat">Κεντρική</string>
-    <string name="fragmentSearch">Αναζήτηση</string>
-
-    <!-- Main Activity -->
-    <string name="mainSearchQuery">Αναζήτηση…</string>
-
-    <!-- Main Toolbar (Menu) -->
-    <string name="mainToolbarItemSearch">Αναζήτηση</string>
-    <string name="mainToolbarItemNotifications">Ειδοποιήσεις</string>
+    <!-- Main SearchView -->
+    <string name="mainSearchBarSettingsButton">Open Settings</string>
+    <string name="mainSearchViewHint">Search user</string>
+    <string name="mainSearchBarProfileButton">Open Profile Settings</string>
 
     <!-- Main BottomNavigationView (Menu) -->
     <string name="mainBottomNavigationViewChoice1">Μηνύματα</string>
-    <string name="mainBottomNavigationViewChoice2">Ειδοποιήσεις</string>
     <string name="mainBottomNavigationViewChoice3">Φίλοι</string>
-
-    <!-- Main Navigation Drawer (Header) -->
-    <string name="navigationHeaderMoreAccounts">Περισσότεροι λογαριασμοι</string>
-
-    <!-- Main Navigation Drawer (Menu) -->
-    <string name="navigationDrawerMenuItemProfile">Προφίλ</string>
-    <string name="navigationDrawerMenuItemSettings">Προφίλ</string>
-    <string name="navigationDrawerMenuItemBug">Bug</string>
-    <string name="navigationDrawerMenuItemFeature">Feature Request</string>
-    <string name="navigationDrawerMenuItemSignOut">Έξοδος</string>
-    <string name="navigation_drawer_open">Άνοιξε το συρτάρι πλοήγης</string>
-    <string name="navigation_drawer_close">Κλείσε το συρτάρι πλοήγης</string>
-
-    <!-- Main Navigation Drawer (Footer) -->
-    <string name="navigationFooterTerms">Όροι χρήσης</string>
-    <string name="navigationFooterChangelog">Ιστορικό αλλαγών</string>
 
     <!-- Sign In fragment -->
     <string name="signInWelcome">Καλώς ήρθες πίσω</string>
@@ -137,12 +106,24 @@
     <string name="dialogFeatureConfirm">Επιβεβαίωση</string>
     <string name="dialogFeatureCancel">Ακύρωση</string>
 
-    <!-- More Accounts Dialog -->
-    <string name="dialogMoreAccountsAcc">Λογαριασμοί</string>
-    <string name="dialogMoreAccountsCreateNew">Δημιουργία λογαριασμού</string>
-    <string name="dialogMoreAccountsAddExisting">Προθήκη προυπάρχοντα λογαριασμού</string>
+    <!-- Dialog AppSettings -->
+    <string name="dialogAppSettingsSettings">Ρυθμίσεις</string>
+    <string name="dialogAppSettingsFeature">Αίτημα νεας δυνατότητα</string>
+    <string name="dialogAppSettingsBug">Εντοπισμός δυσλειτουργίας</string>
 
-    <!-- More Accounts Adapter -->
+    <!-- Dialog Profile-->
+    <string name="dialogProfileClose">Έξοδος</string>
+    <string name="dialogProfileImage">Εικόνα χρήστης</string>
+    <string name="dialogProfileMoreOptions">Περισότερες Επιλογές</string>
+    <string name="dialogProfileManageAccount">Προβολή προφίλ</string>
+    <string name="dialogProfileManageAccountSwitchAccount">Αλλαγή λογαριασμού</string>
+    <string name="dialogProfileManageAccountRemoveAccount">Αφαίρεση λογαριασμού</string>
+    <string name="dialogProfileManageAccountAddAccount">Προσθήκη λογαριασμού</string>
+    <string name="dialogProfileSignOut">Αποσύνδεση</string>
+    <string name="dialogProfileTos">Όροι χρήσης</string>
+    <string name="dialogProfileChangelog">Ιστορικό Αλλαγών</string>
+
+    <!-- More Accounts Adapter TODO: Maybe Remove-->
     <string name="adapterMoreAccountsCurrentAcc">Τωρινός Λογαριασμός</string>
 
     <!-- RegEx -->

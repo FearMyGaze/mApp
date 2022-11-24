@@ -5,25 +5,21 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.constraintlayout.widget.Group;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
@@ -32,14 +28,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.github.fearmygaze.mercury.BuildConfig;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.controller.FriendController;
 import com.github.fearmygaze.mercury.controller.IssueController;
 import com.github.fearmygaze.mercury.controller.UserController;
-import com.github.fearmygaze.mercury.custom.EventNotifier;
 import com.github.fearmygaze.mercury.database.AppDatabase;
 import com.github.fearmygaze.mercury.database.UserDao;
 import com.github.fearmygaze.mercury.interfaces.ISearch;
@@ -50,14 +43,11 @@ import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.PrivatePreference;
 import com.github.fearmygaze.mercury.util.TextHandler;
 import com.github.fearmygaze.mercury.view.adapter.AdapterSearch;
-import com.github.fearmygaze.mercury.view.fragment.MoreAccounts;
-import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.imageview.ShapeableImageView;
-import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -67,24 +57,20 @@ import java.util.Objects;
 
 public class Main extends AppCompatActivity {
 
-    DrawerLayout drawerLayout;
-
     ConstraintLayout mainRoot;
 
-    MaterialToolbar toolbar;
+    ConstraintLayout navbarLayout;
+    ImageButton navbarButton;
+    EditText navBarSearch;
+    ShapeableImageView navBarImage;
 
     BottomNavigationView bottomNavigationView;
-
-    NavigationView navigationView;
-    View navigationHeader;
-    TextView navigationFooterTerms, navigationFooterChangelog;
 
     BottomSheetBehavior<ConstraintLayout> sheetBehavior;
     ConstraintLayout bottomSheetConstraint;
     AdapterSearch adapterSearch;
     RecyclerView searchRecycler;
     TextView searchedUserNotFound;
-    SearchView searchView;
 
     NavController navController;
 
@@ -100,77 +86,30 @@ public class Main extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         database = AppDatabase.getInstance(Main.this);
-        drawerLayout = findViewById(R.id.mainDrawer);
         mainRoot = findViewById(R.id.mainRoot);
-        toolbar = findViewById(R.id.mainToolbar);
+        navbarLayout = findViewById(R.id.mainNavbarLayout);
+        navbarButton = findViewById(R.id.mainNavBarSettingsButton);
+        navBarSearch = findViewById(R.id.mainNavbarSearchBox);
+        navBarImage = findViewById(R.id.mainNavbarProfileButton);
         bottomNavigationView = findViewById(R.id.mainBottomNavigation);
-        navigationView = findViewById(R.id.mainNavigation);
-        navigationHeader = navigationView.getHeaderView(0);
-        navigationFooterTerms = findViewById(R.id.navFooterTerms);
-        navigationFooterChangelog = findViewById(R.id.navFooterChangelog);
         bottomSheetConstraint = findViewById(R.id.search);
 
-        setSupportActionBar(toolbar);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
 
         preference = new PrivatePreference(Main.this);
         userDao = database.userDao();
 
-        if (preference.contains("id") && preference.getInt("id") != -1) {
+        if (preference.contains("id") && preference.getInt("id") != -1) {//TODO: We need to call the user components here or find a way to not enter the setUserComponents()
             user = userDao.getUserByID(preference.getInt("id"));
+            setUserImageComponents(user);
+            rememberMe();
+            navigationBar();
+            initializeBottomSearch();
         } else {
             preference.clearAllValues();
             startActivity(new Intent(Main.this, Starting.class));
             finish();
         }
-
-        rememberMe();
-
-        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.addDrawerListener(drawerToggle);
-        drawerToggle.syncState();
-
-        setUserComponents();
-
-        navigationView.setNavigationItemSelectedListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.navigationMenuItemProfile:
-                    drawerLayout.close();
-                    startActivity(new Intent(Main.this, Profile.class));
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    return true;
-                case R.id.navigationMenuItemSettings:
-                    drawerLayout.close();
-                    startActivity(new Intent(Main.this, Settings.class));
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    return true;
-                case R.id.navigationMenuItemBug:
-                    prepareForBugListing();
-                    return true;
-                case R.id.navigationMenuItemFeature:
-                    prepareForFeatureListing();
-                    return true;
-                case R.id.navigationMenuItemSignOut:
-                    userDao.deleteUserByID(preference.getInt("id"));
-                    preference.clearAllValues();
-                    startActivity(new Intent(this, Starting.class));
-                    finish();
-                    Toast.makeText(this, "User Signed out", Toast.LENGTH_SHORT).show();
-                    return true;
-                default:
-                    return false;
-            }
-        });
-
-        navigationFooterTerms.setOnClickListener(v -> {
-            EventNotifier.event(v, "This will open a dialog", EventNotifier.LENGTH_SHORT);
-        });
-
-        navigationFooterChangelog.setOnClickListener(v -> {
-            EventNotifier.event(v, "This will open a dialog with MarkDown Support", EventNotifier.LENGTH_SHORT);
-        });
-
-        initializeBottomSearch();
 
         navController = Navigation.findNavController(this, R.id.mainNavHost);
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
@@ -215,64 +154,61 @@ public class Main extends AppCompatActivity {
         });
     }
 
-    private void setUserComponents() {
-        ImageButton moreAcc = navigationHeader.findViewById(R.id.navHeaderMore);
-        TextView username = navigationHeader.findViewById(R.id.navHeaderUsername);
-        TextView email = navigationHeader.findViewById(R.id.navHeaderEmail);
-        TextView appVer = findViewById(R.id.navFooterAppVer);
-
-        setUserImageComponents(user);
-
-        username.setText(user.getUsername());
-        email.setText(user.getEmail());
-        appVer.setText(BuildConfig.VERSION_NAME);
-
-        moreAcc.setOnClickListener(v -> {
-            ViewGroup.LayoutParams params = mainRoot.getLayoutParams();
-            params.height = (int) (getResources().getDisplayMetrics().heightPixels * 0.6);
-            MoreAccounts moreAccounts = new MoreAccounts(params);
-            moreAccounts.show(getSupportFragmentManager(), "moreAccountsFrag");
-        });
-    }
-
     private void setUserImageComponents(User user) {
-        ShapeableImageView imageView = navigationHeader.findViewById(R.id.navHeaderImage);
-
-        Glide.with(this)
-                .asDrawable()
-                .circleCrop()
-                .placeholder(R.drawable.ic_person_24)
-                .apply(new RequestOptions().override(50, 50))
-                .load(user.getImageUrl())
-                .skipMemoryCache(true)
-                .into(imageView);
-
-
         Glide.with(this)
                 .asDrawable()
                 .circleCrop()
                 .placeholder(R.drawable.ic_person_24)
                 .apply(new RequestOptions().override(70, 70))
                 .load(user.getImageUrl())
-                .skipMemoryCache(true)
-                .into(new CustomTarget<Drawable>() {
-                    @Override
-                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                        toolbar.setNavigationIcon(resource);
-                    }
-
-                    @Override
-                    public void onLoadCleared(@Nullable Drawable placeholder) {
-
-                    }
-                });
+                .into(navBarImage);
     }
 
-    private void prepareForBugListing() {
+    private void navigationBar() {
+        navbarButton.setOnClickListener(v -> dialogAppSettings());
+        navBarImage.setOnClickListener(v -> dialogProfile());
+        navBarSearch.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus){
+                sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                navBarSearch.setOnEditorActionListener((v1, actionId, event) -> {
+                    if (actionId == EditorInfo.IME_ACTION_SEARCH) {//TODO: Add Here the search functionality
+                        if (!navBarSearch.getText().toString().trim().isEmpty()) {
+                            adapterSearch.setOffset(0);
+                            FriendController.searchUser(user, v1.getText().toString().trim(), adapterSearch.getOffset(), Main.this, new ISearch() {
+                                @Override
+                                public void onSuccess(List<SearchedUser> searchedUserList) {
+                                    searchedUserNotFound.setVisibility(View.GONE);
+                                    adapterSearch.refillList(searchedUserList);
+                                }
+
+                                @Override
+                                public void onError(String message) {
+                                    adapterSearch.clearListAndRefreshAdapter();
+                                    searchedUserNotFound.setVisibility(View.VISIBLE);
+                                    Toast.makeText(Main.this, message, Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        } else {
+                            searchedUserNotFound.setVisibility(View.VISIBLE);
+                            adapterSearch.clearListAndRefreshAdapter();
+                        }
+                        return true;
+                    }
+                    return false;
+                });
+            }
+        });
+    }
+
+    private void dialogBug() {
         Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_bug);
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.getWindow().setGravity(Gravity.TOP);
+        WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+        dialog.getWindow().getAttributes().y = (int) (navbarLayout.getHeight() * 1.2);
+        dialog.getWindow().setAttributes(layoutParams);
 
         TextInputLayout dialogBugDescError = dialog.findViewById(R.id.dialogBugDescError);
         TextInputEditText dialogBugDesc = dialog.findViewById(R.id.dialogBugDesc);
@@ -303,7 +239,6 @@ public class Main extends AppCompatActivity {
                         public void onSuccess(String message) {
                             Toast.makeText(Main.this, message, Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
-                            drawerLayout.close();
                         }
 
                         @Override
@@ -319,11 +254,15 @@ public class Main extends AppCompatActivity {
 
     }
 
-    private void prepareForFeatureListing() {
+    private void dialogFeature() {
         Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog_feature);
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.getWindow().setGravity(Gravity.TOP);
+        WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+        dialog.getWindow().getAttributes().y = (int) (navbarLayout.getHeight() * 1.2);
+        dialog.getWindow().setAttributes(layoutParams);
 
         TextInputLayout dialogBugDescError = dialog.findViewById(R.id.dialogFeatureDescError);
         TextInputEditText dialogBugDesc = dialog.findViewById(R.id.dialogFeatureDesc);
@@ -346,7 +285,6 @@ public class Main extends AppCompatActivity {
                         public void onSuccess(String message) {
                             Toast.makeText(Main.this, message, Toast.LENGTH_SHORT).show();
                             dialog.dismiss();
-                            drawerLayout.close();
                         }
 
                         @Override
@@ -361,6 +299,107 @@ public class Main extends AppCompatActivity {
         dialog.show();
     }
 
+    private void dialogProfile() {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_profile);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.getWindow().setGravity(Gravity.TOP);
+        WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+        dialog.getWindow().getAttributes().y = (int) (navbarLayout.getHeight() * 1.2);
+        dialog.getWindow().setAttributes(layoutParams);
+
+        ImageButton exitButton = dialog.findViewById(R.id.dialogProfileExit);
+        ShapeableImageView userImage = dialog.findViewById(R.id.dialogProfileUserImage);
+        TextView username = dialog.findViewById(R.id.dialogProfileUsername);
+        TextView email = dialog.findViewById(R.id.dialogProfileUserEmail);
+        ImageButton moreOptions = dialog.findViewById(R.id.dialogProfileMoreOptions);
+        MaterialButton manageAccount = dialog.findViewById(R.id.dialogProfileManageAccount);
+        Group manageAccGroup = dialog.findViewById(R.id.dialogProfileManageAccountGroup);
+        ConstraintLayout switchAccount = dialog. findViewById(R.id.dialogProfileManageAccountSwitchAccount);
+        ConstraintLayout addAccount = dialog.findViewById(R.id.dialogProfileManageAccountAddAccount);
+        ConstraintLayout removeAccount = dialog.findViewById(R.id.dialogProfileManageAccountRemoveAccount);
+        ConstraintLayout signOut = dialog.findViewById(R.id.dialogProfileSignOut);
+        TextView termsOfService = dialog.findViewById(R.id.dialogProfileTos);
+        TextView version = dialog.findViewById(R.id.dialogProfileVersion);
+        TextView changeLog = dialog.findViewById(R.id.dialogProfileChangelog);
+
+        termsOfService.setOnClickListener(v -> Toast.makeText(this, "This will show the TOS of the app", Toast.LENGTH_SHORT).show());
+        changeLog.setOnClickListener(v -> Toast.makeText(this, "This will show the changes of the app", Toast.LENGTH_SHORT).show());
+
+        Glide.with(this)
+                .asDrawable()
+                .circleCrop()
+                .placeholder(R.drawable.ic_person_24)
+                .apply(new RequestOptions().override(70, 70))
+                .load(user.getImageUrl())
+                .skipMemoryCache(true)
+                .into(userImage);
+        username.setText(user.getUsername());
+        email.setText(user.getEmail());
+
+        moreOptions.setOnClickListener(v -> {
+            if (manageAccGroup.getVisibility() == View.VISIBLE){
+                manageAccGroup.setVisibility(View.GONE);
+            }else{
+                manageAccGroup.setVisibility(View.VISIBLE);
+            }
+        });
+        manageAccount.setOnClickListener(v -> {
+            startActivity(new Intent(Main.this, Profile.class));
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            dialog.dismiss();
+        });
+        signOut.setOnClickListener(v -> {//TODO: We need to find a way to hold the data of the other users and then we have to
+            Toast.makeText(this, "Sign Out", Toast.LENGTH_SHORT).show();
+        });
+        switchAccount.setOnClickListener(v -> {
+
+        });
+        removeAccount.setOnClickListener(v -> {
+
+        });
+        addAccount.setOnClickListener(v -> {
+
+        });
+        version.setText(BuildConfig.VERSION_NAME);
+        exitButton.setOnClickListener(v -> dialog.dismiss());
+        dialog.show();
+    }
+
+    private void dialogAppSettings() {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_app_settings);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.getWindow().setGravity(Gravity.TOP);
+        WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+        dialog.getWindow().getAttributes().y = (int) (navbarLayout.getHeight() * 1.2);
+        dialog.getWindow().setAttributes(layoutParams);
+
+        ImageButton exit = dialog.findViewById(R.id.dialogAppSettingsExit);
+        ConstraintLayout settings = dialog.findViewById(R.id.dialogAppSettingsSettings);
+        ConstraintLayout feature = dialog.findViewById(R.id.dialogAppSettingsFeature);
+        ConstraintLayout bug = dialog.findViewById(R.id.dialogAppSettingsBug);
+
+        settings.setOnClickListener(v -> {
+            startActivity(new Intent(Main.this, Settings.class));
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            dialog.dismiss();
+        });
+        feature.setOnClickListener(v -> {
+            dialog.dismiss();
+            dialogFeature();
+        });
+        bug.setOnClickListener(v -> {
+            dialog.dismiss();
+            dialogBug();
+        });
+
+        exit.setOnClickListener(v -> dialog.dismiss());
+        dialog.show();
+    }
+
     private void initializeBottomSearch() {
         searchRecycler = bottomSheetConstraint.findViewById(R.id.searchRecycler);
         searchedUserNotFound = bottomSheetConstraint.findViewById(R.id.searchUsersNotFound);
@@ -370,12 +409,12 @@ public class Main extends AppCompatActivity {
                 pos -> FriendController.sendFriendRequest(user.getId(), adapterSearch.getSearchedUserID(pos), getApplicationContext(), new IVolley() {
                     @Override
                     public void onSuccess(String message) {
-                        EventNotifier.customEvent(toolbar, R.drawable.ic_check_24, message);
+                        Toast.makeText(Main.this, message, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onError(String message) {
-                        EventNotifier.errorEvent(toolbar, message);
+                        Toast.makeText(Main.this, message, Toast.LENGTH_SHORT).show();
                     }
                 }));
 
@@ -398,85 +437,34 @@ public class Main extends AppCompatActivity {
             }
 
             private void fetchRows() {
-                adapterSearch.setOffset(adapterSearch.getOffset() + 10);
-                FriendController.searchUser(user, searchView.getQuery().toString().trim(), adapterSearch.getOffset(), Main.this, new ISearch() {
-                    @Override
-                    public void onSuccess(List<SearchedUser> searchedUserList) {
-                        searchedUserNotFound.setVisibility(View.GONE);
-                        adapterSearch.addResultAndRefreshAdapter(searchedUserList);
-                    }
-
-                    @Override
-                    public void onError(String message) {
-
-                    }
-                });
-            }
-        });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
-        getMenuInflater().inflate(R.menu.main_toolbar_chat, menu);
-
-        MenuItem menuItem = menu.findItem(R.id.mainToolbarItemSearch);
-        searchView = (SearchView) menuItem.getActionView();
-
-        searchView.setQueryHint(getString(R.string.searchUserQuery));
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                adapterSearch.setOffset(0);
-                if (!query.isEmpty()) {
-                    FriendController.searchUser(user, query.trim(), adapterSearch.getOffset(), Main.this, new ISearch() {
+                if (!navBarSearch.getText().toString().trim().isEmpty()){
+                    adapterSearch.setOffset(adapterSearch.getOffset() + 10);
+                    FriendController.searchUser(user, navBarSearch.getText().toString(), adapterSearch.getOffset(), Main.this, new ISearch() {
                         @Override
                         public void onSuccess(List<SearchedUser> searchedUserList) {
                             searchedUserNotFound.setVisibility(View.GONE);
-                            adapterSearch.refillList(searchedUserList);
+                            adapterSearch.addResultAndRefreshAdapter(searchedUserList);
                         }
 
                         @Override
                         public void onError(String message) {
-                            adapterSearch.clearListAndRefreshAdapter();
-                            searchedUserNotFound.setVisibility(View.VISIBLE);
-                            Toast.makeText(Main.this, message, Toast.LENGTH_LONG).show();
+
                         }
                     });
                 }
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
             }
         });
-
-        menuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                adapterSearch.clearListAndRefreshAdapter();
-                searchedUserNotFound.setVisibility(View.VISIBLE);
-                sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                return true;
-            }
-        });
-
-        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
+        if (navBarSearch.hasFocus()){
+            navBarSearch.setText("");
+            adapterSearch.clearListAndRefreshAdapter();
+            searchedUserNotFound.setVisibility(View.VISIBLE);
+            sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            navBarSearch.clearFocus();
+        }else{
             super.onBackPressed();
         }
     }

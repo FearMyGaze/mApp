@@ -11,6 +11,7 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status & navigation bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimary</item>
+<!--        <item name="android:windowLightStatusBar">true</item>-->
         <item name="android:navigationBarColor">?attr/colorPrimary</item>
         <!-- Customize your theme here. -->
         <item name="checkboxStyle">@style/Widget.App.CheckBox</item>

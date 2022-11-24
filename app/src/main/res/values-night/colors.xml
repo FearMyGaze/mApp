@@ -6,5 +6,6 @@
     <color name="adapter_background_stroke">#1F1F1F</color>
 
     <color name="divider">@color/white</color>
+    <color name="navbar_background">#392B22</color>
 
 </resources>

@@ -60,6 +60,8 @@ public class AdapterSearch extends RecyclerView.Adapter<AdapterSearch.MyViewHold
 
         if (friend) {
             holder.button.setVisibility(View.INVISIBLE);
+        }else{
+            holder.button.setVisibility(View.VISIBLE);
         }
     }
 

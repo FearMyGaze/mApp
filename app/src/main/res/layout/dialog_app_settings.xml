@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginStart="15dp"
+    android:layout_marginEnd="15dp"
+    android:background="@drawable/rounded_resource"
+    android:padding="10dp">
+
+    <!-- TODO: Make the button Rounded -->
+    <ImageButton
+        android:id="@+id/dialogAppSettingsExit"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/dialogProfileClose"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_close_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TouchTargetSizeCheck" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:textAlignment="center"
+        app:layout_constraintTop_toTopOf="@id/dialogAppSettingsExit"
+        app:layout_constraintBottom_toBottomOf="@id/dialogAppSettingsExit"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/dialogAppSettingsSettings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/dialogAppSettingsExit">
+
+        <ImageButton
+            android:id="@+id/dialogAppSettingsSettingsImage"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_settings_24"
+            android:background="@android:color/transparent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:contentDescription="@string/dialogAppSettingsSettings" />
+
+        <TextView
+            android:id="@+id/dialogAppSettingsSettingsText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/dialogAppSettingsSettings"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:layout_marginStart="15dp"
+            app:layout_constraintStart_toEndOf="@id/dialogAppSettingsSettingsImage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/dialogAppSettingsSettingsImage"
+            app:layout_constraintBottom_toBottomOf="@id/dialogAppSettingsSettingsImage"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/dialogAppSettingsFeature"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        app:layout_constraintTop_toBottomOf="@id/dialogAppSettingsSettings">
+
+        <ImageButton
+            android:id="@+id/dialogAppSettingsFeatureImage"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_settings_24"
+            android:background="@android:color/transparent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:contentDescription="@string/dialogAppSettingsFeature" />
+
+        <TextView
+            android:id="@+id/dialogAppSettingsFeatureText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/dialogAppSettingsFeature"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:layout_marginStart="15dp"
+            app:layout_constraintStart_toEndOf="@id/dialogAppSettingsFeatureImage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/dialogAppSettingsFeatureImage"
+            app:layout_constraintBottom_toBottomOf="@id/dialogAppSettingsFeatureImage"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/dialogAppSettingsBug"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        app:layout_constraintTop_toBottomOf="@id/dialogAppSettingsFeature">
+
+        <ImageButton
+            android:id="@+id/dialogAppSettingsBugImage"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_settings_24"
+            android:background="@android:color/transparent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:contentDescription="@string/dialogAppSettingsBug" />
+
+        <TextView
+            android:id="@+id/dialogAppSettingsBugText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/dialogAppSettingsBug"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:layout_marginStart="15dp"
+            app:layout_constraintStart_toEndOf="@id/dialogAppSettingsBugImage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/dialogAppSettingsBugImage"
+            app:layout_constraintBottom_toBottomOf="@id/dialogAppSettingsBugImage"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

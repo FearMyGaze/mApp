@@ -1,44 +1,15 @@
 <resources> <!-- TODO: Update string resources to remove redundant eg cancel confirm and more--> <!-- TODO: Remove Redundant resources -->
     <!-- App name -->
-    <string name="app_name">Mercury</string>
+    <string name="app_name" translatable="false">Mercury</string>
 
-    <!-- Activities / fragments name -->
-    <string name="activityProfile">Profile</string>
-    <string name="activityNotifications">Notifications</string>
-    <string name="activitySettings">Settings</string>
-    <string name="fragmentSignIn">Sign In</string>
-    <string name="fragmentSignUp">Sign Up</string>
-    <string name="fragmentFriends">Friends</string>
-    <string name="fragmentChat">Chat</string>
-    <string name="fragmentSearch">Search</string>
-
-    <!-- Main Activity -->
-    <string name="mainSearchQuery">Search…</string>
-
-    <!-- Main Toolbar (Menu) -->
-    <string name="mainToolbarItemSearch">Search</string>
-    <string name="mainToolbarItemNotifications">Notifications</string>
+    <!-- Main SearchView -->
+    <string name="mainSearchBarSettingsButton">Άνοιγμα Βασικών Ρυθμίσεων</string>
+    <string name="mainSearchViewHint">Search user</string>
+    <string name="mainSearchBarProfileButton">Άνοιγμα Ρυθμίσεων Προφίλ</string>
 
     <!-- Main BottomNavigationView (Menu) -->
     <string name="mainBottomNavigationViewChoice1">Chats</string>
-    <string name="mainBottomNavigationViewChoice2">Notifications</string>
     <string name="mainBottomNavigationViewChoice3">Friends</string>
-
-    <!-- Main Navigation Drawer (Header) -->
-    <string name="navigationHeaderMoreAccounts">More accounts</string>
-
-    <!-- Main Navigation Drawer (Menu) -->
-    <string name="navigationDrawerMenuItemProfile">Profile</string>
-    <string name="navigationDrawerMenuItemSettings">Settings</string>
-    <string name="navigationDrawerMenuItemBug">Bug</string>
-    <string name="navigationDrawerMenuItemFeature">Feature Request</string>
-    <string name="navigationDrawerMenuItemSignOut">Sign Out</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-
-    <!-- Main Navigation Drawer (Footer) -->
-    <string name="navigationFooterTerms">Terms</string>
-    <string name="navigationFooterChangelog">Changelog</string>
 
     <!-- Sign In fragment -->
     <string name="signInWelcome">Welcome back</string>
@@ -136,10 +107,23 @@
     <string name="dialogFeatureConfirm">Confirm</string>
     <string name="dialogFeatureCancel">Cancel</string>
 
-    <!-- More Accounts Dialog -->
-    <string name="dialogMoreAccountsAcc">Accounts</string>
-    <string name="dialogMoreAccountsCreateNew">Create New Account</string>
-    <string name="dialogMoreAccountsAddExisting">Add Existing Account</string>
+    <!-- Dialog AppSettings -->
+    <string name="dialogAppSettingsSettings">Settings</string>
+    <string name="dialogAppSettingsFeature">Feature Request</string>
+    <string name="dialogAppSettingsBug">Found a bug</string>
+
+    <!-- Dialog Profile -->
+    <string name="dialogProfileClose">Close</string>
+    <string name="dialogProfileImage">User Image</string>
+    <string name="dialogProfileMoreOptions">More Options</string>
+    <string name="dialogProfileManageAccount">View Profile</string>
+    <string name="dialogProfileManageAccountSwitchAccount">Switch Account</string>
+    <string name="dialogProfileManageAccountRemoveAccount">Remove Account</string>
+    <string name="dialogProfileManageAccountAddAccount">Add Account</string>
+    <string name="dialogProfileSignOut">Sign Out</string>
+    <string name="dialogProfileTos">Terms of Service</string>
+    <string name="dialogProfileChangelog">Changelog</string>
+
 
     <!-- More Accounts Adapter -->
     <string name="adapterMoreAccountsCurrentAcc">Current Account</string>
@@ -155,11 +139,11 @@
     <string name="textHandlerSameCells">Cells can\'t have the same value!</string>
 
     <!-- sample Data -->
-    <string name="sampleName" translatable="false">Lorem ipsum</string>
     <string name="sampleUsername" translatable="false">Username</string>
     <string name="sampleLastMessage" translatable="false">You: is message true;</string>
     <string name="sampleTime" translatable="false">22:03</string>
     <string name="sampleEmail" translatable="false">test@test.com</string>
+    <string name="sampleVersion" translatable="false">1.0</string>
 
     <!-- Controller Error -->
     <string name="volleyError">Error: while communicating with the server</string>
