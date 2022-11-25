@@ -313,7 +313,7 @@ public class Main extends AppCompatActivity {
         ShapeableImageView userImage = dialog.findViewById(R.id.dialogProfileUserImage);
         TextView username = dialog.findViewById(R.id.dialogProfileUsername);
         TextView email = dialog.findViewById(R.id.dialogProfileUserEmail);
-        ImageButton moreOptions = dialog.findViewById(R.id.dialogProfileMoreOptions);
+        ConstraintLayout moreOptions = dialog.findViewById(R.id.dialogProfileCurrentProfile);
         MaterialButton manageAccount = dialog.findViewById(R.id.dialogProfileManageAccount);
         Group manageAccGroup = dialog.findViewById(R.id.dialogProfileManageAccountGroup);
         ConstraintLayout switchAccount = dialog. findViewById(R.id.dialogProfileManageAccountSwitchAccount);

@@ -39,54 +39,63 @@
         app:layout_constraintTop_toTopOf="@id/dialogProfileExit"
         app:layout_constraintBottom_toBottomOf="@id/dialogProfileExit"/>
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/dialogProfileUserImage"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="10dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_launcher_background"
-        android:contentDescription="@string/dialogProfileImage"
-        app:shapeAppearance="@style/ShapeAppearance.App.CircleImageView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dialogProfileExit"/>
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/dialogProfileUsername"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/dialogProfileCurrentProfile"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:text="@string/sampleUsername"
-        android:textIsSelectable="true"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/dialogProfileUserEmail"
-        app:layout_constraintStart_toEndOf="@id/dialogProfileUserImage"
-        app:layout_constraintTop_toTopOf="@id/dialogProfileUserImage"
-        tools:ignore="TouchTargetSizeCheck" />
+        android:padding="5dp"
+        android:background="?attr/selectableItemBackground"
+        app:layout_constraintTop_toBottomOf="@id/dialogProfileExit">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/dialogProfileUserEmail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:text="@string/sampleEmail"
-        android:textStyle="bold|italic"
-        app:layout_constraintStart_toEndOf="@id/dialogProfileUserImage"
-        app:layout_constraintTop_toBottomOf="@id/dialogProfileUsername"
-        app:layout_constraintBottom_toBottomOf="@id/dialogProfileUserImage"/>
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/dialogProfileUserImage"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_launcher_background"
+            android:contentDescription="@string/dialogProfileImage"
+            app:shapeAppearance="@style/ShapeAppearance.App.CircleImageView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-    <ImageButton
-        android:id="@+id/dialogProfileMoreOptions"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="@android:color/transparent"
-        android:contentDescription="@string/dialogProfileMoreOptions"
-        android:foreground="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/ic_menu_24"
-        app:layout_constraintBottom_toBottomOf="@id/dialogProfileUserEmail"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/dialogProfileUsername"
-        tools:ignore="TouchTargetSizeCheck" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/dialogProfileUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@string/sampleUsername"
+            android:textIsSelectable="true"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/dialogProfileUserEmail"
+            app:layout_constraintStart_toEndOf="@id/dialogProfileUserImage"
+            app:layout_constraintTop_toTopOf="@id/dialogProfileUserImage"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/dialogProfileUserEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@string/sampleEmail"
+            android:textStyle="bold|italic"
+            app:layout_constraintStart_toEndOf="@id/dialogProfileUserImage"
+            app:layout_constraintTop_toBottomOf="@id/dialogProfileUsername"
+            app:layout_constraintBottom_toBottomOf="@id/dialogProfileUserImage"/>
+
+        <ImageButton
+            android:id="@+id/dialogProfileMoreOptions"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/dialogProfileMoreOptions"
+            android:src="@drawable/ic_menu_24"
+            android:clickable="false"
+            app:layout_constraintBottom_toBottomOf="@id/dialogProfileUserEmail"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/dialogProfileUsername"
+            tools:ignore="TouchTargetSizeCheck" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/dialogProfileManageAccount"
@@ -99,7 +108,7 @@
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dialogProfileMoreOptions"/>
+        app:layout_constraintTop_toBottomOf="@id/dialogProfileCurrentProfile"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/dialogProfileManageAccountManager"
