@@ -20,4 +20,19 @@
     <color name="divider">@color/black</color>
     <color name="navbar_background">#F2E7E1</color>
 
+    <color name="basicBackground">#ffffff</color>
+    <color name="alternateBackground">#313537</color> <!-- TODO: This will be the same in light and dark -->
+
+    <color name="variant">#ff7a00</color>
+    <color name="alternateVariant">#65421f</color>
+
+
+    <color name="textRegular">#8b98a5</color>
+    <color name="textBold">#000000</color> <!-- TODO: Possibly remove this if we dont need it -->
+
+    <!-- TODO: This exists only if i want to implement a different textColor based on the alternate color pallet -->
+    <color name="alternateTextBold">#e6be97</color>
+    <color name="alternateTextRegular">#bfba8e</color>
+
+
 </resources>

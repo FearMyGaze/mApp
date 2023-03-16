@@ -1,54 +1,79 @@
 package com.github.fearmygaze.mercury.model;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import com.google.firebase.database.Exclude;
+import com.google.firebase.database.IgnoreExtraProperties;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+@IgnoreExtraProperties
 @Entity(tableName = "users")
 public class User {
+
     @PrimaryKey
-    @ColumnInfo(name = "id")
-    private final int id;
-
-    @ColumnInfo(name = "username")
-    private final String username;
-
-    @ColumnInfo(name = "imageUrl")
-    private final String imageUrl;
+    @NonNull
+    @ColumnInfo(name = "userUID")
+    public String userUID;
 
     @ColumnInfo(name = "email")
-    private final String email;
+    public String email;
 
-    public User(int id, String username, String imageUrl, String email) {
-        this.id = id;
-        this.username = username;
-        this.imageUrl = imageUrl;
-        this.email = email;
+    @ColumnInfo(name = "username")
+    public String username;
+
+    @ColumnInfo(name = "name")
+    public String name;
+
+    @ColumnInfo(name = "imageURL")
+    public String imageURL;
+
+    @ColumnInfo(name = "token")
+    public String currentNotificationDeviceTokenID;
+
+    @ColumnInfo(name = "status")
+    public String status;
+
+    public User() {
     }
 
-    public int getId() {
-        return id;
+    @Ignore
+    public User(String username, String name, String imageURL) {//Search Model
+        this.name = name.trim();
+        this.username = '@' + username.trim();
+        this.imageURL = imageURL;
     }
 
-    public String getUsername() {
-        return username;
+    @Ignore
+    public User(String userUID, String email, String username, String name, String imageURL, String currentNotificationDeviceTokenID) {//Register Model
+        this.userUID = userUID.trim();
+        this.email = email.trim();
+        this.username = username.trim();
+        this.name = name.trim();
+        this.imageURL = imageURL;
+        this.currentNotificationDeviceTokenID = currentNotificationDeviceTokenID.trim();
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    @Exclude
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("userUID", this.userUID);
+        map.put("email", this.email);
+        map.put("username", this.username);
+        map.put("name", this.name);
+        map.put("imageURL", this.imageURL);
+        map.put("currentNotificationDeviceTokenID", this.currentNotificationDeviceTokenID);
+        return map;
     }
 
-    public String getEmail() {
-        return email;
+    public Map<String, Object> sendStatus() {
+        return Collections.singletonMap("status", this.status);
     }
 
-    @Override
-    public String toString() {
-        return "User1{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", imageUrl='" + imageUrl + '\'' +
-                ", email='" + email + '\'' +
-                '}';
-    }
 }
