@@ -18,20 +18,11 @@ public interface UserDao {
     @Query("SELECT * FROM users")
     List<User> getAllUsers();
 
-    @Query("SELECT * FROM users WHERE id = :id")
-    User getUserByID(int id);
+    @Query("SELECT * FROM users WHERE userUID = :str")
+    User getUserByUserUID(String str);
 
-    @Query("SELECT * FROM users WHERE email = :email")
-    User getUserByEmail(String email);
-
-    @Query("SELECT imageUrl FROM users WHERE id = :id")
-    String getImageUrl(int id);
-
-    @Query("UPDATE users SET imageUrl= :url WHERE id = :id")
-    void updateImageByID(String url, int id);
-
-    @Query("DELETE FROM users WHERE id= :id")
-    void deleteUserByID(int id);
+    @Query("SELECT * FROM users WHERE name = :str")
+    User getUserByDisplayName(String str);
 
     @Insert(onConflict = REPLACE)
     void insertUser(User user);
@@ -42,4 +33,6 @@ public interface UserDao {
     @Delete
     void deleteUser(User user);
 
+    @Query("DELETE FROM users")
+    void deleteAllUsers();
 }

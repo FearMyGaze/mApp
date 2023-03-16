@@ -1,144 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources> <!-- TODO: Remove Redundant resources -->
+<resources> <!-- TODO: Remove Redundant resources and make the new translations -->
 
-    <!-- Main SearchView -->
-    <string name="mainSearchBarSettingsButton">Open Settings</string>
-    <string name="mainSearchViewHint">Search user</string>
-    <string name="mainSearchBarProfileButton">Open Profile Settings</string>
+    <!-- General Purpose -->
+    <string name="generalChoose">Επιλογή</string>
+    <string name="generalOK">ΟΚ</string>
+    <string name="generalCancel">Ακύρωση</string>
 
-    <!-- Main BottomNavigationView (Menu) -->
-    <string name="mainBottomNavigationViewChoice1">Μηνύματα</string>
-    <string name="mainBottomNavigationViewChoice3">Φίλοι</string>
+    <!-- SignIn (Activity) -->
+    <string name="signInWelcome">Καλώς Ήρθατε</string>
+    <string name="signInToContinue">Για να συνεχίσετε συνδεθείτε ή δημηουργήστε λογαριασμό</string>
+    <string name="signInCredential">Όνομα χρήστη ή Ηλ. Διεύθυνση</string>
+    <string name="signInPassword">Κώδ. χρήστη</string>
+    <string name="signInSignIn">Σύνδέση</string>
+    <string name="signInSignUp">Δημιουργία</string>
 
-    <!-- Sign In fragment -->
-    <string name="signInWelcome">Καλώς ήρθες πίσω</string>
-    <string name="signInToContinue">Sign In to continue</string>
-    <string name="signInWithCredentials">Email ή όνομα χρήστη</string>
-    <string name="signInPassword">Κωδικός</string>
-    <string name="signInButton">Σύνδεση</string>
-    <string name="signInCreateNewAccount">Δημιουργία λογαριασμού!</string>
+    <!-- SignUp (Activity) -->
+    <string name="signUpGoBack">Πηγαίντε πίσω</string>
+    <string name="signUpCreateAcc">Δημιουργία Λογαριασμού</string>
+    <string name="signUpEmail">Ηλ. Διεύθυνση</string>
+    <string name="signUpUsername">Όνομα χρήστη</string>
+    <string name="signUpDisplayName">Όνομα</string>
+    <string name="signUpPassword">Κώδ. χρήστη</string>
+    <string name="signUpTerms">Πατώντας Δημιουργία Λογαριασμού συμφωνείς με τους Όρους και Προϋποθέσεις</string>
 
-    <!-- Sign Up fragment -->
-    <string name="signUpCreateNewAccount">Δημιουργία λογαριασμού</string>
-    <string name="signUpAddImage">Προσθ. εικόνας</string>
-    <string name="signUpUserName">Όνομα χρήστη</string>
-    <string name="signUpEmailAddress">Email</string>
-    <string name="signUpPassword">Κωδικός</string>
-    <string name="signUpConfirmPassword">Επιβεβαίωση κωδικόυ</string>
-    <string name="signUpTerms">Όροι χρήσης</string>
-    <string name="signUpAgreeToAdultAge">Είμαι 18+ ετών</string>
-    <string name="signUpButton">Εγραφή</string>
-    <string name="signUpHaveAccount">Σύνδεση</string>
-    <string name="signUpEmailVerification">Απεστάλη email επιβεβαίωσης λογαριασμού στο: </string>
+    <!-- Main (Activity) -->
+    <string name="mainExtendedFab">Ενέργειες</string>
+    <string name="mainPersonalFab">Προσωπική</string>
+    <string name="mainGroupFab">Ομαδική</string>
+    <string name="mainSearchFab">Αναζήτηση</string>
 
-    <!-- Search sheet -->
-    <string name="searchUserQuery">Αναζήτηση χρήστη</string>
-    <string name="searchUsersNotFound">Δεν βρέθηκαν χρήστες με τα στοιχεία που δώσατε…!</string>
-
-    <!-- Search Adapter -->
-    <string name="searchAddFriend">Προσθήκη φίλου</string>
-
-    <!-- Chat Adapter -->
-    <string name="adapterConversationDiv">·</string>
-
-    <!-- Chat Adapter Dialog -->
-    <string name="dialogConversationDelete">Διαγραφή συνομιλίας</string>
-    <string name="dialogConversationRemove">Διαγραφή φίλου</string>
-    <string name="dialogConversationReport">Αναφορά χρήστη</string>
-
-    <!-- Chat Adapter SwipeAction -->
-    <string name="swipeActionOption1">Διαγραφή συνομιλίας</string>
-    <string name="swipeActionOption2">Διαγραφή φίλου</string>
-    <string name="swipeActionOption3">Αναφορά χρήστη</string>
-
-    <!-- ChatRoom Activity -->
-    <string name="chatRoomBottomBarChooseImage">Επίλεξε εικόνα </string>
-    <string name="chatRoomBottomBarRecordSound">Ηχογράφηση</string>
-    <string name="chatRoomBottomBarHint">Μύνημα……</string>
-    <string name="chatRoomBottomBarSendMessage">Αποστολή μυνήματος</string>
-
-    <!-- ChatRoom Toolbar (Menu) -->
-    <string name="chatRoomToolbarItemInfo">Πληροφορίες</string>
-
-    <!-- Tabs -->
-    <string name="friendsTab0">Φίλοι</string>
-    <string name="friendsTab1">Αιτήματα φιλίας</string>
-
-    <!-- Friend List -->
-    <string name="friendListError">Δεν έχεις φίλους ακόμα!</string>
-
-    <!-- Friend Requests -->
-    <string name="friendsRequestsError">Δεν βρέθηκα αιτήματα φιλίας</string>
-    <string name="friendsRequestsAccept">Αποδοχή αιτήματος</string>
-    <string name="friendsRequestsDecline">Απόριψη αιτήματος</string>
-
-    <!-- Profile Activity -->
-    <string name="profileChangeImage">Αλλαγή εικόνας</string>
-    <string name="profileChangePassword">Αλλαγή κωδικού</string>
-    <string name="profileFAQ">Δεν υποστηρίζουμε την αλλαγή email και όνοματος χρήστη \nΠατήστε εδώ για να δείτε το γιατί..!!</string>
-
-    <!-- Dialog Update Password -->
-    <string name="dialogUpdatePasswordCurrentPassword">Τωρινός κωδικός πρόσβασης</string>
-    <string name="dialogUpdatePasswordNewPassword">Νέος κωδικός πρόσβασης</string>
-    <string name="dialogUpdatePassword">Κωδικός πρόσβασης</string>
-    <string name="dialogUpdatePasswordCancel">Ακύρωση</string>
-    <string name="dialogUpdatePasswordConfirm">Επιβεβαίωση</string>
-
-    <!-- Dialog Update Image -->
-    <string name="dialogUpdateImageString">Η εικόνα προφίλ μοιάζει έτσι</string>
-    <string name="dialogUpdateImageCancel">Ακύρωση</string>
-    <string name="dialogUpdateImageConfirm">Επιβεβαίωση</string>
-    <string name="dialogUpdateImageChoose">Επίλεξε</string>
-
-    <!-- Dialog Bug -->
-    <string name="dialogBugParagraph">Αν έχετε πετύχει κάποιο σφάλμα ή πρόβλημα με την εφαρμογή παρακαλώ περιγραψέτο παρακάτω.</string>
-    <string name="dialogBugHint">Περιγραφή</string>
-    <string name="dialogDeviceParagraph">Εάν θέλετε γράψτε τι συσκευή χρησιμοποιείται</string>
-    <string name="dialogDeviceHint">Μοντέλο</string>
-    <string name="dialogBugCheckBox">Συμφωνείται στην περαιτέρω επικοινωνία μέσω email για τυχών ερωτήσεις?</string>
-    <string name="dialogBugConfirm">Επιβεβαίωση</string>
-    <string name="dialogBugCancel">Ακύρωση</string>
-
-    <!-- Dialog Feature -->
-    <string name="dialogFeatureParagraph">Αν πιστέυται ότι λείπει κάτι από την εφαρμογή γράψτε το εδώ !</string>
-    <string name="dialogFeatureHint">Περιγραφή</string>
-    <string name="dialogFeatureCheckBox">Συμφωνείται στην περαιτέρω επικοινωνία μέσω email για τυχών ερωτήσεις?</string>
-    <string name="dialogFeatureConfirm">Επιβεβαίωση</string>
-    <string name="dialogFeatureCancel">Ακύρωση</string>
-
-    <!-- Dialog AppSettings -->
-    <string name="dialogAppSettingsSettings">Ρυθμίσεις</string>
-    <string name="dialogAppSettingsFeature">Αίτημα νεας δυνατότητα</string>
-    <string name="dialogAppSettingsBug">Εντοπισμός δυσλειτουργίας</string>
-
-    <!-- Dialog Profile-->
-    <string name="dialogProfileClose">Έξοδος</string>
-    <string name="dialogProfileImage">Εικόνα χρήστης</string>
-    <string name="dialogProfileMoreOptions">Περισότερες Επιλογές</string>
-    <string name="dialogProfileManageAccount">Προβολή προφίλ</string>
-    <string name="dialogProfileManageAccountSwitchAccount">Αλλαγή λογαριασμού</string>
-    <string name="dialogProfileManageAccountRemoveAccount">Αφαίρεση λογαριασμού</string>
-    <string name="dialogProfileManageAccountAddAccount">Προσθήκη λογαριασμού</string>
-    <string name="dialogProfileSignOut">Αποσύνδεση</string>
-    <string name="dialogProfileTos">Όροι χρήσης</string>
-    <string name="dialogProfileChangelog">Ιστορικό Αλλαγών</string>
-
-    <!-- More Accounts Adapter TODO: Maybe Remove-->
-    <string name="adapterMoreAccountsCurrentAcc">Τωρινός Λογαριασμός</string>
+    <!-- Auth -->
+    <string name="authEmail">Η Ηλ. διέυθυνση υπάρχη ήδη!</string>
+    <string name="authUsername">Το όνομα χρήστη υπάρχει ήδη!</string>
 
     <!-- RegEx -->
-    <string name="regExPasswordError">* Μεγαλύτερο 8 χαρακτήρες \n* 1 μικρό χαρακτήρα \n* 1 κεφαλαίο χαρακτήρα \n* 1 αριθμό \n* 1 ειδικό χαρακτήρα</string>
-    <string name="regExUsernameError">Το όνομα χρήστη δεν πρέπει να περιέχει ειδικούς χαρακτήρες ή κενό</string>
-
-    <!-- TextHandler-->
-    <string name="textHandlerEmpty">Παρακαλώ γεμίστε το κελί</string>
-    <string name="textHandlerNotEqual">Τα κελία δεν ταιρίαζουν</string>
-    <string name="textHandlerTooManyCharacters">Ξεπεράσατε το όριο χαρακτήρων!</string>
-    <string name="textHandlerSameCells">Δεν μπορούν και τα δύο κελία να έχουν την ίδια τιμή!</string>
-
-    <!-- Controller Error -->
-    <string name="volleyError">Σφάλμα: κατα την επικοινωνία με τον server</string>
-    <string name="jsonError">Σφάλμα: κατα την αναλυση δεδομένων</string>
-    <string name="networkError">Σφάλμα: το δίκτυο είναι απενεργοποιημένο</string>
+    <string name="regExEmpty">Δεν μπορεί να είναι κενό</string>
+    <string name="regExSmaller">Δεν μπορεί να είναι μεγαλύτερο από </string>
+    <string name="regExBigger">Δεν μπορεί να είναι μικρότερο από </string>
+    <string name="regExEmail">Δεν μοίαζει με σωστή διέυθυνση</string>
+    <string name="regExUsername">Επιτρέπουμε μόνο Ελληνικούς και αγγλικούς χαρακτήρες ή αριθμούς.</string>
+    <string name="regExName">Επιτρέπουμε μόνο Ελληνικούς και αγγλικούς χαρακτήρες, 1 τελία και 1 κενό ανάμεσα.</string>
+    <string name="regExPassword">Το ελάχιστο είναι: 1 Ειδικός χαρακτήρας, 1 νούμερο και 6 χαρακτήρες.</string>
 
 </resources>

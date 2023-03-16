@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.Mercury" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
@@ -10,26 +10,22 @@
         <item name="colorSecondaryVariant">@color/teal_200</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status & navigation bar color. -->
-        <item name="android:statusBarColor">?attr/colorOnPrimary</item>
-<!--        <item name="android:windowLightStatusBar">false</item>-->
-        <item name="android:navigationBarColor">?attr/colorOnPrimary</item>
+        <item name="android:statusBarColor" tools:targetApi="27">@color/basicBackground</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="27">false</item>
+        <item name="android:navigationBarColor" tools:targetApi="27">@color/basicBackground</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
         <!-- Customize your theme here. -->
-        <item name="checkboxStyle">@style/Widget.App.CheckBox</item>
         <item name="bottomSheetDialogTheme">@style/CustomBottomSheetDialog</item>
     </style>
 
-    <style name="ShapeAppearance.App.CircleImageView" parent="">
+    <style name="RectComponent" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">25%</item>
+    </style>
+
+    <style name="RoundedComponent">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
-    </style>
-
-    <style name="Widget.App.CheckBox" parent="Widget.MaterialComponents.CompoundButton.CheckBox">
-        <item name="materialThemeOverlay">@style/ThemeOverlay.App.CheckBox</item>
-    </style>
-
-    <style name="ThemeOverlay.App.CheckBox" parent="">
-        <item name="colorOnSurface">@color/white</item>
-        <item name="colorSecondary">?attr/colorPrimary</item>
     </style>
 
     <style name="CustomBottomSheetDialog" parent="@style/ThemeOverlay.MaterialComponents.BottomSheetDialog">

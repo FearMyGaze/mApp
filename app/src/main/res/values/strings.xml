@@ -1,142 +1,56 @@
-<resources> <!-- TODO: Update string resources to remove redundant eg cancel confirm and more--> <!-- TODO: Remove Redundant resources -->
+<resources>
     <!-- App name -->
     <string name="app_name" translatable="false">Mercury</string>
 
-    <!-- Main SearchView -->
-    <string name="mainSearchBarSettingsButton">Άνοιγμα Βασικών Ρυθμίσεων</string>
-    <string name="mainSearchViewHint">Search user</string>
-    <string name="mainSearchBarProfileButton">Άνοιγμα Ρυθμίσεων Προφίλ</string>
+    <!-- General Purpose -->
+    <string name="generalChoose">Choose</string>
+    <string name="generalOK">OK</string>
+    <string name="generalCancel">Cancel</string>
 
-    <!-- Main BottomNavigationView (Menu) -->
-    <string name="mainBottomNavigationViewChoice1">Chats</string>
-    <string name="mainBottomNavigationViewChoice3">Friends</string>
-
-    <!-- Sign In fragment -->
-    <string name="signInWelcome">Welcome back</string>
-    <string name="signInToContinue">Sign In to continue</string>
-    <string name="signInWithCredentials">Email or username</string>
+    <!-- SignIn (Activity) -->
+    <string name="signInWelcome">Welcome</string>
+    <string name="signInToContinue">To Continue Sign In or Create an account</string>
+    <string name="signInCredential">Username Or Email</string>
     <string name="signInPassword">Password</string>
-    <string name="signInButton">Sign In</string>
-    <string name="signInCreateNewAccount">Create New Account!</string>
+    <string name="signInSignIn">Sign In</string>
+    <string name="signInSignUp">Sign Up</string>
 
-    <!-- Sign Up fragment -->
-    <string name="signUpCreateNewAccount">Create New Account</string>
-    <string name="signUpAddImage">Add image</string>
-    <string name="signUpUserName">Username</string>
-    <string name="signUpEmailAddress">Email</string>
+    <!-- SignUp (Activity) -->
+    <string name="signUpGoBack">Go Back</string>
+    <string name="signUpCreateAcc">Create Account</string>
+    <string name="signUpEmail">Email</string>
+    <string name="signUpUsername">Username</string>
+    <string name="signUpDisplayName">Name</string>
     <string name="signUpPassword">Password</string>
-    <string name="signUpConfirmPassword">Confirm Password</string>
-    <string name="signUpTerms">Terms</string>
-    <string name="signUpAgreeToAdultAge">I am 18+ years old</string>
-    <string name="signUpButton">Sign Up</string>
-    <string name="signUpHaveAccount">Sign In</string>
-    <string name="signUpEmailVerification">Email verification send at: </string>
+    <string name="signUpTerms">By tapping Create Account you Agree to Terms and Conditions</string>
 
-    <!-- Search sheet -->
-    <string name="searchUserQuery">Search user</string>
-    <string name="searchUsersNotFound">No users with the criteria you gave found…!</string>
+    <!-- HelperText -->
+    <string name="helperEmail" translatable="false">email@address.com</string>
+    <string name="helperUserName" translatable="false">username</string>
+    <string name="helperName" translatable="false">sample Name</string>
 
-    <!-- Search Adapter -->
-    <string name="searchAddFriend">Add Friend</string>
-
-    <!-- Chat Adapter -->
-    <string name="adapterConversationDiv">·</string>
-
-    <!-- Chat Adapter Dialog -->
-    <string name="dialogConversationDelete">Delete Conversation</string>
-    <string name="dialogConversationRemove">Remove Friend</string>
-    <string name="dialogConversationReport">Report user</string>
-
-    <!-- Chat Adapter SwipeAction -->
-    <string name="swipeActionOption1">Delete Conversation</string>
-    <string name="swipeActionOption2">Remove Friend</string>
-    <string name="swipeActionOption3">Report User</string>
-
-    <!-- ChatRoom Activity -->
-    <string name="chatRoomBottomBarChooseImage">Choose Image</string>
-    <string name="chatRoomBottomBarRecordSound">Record Sound</string>
-    <string name="chatRoomBottomBarHint">Message……</string>
-    <string name="chatRoomBottomBarSendMessage">Send Message</string>
-
-    <!-- ChatRoom Toolbar (Menu) -->
-    <string name="chatRoomToolbarItemInfo">info</string>
-
-    <!-- Tabs -->
-    <string name="friendsTab0">Friends</string>
-    <string name="friendsTab1">Friend Requests</string>
-
-    <!-- Friend List -->
-    <string name="friendListError">You don\'t have friends yet!</string>
-
-    <!-- Friend Requests -->
-    <string name="friendsRequestsError">No Friend requests found</string>
-    <string name="friendsRequestsAccept">Accept Request</string>
-    <string name="friendsRequestsDecline">Decline Request</string>
-
-    <!-- Profile Activity -->
-    <string name="profileChangeImage">Change Picture</string>
-    <string name="profileChangePassword">Change Password</string>
-    <string name="profileFAQ">We don\'t support changing username or email \nPress here to see why..! </string>
-
-    <!-- Dialog Update Password -->
-    <string name="dialogUpdatePasswordCurrentPassword">Current Password</string>
-    <string name="dialogUpdatePasswordNewPassword">New Password</string>
-    <string name="dialogUpdatePassword">Password</string>
-    <string name="dialogUpdatePasswordCancel">Cancel</string>
-    <string name="dialogUpdatePasswordConfirm">Confirm</string>
-
-    <!-- Dialog Update Image -->
-    <string name="dialogUpdateImageString">Your profile image looks like this</string>
-    <string name="dialogUpdateImageCancel">Cancel</string>
-    <string name="dialogUpdateImageConfirm">Confirm</string>
-    <string name="dialogUpdateImageChoose">Choose</string>
-
-    <!-- Dialog Bug -->
-    <string name="dialogBugParagraph">If you found a bug or a problem with the app please write it bellow.</string>
-    <string name="dialogBugHint">Description</string>
-    <string name="dialogDeviceParagraph">If you want please tell us what device you are using.</string>
-    <string name="dialogDeviceHint">Device model</string>
-    <string name="dialogBugCheckBox">Do you want to send you an email for further questions?</string>
-    <string name="dialogBugConfirm">Confirm</string>
-    <string name="dialogBugCancel">Cancel</string>
-
-    <!-- Dialog Feature -->
-    <string name="dialogFeatureParagraph">If you found a feature you want to be added say it here !</string>
-    <string name="dialogFeatureHint">Description</string>
-    <string name="dialogFeatureCheckBox">Do you want us to send you an email for further questions?</string>
-    <string name="dialogFeatureConfirm">Confirm</string>
-    <string name="dialogFeatureCancel">Cancel</string>
-
-    <!-- Dialog AppSettings -->
-    <string name="dialogAppSettingsSettings">Settings</string>
-    <string name="dialogAppSettingsFeature">Feature Request</string>
-    <string name="dialogAppSettingsBug">Found a bug</string>
-
-    <!-- Dialog Profile -->
-    <string name="dialogProfileClose">Close</string>
-    <string name="dialogProfileImage">User Image</string>
-    <string name="dialogProfileMoreOptions">More Options</string>
-    <string name="dialogProfileManageAccount">View Profile</string>
-    <string name="dialogProfileManageAccountSwitchAccount">Switch Account</string>
-    <string name="dialogProfileManageAccountRemoveAccount">Remove Account</string>
-    <string name="dialogProfileManageAccountAddAccount">Add Account</string>
-    <string name="dialogProfileSignOut">Sign Out</string>
-    <string name="dialogProfileTos">Terms of Service</string>
-    <string name="dialogProfileChangelog">Changelog</string>
+    <!-- Main (Activity) -->
+    <string name="mainExtendedFab">Actions</string>
+    <string name="mainPersonalFab">Personal</string>
+    <string name="mainGroupFab">Group</string>
+    <string name="mainSearchFab">Search</string>
 
 
-    <!-- More Accounts Adapter -->
-    <string name="adapterMoreAccountsCurrentAcc">Current Account</string>
+    <!-- RegEx (Errors)-->
+    <string name="regExEmpty">Can\'t be empty</string>
+    <string name="regExSmaller">Can\'t be smaller than </string>
+    <string name="regExBigger">Can\'t be bigger than </string>
+    <string name="regExEmail">Not a valid Email</string>
+    <string name="regExUsername">We only allow English and Greek characters or numbers.</string>
+    <string name="regExName">We only allow English and Greek characters, a dot, a space in between</string>
+    <string name="regExPassword">The minimum is: 1 Special character, 1 Number and 6 characters</string>
 
-    <!-- RegEx -->
-    <string name="regExPasswordError">* Bigger than 8 characters \n* 1 Uppercase character \n* 1 number \n* 1 special character</string>
-    <string name="regExUsernameError">Username can\'t contain special characters or spaces</string>
+    <!-- Auth (Errors) -->
+    <string name="authEmail">Email Already Exists!</string>
+    <string name="authUsername">Username Already Exists!</string>
 
-    <!-- TextHandler-->
-    <string name="textHandlerEmpty">Fill the empty cell</string>
-    <string name="textHandlerNotEqual">Cells not the same</string>
-    <string name="textHandlerTooManyCharacters">You passed the amount of allowed characters!</string>
-    <string name="textHandlerSameCells">Cells can\'t have the same value!</string>
+    <!--Programming (Errors)  -->
+    <string name="blameError" translatable="false">An Error has occurred</string>
 
     <!-- sample Data -->
     <string name="sampleUsername" translatable="false">Username</string>
@@ -144,39 +58,5 @@
     <string name="sampleTime" translatable="false">22:03</string>
     <string name="sampleEmail" translatable="false">test@test.com</string>
     <string name="sampleVersion" translatable="false">1.0</string>
-
-    <!-- Controller Error -->
-    <string name="volleyError">Error: while communicating with the server</string>
-    <string name="jsonError">Error: while parsing data</string>
-    <string name="networkError">Error: network connection is offline</string>
-
-    <string-array name="user">
-        <item>register-user</item>
-        <item>login-user</item>
-        <item>update-user-password</item>
-        <item>update-user-image</item>
-        <item>user-status</item>
-        <item>disable-user</item>
-        <item>report-user</item><!-- TODO: This is going to be hard because we need to find first the HOW and then how to do it-->
-    </string-array>
-
-    <string-array name="issue">
-        <item>issue</item>
-    </string-array>
-
-    <string-array name="friends">
-        <item>search-user</item>
-        <item>send-friend-request</item>
-        <item>show-friends</item>
-        <item>show-requests</item>
-        <item>answer-friend-request</item>
-        <item>delete-friend</item>
-    </string-array>
-
-    <string-array name="chat">
-        <item>create-room</item>
-        <item>update-room</item>
-        <item>delete-room</item>
-    </string-array>
 
 </resources>

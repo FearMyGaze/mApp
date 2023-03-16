@@ -13,13 +13,7 @@
         android:fitsSystemWindows="true"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/chatRoomToolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@drawable/ic_arrow_back_24"
-            app:menu="@menu/chat_room_toolbar"
-            style="@style/Widget.MaterialComponents.Toolbar.PrimarySurface" />
+
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -45,7 +39,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/ic_image_24"
-            android:contentDescription="@string/chatRoomBottomBarChooseImage"
+            android:contentDescription="chatRoomBottomBarChooseImage"
             app:tint="@color/white"
             android:background="@android:color/transparent"
             android:foreground="?attr/selectableItemBackground"
@@ -57,7 +51,7 @@
         <EditText
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="@string/chatRoomBottomBarHint"
+            android:hint="chatRoomBottomBarHint"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:maxLines="3"
@@ -75,7 +69,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/ic_send_24"
-            android:contentDescription="@string/chatRoomBottomBarSendMessage"
+            android:contentDescription="chatRoomBottomBarSendMessage"
             app:tint="@color/white"
             android:background="@android:color/transparent"
             android:foreground="?attr/selectableItemBackground"
