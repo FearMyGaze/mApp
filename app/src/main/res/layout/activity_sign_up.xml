@@ -83,6 +83,7 @@
                     android:id="@+id/signUpEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:maxLength="345"
                     android:inputType="textEmailAddress|textAutoComplete"/>
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -114,6 +115,7 @@
                     android:id="@+id/signUpUsername"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:maxLength="50"
                     android:inputType="textPersonName|textAutoComplete"/>
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -125,7 +127,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginTop="20dp"
-                android:hint="@string/signUpDisplayName"
+                android:hint="@string/signUpName"
                 app:endIconMode="clear_text"
                 app:helperTextEnabled="true"
                 app:helperText="@string/helperName"
@@ -175,7 +177,7 @@
                     android:id="@+id/signUpPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:maxEms="255"
+                    android:maxLength="255"
                     android:inputType="textPassword"/>
 
             </com.google.android.material.textfield.TextInputLayout>

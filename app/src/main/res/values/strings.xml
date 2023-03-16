@@ -27,7 +27,7 @@
     <!-- HelperText -->
     <string name="helperEmail" translatable="false">email@address.com</string>
     <string name="helperUserName" translatable="false">username</string>
-    <string name="helperName" translatable="false">sample Name</string>
+    <string name="helperName" translatable="false">John Doe</string>
 
     <!-- Main (Activity) -->
     <string name="mainExtendedFab">Actions</string>
@@ -35,6 +35,8 @@
     <string name="mainGroupFab">Group</string>
     <string name="mainSearchFab">Search</string>
 
+    <!-- Search (Activity) -->
+    <string name="searchContainer">Search</string>
 
     <!-- RegEx (Errors)-->
     <string name="regExEmpty">Can\'t be empty</string>

@@ -81,7 +81,11 @@ public class SignIn extends AppCompatActivity {
                         new Auth.OnResultListener() {
                             @Override
                             public void onResult(boolean result) {
-                                Toast.makeText(SignIn.this, String.valueOf(result), Toast.LENGTH_SHORT).show();
+                                if (result){
+                                    startActivity(new Intent(SignIn.this, Main.class));
+                                    finish();
+                                }else
+                                    Toast.makeText(SignIn.this, "Error", Toast.LENGTH_SHORT).show();
                             }
 
                             @Override

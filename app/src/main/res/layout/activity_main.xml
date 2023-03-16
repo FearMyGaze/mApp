@@ -171,7 +171,14 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- TODO: Add here the firebaseUI recycler -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/mainRecycler"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/mainCardGuideLine"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/mainExtendedFab"
@@ -186,7 +193,7 @@
             app:layout_constraintBottom_toBottomOf="parent"/>
 
         <androidx.constraintlayout.widget.Group
-            android:id="@+id/mainFabGroup"
+            android:id="@+id/mainGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
@@ -199,7 +206,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             app:fabSize="mini"
-            android:src="@drawable/ic_person_24"
+            android:src="@drawable/ic_people_24"
             android:contentDescription="@string/mainPersonalFab"
             app:shapeAppearanceOverlay="@style/RectComponent"
             app:layout_constraintEnd_toEndOf="@id/mainExtendedFab"
@@ -222,7 +229,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             app:fabSize="mini"
-            android:src="@drawable/ic_people_24"
+            android:src="@drawable/ic_person_24"
             android:contentDescription="@string/mainGroupFab"
             app:shapeAppearanceOverlay="@style/RectComponent"
             app:layout_constraintEnd_toEndOf="@id/mainPersonalFab"
@@ -245,7 +252,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             app:fabSize="mini"
-            android:src="@drawable/ic_people_24"
+            android:src="@drawable/ic_search_24"
             android:contentDescription="@string/mainSearchFab"
             app:shapeAppearanceOverlay="@style/RectComponent"
             app:layout_constraintEnd_toEndOf="@id/mainGroupFab"

@@ -46,7 +46,7 @@ public class User {
     @Ignore
     public User(String username, String name, String imageURL) {//Search Model
         this.name = name.trim();
-        this.username = '@' + username.trim();
+        this.username = username.trim();
         this.imageURL = imageURL;
     }
 

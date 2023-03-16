@@ -29,6 +29,9 @@
     <string name="mainGroupFab">Ομαδική</string>
     <string name="mainSearchFab">Αναζήτηση</string>
 
+    <!-- Search (Activity) -->
+    <string name="searchContainer">Αναζήτηση</string>
+
     <!-- Auth -->
     <string name="authEmail">Η Ηλ. διέυθυνση υπάρχη ήδη!</string>
     <string name="authUsername">Το όνομα χρήστη υπάρχει ήδη!</string>

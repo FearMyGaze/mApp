@@ -21,6 +21,7 @@ import com.github.fearmygaze.mercury.database.AppDatabase;
 import com.github.fearmygaze.mercury.model.User;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -42,6 +43,7 @@ public class Main extends AppCompatActivity {
 
     //Actions
     ExtendedFloatingActionButton actions;
+    FloatingActionButton personalFab, groupFab, searchFab;
     Group actionGroup;
 
     //Firebase
@@ -75,7 +77,10 @@ public class Main extends AppCompatActivity {
         //Actions
         actions = findViewById(R.id.mainExtendedFab);
         actions.shrink();
-        actionGroup = findViewById(R.id.mainFabGroup);
+        personalFab = findViewById(R.id.mainPersonalFab);
+        groupFab = findViewById(R.id.mainGroupFab);
+        searchFab = findViewById(R.id.mainSearchFab);
+        actionGroup = findViewById(R.id.mainGroup);
 
         /*
          * TODO:
@@ -83,15 +88,7 @@ public class Main extends AppCompatActivity {
          *      Add the Firebase-UI scrollView
          * */
 
-        actions.setOnClickListener(v -> {
-            if (actionGroup.getVisibility() == View.VISIBLE) {
-                actionGroup.setVisibility(View.GONE);
-                actions.shrink();
-            } else {
-                actions.extend();
-                actionGroup.setVisibility(View.VISIBLE);
-            }
-        });
+        actions.setOnClickListener(v -> fabController());
 
         settingsBtn.setOnClickListener(v -> {
             startActivity(new Intent(Main.this, Settings.class));
@@ -106,7 +103,7 @@ public class Main extends AppCompatActivity {
         pendingBtn.setOnClickListener(v -> {
             List<User> users = AppDatabase.getInstance(Main.this).userDao().getAllUsers();
             for (int i = 0; i < users.size(); i++) {
-                Log.d("Logger", users.toString());
+                Log.d("customLog", users.toString());
             }
             Toast.makeText(this, "Click", Toast.LENGTH_SHORT).show();
         });
@@ -116,12 +113,36 @@ public class Main extends AppCompatActivity {
             Toast.makeText(this, "Click", Toast.LENGTH_SHORT).show();
         });
 
-        profileBtn.setOnClickListener(v -> {
-            startActivity(new Intent(Main.this, Profile.class));
-            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        profileBtn.setOnClickListener(v -> { //TODO: Delete this Activity(Profile) and make a new (MyProfile)
+            startActivity(new Intent(Main.this, MyProfile.class));
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        });
+
+        searchFab.setOnClickListener(v -> {
+            fabController();
+            startActivity(new Intent(Main.this, Search.class));
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        });
+
+        groupFab.setOnClickListener(v -> {
+
+        });
+
+        personalFab.setOnClickListener(v -> {
+
         });
 
         refreshLayout.setOnRefreshListener(() -> refreshLayout.setRefreshing(false));
+    }
+
+    private void fabController() {
+        if (actionGroup.getVisibility() == View.VISIBLE) {
+            actionGroup.setVisibility(View.GONE);
+            actions.shrink();
+        } else {
+            actions.extend();
+            actionGroup.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -132,6 +153,7 @@ public class Main extends AppCompatActivity {
             startActivity(new Intent(Main.this, SignIn.class));
             finish();
         } else {
+            Glide.with(Main.this).load(user.getPhotoUrl()).centerCrop().apply(new RequestOptions().override(1024)).into(profileImage);
             FirebaseMessaging.getInstance().getToken().addOnSuccessListener(s -> {
                 FirebaseDatabase.getInstance().getReference().child("users")
                         .orderByChild("userUID").equalTo(user.getUid()).limitToFirst(1)
@@ -158,6 +180,7 @@ public class Main extends AppCompatActivity {
                                                         }).addOnFailureListener(e -> Toast.makeText(Main.this, e.getMessage(), Toast.LENGTH_SHORT).show());
                                                     }
                                             ).addOnFailureListener(e -> {
+                                                Toast.makeText(Main.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                                                 startActivity(new Intent(Main.this, SignIn.class));
                                                 finish();
                                             });
@@ -166,11 +189,13 @@ public class Main extends AppCompatActivity {
 
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
+                                Toast.makeText(Main.this, error.getMessage(), Toast.LENGTH_SHORT).show();
                                 startActivity(new Intent(Main.this, SignIn.class));
                                 finish();
                             }
                         });
             }).addOnFailureListener(e -> {
+                Toast.makeText(Main.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(Main.this, SignIn.class));
                 finish();
             });

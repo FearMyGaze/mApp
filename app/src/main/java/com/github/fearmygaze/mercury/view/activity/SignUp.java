@@ -174,11 +174,19 @@ public class SignUp extends AppCompatActivity {
     private final ActivityResultLauncher<Intent> pickImage = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                    imageData = result.getData().getData();
-                    Glide.with(userImage).load(imageData).centerCrop().apply(new RequestOptions().override(1024)).into(userImage);
-                    userImage.setImageURI(imageData);
-                    createAccount.setEnabled(true);
+                switch (result.getResultCode()){
+                    case RESULT_OK:
+                        if (result.getData() != null){
+                            imageData = result.getData().getData();
+                            Glide.with(userImage).load(imageData).centerCrop().apply(new RequestOptions().override(1024)).into(userImage);
+                            userImage.setImageURI(imageData);
+                            createAccount.setEnabled(true);
+                        }
+                        break;
+                    case RESULT_CANCELED:
+                        break;
+                    default:
+                        Toast.makeText(SignUp.this, "ERROR", Toast.LENGTH_SHORT).show();
                 }
             }
     );
