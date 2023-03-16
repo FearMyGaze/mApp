@@ -1,6 +1,10 @@
 package com.github.fearmygaze.mercury.util;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Handler;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -23,12 +27,20 @@ public class Tools {
         new Handler().postDelayed(() -> setErrorToLayout(layout, null, false), ms);
     }
 
-    public static void closeKeyboard() {
-
+    public static void closeKeyboard(Context context) {
+        View view = ((Activity)context).getWindow().getDecorView().findViewById(android.R.id.content);
+        InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm.isAcceptingText()){
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
-    public static void openKeyboard() {
-
+    public static void openKeyboard(Context context) {
+        View view = ((Activity)context).getWindow().getDecorView().findViewById(android.R.id.content);
+        InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (!imm.isAcceptingText()){
+            imm.showSoftInput((View) view.getWindowToken(), InputMethodManager.SHOW_IMPLICIT);
+        }
     }
 
     public static String setDateFormat(long time) {// TODO: Show the correct timestamp and show to Short Version or the Long Version

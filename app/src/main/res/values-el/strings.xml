@@ -19,7 +19,7 @@
     <string name="signUpCreateAcc">Δημιουργία Λογαριασμού</string>
     <string name="signUpEmail">Ηλ. Διεύθυνση</string>
     <string name="signUpUsername">Όνομα χρήστη</string>
-    <string name="signUpDisplayName">Όνομα</string>
+    <string name="signUpName">Όνομα</string>
     <string name="signUpPassword">Κώδ. χρήστη</string>
     <string name="signUpTerms">Πατώντας Δημιουργία Λογαριασμού συμφωνείς με τους Όρους και Προϋποθέσεις</string>
 
@@ -31,6 +31,10 @@
 
     <!-- Search (Activity) -->
     <string name="searchContainer">Αναζήτηση</string>
+
+    <string name="myProfileName">Όνομα</string>
+    <string name="myProfileUsername">Όνομα χρήστη</string>
+    <string name="myProfileStatus">Κατάσταση</string>
 
     <!-- Auth -->
     <string name="authEmail">Η Ηλ. διέυθυνση υπάρχη ήδη!</string>

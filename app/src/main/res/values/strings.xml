@@ -20,7 +20,7 @@
     <string name="signUpCreateAcc">Create Account</string>
     <string name="signUpEmail">Email</string>
     <string name="signUpUsername">Username</string>
-    <string name="signUpDisplayName">Name</string>
+    <string name="signUpName">Name</string>
     <string name="signUpPassword">Password</string>
     <string name="signUpTerms">By tapping Create Account you Agree to Terms and Conditions</string>
 
@@ -37,6 +37,10 @@
 
     <!-- Search (Activity) -->
     <string name="searchContainer">Search</string>
+
+    <string name="myProfileName">Name</string>
+    <string name="myProfileUsername">Username</string>
+    <string name="myProfileStatus">Status</string>
 
     <!-- RegEx (Errors)-->
     <string name="regExEmpty">Can\'t be empty</string>
