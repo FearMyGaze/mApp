@@ -123,6 +123,31 @@ public class RegEx {
         }
     }
 
+    public static boolean isUrlValid(TextInputEditText text, TextInputLayout layout, Context context) {
+        if (text.getText().length() == 0) {
+            Tools.setErrorToLayout(layout, context.getString(R.string.regExEmpty), true);
+            return false;
+        }
+
+        if (text.getText().length() < 8) {
+            Tools.setErrorToLayout(layout, context.getString(R.string.regExSmaller) + 8, true);
+            return false;
+        }
+
+        if (text.getText().length() > layout.getCounterMaxLength()) {
+            Tools.setErrorToLayout(layout, context.getString(R.string.regExBigger) + layout.getCounterMaxLength(), true);
+            return false;
+        }
+
+        Tools.setErrorToLayout(layout, null, false);
+
+        if (Patterns.WEB_URL.matcher(text.getText().toString().trim()).matches()) return true;
+        else {
+            Tools.setErrorToLayout(layout, context.getString(R.string.regExURL), true);
+            return false;
+        }
+    }
+
     public static boolean isCredentialValid(@NonNull TextInputEditText text, TextInputLayout layout, Context context) {
         if (text.getText().toString().trim().contains("@")) {
             return isEmailValid(text, layout, context);

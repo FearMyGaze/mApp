@@ -16,6 +16,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.firebase.Auth;
 import com.github.fearmygaze.mercury.util.RegEx;
+import com.github.fearmygaze.mercury.util.Tools;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textfield.TextInputEditText;
@@ -65,9 +66,7 @@ public class SignUp extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (RegEx.isEmailValid(email, emailError, SignUp.this)) {
-                    usernameError.setEnabled(true);
-                }
+                usernameError.setEnabled(RegEx.isEmailValid(email, emailError, SignUp.this));
             }
         });
 
@@ -84,9 +83,7 @@ public class SignUp extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (RegEx.isUsernameValid(username, usernameError, SignUp.this)) {
-                    displayNameError.setEnabled(true);
-                }
+                displayNameError.setEnabled(RegEx.isUsernameValid(username, usernameError, SignUp.this));
             }
         });
 
@@ -103,9 +100,7 @@ public class SignUp extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (RegEx.isNameValid(displayName, displayNameError, SignUp.this)) {
-                    passwordError.setEnabled(true);
-                }
+                passwordError.setEnabled(RegEx.isNameValid(displayName, displayNameError, SignUp.this));
             }
         });
 
@@ -122,21 +117,11 @@ public class SignUp extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (RegEx.isPasswordValid(password, passwordError, SignUp.this)) {
-                    chooseImage.setEnabled(true);
-                }
+                chooseImage.setEnabled(RegEx.isPasswordValid(password, passwordError, SignUp.this));
             }
         });
 
-        chooseImage.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_PICK);
-            intent.setType("image/*");
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            intent.addCategory(Intent.CATEGORY_OPENABLE);
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
-            pickImage.launch(intent);
-        });
+        chooseImage.setOnClickListener(v -> pickImage.launch(Tools.imageSelector()));
 
         createAccount.setOnClickListener(v -> {//TODO: I need to find a way to say the user we process the data
             String sEmail = Objects.requireNonNull(email.getText()).toString().trim();
@@ -174,9 +159,9 @@ public class SignUp extends AppCompatActivity {
     private final ActivityResultLauncher<Intent> pickImage = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                switch (result.getResultCode()){
+                switch (result.getResultCode()) {
                     case RESULT_OK:
-                        if (result.getData() != null){
+                        if (result.getData() != null) {
                             imageData = result.getData().getData();
                             Glide.with(userImage).load(imageData).centerCrop().apply(new RequestOptions().override(1024)).into(userImage);
                             userImage.setImageURI(imageData);

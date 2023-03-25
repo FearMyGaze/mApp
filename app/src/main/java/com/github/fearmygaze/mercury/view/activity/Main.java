@@ -33,7 +33,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.List;
-import java.util.Objects;
 
 public class Main extends AppCompatActivity {
 
@@ -85,7 +84,8 @@ public class Main extends AppCompatActivity {
         /*
          * TODO:
          *      When a user scrolls make the extended fab to vanish with animation
-         *      Add the Firebase-UI scrollView
+         *      Remove the Pending, Ignored and make them in one activity and in the removed
+         *          button add the theme switch (to the alternate theme)
          * */
 
         actions.setOnClickListener(v -> fabController());
@@ -105,16 +105,16 @@ public class Main extends AppCompatActivity {
             for (int i = 0; i < users.size(); i++) {
                 Log.d("customLog", users.toString());
             }
-            Toast.makeText(this, "Click", Toast.LENGTH_SHORT).show();
         });
 
         ignoredBtn.setOnClickListener(v -> {
             AppDatabase.getInstance(Main.this).userDao().deleteAllUsers();
+            FirebaseAuth.getInstance().signOut();
             Toast.makeText(this, "Click", Toast.LENGTH_SHORT).show();
         });
 
-        profileBtn.setOnClickListener(v -> { //TODO: Delete this Activity(Profile) and make a new (MyProfile)
-            startActivity(new Intent(Main.this, MyProfile.class));
+        profileBtn.setOnClickListener(v -> {
+            startActivity(new Intent(Main.this, Profile.class));
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
 
@@ -163,20 +163,38 @@ public class Main extends AppCompatActivity {
                                 if (snapshot.exists()) {
                                     DataSnapshot userSnapshot = snapshot.getChildren().iterator().next();
                                     FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid())
-                                            .setValue(new User(user.getUid(), Objects.requireNonNull(user.getEmail()),
-                                                    Objects.requireNonNull(userSnapshot.child("username").getValue(String.class)),
-                                                    Objects.requireNonNull(user.getDisplayName()),
-                                                    userSnapshot.child("imageURL").getValue(String.class), s)
-                                                    .toMap()
+                                            .setValue(new User(
+                                                    user.getUid(),
+                                                    user.getEmail(),
+                                                    userSnapshot.child("username").getValue(String.class),
+                                                    user.getDisplayName(),
+                                                    userSnapshot.child("imageURL").getValue(String.class),
+                                                    s,
+                                                    userSnapshot.child("status").getValue(String.class),
+                                                    userSnapshot.child("location").getValue(String.class),
+                                                    userSnapshot.child("job").getValue(String.class),
+                                                    userSnapshot.child("website").getValue(String.class),
+                                                    userSnapshot.child("createdAt").getValue(Long.class)
+                                                    )
+                                                    .toMap(false)
                                             ).addOnSuccessListener(unused -> {
                                                         UserProfileChangeRequest changeRequest = new UserProfileChangeRequest.Builder()
                                                                 .setPhotoUri(Uri.parse(userSnapshot.child("imageURL").getValue(String.class))).build();
                                                         user.updateProfile(changeRequest).addOnSuccessListener(unused1 -> {
                                                             Glide.with(Main.this).load(user.getPhotoUrl()).centerCrop().apply(new RequestOptions().override(1024)).into(profileImage);
-                                                            AppDatabase.getInstance(Main.this).userDao().updateUser(new User(user.getUid(), Objects.requireNonNull(user.getEmail()),
-                                                                    Objects.requireNonNull(userSnapshot.child("username").getValue(String.class)),
-                                                                    Objects.requireNonNull(user.getDisplayName()),
-                                                                    userSnapshot.child("imageURL").getValue(String.class), s));
+                                                            AppDatabase.getInstance(Main.this).userDao().updateUser(new User( //TODO: instead of doing this all the time make something to minimize the code
+                                                                    user.getUid(),
+                                                                    user.getEmail(),
+                                                                    userSnapshot.child("username").getValue(String.class),
+                                                                    user.getDisplayName(),
+                                                                    userSnapshot.child("imageURL").getValue(String.class),
+                                                                    s,
+                                                                    userSnapshot.child("status").getValue(String.class),
+                                                                    userSnapshot.child("location").getValue(String.class),
+                                                                    userSnapshot.child("job").getValue(String.class),
+                                                                    userSnapshot.child("website").getValue(String.class),
+                                                                    userSnapshot.child("createdAt").getValue(Long.class))
+                                                            );
                                                         }).addOnFailureListener(e -> Toast.makeText(Main.this, e.getMessage(), Toast.LENGTH_SHORT).show());
                                                     }
                                             ).addOnFailureListener(e -> {

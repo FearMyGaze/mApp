@@ -64,6 +64,7 @@ public class Search extends AppCompatActivity {
                                         if (snapshot.exists()) {
                                             for (DataSnapshot user : snapshot.getChildren()) {
                                                 searchedUsers.add(new User(
+                                                        Objects.requireNonNull(user.child("userUID").getValue(String.class)),
                                                         Objects.requireNonNull(user.child("username").getValue(String.class)),
                                                         Objects.requireNonNull(user.child("name").getValue(String.class)),
                                                         Objects.requireNonNull(user.child("imageURL").getValue(String.class)))
@@ -88,6 +89,7 @@ public class Search extends AppCompatActivity {
                                         if (snapshot.exists()) {
                                             for (DataSnapshot user : snapshot.getChildren()) {
                                                 searchedUsers.add(new User(
+                                                        Objects.requireNonNull(user.child("userUID").getValue(String.class)),
                                                         Objects.requireNonNull(user.child("username").getValue(String.class)),
                                                         Objects.requireNonNull(user.child("name").getValue(String.class)),
                                                         Objects.requireNonNull(user.child("imageURL").getValue(String.class)))

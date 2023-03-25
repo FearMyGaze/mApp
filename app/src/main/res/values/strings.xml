@@ -2,10 +2,21 @@
     <!-- App name -->
     <string name="app_name" translatable="false">Mercury</string>
 
-    <!-- General Purpose -->
+    <!-- General Purpose --> <!-- TODO: We need to change to the general translations -->
     <string name="generalChoose">Choose</string>
     <string name="generalOK">OK</string>
     <string name="generalCancel">Cancel</string>
+    <string name="generalUsername">Username</string>
+    <string name="generalName">Name</string>
+    <string name="generalEmail">Email</string>
+    <string name="generalPassword">Password</string>
+    <string name="generalStatus">Status</string>
+    <string name="generalJob">Job</string>
+    <string name="generalLocation">Location</string>
+    <string name="generalWebsite">Website</string>
+    <string name="generalSave">Save</string>
+    <string name="generalAdd">Add</string>
+    <string name="generalRemove">Remove</string>
 
     <!-- SignIn (Activity) -->
     <string name="signInWelcome">Welcome</string>
@@ -38,9 +49,8 @@
     <!-- Search (Activity) -->
     <string name="searchContainer">Search</string>
 
-    <string name="myProfileName">Name</string>
-    <string name="myProfileUsername">Username</string>
-    <string name="myProfileStatus">Status</string>
+    <!-- ProfileEdit (Activity) -->
+    <string name="profileEditHelper">Edit Profile</string>
 
     <!-- RegEx (Errors)-->
     <string name="regExEmpty">Can\'t be empty</string>
@@ -50,6 +60,7 @@
     <string name="regExUsername">We only allow English and Greek characters or numbers.</string>
     <string name="regExName">We only allow English and Greek characters, a dot, a space in between</string>
     <string name="regExPassword">The minimum is: 1 Special character, 1 Number and 6 characters</string>
+    <string name="regExURL">Not a valid link</string>
 
     <!-- Auth (Errors) -->
     <string name="authEmail">Email Already Exists!</string>
@@ -57,12 +68,5 @@
 
     <!--Programming (Errors)  -->
     <string name="blameError" translatable="false">An Error has occurred</string>
-
-    <!-- sample Data -->
-    <string name="sampleUsername" translatable="false">Username</string>
-    <string name="sampleLastMessage" translatable="false">You: is message true;</string>
-    <string name="sampleTime" translatable="false">22:03</string>
-    <string name="sampleEmail" translatable="false">test@test.com</string>
-    <string name="sampleVersion" translatable="false">1.0</string>
 
 </resources>

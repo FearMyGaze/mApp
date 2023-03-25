@@ -9,30 +9,16 @@
     <color name="white">#FFFFFF</color>
     <color name="transparent">#00000000</color>
 
-    <color name="input_background">#ECECEC</color>
-    <color name="primary_text">#212121</color>
-    <color name="secondary_text">#757575</color>
-    <color name="primary">#1C2E46</color>
-
-    <color name="adapter_background">#FCFCFC</color>
-    <color name="adapter_background_stroke">#FDFDFD</color>
-
-    <color name="divider">@color/black</color>
-    <color name="navbar_background">#F2E7E1</color>
-
+    <!-- Basic Theme/Pallet -->
     <color name="basicBackground">#ffffff</color>
-    <color name="alternateBackground">#313537</color> <!-- TODO: This will be the same in light and dark -->
-
     <color name="variant">#ff7a00</color>
-    <color name="alternateVariant">#65421f</color>
-
-
     <color name="textRegular">#8b98a5</color>
-    <color name="textBold">#000000</color> <!-- TODO: Possibly remove this if we dont need it -->
+    <color name="textBold">#000000</color>
 
-    <!-- TODO: This exists only if i want to implement a different textColor based on the alternate color pallet -->
+    <!-- Alternate Theme/Pallet -->
+    <color name="alternateBackground">#313537</color> <!-- TODO: This will be the same in light and dark -->
+    <color name="alternateVariant">#65421f</color>
     <color name="alternateTextBold">#e6be97</color>
-    <color name="alternateTextRegular">#bfba8e</color>
-
+    <color name="alternateTextRegular">#bfba8e</color> <!-- TODO: This exists only if i want to implement a different textColor based on the alternate color pallet -->
 
 </resources>

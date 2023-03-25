@@ -1,84 +1,138 @@
 package com.github.fearmygaze.mercury.view.activity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Base64;
-import android.widget.Toast;
+import android.widget.TextView;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.custom.EventNotifier;
 import com.github.fearmygaze.mercury.database.AppDatabase;
 import com.github.fearmygaze.mercury.model.User;
-import com.github.fearmygaze.mercury.util.PrivatePreference;
+import com.github.fearmygaze.mercury.util.Tools;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.imageview.ShapeableImageView;
-import com.google.android.material.textview.MaterialTextView;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class Profile extends AppCompatActivity {
 
-    ShapeableImageView userImage, dialogImage;
-    MaterialTextView username, userEmail, faq;
-    MaterialButton changePassword, changeProfilePicture, update;
+    //User
+    ShapeableImageView userImage;
+    MaterialButton edit;
+    TextView name, username, status;
+    ChipGroup chipGroup;
 
-    PrivatePreference preference;
-    AppDatabase database;
+    //Friends
+    TextView friendsCounter;
+    RecyclerView friendsView;
+
     User user;
-
-    String base64Image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        database = AppDatabase.getInstance(Profile.this);
-        preference = new PrivatePreference(Profile.this);
 
-        userImage = findViewById(R.id.profileUserImage);
+        user = AppDatabase.getInstance(Profile.this).userDao().getUserByUserUID(FirebaseAuth.getInstance().getUid());
+
+        userImage = findViewById(R.id.profileImage);
+        edit = findViewById(R.id.profileEdit);
+        name = findViewById(R.id.profileName);
         username = findViewById(R.id.profileUsername);
-        userEmail = findViewById(R.id.profileUserEmail);
-        changePassword = findViewById(R.id.profileChangePassword);
-        changeProfilePicture = findViewById(R.id.profileChangeImage);
-        faq = findViewById(R.id.profileFAQ);
+        status = findViewById(R.id.profileStatus);
 
+        chipGroup = findViewById(R.id.profileExtraInfo);
 
-        faq.setOnClickListener(v -> {
-            Toast.makeText(this, "This will open a dialog", Toast.LENGTH_SHORT).show();
+        friendsCounter = findViewById(R.id.profileFriendsCounter);
+        friendsView = findViewById(R.id.profileFriends);
+
+        Glide.with(Profile.this).load(user.imageURL).centerInside().into(userImage);
+        name.setText(user.name);
+        username.setText(user.username);
+        status.setText(user.status);
+
+        userImage.setOnClickListener(v -> {
+            //TODO: We need to make a simple imageViewer
+        });
+
+        edit.setOnClickListener(v -> {
+            startActivity(new Intent(Profile.this, ProfileEdit.class));
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
 
     }
 
-    private final ActivityResultLauncher<Intent> pickImage = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                    Uri uri = result.getData().getData();
-                    try {
-                        Bitmap output = Bitmap.createScaledBitmap(MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri), 1024, 1024, true);
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        output.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                        base64Image = Base64.encodeToString(stream.toByteArray(), Base64.DEFAULT);
-                        dialogImage.setImageURI(uri);
-                        update.setEnabled(true);
-                    } catch (IOException e) {
-                        EventNotifier.event(faq, "Error: " + e.getMessage(), EventNotifier.LENGTH_LONG);
-                    }
-                }
-            }
-    );
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            finish();
+        }
+        chipGroup.removeAllViews();
+        extraInfo();
+    }
 
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
         finish();
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
+
+    private void extraInfo() {
+        if (user.job != null && !user.job.isEmpty()) {
+            Chip chip = new Chip(Profile.this);
+            chip.setText(user.job);
+            chip.setCheckable(false);
+            chip.setChecked(false);
+            chip.setClickable(false);
+            chip.setChipIconResource(R.drawable.ic_repair_service_24);
+            chip.setChipBackgroundColorResource(R.color.basicBackground);
+            chipGroup.addView(chip);
+        }
+
+        if (user.website != null && !user.website.isEmpty()) {
+            Chip chip = new Chip(Profile.this);
+            chip.setText(Tools.removeHttp(user.website));
+            chip.setCheckable(false);
+            chip.setChecked(false);
+            chip.setChipIconResource(R.drawable.ic_link_24);
+            chip.setChipBackgroundColorResource(R.color.basicBackground);
+            chip.setOnClickListener(v -> {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(user.website))
+                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+            });
+            chipGroup.addView(chip);
+        }
+
+        if (user.location != null && !user.location.isEmpty()) {
+            Chip chip = new Chip(Profile.this);
+            chip.setText(user.location);
+            chip.setCheckable(false);
+            chip.setChecked(false);
+            chip.setClickable(false);
+            chip.setChipIconResource(R.drawable.ic_location_24);
+            chip.setChipBackgroundColorResource(R.color.basicBackground);
+            chipGroup.addView(chip);
+        }
+
+        if (user.createdAt != null) {
+            Chip chip = new Chip(Profile.this);
+            chip.setText(String.valueOf(user.createdAt));
+            chip.setCheckable(false);
+            chip.setChecked(false);
+            chip.setClickable(false);
+            chip.setChipIconResource(R.drawable.ic_calendar_24);
+            chip.setChipBackgroundColorResource(R.color.basicBackground);
+            chipGroup.addView(chip);
+        }
+    }
+
+
+
 }

@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources> <!-- TODO: Remove Redundant resources and make the new translations -->
+<resources>
 
     <!-- General Purpose -->
     <string name="generalChoose">Επιλογή</string>
     <string name="generalOK">ΟΚ</string>
     <string name="generalCancel">Ακύρωση</string>
+    <string name="generalUsername">Όνομα χρήστη</string>
+    <string name="generalName">Όνομα</string>
+    <string name="generalEmail">Ηλ. Διεύθυνση</string>
+    <string name="generalPassword">Κώδ. χρήστη</string>
+    <string name="generalStatus">Κατάσταση</string>
+    <string name="generalJob">Εργασία</string>
+    <string name="generalLocation">Τοποθεσία</string>
+    <string name="generalWebsite">Ιστοσελίδα</string>
+    <string name="generalSave">Αποθύκευση</string>
+    <string name="generalAdd">Προσθήκη</string>
+    <string name="generalRemove">Αφαίρεση</string>
 
     <!-- SignIn (Activity) -->
     <string name="signInWelcome">Καλώς Ήρθατε</string>
@@ -32,9 +43,8 @@
     <!-- Search (Activity) -->
     <string name="searchContainer">Αναζήτηση</string>
 
-    <string name="myProfileName">Όνομα</string>
-    <string name="myProfileUsername">Όνομα χρήστη</string>
-    <string name="myProfileStatus">Κατάσταση</string>
+    <!-- ProfileEdit (Activity) -->
+    <string name="profileEditHelper">Τροποποίση Προφίλ</string>
 
     <!-- Auth -->
     <string name="authEmail">Η Ηλ. διέυθυνση υπάρχη ήδη!</string>
@@ -48,5 +58,6 @@
     <string name="regExUsername">Επιτρέπουμε μόνο Ελληνικούς και αγγλικούς χαρακτήρες ή αριθμούς.</string>
     <string name="regExName">Επιτρέπουμε μόνο Ελληνικούς και αγγλικούς χαρακτήρες, 1 τελία και 1 κενό ανάμεσα.</string>
     <string name="regExPassword">Το ελάχιστο είναι: 1 Ειδικός χαρακτήρας, 1 νούμερο και 6 χαρακτήρες.</string>
+    <string name="regExURL">Δεν μοίζει με σωστό σύνδεσμο</string>
 
 </resources>

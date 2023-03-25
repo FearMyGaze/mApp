@@ -1,10 +1,10 @@
 package com.github.fearmygaze.mercury.view.adapter;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.model.User;
+import com.github.fearmygaze.mercury.view.util.ProfileViewer;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.imageview.ShapeableImageView;
 
@@ -36,9 +37,11 @@ public class AdapterSearch extends RecyclerView.Adapter<AdapterSearch.MyViewHold
         Glide.with(holder.itemView.getRootView()).load(users.get(position).imageURL).centerInside().into(holder.image); //TODO: Add Placeholder
         holder.name.setText(users.get(position).name);
         holder.username.setText(users.get(position).username);
-        holder.root.setOnClickListener(v -> {//TODO: Pass the user to the Profile Screen (to make him friend and see his profile)
-            Toast.makeText(holder.itemView.getContext(), "click", Toast.LENGTH_SHORT).show();
-        });
+        holder.root.setOnClickListener(v ->
+                v.getContext().startActivity(new Intent(v.getContext(), ProfileViewer.class)
+                        .putExtra("userUID", users.get(position).userUID)
+                        .putExtra("name", users.get(position).name))
+        );
     }
 
     @Override
@@ -51,7 +54,7 @@ public class AdapterSearch extends RecyclerView.Adapter<AdapterSearch.MyViewHold
         notifyItemRangeChanged(0, users.size());
     }
 
-    public void clearUsers(){
+    public void clearUsers() {
         notifyItemRangeRemoved(0, users.size());
         users.clear();
     }

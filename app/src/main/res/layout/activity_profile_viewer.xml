@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/basicBackground"
-    tools:context=".view.activity.Profile">
+    tools:context=".view.util.ProfileViewer">
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/profileImage"
+        android:id="@+id/profileViewerImage"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginStart="20dp"
@@ -19,20 +19,20 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/profileEdit"
+        android:id="@+id/profileViewerButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
-        android:text="Edit Profile"
+        android:text="@string/generalAdd"
         android:textAllCaps="false"
         app:cornerRadius="12.5dp"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/profileImage"
-        app:layout_constraintBottom_toBottomOf="@id/profileImage"/>
-
+        app:layout_constraintTop_toTopOf="@id/profileViewerImage"
+        app:layout_constraintBottom_toBottomOf="@id/profileViewerImage"/>
+    
     <TextView
-        android:id="@+id/profileName"
+        android:id="@+id/profileViewerName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -42,11 +42,11 @@
         android:textColor="@color/textBold"
         android:maxLines="1"
         android:maxLength="50"
-        app:layout_constraintStart_toStartOf="@id/profileImage"
-        app:layout_constraintTop_toBottomOf="@id/profileImage"/>
+        app:layout_constraintStart_toStartOf="@id/profileViewerImage"
+        app:layout_constraintTop_toBottomOf="@id/profileViewerImage"/>
 
     <TextView
-        android:id="@+id/profileUsername"
+        android:id="@+id/profileViewerUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
@@ -56,53 +56,30 @@
         android:textColor="@color/textBold"
         android:maxLines="1"
         android:maxLength="15"
-        app:layout_constraintStart_toStartOf="@id/profileName"
-        app:layout_constraintTop_toBottomOf="@id/profileName"/>
+        app:layout_constraintStart_toStartOf="@id/profileViewerName"
+        app:layout_constraintTop_toBottomOf="@id/profileViewerName"/>
 
     <TextView
-        android:id="@+id/profileStatus"
+        android:id="@+id/profileViewerStatus"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
         android:layout_marginTop="5dp"
         tools:text="@tools:sample/lorem/random"
         android:textSize="14sp"
         android:textStyle="normal"
         android:textColor="@color/textBold"
         android:maxLength="144"
-        app:layout_constraintStart_toStartOf="@id/profileUsername"
-        app:layout_constraintEnd_toEndOf="@id/profileEdit"
-        app:layout_constraintTop_toBottomOf="@id/profileUsername"/>
+        app:layout_constraintStart_toStartOf="@id/profileViewerUsername"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profileViewerUsername"/>
 
     <com.google.android.material.chip.ChipGroup
-        android:id="@+id/profileExtraInfo"
+        android:id="@+id/profileViewerChipGroup"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@id/profileStatus"
-        app:layout_constraintEnd_toEndOf="@id/profileEdit"
-        app:layout_constraintTop_toBottomOf="@id/profileStatus"/>
-
-    <TextView
-        android:id="@+id/profileFriendsCounter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="Friends: 100"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:textColor="@color/textBold"
-        app:layout_constraintStart_toStartOf="@id/profileExtraInfo"
-        app:layout_constraintTop_toBottomOf="@id/profileExtraInfo"/>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/profileFriends"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/profileFriendsCounter"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-
+        app:layout_constraintStart_toStartOf="@id/profileViewerStatus"
+        app:layout_constraintEnd_toEndOf="@id/profileViewerStatus"
+        app:layout_constraintTop_toBottomOf="@id/profileViewerStatus"/>
+    
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,7 +10,7 @@ public class MessagingService extends FirebaseMessagingService {
     @Override
     public void onNewToken(@NonNull String token) {
         PrivatePreference preference = new PrivatePreference(getApplicationContext());
-        preference.putString("token", token);
+        preference.putString("token", token); //TODO: remove
         super.onNewToken(token);
     }
 

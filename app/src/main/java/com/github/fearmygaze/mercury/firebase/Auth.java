@@ -78,7 +78,14 @@ public class Auth {
                         user.updateProfile(update).addOnSuccessListener(unused0 -> {
                             user.sendEmailVerification().addOnSuccessListener(unused1 -> {
                                 FirebaseMessaging.getInstance().getToken().addOnSuccessListener(token -> {
-                                    usersRef.child(user.getUid()).setValue(new User(user.getUid(), email, "@" + username, name, String.valueOf(uri), token).toMap())
+                                    usersRef.child(user.getUid()).setValue(new User(
+                                                    user.getUid(),
+                                                    email,
+                                                    "@" + username,
+                                                    name,
+                                                    String.valueOf(uri),
+                                                    token)
+                                                    .toMap(true))
                                             .addOnSuccessListener(unused2 -> listener.onResult(true))
                                             .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
                                 }).addOnFailureListener(e -> listener.onFailure(e.getMessage()));
@@ -114,11 +121,16 @@ public class Auth {
                                                 AppDatabase.getInstance(context)
                                                         .userDao().insertUser(new User(
                                                                 Objects.requireNonNull(userSnapshot.child("userUID").getValue(String.class)),
-                                                                Objects.requireNonNull(userSnapshot.child("email").getValue(String.class)),
-                                                                Objects.requireNonNull(userSnapshot.child("username").getValue(String.class)),
-                                                                Objects.requireNonNull(userSnapshot.child("name").getValue(String.class)),
-                                                                Objects.requireNonNull(userSnapshot.child("imageURL").getValue(String.class)),
-                                                                Objects.requireNonNull(userSnapshot.child("currentNotificationDeviceTokenID").getValue(String.class))
+                                                                userSnapshot.child("email").getValue(String.class),
+                                                                userSnapshot.child("username").getValue(String.class),
+                                                                userSnapshot.child("name").getValue(String.class),
+                                                                userSnapshot.child("imageURL").getValue(String.class),
+                                                                userSnapshot.child("notificationToken").getValue(String.class),
+                                                                userSnapshot.child("status").getValue(String.class),
+                                                                userSnapshot.child("location").getValue(String.class),
+                                                                userSnapshot.child("job").getValue(String.class),
+                                                                userSnapshot.child("website").getValue(String.class),
+                                                                userSnapshot.child("createdAt").getValue(Long.class)
                                                         ));
                                                 listener.onResult(true);
                                             } else listener.onResult(false);
@@ -146,12 +158,18 @@ public class Auth {
                                         .addOnSuccessListener(authResult -> {
                                             if (Objects.requireNonNull(authResult.getUser()).isEmailVerified()) {
                                                 AppDatabase.getInstance(context).userDao()
-                                                        .insertUser(new User(Objects.requireNonNull(userSnapshot.child("userUID").getValue(String.class)),
-                                                                Objects.requireNonNull(userSnapshot.child("email").getValue(String.class)),
-                                                                Objects.requireNonNull(userSnapshot.child("username").getValue(String.class)),
-                                                                Objects.requireNonNull(userSnapshot.child("name").getValue(String.class)),
-                                                                Objects.requireNonNull(userSnapshot.child("imageURL").getValue(String.class)),
-                                                                Objects.requireNonNull(userSnapshot.child("currentNotificationDeviceTokenID").getValue(String.class))
+                                                        .insertUser(new User(
+                                                                Objects.requireNonNull(userSnapshot.child("userUID").getValue(String.class)),
+                                                                userSnapshot.child("email").getValue(String.class),
+                                                                userSnapshot.child("username").getValue(String.class),
+                                                                userSnapshot.child("name").getValue(String.class),
+                                                                userSnapshot.child("imageURL").getValue(String.class),
+                                                                userSnapshot.child("notificationToken").getValue(String.class),
+                                                                userSnapshot.child("status").getValue(String.class),
+                                                                userSnapshot.child("location").getValue(String.class),
+                                                                userSnapshot.child("job").getValue(String.class),
+                                                                userSnapshot.child("website").getValue(String.class),
+                                                                userSnapshot.child("createdAt").getValue(Long.class)
                                                         ));
                                                 listener.onResult(true);
                                             } else listener.onResult(false);
@@ -167,6 +185,12 @@ public class Auth {
         }
     }
 
+    /**
+     * @param credential Users Email Or Username
+     * @param password   Users Password
+     * @param context    Context for the Room database
+     * @param listener   Listener Returns <b>True</b> when passes, <b>False</b> when the user is not email verified and a <b>String</b> if an error occurs
+     */
     public static void signInForm(String credential, String password, Context context, OnResultListener listener) {
         signInUser(credential, password, context, new OnResultListener() {
             @Override
