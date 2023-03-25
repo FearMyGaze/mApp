@@ -2,7 +2,7 @@
     <!-- App name -->
     <string name="app_name" translatable="false">Mercury</string>
 
-    <!-- General Purpose --> <!-- TODO: We need to change to the general translations -->
+    <!-- General Purpose -->
     <string name="generalChoose">Choose</string>
     <string name="generalOK">OK</string>
     <string name="generalCancel">Cancel</string>
@@ -29,10 +29,6 @@
     <!-- SignUp (Activity) -->
     <string name="signUpGoBack">Go Back</string>
     <string name="signUpCreateAcc">Create Account</string>
-    <string name="signUpEmail">Email</string>
-    <string name="signUpUsername">Username</string>
-    <string name="signUpName">Name</string>
-    <string name="signUpPassword">Password</string>
     <string name="signUpTerms">By tapping Create Account you Agree to Terms and Conditions</string>
 
     <!-- HelperText -->

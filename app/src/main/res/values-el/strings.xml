@@ -28,10 +28,6 @@
     <!-- SignUp (Activity) -->
     <string name="signUpGoBack">Πηγαίντε πίσω</string>
     <string name="signUpCreateAcc">Δημιουργία Λογαριασμού</string>
-    <string name="signUpEmail">Ηλ. Διεύθυνση</string>
-    <string name="signUpUsername">Όνομα χρήστη</string>
-    <string name="signUpName">Όνομα</string>
-    <string name="signUpPassword">Κώδ. χρήστη</string>
     <string name="signUpTerms">Πατώντας Δημιουργία Λογαριασμού συμφωνείς με τους Όρους και Προϋποθέσεις</string>
 
     <!-- Main (Activity) -->
