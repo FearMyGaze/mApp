@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pendingRequestsSwipe"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/basicBackground">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="20dp">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/pendingRequestsGoBack"
+            android:layout_width="30dp"
+            android:layout_height="0dp"
+            android:src="@drawable/ic_arrow_back_24"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:shapeAppearance="@style/RoundedComponent"
+            android:contentDescription="@string/signUpGoBack"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/pendingRequestsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/textBold"
+            app:layout_constraintStart_toStartOf="@id/pendingRequestsGoBack"
+            app:layout_constraintTop_toBottomOf="@id/pendingRequestsGoBack"/>
+
+        <TextView
+            android:id="@+id/pendingRequestsCounter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/textBold"
+            app:layout_constraintStart_toEndOf="@id/pendingRequestsTitle"
+            app:layout_constraintTop_toTopOf="@id/pendingRequestsTitle"
+            app:layout_constraintBottom_toBottomOf="@id/pendingRequestsTitle"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/pendingRequestsError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/pendingRequestsGoBack">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/pendingRequestsError"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/textBold"
+                android:textAlignment="center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/pendingRequestsRecycler"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/pendingRequestsTitle"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

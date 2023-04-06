@@ -52,14 +52,19 @@ public class User { //TODO: we need to add Index inside the colum info
     @ColumnInfo(name = "createdAt")
     public Long createdAt;
 
+    @ColumnInfo(name = "showFriends")
+    public boolean showFriends;
+
     public User() {
     }
 
-    public User(String userUID, String username, String name, String imageURL) {
+    @Ignore//Generic
+    public User(@NonNull String userUID, String username, String name, String imageURL, boolean showFriends) {
         this.userUID = userUID;
         this.username = username;
         this.name = name;
         this.imageURL = imageURL;
+        this.showFriends = showFriends;
     }
 
     @Ignore //Register
@@ -71,26 +76,14 @@ public class User { //TODO: we need to add Index inside the colum info
         this.imageURL = imageURL;
         this.notificationToken = notificationToken;
         this.status = "";
-        this.job = "";
         this.location = "";
+        this.job = "";
         this.website = "";
-    }
-
-    @Ignore //Search adapter
-    public User(@NonNull String userUID, String email, String username, String name, String imageURL, String status, String location, String job, String website) {
-        this.userUID = userUID;
-        this.email = email;
-        this.username = username;
-        this.name = name;
-        this.imageURL = imageURL;
-        this.status = status;
-        this.location = location;
-        this.job = job;
-        this.website = website;
+        this.showFriends = true;
     }
 
     @Ignore //SignIn or Update Info
-    public User(@NonNull String userUID, String email, String username, String name, String imageURL, String token, String status, String location, String job, String website, Long createdAt) {
+    public User(@NonNull String userUID, String email, String username, String name, String imageURL, String token, String status, String location, String job, String website, boolean showFriends, Long createdAt) {
         this.userUID = userUID;
         this.email = email;
         this.username = username;
@@ -101,6 +94,7 @@ public class User { //TODO: we need to add Index inside the colum info
         this.location = location;
         this.job = job;
         this.website = website;
+        this.showFriends = showFriends;
         this.createdAt = createdAt;
     }
 
@@ -113,18 +107,35 @@ public class User { //TODO: we need to add Index inside the colum info
         map.put("name", this.name);
         map.put("imageURL", this.imageURL);
         map.put("notificationToken", this.notificationToken);
-        map.put("showFriends", true); //TODO: This will be set only for showing friends (you can change that in the settings later)
-        if (!status.isEmpty())
+        map.put("showFriends", this.showFriends);
+        if (status != null && !status.isEmpty())
             map.put("status", this.status);
-        if (!location.isEmpty())
+        if (status != null && !location.isEmpty())
             map.put("location", this.location);
-        if (!job.isEmpty())
+        if (status != null && !job.isEmpty())
             map.put("job", this.job);
-        if (!website.isEmpty())
+        if (status != null && !website.isEmpty())
             map.put("website", this.website);
         if (setTime) map.put("createdAt", ServerValue.TIMESTAMP);
         else map.put("createdAt", this.createdAt);
         return map;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "userUID='" + userUID + '\'' +
+                ", email='" + email + '\'' +
+                ", username='" + username + '\'' +
+                ", name='" + name + '\'' +
+                ", imageURL='" + imageURL + '\'' +
+                ", notificationToken='" + notificationToken + '\'' +
+                ", status='" + status + '\'' +
+                ", location='" + location + '\'' +
+                ", job='" + job + '\'' +
+                ", website='" + website + '\'' +
+                ", createdAt=" + createdAt +
+                ", showFriends=" + showFriends +
+                '}';
+    }
 }

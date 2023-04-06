@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/adapterSearchRoot"
+    android:id="@+id/adapterUserListRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
-    android:layout_marginStart="5dp"
-    android:layout_marginEnd="5dp"
-    app:cardCornerRadius="25dp"
+    app:cardCornerRadius="12.5dp"
     app:cardElevation="2dp"
     app:contentPadding="10dp"
-    app:cardBackgroundColor="@color/basicBackground"
+    app:cardBackgroundColor="@color/basicBackgroundAlternate"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -18,7 +16,7 @@
         android:layout_height="match_parent">
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/adapterSearchImage"
+            android:id="@+id/adapterUserListImage"
             android:layout_width="60dp"
             android:layout_height="0dp"
             tools:src="@tools:sample/avatars"
@@ -29,10 +27,11 @@
             app:layout_constraintBottom_toBottomOf="parent"/>
 
         <TextView
-            android:id="@+id/adapterSearchName"
+            android:id="@+id/adapterUserListName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             tools:text="@tools:sample/full_names"
             android:textStyle="bold"
             android:textSize="17sp"
@@ -40,13 +39,26 @@
             android:maxLines="1"
             android:maxEms="50"
             android:maxLength="50"
-            app:layout_constraintStart_toEndOf="@id/adapterSearchImage"
+            app:layout_constraintStart_toEndOf="@id/adapterUserListImage"
+            app:layout_constraintEnd_toStartOf="@id/adapterUserListOptions"
+            app:layout_constraintTop_toTopOf="@id/adapterUserListImage"
+            app:layout_constraintBottom_toTopOf="@id/adapterUserListUsername"/>
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/adapterUserListOptions"
+            android:layout_width="20dp"
+            android:layout_height="0dp"
+            android:src="@drawable/ic_more_vert_24"
+            android:tint="@color/variant"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:shapeAppearance="@style/RoundedComponent"
+            app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/adapterSearchImage"
-            app:layout_constraintBottom_toTopOf="@id/adapterSearchUsername"/>
+            app:layout_constraintTop_toTopOf="@id/adapterUserListName"
+            app:layout_constraintBottom_toBottomOf="@id/adapterUserListName"/>
 
         <TextView
-            android:id="@+id/adapterSearchUsername"
+            android:id="@+id/adapterUserListUsername"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -57,10 +69,10 @@
             android:maxLines="1"
             android:maxEms="50"
             android:maxLength="50"
-            app:layout_constraintStart_toEndOf="@id/adapterSearchImage"
+            app:layout_constraintStart_toEndOf="@id/adapterUserListImage"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/adapterSearchName"
-            app:layout_constraintBottom_toBottomOf="@id/adapterSearchImage"/>
+            app:layout_constraintTop_toBottomOf="@id/adapterUserListName"
+            app:layout_constraintBottom_toBottomOf="@id/adapterUserListImage"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

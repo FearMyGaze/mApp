@@ -3,21 +3,30 @@ package com.github.fearmygaze.mercury.view.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.database.AppDatabase;
+import com.github.fearmygaze.mercury.firebase.Friends;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
+import com.github.fearmygaze.mercury.view.adapter.AdapterUserList;
+import com.github.fearmygaze.mercury.view.util.ImageViewer;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Profile extends AppCompatActivity {
 
@@ -28,7 +37,8 @@ public class Profile extends AppCompatActivity {
     ChipGroup chipGroup;
 
     //Friends
-    TextView friendsCounter;
+    TextView title, counter;
+    AdapterUserList adapterUserList;
     RecyclerView friendsView;
 
     User user;
@@ -48,7 +58,8 @@ public class Profile extends AppCompatActivity {
 
         chipGroup = findViewById(R.id.profileExtraInfo);
 
-        friendsCounter = findViewById(R.id.profileFriendsCounter);
+        title = findViewById(R.id.profileFriendsTitle);
+        counter = findViewById(R.id.profileFriendsCounter);
         friendsView = findViewById(R.id.profileFriends);
 
         Glide.with(Profile.this).load(user.imageURL).centerInside().into(userImage);
@@ -57,7 +68,10 @@ public class Profile extends AppCompatActivity {
         status.setText(user.status);
 
         userImage.setOnClickListener(v -> {
-            //TODO: We need to make a simple imageViewer
+            startActivity(new Intent(Profile.this, ImageViewer.class)
+                    .putExtra("imageData", user.imageURL)
+                    .putExtra("downloadImage", true));
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
 
         edit.setOnClickListener(v -> {
@@ -65,6 +79,29 @@ public class Profile extends AppCompatActivity {
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
 
+        Friends.friendList(user.userUID, new Friends.OnExtendedListener() {
+            @Override
+            public void onResult(int resultCode, List<User> list) {
+                if (resultCode == 1) {
+                    title.setVisibility(View.VISIBLE);
+                    counter.setVisibility(View.VISIBLE);
+                    counter.setText(String.valueOf(list.size()));
+                    adapterUserList.setUsers(list);
+                } else{
+                    title.setVisibility(View.GONE);
+                    counter.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onFailure(String message) {
+                Toast.makeText(Profile.this, message, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        adapterUserList = new AdapterUserList(new ArrayList<>(), user.userUID, false);
+        friendsView.setLayoutManager(new LinearLayoutManager(Profile.this, LinearLayoutManager.VERTICAL, false));
+        friendsView.setAdapter(adapterUserList);
     }
 
     @Override
@@ -73,6 +110,7 @@ public class Profile extends AppCompatActivity {
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             finish();
         }
+        user = AppDatabase.getInstance(Profile.this).userDao().getUserByUserUID(FirebaseAuth.getInstance().getUid());
         chipGroup.removeAllViews();
         extraInfo();
     }
@@ -85,6 +123,8 @@ public class Profile extends AppCompatActivity {
     }
 
     private void extraInfo() {
+        name.setText(user.name);
+        status.setText(user.status);
         if (user.job != null && !user.job.isEmpty()) {
             Chip chip = new Chip(Profile.this);
             chip.setText(user.job);
@@ -92,7 +132,7 @@ public class Profile extends AppCompatActivity {
             chip.setChecked(false);
             chip.setClickable(false);
             chip.setChipIconResource(R.drawable.ic_repair_service_24);
-            chip.setChipBackgroundColorResource(R.color.basicBackground);
+            chip.setChipBackgroundColorResource(R.color.basicBackgroundAlternate);
             chipGroup.addView(chip);
         }
 
@@ -102,10 +142,10 @@ public class Profile extends AppCompatActivity {
             chip.setCheckable(false);
             chip.setChecked(false);
             chip.setChipIconResource(R.drawable.ic_link_24);
-            chip.setChipBackgroundColorResource(R.color.basicBackground);
+            chip.setChipBackgroundColorResource(R.color.basicBackgroundAlternate);
             chip.setOnClickListener(v -> {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(user.website))
-                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(user.website))
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
             });
             chipGroup.addView(chip);
         }
@@ -117,22 +157,19 @@ public class Profile extends AppCompatActivity {
             chip.setChecked(false);
             chip.setClickable(false);
             chip.setChipIconResource(R.drawable.ic_location_24);
-            chip.setChipBackgroundColorResource(R.color.basicBackground);
+            chip.setChipBackgroundColorResource(R.color.basicBackgroundAlternate);
             chipGroup.addView(chip);
         }
 
         if (user.createdAt != null) {
             Chip chip = new Chip(Profile.this);
-            chip.setText(String.valueOf(user.createdAt));
+            chip.setText(String.valueOf(Tools.setDateInProfile(user.createdAt)));
             chip.setCheckable(false);
             chip.setChecked(false);
             chip.setClickable(false);
             chip.setChipIconResource(R.drawable.ic_calendar_24);
-            chip.setChipBackgroundColorResource(R.color.basicBackground);
+            chip.setChipBackgroundColorResource(R.color.basicBackgroundAlternate);
             chipGroup.addView(chip);
         }
     }
-
-
-
 }

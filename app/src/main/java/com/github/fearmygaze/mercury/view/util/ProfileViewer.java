@@ -9,13 +9,15 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.database.AppDatabase;
-import com.github.fearmygaze.mercury.firebase.FriendState;
+import com.github.fearmygaze.mercury.firebase.Friends;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
+import com.github.fearmygaze.mercury.view.adapter.AdapterUserList;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -26,6 +28,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class ProfileViewer extends AppCompatActivity {
@@ -37,8 +41,11 @@ public class ProfileViewer extends AppCompatActivity {
     TextView username, name, status;
     ChipGroup chipGroup;
 
-    String userUID;
-    User user;
+    AdapterUserList adapterUserList;
+    RecyclerView friendsView;
+
+    String senderID, receiverID, imageData;
+    boolean showFriends;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,20 +58,37 @@ public class ProfileViewer extends AppCompatActivity {
         name = findViewById(R.id.profileViewerName);
         status = findViewById(R.id.profileViewerStatus);
         chipGroup = findViewById(R.id.profileViewerChipGroup);
+        friendsView = findViewById(R.id.profileViewerRecycler);
 
         intent = getIntent();
+        senderID = intent.getStringExtra("senderID");
+        receiverID = intent.getStringExtra("receiverID");
+        showFriends = intent.getBooleanExtra("showFriends", false);
         userInfo();
 
-        user = AppDatabase.getInstance(ProfileViewer.this).userDao().getUserByUserUID(FirebaseAuth.getInstance().getUid());
+        userImage.setOnClickListener(v -> {
+            startActivity(new Intent(ProfileViewer.this, ImageViewer.class)
+                    .putExtra("imageData", imageData)
+                    .putExtra("downloadImage", true));
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        });
 
-        if (user.userUID.equals(intent.getStringExtra("userUID"))) {
-            button.setVisibility(View.INVISIBLE);
-            button.setClickable(false);
-        } else {
-            FriendState.areTheyFriends(user.userUID, intent.getStringExtra("userUID"), new FriendState.OnResultListener() {
+        if (!senderID.equals(receiverID)) {
+            button.setVisibility(View.VISIBLE);
+            Friends.status(senderID, receiverID, new Friends.OnResultListener() {
                 @Override
-                public void onResult(boolean result) {
-                    if (result) button.setText(getString(R.string.generalRemove));
+                public void onResult(int result) {
+                    switch (result) {
+                        case 2:
+                            button.setText("Waiting for response");
+                            break;
+                        case 1:
+                            button.setText("Friends");
+                            break;
+                        case 0:
+                            button.setText("IGNORED");
+                            break;
+                    }
                 }
 
                 @Override
@@ -72,15 +96,37 @@ public class ProfileViewer extends AppCompatActivity {
                     Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_SHORT).show();
                 }
             });
+        } else {
+            button.setVisibility(View.GONE);
+        }
+
+        if (showFriends) {
+            Friends.friendList(receiverID, new Friends.OnExtendedListener() {
+                @Override
+                public void onResult(int resultCode, List<User> list) {
+                    if (resultCode == 1) {
+                        adapterUserList.setUsers(list);
+                    }
+                }
+
+                @Override
+                public void onFailure(String message) {
+                    Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            adapterUserList = new AdapterUserList(new ArrayList<>(), senderID, false);
+            friendsView.setLayoutManager(new LinearLayoutManager(ProfileViewer.this, LinearLayoutManager.VERTICAL, false));
+            friendsView.setAdapter(adapterUserList);
         }
 
         button.setOnClickListener(v -> {
             if (button.getText().equals(getString(R.string.generalAdd))) {
-                FriendState.sendRequest(user.userUID, intent.getStringExtra("userUID"), new FriendState.OnResultListener() {
+                Friends.sendRequest(senderID, receiverID, new Friends.OnResultListener() {
                     @Override
-                    public void onResult(boolean result) {
-                        if (result) {
-                            button.setText(getString(R.string.generalRemove));
+                    public void onResult(int result) {
+                        if (result == 1) {
+                            Toast.makeText(ProfileViewer.this, "Request has be Send", Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -89,14 +135,27 @@ public class ProfileViewer extends AppCompatActivity {
                         Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_SHORT).show();
                     }
                 });
-            } else {
-                FriendState.removeRequest(user.userUID, intent.getStringExtra("userUID"), new FriendState.OnResultListener() {
+            } else if (button.getText().equals("Friends")) {
+                Friends.removeFriend(senderID, receiverID, new Friends.OnResultListener() {
                     @Override
-                    public void onResult(boolean result) {
-                        if (result) {
-                            button.setText(getString(R.string.generalAdd));
-                        } else
-                            Toast.makeText(ProfileViewer.this, "eixae", Toast.LENGTH_SHORT).show();
+                    public void onResult(int result) {
+                        if (result == 1) {
+                            Toast.makeText(ProfileViewer.this, "Friend Removed", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+                        Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else if (button.getText().equals("Cancel")) {
+                Friends.cancelRequest(senderID, receiverID, new Friends.OnResultListener() {
+                    @Override
+                    public void onResult(int result) {
+                        if (result == 1) {
+                            Toast.makeText(ProfileViewer.this, "Request Canceled", Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
@@ -120,8 +179,8 @@ public class ProfileViewer extends AppCompatActivity {
     private void userInfo() {
         chipGroup.removeAllViews();
         FirebaseDatabase.getInstance().getReference()
-                .child("users").orderByChild("name")
-                .equalTo(intent.getStringExtra("name")).limitToFirst(1)
+                .child("users").orderByChild("userUID")
+                .equalTo(receiverID).limitToFirst(1)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -134,7 +193,7 @@ public class ProfileViewer extends AppCompatActivity {
                                 chip.setChecked(false);
                                 chip.setClickable(false);
                                 chip.setChipIconResource(R.drawable.ic_repair_service_24);
-                                chip.setChipBackgroundColorResource(R.color.basicBackground);
+                                chip.setChipBackgroundColorResource(R.color.basicBackgroundAlternate);
                                 chipGroup.addView(chip);
                             }
                             if (userSnapshot.child("website").exists()) {
@@ -143,7 +202,7 @@ public class ProfileViewer extends AppCompatActivity {
                                 chip.setCheckable(false);
                                 chip.setChecked(false);
                                 chip.setChipIconResource(R.drawable.ic_link_24);
-                                chip.setChipBackgroundColorResource(R.color.basicBackground);
+                                chip.setChipBackgroundColorResource(R.color.basicBackgroundAlternate);
                                 chip.setOnClickListener(v ->
                                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(userSnapshot.child("website").getValue(String.class)))
                                                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)));
@@ -156,17 +215,17 @@ public class ProfileViewer extends AppCompatActivity {
                                 chip.setChecked(false);
                                 chip.setClickable(false);
                                 chip.setChipIconResource(R.drawable.ic_location_24);
-                                chip.setChipBackgroundColorResource(R.color.basicBackground);
+                                chip.setChipBackgroundColorResource(R.color.basicBackgroundAlternate);
                                 chipGroup.addView(chip);
                             }
                             if (userSnapshot.child("createdAt").exists()) {
                                 Chip chip = new Chip(ProfileViewer.this);
-                                chip.setText(String.valueOf(userSnapshot.child("createdAt").getValue(Long.class)));
+                                chip.setText(String.valueOf(Tools.setDateInProfile(userSnapshot.child("createdAt").getValue(Long.class))));
                                 chip.setCheckable(false);
                                 chip.setChecked(false);
                                 chip.setClickable(false);
                                 chip.setChipIconResource(R.drawable.ic_calendar_24);
-                                chip.setChipBackgroundColorResource(R.color.basicBackground);
+                                chip.setChipBackgroundColorResource(R.color.basicBackgroundAlternate);
                                 chipGroup.addView(chip);
                             }
                             if (userSnapshot.child("status").exists()) {
@@ -179,10 +238,8 @@ public class ProfileViewer extends AppCompatActivity {
                                 username.setText(userSnapshot.child("username").getValue(String.class));
                             }
                             if (userSnapshot.child("imageURL").exists()) {
-                                Glide.with(ProfileViewer.this).load(userSnapshot.child("imageURL").getValue(String.class)).centerInside().into(userImage);
-                            }
-                            if (userSnapshot.child("userUID").exists()) {
-                                userUID = userSnapshot.child("userUID").getValue(String.class);
+                                imageData = userSnapshot.child("imageURL").getValue(String.class);
+                                Glide.with(ProfileViewer.this).load(imageData).centerInside().into(userImage); //TODO Add placeholder
                             }
                         } else {
                             Toast.makeText(ProfileViewer.this, "Error", Toast.LENGTH_SHORT).show();

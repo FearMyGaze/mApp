@@ -123,20 +123,21 @@ public class SignUp extends AppCompatActivity {
 
         chooseImage.setOnClickListener(v -> pickImage.launch(Tools.imageSelector()));
 
-        createAccount.setOnClickListener(v -> {//TODO: I need to find a way to say the user we process the data
+        createAccount.setOnClickListener(v -> {
             String sEmail = Objects.requireNonNull(email.getText()).toString().trim();
             String sUsername = Objects.requireNonNull(username.getText()).toString().trim();
             String sDisplayName = Objects.requireNonNull(displayName.getText()).toString().trim();
             String sPassword = Objects.requireNonNull(password.getText()).toString().trim();
             if (!emailError.isErrorEnabled() && !usernameError.isErrorEnabled() && !displayNameError.isErrorEnabled() && !passwordError.isErrorEnabled()) {
-                Auth.signUpForm(sEmail, emailError, sUsername, usernameError, sDisplayName, sPassword, imageData, SignUp.this, new Auth.OnResultListener() {
+                Auth.signUpForm(sEmail, emailError, sUsername, usernameError, sDisplayName, sPassword, imageData, SignUp.this, new Auth.OnResponseListener() {
                     @Override
-                    public void onResult(boolean result) {
-                        if (result) {
+                    public void onResult(int resultCode) {
+                        if (resultCode == 1) {
                             startActivity(new Intent(SignUp.this, SignIn.class));
                             finish();
-                        } else
+                        } else {
                             Toast.makeText(SignUp.this, getString(R.string.blameError), Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override

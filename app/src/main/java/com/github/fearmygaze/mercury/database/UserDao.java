@@ -21,9 +21,6 @@ public interface UserDao {
     @Query("SELECT * FROM users WHERE userUID = :str")
     User getUserByUserUID(String str);
 
-    @Query("SELECT * FROM users WHERE name = :str")
-    User getUserByDisplayName(String str);
-
     @Insert(onConflict = REPLACE)
     void insertUser(User user);
 

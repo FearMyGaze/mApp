@@ -12,8 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.model.User;
-import com.github.fearmygaze.mercury.view.adapter.AdapterSearch;
+import com.github.fearmygaze.mercury.view.adapter.AdapterUserList;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -25,9 +27,10 @@ import java.util.Objects;
 
 public class Search extends AppCompatActivity {
 
+    ShapeableImageView goBack;
     TextInputEditText search;
 
-    AdapterSearch adapterSearch;
+    AdapterUserList adapterUserList;
     List<User> searchedUsers;
     RecyclerView searchRecycler;
 
@@ -36,9 +39,12 @@ public class Search extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+        goBack = findViewById(R.id.searchGoBack);
         search = findViewById(R.id.searchContainer);
         searchRecycler = findViewById(R.id.searchRecycler);
         searchedUsers = new ArrayList<>();
+
+        goBack.setOnClickListener(v -> onBackPressed());
 
         search.addTextChangedListener(new TextWatcher() {
             @Override
@@ -53,7 +59,7 @@ public class Search extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {//TODO: Bring a set amount of users and update them on scroll
-                if (s.toString().trim().length() >= 3) {
+                if (s.toString().trim().length() >= 3) { //TODO: Make the search for location, job
                     if (s.toString().trim().startsWith("@")) {
                         searchedUsers.clear();
                         FirebaseDatabase.getInstance().getReference().child("users")
@@ -67,11 +73,12 @@ public class Search extends AppCompatActivity {
                                                         Objects.requireNonNull(user.child("userUID").getValue(String.class)),
                                                         Objects.requireNonNull(user.child("username").getValue(String.class)),
                                                         Objects.requireNonNull(user.child("name").getValue(String.class)),
-                                                        Objects.requireNonNull(user.child("imageURL").getValue(String.class)))
-                                                );
+                                                        Objects.requireNonNull(user.child("imageURL").getValue(String.class)),
+                                                        Objects.requireNonNull(user.child("showFriends").getValue(Boolean.class))
+                                                ));
                                             }
-                                            adapterSearch.setUsers(searchedUsers);
-                                        }
+                                            adapterUserList.setUsers(searchedUsers);
+                                        } else adapterUserList.clearUsers();
                                     }
 
                                     @Override
@@ -79,7 +86,7 @@ public class Search extends AppCompatActivity {
                                         Toast.makeText(Search.this, error.getMessage(), Toast.LENGTH_SHORT).show();
                                     }
                                 });
-                    }else{
+                    } else {
                         searchedUsers.clear();
                         FirebaseDatabase.getInstance().getReference().child("users")
                                 .orderByChild("name").startAt(s.toString().trim()).endAt(s.toString().trim() + "\uf8ff")
@@ -92,11 +99,12 @@ public class Search extends AppCompatActivity {
                                                         Objects.requireNonNull(user.child("userUID").getValue(String.class)),
                                                         Objects.requireNonNull(user.child("username").getValue(String.class)),
                                                         Objects.requireNonNull(user.child("name").getValue(String.class)),
-                                                        Objects.requireNonNull(user.child("imageURL").getValue(String.class)))
-                                                );
+                                                        Objects.requireNonNull(user.child("imageURL").getValue(String.class)),
+                                                        Objects.requireNonNull(user.child("showFriends").getValue(Boolean.class))
+                                                ));
                                             }
-                                            adapterSearch.setUsers(searchedUsers);
-                                        }
+                                            adapterUserList.setUsers(searchedUsers);
+                                        } else adapterUserList.clearUsers();
                                     }
 
                                     @Override
@@ -105,13 +113,13 @@ public class Search extends AppCompatActivity {
                                     }
                                 });
                     }
-                } else adapterSearch.clearUsers();
+                } else adapterUserList.clearUsers();
             }
         });
 
-        adapterSearch = new AdapterSearch(searchedUsers);
+        adapterUserList = new AdapterUserList(new ArrayList<>(), FirebaseAuth.getInstance().getUid(), false);
         searchRecycler.setLayoutManager(new LinearLayoutManager(Search.this, LinearLayoutManager.VERTICAL, false));
-        searchRecycler.setAdapter(adapterSearch);
+        searchRecycler.setAdapter(adapterUserList);
     }
 
     @Override

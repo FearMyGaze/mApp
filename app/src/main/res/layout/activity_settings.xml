@@ -4,12 +4,712 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/basicBackground"
     tools:context=".view.activity.Settings">
 
-    <TextView
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/settingsGoBack"
+        android:layout_width="30dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/ic_arrow_back_24"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:shapeAppearance="@style/RoundedComponent"
+        android:contentDescription="@string/signUpGoBack"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Settings Screen"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="0dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintTop_toBottomOf="@id/settingsGoBack"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp">
+
+            <TextView
+                android:id="@+id/settingsAccountTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/settingsAccountTitle"
+                android:textColor="@color/textBold"
+                android:textStyle="bold"
+                android:textSize="24sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/settingsAccountParent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:cardBackgroundColor="@color/basicBackgroundAlternate"
+                app:cardCornerRadius="12.5dp"
+                app:cardElevation="0dp"
+                app:contentPadding="10dp"
+                app:layout_constraintStart_toStartOf="@id/settingsAccountTitle"
+                app:layout_constraintEnd_toEndOf="@id/settingsAccountTitle"
+                app:layout_constraintTop_toBottomOf="@id/settingsAccountTitle">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/settingsAccountChangeEmail"
+                        android:layout_width="0dp"
+                        android:layout_height="55dp"
+                        app:cardBackgroundColor="@color/basicBackgroundAlternate"
+                        app:cardCornerRadius="12.5dp"
+                        app:contentPadding="5dp"
+                        app:cardElevation="0dp"
+                        android:contentDescription="@string/settingsAccountChangeEmail"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/settingsAccountChangeEmailImage"
+                                android:layout_width="30dp"
+                                android:layout_height="0dp"
+                                android:src="@drawable/ic_person_24"
+                                android:tint="@color/variant"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:text="@string/settingsAccountChangeEmail"
+                                android:textSize="17sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/textBold"
+                                app:layout_constraintStart_toEndOf="@id/settingsAccountChangeEmailImage"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/settingsAccountChangePassword"
+                        android:layout_width="0dp"
+                        android:layout_height="55dp"
+                        android:layout_marginTop="10dp"
+                        app:cardBackgroundColor="@color/basicBackgroundAlternate"
+                        app:cardCornerRadius="12.5dp"
+                        app:contentPadding="5dp"
+                        app:cardElevation="0dp"
+                        android:contentDescription="@string/settingsAccountChangePassword"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/settingsAccountChangeEmail">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/settingsAccountChangePasswordImage"
+                                android:layout_width="30dp"
+                                android:layout_height="0dp"
+                                android:src="@drawable/ic_person_24"
+                                android:tint="@color/variant"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:text="@string/settingsAccountChangePassword"
+                                android:textSize="17sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/textBold"
+                                app:layout_constraintStart_toEndOf="@id/settingsAccountChangePasswordImage"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/settingsAccountEditProfile"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:layout_marginTop="10dp"
+                        app:cardBackgroundColor="@color/basicBackgroundAlternate"
+                        app:cardCornerRadius="12.5dp"
+                        app:contentPadding="5dp"
+                        app:cardElevation="0dp"
+                        android:contentDescription="@string/settingsAccountEditProfile"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/settingsAccountChangePassword">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/settingsAccountEditProfileImage"
+                                android:layout_width="30dp"
+                                android:layout_height="0dp"
+                                android:src="@drawable/ic_person_24"
+                                android:tint="@color/variant"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:text="@string/settingsAccountEditProfile"
+                                android:textSize="17sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/textBold"
+                                app:layout_constraintStart_toEndOf="@id/settingsAccountEditProfileImage"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/settingsAccountSignOut"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:layout_marginTop="10dp"
+                        app:cardBackgroundColor="@color/basicBackgroundAlternate"
+                        app:cardCornerRadius="12.5dp"
+                        app:contentPadding="5dp"
+                        app:cardElevation="0dp"
+                        android:contentDescription="@string/settingsAccountSignOut"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/settingsAccountEditProfile">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/settingsAccountSignOutImage"
+                                android:layout_width="30dp"
+                                android:layout_height="0dp"
+                                android:src="@drawable/ic_exit_24"
+                                android:tint="@color/variant"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:text="@string/settingsAccountSignOut"
+                                android:textSize="17sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/textBold"
+                                app:layout_constraintStart_toEndOf="@id/settingsAccountSignOutImage"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/settingsAccountDelete"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:layout_marginTop="10dp"
+                        app:cardBackgroundColor="@color/basicBackgroundAlternate"
+                        app:cardCornerRadius="12.5dp"
+                        app:contentPadding="5dp"
+                        app:cardElevation="0dp"
+                        android:contentDescription="@string/settingsAccountCloseAccount"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/settingsAccountSignOut">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/settingsAccountDeleteImage"
+                                android:layout_width="30dp"
+                                android:layout_height="0dp"
+                                android:src="@drawable/ic_heart_broken_24"
+                                android:tint="@android:color/holo_red_dark"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:text="@string/settingsAccountCloseAccount"
+                                android:textSize="17sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/textBold"
+                                app:layout_constraintStart_toEndOf="@id/settingsAccountDeleteImage"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/settingsPreferenceTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/settingsPreferencesTitle"
+                android:textColor="@color/textBold"
+                android:textStyle="bold"
+                android:textSize="24sp"
+                app:layout_constraintStart_toStartOf="@id/settingsAccountTitle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/settingsAccountParent"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/settingsPreferenceParent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:cardBackgroundColor="@color/basicBackgroundAlternate"
+                app:cardCornerRadius="12.5dp"
+                app:cardElevation="0dp"
+                app:contentPadding="10dp"
+                app:layout_constraintStart_toStartOf="@id/settingsPreferenceTitle"
+                app:layout_constraintEnd_toEndOf="@id/settingsPreferenceTitle"
+                app:layout_constraintTop_toBottomOf="@id/settingsPreferenceTitle">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/settingsPreferencesPending"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        app:cardBackgroundColor="@color/basicBackgroundAlternate"
+                        app:cardCornerRadius="12.5dp"
+                        app:contentPadding="5dp"
+                        app:cardElevation="0dp"
+                        android:contentDescription="@string/settingsPreferencesShowPending"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/settingsPreferencesPendingImage"
+                                android:layout_width="30dp"
+                                android:layout_height="0dp"
+                                android:src="@drawable/ic_info_24"
+                                android:tint="@color/variant"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:text="@string/settingsPreferencesShowPending"
+                                android:textSize="17sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/textBold"
+                                app:layout_constraintStart_toEndOf="@id/settingsPreferencesPendingImage"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/settingsPreferencesPendingSwitch"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:clickable="false"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/settingsPreferencesIgnored"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:layout_marginTop="10dp"
+                        app:cardBackgroundColor="@color/basicBackgroundAlternate"
+                        app:cardCornerRadius="12.5dp"
+                        app:contentPadding="5dp"
+                        app:cardElevation="0dp"
+                        android:contentDescription="@string/settingsPreferencesShowIgnored"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/settingsPreferencesPending">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/settingsPreferencesIgnoredImage"
+                                android:layout_width="30dp"
+                                android:layout_height="0dp"
+                                android:src="@drawable/ic_info_24"
+                                android:tint="@color/variant"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:text="@string/settingsPreferencesShowIgnored"
+                                android:textSize="17sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/textBold"
+                                app:layout_constraintStart_toEndOf="@id/settingsPreferencesIgnoredImage"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/settingsPreferencesIgnoredSwitch"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:clickable="false"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/settingsPreferencesFriends"
+                        android:layout_width="0dp"
+                        android:layout_height="55dp"
+                        android:layout_marginTop="10dp"
+                        app:cardBackgroundColor="@color/basicBackgroundAlternate"
+                        app:cardCornerRadius="12.5dp"
+                        app:contentPadding="5dp"
+                        app:cardElevation="0dp"
+                        android:contentDescription="@string/settingsPreferencesShowFriends"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/settingsPreferencesIgnored">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/settingsPreferencesFriendsImage"
+                                android:layout_width="30dp"
+                                android:layout_height="0dp"
+                                android:src="@drawable/ic_info_24"
+                                android:tint="@color/variant"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:text="@string/settingsPreferencesShowFriends"
+                                android:textSize="17sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/textBold"
+                                app:layout_constraintStart_toEndOf="@id/settingsPreferencesFriendsImage"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/settingsPreferencesFriendsSwitch"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:clickable="false"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/settingsPreferencesContent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:cardBackgroundColor="@color/basicBackgroundAlternate"
+                        app:cardCornerRadius="12.5dp"
+                        app:contentPadding="5dp"
+                        app:cardElevation="0dp"
+                        android:contentDescription="@string/settingsPreferencesShowImages"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/settingsPreferencesFriends">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/settingsPreferencesContentImage"
+                                android:layout_width="30dp"
+                                android:layout_height="0dp"
+                                android:src="@drawable/ic_info_24"
+                                android:tint="@color/variant"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:text="@string/settingsPreferencesShowImages"
+                                android:textSize="17sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/textBold"
+                                app:layout_constraintStart_toEndOf="@id/settingsPreferencesContentImage"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/settingsPreferencesContentSwitch"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:clickable="false"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/settingsPreferencesAlternate"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:layout_marginTop="10dp"
+                        app:cardBackgroundColor="@color/basicBackgroundAlternate"
+                        app:cardCornerRadius="12.5dp"
+                        app:contentPadding="5dp"
+                        app:cardElevation="0dp"
+                        android:contentDescription="@string/settingsPreferencesChangeTheme"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/settingsPreferencesContent">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/settingsPreferencesAlternateImage"
+                                android:layout_width="30dp"
+                                android:layout_height="0dp"
+                                android:src="@drawable/ic_info_24"
+                                android:tint="@color/variant"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:text="@string/settingsPreferencesChangeTheme"
+                                android:textSize="17sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/textBold"
+                                app:layout_constraintStart_toEndOf="@id/settingsPreferencesAlternateImage"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/settingsDocumentsTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/settingsDocumentsTitle"
+                android:textColor="@color/textBold"
+                android:textStyle="bold"
+                android:textSize="24sp"
+                app:layout_constraintStart_toStartOf="@id/settingsAccountTitle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/settingsPreferenceParent"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/settingsDocuments"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:cardBackgroundColor="@color/basicBackgroundAlternate"
+                app:cardCornerRadius="12.5dp"
+                app:cardElevation="0dp"
+                app:contentPadding="10dp"
+                app:layout_constraintStart_toStartOf="@id/settingsDocumentsTitle"
+                app:layout_constraintEnd_toEndOf="@id/settingsDocumentsTitle"
+                app:layout_constraintTop_toBottomOf="@id/settingsDocumentsTitle">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/settingsDocumentsPrivacy"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        app:cardBackgroundColor="@color/basicBackgroundAlternate"
+                        app:cardCornerRadius="12.5dp"
+                        app:contentPadding="5dp"
+                        app:cardElevation="0dp"
+                        android:contentDescription="@string/settingsDocumentsPrivacy"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/settingsDocumentsPrivacyImage"
+                                android:layout_width="30dp"
+                                android:layout_height="0dp"
+                                android:src="@drawable/ic_document_24"
+                                android:tint="@color/variant"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:text="@string/settingsDocumentsPrivacy"
+                                android:textSize="17sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/textBold"
+                                app:layout_constraintStart_toEndOf="@id/settingsDocumentsPrivacyImage"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/settingsDocumentsTerms"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:layout_marginTop="10dp"
+                        app:cardBackgroundColor="@color/basicBackgroundAlternate"
+                        app:cardCornerRadius="12.5dp"
+                        app:contentPadding="5dp"
+                        app:cardElevation="0dp"
+                        android:contentDescription="@string/settingsDocumentsTerms"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/settingsDocumentsPrivacy">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/settingsDocumentsTermsImage"
+                                android:layout_width="30dp"
+                                android:layout_height="0dp"
+                                android:src="@drawable/ic_document_24"
+                                android:tint="@color/variant"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:text="@string/settingsDocumentsTerms"
+                                android:textSize="17sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/textBold"
+                                app:layout_constraintStart_toEndOf="@id/settingsDocumentsTermsImage"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

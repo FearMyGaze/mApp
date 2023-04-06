@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/basicBackground"
+    tools:context=".view.util.ChangePassword">
+
+    <TextView
+        android:id="@+id/changePasswordTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/changePasswordTitle"
+        android:textStyle="bold"
+        android:textSize="22sp"
+        android:textColor="@color/textBold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/changePasswordSubTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/changePasswordSubTitle"
+        android:textSize="17sp"
+        android:textColor="@color/textBold"
+        app:layout_constraintStart_toStartOf="@id/changePasswordTitle"
+        app:layout_constraintEnd_toEndOf="@id/changePasswordTitle"
+        app:layout_constraintTop_toBottomOf="@id/changePasswordTitle"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/changePasswordError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+        android:hint="@string/generalPassword"
+        app:endIconMode="password_toggle"
+        app:counterEnabled="true"
+        app:counterMaxLength="255"
+        app:boxCornerRadiusTopStart="12.5dp"
+        app:boxCornerRadiusTopEnd="12.5dp"
+        app:boxCornerRadiusBottomStart="12.5dp"
+        app:boxCornerRadiusBottomEnd="12.5dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/changePasswordSubTitle">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/changePassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLength="255"
+            android:inputType="textPassword"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/changePasswordForgot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/changePasswordForgot"
+        android:textAllCaps="false"
+        app:cornerRadius="12.5dp"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/changePasswordError"/>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@id/changePasswordCancel"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/changePasswordCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="20dp"
+        android:text="@string/generalCancel"
+        android:textAllCaps="false"
+        app:cornerRadius="12.5dp"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/changePasswordNext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:text="@string/generalConfirm"
+        android:textAllCaps="false"
+        app:cornerRadius="12.5dp"
+        android:enabled="false"
+        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

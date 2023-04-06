@@ -2,37 +2,27 @@ package com.github.fearmygaze.mercury.view.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.Group;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.database.AppDatabase;
+import com.github.fearmygaze.mercury.firebase.Auth;
 import com.github.fearmygaze.mercury.model.User;
+import com.github.fearmygaze.mercury.util.PrivatePreference;
+import com.github.fearmygaze.mercury.util.Tools;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.messaging.FirebaseMessaging;
-
-import java.util.List;
 
 public class Main extends AppCompatActivity {
 
@@ -45,8 +35,7 @@ public class Main extends AppCompatActivity {
     FloatingActionButton personalFab, groupFab, searchFab;
     Group actionGroup;
 
-    //Firebase
-    FirebaseUser user;
+    User user;
 
     //General
     SwipeRefreshLayout refreshLayout;
@@ -58,9 +47,6 @@ public class Main extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
-
-        //Firebase
-        user = FirebaseAuth.getInstance().getCurrentUser();
 
         //General
         refreshLayout = findViewById(R.id.mainSwipeRefresh);
@@ -81,11 +67,21 @@ public class Main extends AppCompatActivity {
         searchFab = findViewById(R.id.mainSearchFab);
         actionGroup = findViewById(R.id.mainGroup);
 
+        setupPreferences();
+
         /*
          * TODO:
          *      When a user scrolls make the extended fab to vanish with animation
-         *      Remove the Pending, Ignored and make them in one activity and in the removed
-         *          button add the theme switch (to the alternate theme)
+         *      Remove the Group Button and make an option Create Group from the Chat option (?? see if it looks better)
+         *      Crash When i search "Lorem1" error message i get is "Inconsistency detected"
+         *      Create an imageViewer (with a func to download the image)
+         *      I need to find a way to say the user we process the data (in signUp)
+         *      Change the naming of the colors
+         *      Create a Starting Activity (with the app image and name) with the name Starting and in this
+         *          activity update the user components and stuff
+         *      For Privacy and Terms i have to create a document in github page and get the link and show it in the app
+         * Color Options:
+         *      #FAAB1A, #232F34, #5D1049
          * */
 
         actions.setOnClickListener(v -> fabController());
@@ -96,25 +92,27 @@ public class Main extends AppCompatActivity {
         });
 
         notificationsBtn.setOnClickListener(v -> {
-            startActivity(new Intent(Main.this, SignIn.class));
-            Toast.makeText(this, "Click", Toast.LENGTH_SHORT).show();
+            PrivatePreference preference = new PrivatePreference(Main.this);
+            preference.clearAllValues();
         });
 
         pendingBtn.setOnClickListener(v -> {
-            List<User> users = AppDatabase.getInstance(Main.this).userDao().getAllUsers();
-            for (int i = 0; i < users.size(); i++) {
-                Log.d("customLog", users.toString());
-            }
+            startActivity(new Intent(Main.this, PendingRequests.class)
+                    .putExtra("option", "pending")
+                    .putExtra("id", user.userUID));
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
 
         ignoredBtn.setOnClickListener(v -> {
-            AppDatabase.getInstance(Main.this).userDao().deleteAllUsers();
-            FirebaseAuth.getInstance().signOut();
-            Toast.makeText(this, "Click", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(Main.this, PendingRequests.class)
+                    .putExtra("option", "ignored")
+                    .putExtra("id", user.userUID));
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
 
         profileBtn.setOnClickListener(v -> {
-            startActivity(new Intent(Main.this, Profile.class));
+            startActivity(new Intent(Main.this, Profile.class)
+                    .putExtra("id", user.userUID));
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
 
@@ -129,7 +127,10 @@ public class Main extends AppCompatActivity {
         });
 
         personalFab.setOnClickListener(v -> {
-
+            fabController();
+            startActivity(new Intent(Main.this, RoomCreator.class)
+                    .putExtra("options", 0));
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
 
         refreshLayout.setOnRefreshListener(() -> refreshLayout.setRefreshing(false));
@@ -148,76 +149,24 @@ public class Main extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (user == null) { //TODO: I will have to see the other version on main PC if that is better or not + handle better the errors?
-            AppDatabase.getInstance(Main.this).userDao().deleteAllUsers();
-            startActivity(new Intent(Main.this, SignIn.class));
-            finish();
-        } else {
-            Glide.with(Main.this).load(user.getPhotoUrl()).centerCrop().apply(new RequestOptions().override(1024)).into(profileImage);
-            FirebaseMessaging.getInstance().getToken().addOnSuccessListener(s -> {
-                FirebaseDatabase.getInstance().getReference().child("users")
-                        .orderByChild("userUID").equalTo(user.getUid()).limitToFirst(1)
-                        .addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if (snapshot.exists()) {
-                                    DataSnapshot userSnapshot = snapshot.getChildren().iterator().next();
-                                    FirebaseDatabase.getInstance().getReference().child("users").child(user.getUid())
-                                            .setValue(new User(
-                                                    user.getUid(),
-                                                    user.getEmail(),
-                                                    userSnapshot.child("username").getValue(String.class),
-                                                    user.getDisplayName(),
-                                                    userSnapshot.child("imageURL").getValue(String.class),
-                                                    s,
-                                                    userSnapshot.child("status").getValue(String.class),
-                                                    userSnapshot.child("location").getValue(String.class),
-                                                    userSnapshot.child("job").getValue(String.class),
-                                                    userSnapshot.child("website").getValue(String.class),
-                                                    userSnapshot.child("createdAt").getValue(Long.class)
-                                                    )
-                                                    .toMap(false)
-                                            ).addOnSuccessListener(unused -> {
-                                                        UserProfileChangeRequest changeRequest = new UserProfileChangeRequest.Builder()
-                                                                .setPhotoUri(Uri.parse(userSnapshot.child("imageURL").getValue(String.class))).build();
-                                                        user.updateProfile(changeRequest).addOnSuccessListener(unused1 -> {
-                                                            Glide.with(Main.this).load(user.getPhotoUrl()).centerCrop().apply(new RequestOptions().override(1024)).into(profileImage);
-                                                            AppDatabase.getInstance(Main.this).userDao().updateUser(new User( //TODO: instead of doing this all the time make something to minimize the code
-                                                                    user.getUid(),
-                                                                    user.getEmail(),
-                                                                    userSnapshot.child("username").getValue(String.class),
-                                                                    user.getDisplayName(),
-                                                                    userSnapshot.child("imageURL").getValue(String.class),
-                                                                    s,
-                                                                    userSnapshot.child("status").getValue(String.class),
-                                                                    userSnapshot.child("location").getValue(String.class),
-                                                                    userSnapshot.child("job").getValue(String.class),
-                                                                    userSnapshot.child("website").getValue(String.class),
-                                                                    userSnapshot.child("createdAt").getValue(Long.class))
-                                                            );
-                                                        }).addOnFailureListener(e -> Toast.makeText(Main.this, e.getMessage(), Toast.LENGTH_SHORT).show());
-                                                    }
-                                            ).addOnFailureListener(e -> {
-                                                Toast.makeText(Main.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                startActivity(new Intent(Main.this, SignIn.class));
-                                                finish();
-                                            });
-                                }
-                            }
+        setupPreferences();
+        Auth.rememberMe(Main.this, new Auth.OnResponseListener() {
+            @Override
+            public void onResult(int resultCode) {
+                if (resultCode == 1) {
+                    user = AppDatabase.getInstance(Main.this).userDao().getUserByUserUID(FirebaseAuth.getInstance().getUid());
+                    Glide.with(Main.this).load(user.imageURL).into(profileImage);
+                } else {
+                    AppDatabase.getInstance(Main.this).userDao().deleteAllUsers();
+                    finish();
+                }
+            }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-                                Toast.makeText(Main.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent(Main.this, SignIn.class));
-                                finish();
-                            }
-                        });
-            }).addOnFailureListener(e -> {
-                Toast.makeText(Main.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(Main.this, SignIn.class));
-                finish();
-            });
-        }
+            @Override
+            public void onFailure(String message) {
+                Toast.makeText(Main.this, message, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -233,6 +182,16 @@ public class Main extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    private void setupPreferences() {
+        if (Tools.getPreference("showIgnored", Main.this)) {
+            ignoredBtn.setVisibility(View.VISIBLE);
+        } else ignoredBtn.setVisibility(View.GONE);
+
+        if (Tools.getPreference("showPending", Main.this)) {
+            pendingBtn.setVisibility(View.VISIBLE);
+        } else pendingBtn.setVisibility(View.GONE);
     }
 
 }

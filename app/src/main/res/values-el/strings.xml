@@ -5,6 +5,7 @@
     <string name="generalChoose">Επιλογή</string>
     <string name="generalOK">ΟΚ</string>
     <string name="generalCancel">Ακύρωση</string>
+    <string name="generalNext">Επόμενο</string>
     <string name="generalUsername">Όνομα χρήστη</string>
     <string name="generalName">Όνομα</string>
     <string name="generalEmail">Ηλ. Διεύθυνση</string>
@@ -16,6 +17,10 @@
     <string name="generalSave">Αποθύκευση</string>
     <string name="generalAdd">Προσθήκη</string>
     <string name="generalRemove">Αφαίρεση</string>
+    <string name="generalFriends">Φίλοι</string>
+    <string name="generalAccept">Επιβεβαίωση</string>
+    <string name="generalIgnore">Αγνόησε</string>
+    <string name="generalConfirm">Επιβεβαίωση</string>
 
     <!-- SignIn (Activity) -->
     <string name="signInWelcome">Καλώς Ήρθατε</string>
@@ -45,6 +50,37 @@
     <!-- Auth -->
     <string name="authEmail">Η Ηλ. διέυθυνση υπάρχη ήδη!</string>
     <string name="authUsername">Το όνομα χρήστη υπάρχει ήδη!</string>
+
+    <!-- PendingRequests (Activity) -->
+    <string name="pendingRequestsFriends">Αιτήματα φιλίας:</string>
+    <string name="pendingRequestsIgnored">Αγνωημένα αιτήματα:</string>
+    <string name="pendingRequestsError">Δεν μπορέσαμε να βρούμε αιτήματα φιλίας</string>
+
+    <!-- Settings (Activity) -->
+    <string name="settingsAccountTitle">Λογαριασμός</string>
+    <string name="settingsPreferencesTitle">Προτιμήσεις</string>
+    <string name="settingsDocumentsTitle">Έγραφα</string>
+    <string name="settingsAccountSignOut">Αποσύνδεση</string>
+    <string name="settingsAccountChangeEmail">Αλλαγή Ηλ.διεύθυνση</string>
+    <string name="settingsAccountChangePassword">Αλλαγή Κωδικού</string>
+    <string name="settingsAccountEditProfile">Τροποποίση Προφίλ</string>
+    <string name="settingsAccountCloseAccount">Κλείσιμο λογαριασμού</string>
+    <string name="settingsPreferencesShowPending">Εμφάνηση Αιτημάτων</string>
+    <string name="settingsPreferencesShowIgnored">Εμφάνηση Αγνωημένων</string>
+    <string name="settingsPreferencesShowFriends">Εμφάνιση φίλων</string>
+    <string name="settingsPreferencesShowImages">Εμφάνιση εικόνων</string>
+    <string name="settingsPreferencesChangeTheme">Αλλαγή θέματος</string>
+    <string name="settingsDocumentsPrivacy">Πολιτική απορρήτου</string>
+    <string name="settingsDocumentsTerms">Όροι &amp; προϋποθέσεις</string>
+
+    <!-- ChangeInformation (Activity) -->
+    <string name="changeVerifyTitle">Επαλύθευση του κωδικόυ</string>
+    <string name="changeVerifySubTitle">Πληκτρολογήστε ξανά τον κωδικό πρόσβασής σας</string>
+    <string name="changeEmailTitle">Αλλαγή Ηλ.διεύθυνσης</string>
+    <string name="changeEmailSubTitle">Η Ηλ.διεύθυνση σε χρήση ειναι: </string>
+    <string name="changePasswordTitle">Αλλαγή κωδικού</string>
+    <string name="changePasswordSubTitle">Τοποθετήστε κάτω τον νέο κωδικό της επιλογής σας</string>
+    <string name="changePasswordForgot">Ξέχασες τον κωδικό σου?</string>
 
     <!-- RegEx -->
     <string name="regExEmpty">Δεν μπορεί να είναι κενό</string>

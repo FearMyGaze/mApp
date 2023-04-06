@@ -29,7 +29,7 @@ public class Tools {
         layout.setErrorEnabled(enabled);
         layout.setError(message);
         return enabled;
-    }//TODO: Make it permanent
+    }//TODO: Make it permanent (before that we need to reverse the output because when we send an error we dont want the method to pass true)
 
     public static void setTimedErrorToLayout(TextInputLayout layout, String message, boolean enabled, int ms) {
         setErrorToLayout(layout, message, enabled);
@@ -52,7 +52,7 @@ public class Tools {
         }
     }
 
-    public static String setDateFormat(long time) {// TODO: Show the correct timestamp and show to Short Version or the Long Version
+    public static String setDateFormat(long time) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(time), ZoneId.systemDefault());
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("EEEE, dd MMMM yyyy, hh:mm a");
@@ -64,6 +64,51 @@ public class Tools {
         }
     }
 
+    public static String setDateInProfile(long time) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(time), ZoneId.systemDefault());
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy");
+            return localDateTime.format(dateTimeFormatter);
+        } else {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(time);
+            return DateFormat.getDateInstance(DateFormat.LONG).format(calendar.getTime());
+        }
+    }
+
+    public static void createSettingsPreference(Context context) {
+        PrivatePreference preference = new PrivatePreference(context);
+        if (!preference.contains("alternateEnabled")) {
+            preference.putBoolean("alternateEnabled", false);
+        }
+        if (!preference.contains("showIgnored")) {
+            preference.putBoolean("showIgnored", false);
+        }
+        if (!preference.contains("showImages")) {
+            preference.putBoolean("showImages", true);
+        }
+        if (!preference.contains("showFriends")) {
+            preference.putBoolean("showFriends", true);
+        }
+        if (!preference.contains("showPending")) {
+            preference.putBoolean("showPending", true);
+        }
+
+    }
+
+    public static void writePreference(String key, boolean value, Context context) {
+        PrivatePreference preference = new PrivatePreference(context);
+        preference.putBoolean(key, value);
+    }
+
+    public static boolean getPreference(String key, Context context) {
+        PrivatePreference preference = new PrivatePreference(context);
+        if (preference.contains(key)) {
+            return preference.getBoolean(key);
+        }
+        return false;
+    }
+
     public static Intent imageSelector() {
         return new Intent(Intent.ACTION_PICK).setType("image/*")
                 .setAction(Intent.ACTION_GET_CONTENT)
@@ -73,10 +118,16 @@ public class Tools {
     }
 
     public static String removeHttp(@NonNull String value) {
+        if (value.startsWith("https://www."))
+            return value.replace("https://www.", "");
+        if (value.startsWith("http://www."))
+            return value.replace("http://www.", "");
         if (value.startsWith("http://"))
             return value.replace("http://", "");
         if (value.startsWith("https://"))
             return value.replace("https://", "");
+        if (value.startsWith("www."))
+            return value.replace("www.", "");
         return value;
     }
 }

@@ -87,23 +87,6 @@ public class ProfileEdit extends AppCompatActivity {
             }
         });
 
-        jobCell.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                //TODO: Maybe add a simple RegEx
-            }
-        });
-
         websiteCell.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -131,12 +114,12 @@ public class ProfileEdit extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        finish();
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        finish();
     }
 
     private void sendData() {
-        if (!nameLayout.isErrorEnabled() && !jobLayout.isErrorEnabled() && !websiteLayout.isErrorEnabled()) {
+        if (!nameLayout.isErrorEnabled() && !websiteLayout.isErrorEnabled()) {
             if (!changed) {
                 FirebaseDatabase.getInstance().getReference()
                         .child("users").child(user.userUID)
@@ -151,6 +134,7 @@ public class ProfileEdit extends AppCompatActivity {
                                 Objects.requireNonNull(locationCell.getText()).toString().trim(),
                                 Objects.requireNonNull(jobCell.getText()).toString().trim(),
                                 Objects.requireNonNull(websiteCell.getText()).toString().trim(),
+                                user.showFriends,
                                 user.createdAt).toMap(false))
                         .addOnSuccessListener(unused -> {
                             AppDatabase.getInstance(ProfileEdit.this).userDao().updateUser(new User(
@@ -164,6 +148,7 @@ public class ProfileEdit extends AppCompatActivity {
                                     Objects.requireNonNull(locationCell.getText()).toString().trim(),
                                     Objects.requireNonNull(jobCell.getText()).toString().trim(),
                                     Objects.requireNonNull(websiteCell.getText()).toString().trim(),
+                                    user.showFriends,
                                     user.createdAt
                             ));
                             onBackPressed();
@@ -186,6 +171,7 @@ public class ProfileEdit extends AppCompatActivity {
                                                 Objects.requireNonNull(locationCell.getText()).toString().trim(),
                                                 Objects.requireNonNull(jobCell.getText()).toString().trim(),
                                                 Objects.requireNonNull(websiteCell.getText()).toString().trim(),
+                                                user.showFriends,
                                                 user.createdAt).toMap(false))
                                         .addOnSuccessListener(unused -> {
                                             AppDatabase.getInstance(ProfileEdit.this).userDao().updateUser(new User(
@@ -199,6 +185,7 @@ public class ProfileEdit extends AppCompatActivity {
                                                     Objects.requireNonNull(locationCell.getText()).toString().trim(),
                                                     Objects.requireNonNull(jobCell.getText()).toString().trim(),
                                                     Objects.requireNonNull(websiteCell.getText()).toString().trim(),
+                                                    user.showFriends,
                                                     user.createdAt
                                             ));
                                             onBackPressed();

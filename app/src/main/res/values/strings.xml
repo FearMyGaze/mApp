@@ -6,6 +6,7 @@
     <string name="generalChoose">Choose</string>
     <string name="generalOK">OK</string>
     <string name="generalCancel">Cancel</string>
+    <string name="generalNext">Next</string>
     <string name="generalUsername">Username</string>
     <string name="generalName">Name</string>
     <string name="generalEmail">Email</string>
@@ -17,6 +18,10 @@
     <string name="generalSave">Save</string>
     <string name="generalAdd">Add</string>
     <string name="generalRemove">Remove</string>
+    <string name="generalFriends">Friends</string>
+    <string name="generalAccept">Accept</string>
+    <string name="generalIgnore">Ignore</string>
+    <string name="generalConfirm">Confirm</string>
 
     <!-- SignIn (Activity) -->
     <string name="signInWelcome">Welcome</string>
@@ -31,11 +36,6 @@
     <string name="signUpCreateAcc">Create Account</string>
     <string name="signUpTerms">By tapping Create Account you Agree to Terms and Conditions</string>
 
-    <!-- HelperText -->
-    <string name="helperEmail" translatable="false">email@address.com</string>
-    <string name="helperUserName" translatable="false">username</string>
-    <string name="helperName" translatable="false">John Doe</string>
-
     <!-- Main (Activity) -->
     <string name="mainExtendedFab">Actions</string>
     <string name="mainPersonalFab">Personal</string>
@@ -48,6 +48,38 @@
     <!-- ProfileEdit (Activity) -->
     <string name="profileEditHelper">Edit Profile</string>
 
+    <!-- PendingRequests (Activity) -->
+    <string name="pendingRequestsFriends">Pending requests:</string>
+    <string name="pendingRequestsIgnored">Ignored requests:</string>
+    <string name="pendingRequestsError">We couldn\'t find Pending Requests</string>
+
+    <!-- Settings (Activity) -->
+    <string name="settingsAccountTitle">Account</string>
+    <string name="settingsPreferencesTitle">Preference</string>
+    <string name="settingsDocumentsTitle">Documents</string>
+    <string name="settingsAccountSignOut">Sign out</string>
+    <string name="settingsAccountChangeEmail">Change email</string>
+    <string name="settingsAccountChangePassword">Change password</string>
+    <string name="settingsAccountEditProfile">Edit profile</string>
+    <string name="settingsAccountCloseAccount">Close account</string>
+    <string name="settingsPreferencesShowPending">Show Pending</string>
+    <string name="settingsPreferencesShowIgnored">Show ignored</string>
+    <string name="settingsPreferencesShowFriends">Show friends</string>
+    <string name="settingsPreferencesShowImages">Show images</string>
+    <string name="settingsPreferencesChangeTheme">Change theme</string>
+    <string name="settingsDocumentsPrivacy">Privacy policy</string>
+    <string name="settingsDocumentsTerms">Terms &amp; Conditions</string>
+
+    <!-- ChangeInformation (Activity) -->
+    <string name="changeVerifyTitle">Verify your password</string>
+    <string name="changeVerifySubTitle">Re-enter your password to continue</string>
+    <string name="changeEmailTitle">Change email</string>
+    <string name="changeEmailSubTitle">Your current email is: </string>
+    <string name="changePasswordTitle">Change password</string>
+    <string name="changePasswordSubTitle">Type bellow the new password of your choice</string>
+    <string name="changePasswordForgot">Forgot password?</string>
+
+
     <!-- RegEx (Errors)-->
     <string name="regExEmpty">Can\'t be empty</string>
     <string name="regExSmaller">Can\'t be smaller than </string>
@@ -57,6 +89,12 @@
     <string name="regExName">We only allow English and Greek characters, a dot, a space in between</string>
     <string name="regExPassword">The minimum is: 1 Special character, 1 Number and 6 characters</string>
     <string name="regExURL">Not a valid link</string>
+
+    <!-- HelperText -->
+    <string name="helperEmail" translatable="false">email@address.com</string>
+    <string name="helperUserName" translatable="false">username</string>
+    <string name="helperName" translatable="false">John Doe</string>
+
 
     <!-- Auth (Errors) -->
     <string name="authEmail">Email Already Exists!</string>

@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.activity.Search"
-    android:background="@color/basicBackground">
+    android:background="@color/basicBackground"
+    tools:context=".view.activity.RoomCreator">
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/searchGoBack"
+        android:id="@+id/roomCreatorGoBack"
         android:layout_width="30dp"
         android:layout_height="0dp"
         android:layout_marginStart="15dp"
@@ -18,11 +18,11 @@
         android:contentDescription="@string/signUpGoBack"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/searchContainerError"
-        app:layout_constraintBottom_toBottomOf="@id/searchContainerError"/>
+        app:layout_constraintTop_toTopOf="@id/roomCreatorSearchError"
+        app:layout_constraintBottom_toBottomOf="@id/roomCreatorSearchError"/>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/searchContainerError"
+        android:id="@+id/roomCreatorSearchError"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
@@ -36,12 +36,12 @@
         app:boxCornerRadiusBottomStart="12.5dp"
         app:boxCornerRadiusBottomEnd="12.5dp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        app:layout_constraintStart_toEndOf="@id/searchGoBack"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/roomCreatorGoBack"
+        app:layout_constraintEnd_toStartOf="@id/roomCreatorEnableGroup"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/searchContainer"
+            android:id="@+id/roomCreatorSearch"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:imeOptions="actionDone"
@@ -49,23 +49,38 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/roomCreatorEnableGroup"
+        android:layout_width="30dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="15dp"
+        android:src="@drawable/ic_people_24"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:shapeAppearance="@style/RoundedComponent"
+        android:contentDescription="Enable Group"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/roomCreatorSearchError"
+        app:layout_constraintBottom_toBottomOf="@id/roomCreatorSearchError"/>
+
     <com.google.android.material.divider.MaterialDivider
-        android:id="@+id/searchDivider"
+        android:id="@+id/chatCreatorDivider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         app:dividerThickness="2dp"
-        app:layout_constraintTop_toBottomOf="@id/searchContainerError"/>
+        app:layout_constraintTop_toBottomOf="@id/roomCreatorSearchError"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/searchRecycler"
-        android:layout_width="match_parent"
+        android:id="@+id/roomCreatorUsers"
+        android:layout_width="0dp"
         android:layout_height="0dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
         android:layout_marginTop="5dp"
-        android:padding="5dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/searchDivider"
+        app:layout_constraintTop_toBottomOf="@id/chatCreatorDivider"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.firebase.Auth;
 import com.github.fearmygaze.mercury.util.RegEx;
+import com.github.fearmygaze.mercury.util.Tools;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -76,16 +77,18 @@ public class SignIn extends AppCompatActivity {
 
         signIn.setOnClickListener(v -> {
             if (!credentialError.isErrorEnabled() && !passwordError.isErrorEnabled()) {
-                Auth.signInForm(Objects.requireNonNull(credential.getText()).toString().trim(),
+                Auth.signInUser(Objects.requireNonNull(credential.getText()).toString().trim(),
                         Objects.requireNonNull(password.getText()).toString().trim(), SignIn.this,
-                        new Auth.OnResultListener() {
+                        new Auth.OnResponseListener() {
                             @Override
-                            public void onResult(boolean result) {
-                                if (result){
+                            public void onResult(int resultCode) {
+                                if (resultCode == 1) {
+                                    Tools.createSettingsPreference(SignIn.this);
                                     startActivity(new Intent(SignIn.this, Main.class));
                                     finish();
-                                }else
-                                    Toast.makeText(SignIn.this, "Error", Toast.LENGTH_SHORT).show();
+                                } else if (resultCode == -1){
+                                    Toast.makeText(SignIn.this, "You need to verify you email", Toast.LENGTH_SHORT).show();
+                                }
                             }
 
                             @Override
