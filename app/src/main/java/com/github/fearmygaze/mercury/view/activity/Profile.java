@@ -3,6 +3,7 @@ package com.github.fearmygaze.mercury.view.activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,6 +44,8 @@ public class Profile extends AppCompatActivity {
 
     User user;
 
+    TypedValue typedValue;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +69,9 @@ public class Profile extends AppCompatActivity {
         name.setText(user.name);
         username.setText(user.username);
         status.setText(user.status);
+
+        typedValue = new TypedValue();
+        getTheme().resolveAttribute(android.R.attr.colorPrimary, typedValue, true);
 
         userImage.setOnClickListener(v -> {
             startActivity(new Intent(Profile.this, ImageViewer.class)
@@ -132,6 +138,7 @@ public class Profile extends AppCompatActivity {
             chip.setChecked(false);
             chip.setClickable(false);
             chip.setChipIconResource(R.drawable.ic_repair_service_24);
+            chip.setChipIconTintResource(typedValue.resourceId);
             chip.setChipBackgroundColorResource(R.color.basicBackgroundAlternate);
             chipGroup.addView(chip);
         }
@@ -142,6 +149,7 @@ public class Profile extends AppCompatActivity {
             chip.setCheckable(false);
             chip.setChecked(false);
             chip.setChipIconResource(R.drawable.ic_link_24);
+            chip.setChipIconTintResource(typedValue.resourceId);
             chip.setChipBackgroundColorResource(R.color.basicBackgroundAlternate);
             chip.setOnClickListener(v -> {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(user.website))
@@ -157,6 +165,7 @@ public class Profile extends AppCompatActivity {
             chip.setChecked(false);
             chip.setClickable(false);
             chip.setChipIconResource(R.drawable.ic_location_24);
+            chip.setChipIconTintResource(typedValue.resourceId);
             chip.setChipBackgroundColorResource(R.color.basicBackgroundAlternate);
             chipGroup.addView(chip);
         }
@@ -168,6 +177,7 @@ public class Profile extends AppCompatActivity {
             chip.setChecked(false);
             chip.setClickable(false);
             chip.setChipIconResource(R.drawable.ic_calendar_24);
+            chip.setChipIconTintResource(typedValue.resourceId);
             chip.setChipBackgroundColorResource(R.color.basicBackgroundAlternate);
             chipGroup.addView(chip);
         }

@@ -21,6 +21,9 @@ public interface UserDao {
     @Query("SELECT * FROM users WHERE userUID = :str")
     User getUserByUserUID(String str);
 
+    @Query("UPDATE users SET token =:token WHERE userUID= :id")
+    void updateUserToken(String token, String id);
+
     @Insert(onConflict = REPLACE)
     void insertUser(User user);
 

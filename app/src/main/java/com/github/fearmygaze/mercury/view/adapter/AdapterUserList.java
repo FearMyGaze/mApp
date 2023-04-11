@@ -20,7 +20,7 @@ import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.List;
 
-public class AdapterUserList extends RecyclerView.Adapter<AdapterUserList.MyViewHolder> {
+public class AdapterUserList extends RecyclerView.Adapter<AdapterUserList.UserVH> {
 
     List<User> users;
     String userID;
@@ -34,12 +34,12 @@ public class AdapterUserList extends RecyclerView.Adapter<AdapterUserList.MyView
 
     @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_user_list, parent, false));
+    public UserVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new UserVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_user_list, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull UserVH holder, int position) {
         Glide.with(holder.itemView.getRootView()).load(users.get(position).imageURL).centerInside().into(holder.image); //TODO: Add Placeholder
         holder.name.setText(users.get(position).name);
         holder.username.setText(users.get(position).username);
@@ -50,11 +50,14 @@ public class AdapterUserList extends RecyclerView.Adapter<AdapterUserList.MyView
                         .putExtra("receiverID", users.get(position).userUID)
                         .putExtra("showFriends", users.get(position).showFriends)
                 );
-            } else {
-                v.getContext().startActivity(new Intent(v.getContext(), ChatRoom.class));
+            } else { //TODO: We need to check if the chatRoomExists and if the room doesnt exist pass the following
+                v.getContext().startActivity(new Intent(v.getContext(), ChatRoom.class)
+                        .putExtra("receiverID", users.get(position).userUID)
+                        .putExtra("userImage", users.get(position).imageURL)
+                        .putExtra("userName", users.get(position).name));
             }
         });
-        holder.more.setOnClickListener(v -> {
+        holder.more.setOnClickListener(v -> {//TODO: show extra stuff for the user
             Toast.makeText(v.getContext(), "Not Implemented", Toast.LENGTH_SHORT).show();
         });
     }
@@ -83,12 +86,12 @@ public class AdapterUserList extends RecyclerView.Adapter<AdapterUserList.MyView
         return users.size();
     }
 
-    protected static class MyViewHolder extends RecyclerView.ViewHolder {
+    protected static class UserVH extends RecyclerView.ViewHolder {
         MaterialCardView root;
         ShapeableImageView image, more;
         TextView name, username;
 
-        public MyViewHolder(@NonNull View itemView) {
+        public UserVH(@NonNull View itemView) {
             super(itemView);
             root = itemView.findViewById(R.id.adapterUserListRoot);
             image = itemView.findViewById(R.id.adapterUserListImage);

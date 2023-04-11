@@ -21,7 +21,7 @@ import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.List;
 
-public class AdapterFriendRequest extends RecyclerView.Adapter<AdapterFriendRequest.MyViewHolder> {
+public class AdapterFriendRequest extends RecyclerView.Adapter<AdapterFriendRequest.FriendRequestVH> {
 
     List<User> users;
     String userID;
@@ -35,12 +35,12 @@ public class AdapterFriendRequest extends RecyclerView.Adapter<AdapterFriendRequ
 
     @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_friend_request, parent, false));
+    public FriendRequestVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new FriendRequestVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_friend_request, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull FriendRequestVH holder, int position) {
         Glide.with(holder.itemView.getRootView()).load(users.get(position).imageURL).centerInside().into(holder.image); //TODO: Add Placeholder
         holder.name.setText(users.get(position).name);
         holder.username.setText(users.get(position).username);
@@ -104,13 +104,13 @@ public class AdapterFriendRequest extends RecyclerView.Adapter<AdapterFriendRequ
         users.remove(pos);
     }
 
-    protected static class MyViewHolder extends RecyclerView.ViewHolder {
+    protected static class FriendRequestVH extends RecyclerView.ViewHolder {
         MaterialCardView root;
         ShapeableImageView image, more;
         TextView name, username;
         MaterialButton ignore, accept;
 
-        public MyViewHolder(@NonNull View itemView) {
+        public FriendRequestVH(@NonNull View itemView) {
             super(itemView);
             root = itemView.findViewById(R.id.adapterFriendRequestRoot);
             image = itemView.findViewById(R.id.adapterFriendRequestImage);

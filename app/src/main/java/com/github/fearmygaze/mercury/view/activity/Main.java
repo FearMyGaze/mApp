@@ -1,6 +1,5 @@
 package com.github.fearmygaze.mercury.view.activity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -40,13 +39,17 @@ public class Main extends AppCompatActivity {
     //General
     SwipeRefreshLayout refreshLayout;
 
-    @SuppressLint("NonConstantResourceId")
+    //Firebase
+    FirebaseAuth auth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+
+        auth = FirebaseAuth.getInstance();
 
         //General
         refreshLayout = findViewById(R.id.mainSwipeRefresh);
@@ -80,6 +83,7 @@ public class Main extends AppCompatActivity {
          *      Create a Starting Activity (with the app image and name) with the name Starting and in this
          *          activity update the user components and stuff
          *      For Privacy and Terms i have to create a document in github page and get the link and show it in the app
+         *      We need to create a Service that updates the user data
          * Color Options:
          *      #FAAB1A, #232F34, #5D1049
          * */
@@ -150,15 +154,20 @@ public class Main extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         setupPreferences();
-        Auth.rememberMe(Main.this, new Auth.OnResponseListener() {
+        Auth.rememberMe(auth, Main.this, new Auth.OnResponseListener() {
             @Override
             public void onResult(int resultCode) {
-                if (resultCode == 1) {
-                    user = AppDatabase.getInstance(Main.this).userDao().getUserByUserUID(FirebaseAuth.getInstance().getUid());
-                    Glide.with(Main.this).load(user.imageURL).into(profileImage);
-                } else {
-                    AppDatabase.getInstance(Main.this).userDao().deleteAllUsers();
-                    finish();
+                switch (resultCode) {
+                    case -1:
+                    case -2:
+                    case 0:
+                        //TODO: Maybe remove all the users?
+                        startActivity(new Intent(Main.this, SignIn.class));
+                        finish();
+                    case 1:
+                        user = AppDatabase.getInstance(Main.this).userDao().getUserByUserUID(auth.getUid());
+                        Glide.with(Main.this).load(user.imageURL).fitCenter().into(profileImage);
+                        break;
                 }
             }
 

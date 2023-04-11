@@ -63,7 +63,7 @@ public class ChangeEmail extends AppCompatActivity {
         });
 
         next.setOnClickListener(v ->
-                Auth.updateEmail(Objects.requireNonNull(email.getText()).toString().trim(), new Auth.OnResponseListener() {
+                Auth.updateEmail(Objects.requireNonNull(email.getText()).toString().trim(), user, ChangeEmail.this, new Auth.OnResponseListener() {
                     @Override
                     public void onResult(int resultCode) {
                         if (resultCode == 1) {

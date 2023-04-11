@@ -3,6 +3,7 @@ package com.github.fearmygaze.mercury.view.util;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +48,8 @@ public class ProfileViewer extends AppCompatActivity {
     String senderID, receiverID, imageData;
     boolean showFriends;
 
+    TypedValue typedValue;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +67,10 @@ public class ProfileViewer extends AppCompatActivity {
         senderID = intent.getStringExtra("senderID");
         receiverID = intent.getStringExtra("receiverID");
         showFriends = intent.getBooleanExtra("showFriends", false);
+
+        typedValue = new TypedValue();
+        getTheme().resolveAttribute(android.R.attr.colorPrimary, typedValue, true);
+
         userInfo();
 
         userImage.setOnClickListener(v -> {
@@ -193,6 +200,7 @@ public class ProfileViewer extends AppCompatActivity {
                                 chip.setChecked(false);
                                 chip.setClickable(false);
                                 chip.setChipIconResource(R.drawable.ic_repair_service_24);
+                                chip.setChipIconTintResource(typedValue.resourceId);
                                 chip.setChipBackgroundColorResource(R.color.basicBackgroundAlternate);
                                 chipGroup.addView(chip);
                             }
@@ -202,6 +210,7 @@ public class ProfileViewer extends AppCompatActivity {
                                 chip.setCheckable(false);
                                 chip.setChecked(false);
                                 chip.setChipIconResource(R.drawable.ic_link_24);
+                                chip.setChipIconTintResource(typedValue.resourceId);
                                 chip.setChipBackgroundColorResource(R.color.basicBackgroundAlternate);
                                 chip.setOnClickListener(v ->
                                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(userSnapshot.child("website").getValue(String.class)))
@@ -215,6 +224,7 @@ public class ProfileViewer extends AppCompatActivity {
                                 chip.setChecked(false);
                                 chip.setClickable(false);
                                 chip.setChipIconResource(R.drawable.ic_location_24);
+                                chip.setChipIconTintResource(typedValue.resourceId);
                                 chip.setChipBackgroundColorResource(R.color.basicBackgroundAlternate);
                                 chipGroup.addView(chip);
                             }
@@ -225,6 +235,7 @@ public class ProfileViewer extends AppCompatActivity {
                                 chip.setChecked(false);
                                 chip.setClickable(false);
                                 chip.setChipIconResource(R.drawable.ic_calendar_24);
+                                chip.setChipIconTintResource(typedValue.resourceId);
                                 chip.setChipBackgroundColorResource(R.color.basicBackgroundAlternate);
                                 chipGroup.addView(chip);
                             }
