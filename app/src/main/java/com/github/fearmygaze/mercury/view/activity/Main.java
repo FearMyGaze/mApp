@@ -84,6 +84,7 @@ public class Main extends AppCompatActivity {
          *          activity update the user components and stuff
          *      For Privacy and Terms i have to create a document in github page and get the link and show it in the app
          *      We need to create a Service that updates the user data
+         *      See if we can set the background color inside the theme
          * Color Options:
          *      #FAAB1A, #232F34, #5D1049
          * */
@@ -161,9 +162,9 @@ public class Main extends AppCompatActivity {
                     case -1:
                     case -2:
                     case 0:
-                        //TODO: Maybe remove all the users?
                         startActivity(new Intent(Main.this, SignIn.class));
                         finish();
+                        break;
                     case 1:
                         user = AppDatabase.getInstance(Main.this).userDao().getUserByUserUID(auth.getUid());
                         Glide.with(Main.this).load(user.imageURL).fitCenter().into(profileImage);
