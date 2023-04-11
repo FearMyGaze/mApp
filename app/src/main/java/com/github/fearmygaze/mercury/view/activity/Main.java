@@ -78,7 +78,6 @@ public class Main extends AppCompatActivity {
          *      Remove the Group Button and make an option Create Group from the Chat option (?? see if it looks better)
          *      Crash When i search "Lorem1" error message i get is "Inconsistency detected"
          *      Create an imageViewer (with a func to download the image)
-         *      I need to find a way to say the user we process the data (in signUp)
          *      Change the naming of the colors
          *      Create a Starting Activity (with the app image and name) with the name Starting and in this
          *          activity update the user components and stuff

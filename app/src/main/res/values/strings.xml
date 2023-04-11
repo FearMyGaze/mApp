@@ -35,6 +35,7 @@
     <string name="signUpGoBack">Go Back</string>
     <string name="signUpCreateAcc">Create Account</string>
     <string name="signUpTerms">By tapping Create Account you Agree to Terms and Conditions</string>
+    <string name="signUpDialogMessage">Please wait while we create your user</string>
 
     <!-- Main (Activity) -->
     <string name="mainExtendedFab">Actions</string>
@@ -79,6 +80,8 @@
     <string name="changePasswordSubTitle">Type bellow the new password of your choice</string>
     <string name="changePasswordForgot">Forgot password?</string>
 
+    <!-- ChatRoom (Activity) -->
+    <string name="chatRoomMessageHint">Aa</string>
 
     <!-- RegEx (Errors)-->
     <string name="regExEmpty">Can\'t be empty</string>

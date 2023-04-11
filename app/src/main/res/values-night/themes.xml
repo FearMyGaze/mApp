@@ -28,6 +28,12 @@
         <item name="cornerSize">50%</item>
     </style>
 
+    <style name="customAlertDialog" parent="Theme.AppCompat.DayNight.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/dialog_shape</item>
+        <item name="colorOnPrimary">?attr/colorPrimary</item>
+        <item name="android:textColorPrimary">@color/textBold</item>
+    </style>
+
     <style name="CustomBottomSheetDialog" parent="@style/ThemeOverlay.MaterialComponents.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/CustomBottomSheet</item>
     </style>

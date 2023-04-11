@@ -86,7 +86,7 @@ public class SignIn extends AppCompatActivity {
                                     Tools.createSettingsPreference(SignIn.this);
                                     startActivity(new Intent(SignIn.this, Main.class));
                                     finish();
-                                } else if (resultCode == -1){
+                                } else if (resultCode == -1) {
                                     Toast.makeText(SignIn.this, "You need to verify you email", Toast.LENGTH_SHORT).show();
                                 }
                             }

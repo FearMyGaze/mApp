@@ -5,10 +5,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
@@ -129,9 +132,17 @@ public class SignUp extends AppCompatActivity {
             String sDisplayName = Objects.requireNonNull(displayName.getText()).toString().trim();
             String sPassword = Objects.requireNonNull(password.getText()).toString().trim();
             if (!emailError.isErrorEnabled() && !usernameError.isErrorEnabled() && !displayNameError.isErrorEnabled() && !passwordError.isErrorEnabled()) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(SignUp.this, R.style.customAlertDialog);
+                View dialogView = LayoutInflater.from(SignUp.this).inflate(R.layout.dialog_sign_up, null);
+                builder.setView(dialogView)
+                        .setMessage(getString(R.string.signUpDialogMessage))
+                        .setCancelable(false)
+                        .show();
+                AlertDialog dialog = builder.create();
                 Auth.signUpForm(sEmail, emailError, sUsername, usernameError, sDisplayName, sPassword, imageData, SignUp.this, new Auth.OnResponseListener() {
                     @Override
                     public void onResult(int resultCode) {
+                        dialog.dismiss();
                         if (resultCode == 1) {
                             startActivity(new Intent(SignUp.this, SignIn.class));
                             finish();

@@ -104,6 +104,7 @@ public class Settings extends AppCompatActivity {
 
         signOut.setOnClickListener(v -> {
             FirebaseAuth.getInstance().signOut();
+            AppDatabase.getInstance(Settings.this).userDao().deleteUser(user);
             onBackPressed();
         });
 
