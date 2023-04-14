@@ -48,10 +48,6 @@
     <!-- ProfileEdit (Activity) -->
     <string name="profileEditHelper">Τροποποίση Προφίλ</string>
 
-    <!-- Auth -->
-    <string name="authEmail">Η Ηλ. διέυθυνση υπάρχη ήδη!</string>
-    <string name="authUsername">Το όνομα χρήστη υπάρχει ήδη!</string>
-
     <!-- PendingRequests (Activity) -->
     <string name="pendingRequestsFriends">Αιτήματα φιλίας:</string>
     <string name="pendingRequestsIgnored">Αγνωημένα αιτήματα:</string>
@@ -86,6 +82,9 @@
     <!-- ChatRoom (Activity) -->
     <string name="chatRoomMessageHint">Αα</string>
 
+    <!-- AdapterFriendRequest (Adapter)-->
+    <string name="adapterFriendRequest">Σφάλμα κατα την απάντηση στο αίτημα</string>
+
     <!-- RegEx -->
     <string name="regExEmpty">Δεν μπορεί να είναι κενό</string>
     <string name="regExSmaller">Δεν μπορεί να είναι μεγαλύτερο από </string>
@@ -95,5 +94,9 @@
     <string name="regExName">Επιτρέπουμε μόνο Ελληνικούς και αγγλικούς χαρακτήρες, 1 τελία και 1 κενό ανάμεσα.</string>
     <string name="regExPassword">Το ελάχιστο είναι: 1 Ειδικός χαρακτήρας, 1 νούμερο και 6 χαρακτήρες.</string>
     <string name="regExURL">Δεν μοίζει με σωστό σύνδεσμο</string>
+
+    <!-- Auth -->
+    <string name="authEmail">Η Ηλ. διέυθυνση υπάρχη ήδη!</string>
+    <string name="authUsername">Το όνομα χρήστη υπάρχει ήδη!</string>
 
 </resources>

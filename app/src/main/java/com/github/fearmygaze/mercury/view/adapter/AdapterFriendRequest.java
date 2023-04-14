@@ -50,8 +50,9 @@ public class AdapterFriendRequest extends RecyclerView.Adapter<AdapterFriendRequ
                     public void onResult(int result) {
                         if (result == 1) {
                             removeSpecificUser(holder.getAbsoluteAdapterPosition());
-                        } else
-                            Toast.makeText(holder.ignore.getContext(), "Error", Toast.LENGTH_SHORT).show();//TODO: String Resource
+                        } else {
+                            Toast.makeText(holder.ignore.getContext(), v.getResources().getString(R.string.adapterFriendRequest), Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
@@ -66,8 +67,9 @@ public class AdapterFriendRequest extends RecyclerView.Adapter<AdapterFriendRequ
                     public void onResult(int result) {
                         if (result == 1) {
                             removeSpecificUser(holder.getAbsoluteAdapterPosition());
-                        } else
-                            Toast.makeText(holder.accept.getContext(), "Error", Toast.LENGTH_SHORT).show();//TODO: String Resource
+                        } else {
+                            Toast.makeText(holder.accept.getContext(), v.getResources().getString(R.string.adapterFriendRequest), Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override

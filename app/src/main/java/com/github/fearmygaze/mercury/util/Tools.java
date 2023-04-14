@@ -25,12 +25,6 @@ public class Tools {
         layout.setError(message);
     }
 
-    public static boolean setErrorTest(TextInputLayout layout, String message, boolean enabled) {
-        layout.setErrorEnabled(enabled);
-        layout.setError(message);
-        return enabled;
-    }//TODO: Make it permanent (before that we need to reverse the output because when we send an error we dont want the method to pass true)
-
     public static void setTimedErrorToLayout(TextInputLayout layout, String message, boolean enabled, int ms) {
         setErrorToLayout(layout, message, enabled);
         new Handler().postDelayed(() -> setErrorToLayout(layout, null, false), ms);

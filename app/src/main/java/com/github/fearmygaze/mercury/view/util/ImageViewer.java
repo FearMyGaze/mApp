@@ -12,7 +12,7 @@ import com.ortiz.touchview.TouchImageView;
 
 public class ImageViewer extends AppCompatActivity {
 
-    ShapeableImageView goBack;
+    ShapeableImageView goBack, download;
     TouchImageView image;
     String imageData;
 
@@ -24,11 +24,15 @@ public class ImageViewer extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
 
         goBack = findViewById(R.id.imageViewerGoBack);
+        download = findViewById(R.id.imageViewerDownload);
         image = findViewById(R.id.imageViewerImage);
 
         imageData = getIntent().getStringExtra("imageData");
 
         goBack.setOnClickListener(v -> onBackPressed());
+        download.setOnClickListener(v -> {
+            //TODO: Find a way to download the image
+        });
 
         Glide.with(ImageViewer.this).load(imageData).into(image);
 

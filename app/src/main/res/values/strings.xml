@@ -83,6 +83,9 @@
     <!-- ChatRoom (Activity) -->
     <string name="chatRoomMessageHint">Aa</string>
 
+    <!-- AdapterFriendRequest (Adapter)-->
+    <string name="adapterFriendRequest">Error while answering the request.</string>
+
     <!-- RegEx (Errors)-->
     <string name="regExEmpty">Can\'t be empty</string>
     <string name="regExSmaller">Can\'t be smaller than </string>
@@ -97,7 +100,6 @@
     <string name="helperEmail" translatable="false">email@address.com</string>
     <string name="helperUserName" translatable="false">username</string>
     <string name="helperName" translatable="false">John Doe</string>
-
 
     <!-- Auth (Errors) -->
     <string name="authEmail">Email Already Exists!</string>
