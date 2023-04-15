@@ -129,7 +129,7 @@ public class Friends {
                                                                 Boolean.TRUE.equals(user.child(USER_VALUE_FRIENDS).getValue(Boolean.class))
                                                         ));
                                                         listener.onResult(1, list);
-                                                    } else listener.onResult(-1, null);
+                                                    } else listener.onResult(0, null);
                                                 }
 
                                                 @Override
@@ -137,9 +137,9 @@ public class Friends {
                                                     listener.onFailure(error.getMessage());
                                                 }
                                             });
-                                }
+                                } else listener.onResult(0, null);
                             }
-                        } else listener.onResult(-1, null);
+                        } else listener.onResult(0, null);
                     }
 
                     @Override
@@ -174,7 +174,7 @@ public class Friends {
                                                                 Boolean.TRUE.equals(user.child(USER_VALUE_FRIENDS).getValue(Boolean.class))
                                                         ));
                                                         listener.onResult(1, list);
-                                                    } else listener.onResult(-1, null);
+                                                    } else listener.onResult(0, null);
                                                 }
 
                                                 @Override
@@ -182,9 +182,9 @@ public class Friends {
                                                     listener.onFailure(error.getMessage());
                                                 }
                                             });
-                                }
+                                } else listener.onResult(0, null);
                             }
-                        } else listener.onResult(-1, null);
+                        } else listener.onResult(0, null);
                     }
 
                     @Override
@@ -219,7 +219,7 @@ public class Friends {
                                                                 Boolean.TRUE.equals(user.child(USER_VALUE_FRIENDS).getValue(Boolean.class))
                                                         ));
                                                         listener.onResult(1, list);
-                                                    } else listener.onResult(-1, null);
+                                                    } else listener.onResult(0, null);
                                                 }
 
                                                 @Override
@@ -227,9 +227,9 @@ public class Friends {
                                                     listener.onFailure(error.getMessage());
                                                 }
                                             });
-                                }
+                                } else listener.onResult(0, null);
                             }
-                        } else listener.onResult(-1, null);
+                        } else listener.onResult(0, null);
                     }
 
                     @Override
