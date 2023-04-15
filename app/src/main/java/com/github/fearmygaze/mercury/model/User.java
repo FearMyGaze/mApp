@@ -15,7 +15,7 @@ import java.util.Map;
 
 @IgnoreExtraProperties
 @Entity(tableName = "users")
-public class User { //TODO: we need to add Index inside the colum info
+public class User {
 
     @PrimaryKey
     @NonNull

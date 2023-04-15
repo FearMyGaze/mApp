@@ -73,17 +73,20 @@ public class PendingRequests extends AppCompatActivity {
             Friends.ignoredList(userID, new Friends.OnExtendedListener() {
                 @Override
                 public void onResult(int resultCode, List<User> list) {
-                    if (resultCode == 1 && list != null) {
-                        title.setVisibility(View.VISIBLE);
-                        counter.setVisibility(View.VISIBLE);
-                        parentError.setVisibility(View.GONE);
-                        title.setText(getString(R.string.pendingRequestsIgnored));
-                        counter.setText(String.valueOf(list.size()));
-                        adapterFriendRequest.setUsers(list);
-                    } else {
-                        title.setVisibility(View.GONE);
-                        counter.setVisibility(View.GONE);
-                        parentError.setVisibility(View.VISIBLE);
+                    switch (resultCode) {
+                        case 0: //No users found
+                            title.setVisibility(View.GONE);
+                            counter.setVisibility(View.GONE);
+                            parentError.setVisibility(View.VISIBLE);
+                            break;
+                        case 1: //We found users and returned them
+                            title.setVisibility(View.VISIBLE);
+                            counter.setVisibility(View.VISIBLE);
+                            parentError.setVisibility(View.GONE);
+                            title.setText(getString(R.string.pendingRequestsIgnored));
+                            counter.setText(String.valueOf(list.size()));
+                            adapterFriendRequest.setUsers(list);
+                            break;
                     }
                 }
 
@@ -96,17 +99,20 @@ public class PendingRequests extends AppCompatActivity {
             Friends.pendingList(userID, new Friends.OnExtendedListener() {
                 @Override
                 public void onResult(int resultCode, List<User> list) {
-                    if (resultCode == 1 && list != null) {
-                        title.setVisibility(View.VISIBLE);
-                        counter.setVisibility(View.VISIBLE);
-                        parentError.setVisibility(View.GONE);
-                        title.setText(getString(R.string.pendingRequestsFriends));
-                        counter.setText(String.valueOf(list.size()));
-                        adapterFriendRequest.setUsers(list);
-                    } else {
-                        title.setVisibility(View.GONE);
-                        counter.setVisibility(View.GONE);
-                        parentError.setVisibility(View.VISIBLE);
+                    switch (resultCode) {
+                        case 0: //No users found
+                            title.setVisibility(View.GONE);
+                            counter.setVisibility(View.GONE);
+                            parentError.setVisibility(View.VISIBLE);
+                            break;
+                        case 1: //We found users and returned them
+                            title.setVisibility(View.VISIBLE);
+                            counter.setVisibility(View.VISIBLE);
+                            parentError.setVisibility(View.GONE);
+                            title.setText(getString(R.string.pendingRequestsFriends));
+                            counter.setText(String.valueOf(list.size()));
+                            adapterFriendRequest.setUsers(list);
+                            break;
                     }
                 }
 
