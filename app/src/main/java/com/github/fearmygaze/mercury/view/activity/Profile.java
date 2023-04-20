@@ -172,7 +172,7 @@ public class Profile extends AppCompatActivity {
 
         if (user.createdAt != null) {
             Chip chip = new Chip(Profile.this);
-            chip.setText(String.valueOf(Tools.setDateInProfile(user.createdAt)));
+            chip.setText(String.valueOf(Tools.setDate(user.createdAt)));
             chip.setCheckable(false);
             chip.setChecked(false);
             chip.setClickable(false);

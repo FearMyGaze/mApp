@@ -230,7 +230,7 @@ public class ProfileViewer extends AppCompatActivity {
                             }
                             if (userSnapshot.child("createdAt").exists()) {
                                 Chip chip = new Chip(ProfileViewer.this);
-                                chip.setText(String.valueOf(Tools.setDateInProfile(userSnapshot.child("createdAt").getValue(Long.class))));
+                                chip.setText(String.valueOf(Tools.setDate(userSnapshot.child("createdAt").getValue(Long.class))));
                                 chip.setCheckable(false);
                                 chip.setChecked(false);
                                 chip.setClickable(false);

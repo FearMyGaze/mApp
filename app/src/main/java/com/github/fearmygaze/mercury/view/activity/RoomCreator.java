@@ -60,11 +60,29 @@ public class RoomCreator extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                //TODO: We need to filter the users based on the given name here
-//                adapterFriendList.filterUsers(s.toString().trim());
+                if (s.toString().trim().length() > 3) {
+                    adapterFriendList.filterUsers(s.toString().trim());
+                } else {
+                    adapterFriendList.clearUsers();
+                    setFriends();
+                }
             }
         });
 
+        setFriends();
+
+        adapterFriendList = new AdapterUserList(new ArrayList<>(), FirebaseAuth.getInstance().getUid(), true);
+        friendList.setLayoutManager(new LinearLayoutManager(RoomCreator.this, LinearLayoutManager.VERTICAL, false));
+        friendList.setAdapter(adapterFriendList);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+    private void setFriends() {
         Friends.friendList(FirebaseAuth.getInstance().getUid(), new Friends.OnExtendedListener() {
 
             @Override
@@ -79,15 +97,5 @@ public class RoomCreator extends AppCompatActivity {
                 Toast.makeText(RoomCreator.this, message, Toast.LENGTH_SHORT).show();
             }
         });
-
-        adapterFriendList = new AdapterUserList(new ArrayList<>(), FirebaseAuth.getInstance().getUid(), true);
-        friendList.setLayoutManager(new LinearLayoutManager(RoomCreator.this, LinearLayoutManager.VERTICAL, false));
-        friendList.setAdapter(adapterFriendList);
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
     }
 }

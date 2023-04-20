@@ -18,6 +18,7 @@ import com.github.fearmygaze.mercury.view.util.ProfileViewer;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.imageview.ShapeableImageView;
 
+import java.util.Iterator;
 import java.util.List;
 
 public class AdapterUserList extends RecyclerView.Adapter<AdapterUserList.UserVH> {
@@ -73,11 +74,23 @@ public class AdapterUserList extends RecyclerView.Adapter<AdapterUserList.UserVH
     }
 
     public void filterUsers(String name) {
-        //TODO: Filter the list based on the givenName
-        if (name.startsWith("@" + name)) {
-
+        Iterator<User> iterator = users.iterator();
+        if (name.startsWith("@")) {
+            while (iterator.hasNext()) {
+                User user = iterator.next();
+                if (!user.username.startsWith("@" + name)) {
+                    iterator.remove();
+                    notifyItemRemoved(users.indexOf(user));
+                }
+            }
         } else {
-
+            while (iterator.hasNext()) {
+                User user = iterator.next();
+                if (!user.name.startsWith(name)) {
+                    iterator.remove();
+                    notifyItemRemoved(users.indexOf(user));
+                }
+            }
         }
     }
 
