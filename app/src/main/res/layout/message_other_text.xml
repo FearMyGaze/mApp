@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/messageTextDestRoot"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        app:layout_constraintWidth_max="wrap"
+        app:layout_constraintWidth_percent="0.65"
+        app:cardBackgroundColor="@color/variant"
+        app:contentPadding="5dp"
+        style="@style/RoundedComponent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <TextView
+            android:id="@+id/messageTextDestContent"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem IpsumLorem Ipsum Lorem Ipsum"
+            android:textColor="@color/textBold"
+            android:textSize="15sp"
+            android:textStyle="bold"/>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/messageTextDestDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="sampleTime"
+        android:textStyle="italic"
+        android:textColor="@color/textBold"
+        android:textSize="13sp"
+        app:layout_constraintStart_toStartOf="@id/messageTextDestRoot"
+        app:layout_constraintTop_toBottomOf="@id/messageTextDestRoot"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
