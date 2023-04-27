@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/messageTextDestRoot"
@@ -22,7 +23,7 @@
             android:id="@+id/messageTextDestContent"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem Ipsum Lorem IpsumLorem Ipsum Lorem Ipsum"
+            tools:text="@tools:sample/cities"
             android:textColor="@color/textBold"
             android:textSize="15sp"
             android:textStyle="bold"/>
@@ -33,7 +34,7 @@
         android:id="@+id/messageTextDestDate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="sampleTime"
+        android:text="@tools:sample/date/hhmm"
         android:textStyle="italic"
         android:textColor="@color/textBold"
         android:textSize="13sp"

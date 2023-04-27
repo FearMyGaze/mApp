@@ -87,7 +87,6 @@ public class Tools {
         if (!preference.contains("showPending")) {
             preference.putBoolean("showPending", true);
         }
-
     }
 
     public static void writePreference(String key, boolean value, Context context) {

@@ -21,6 +21,7 @@
     <string name="generalAccept">Επιβεβαίωση</string>
     <string name="generalIgnore">Αγνόησε</string>
     <string name="generalConfirm">Επιβεβαίωση</string>
+    <string name="generalPhoto">Εικόνα</string>
 
     <!-- SignIn (Activity) -->
     <string name="signInWelcome">Καλώς Ήρθατε</string>

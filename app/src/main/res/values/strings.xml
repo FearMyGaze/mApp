@@ -22,6 +22,7 @@
     <string name="generalAccept">Accept</string>
     <string name="generalIgnore">Ignore</string>
     <string name="generalConfirm">Confirm</string>
+    <string name="generalPhoto">Photo</string>
 
     <!-- SignIn (Activity) -->
     <string name="signInWelcome">Welcome</string>

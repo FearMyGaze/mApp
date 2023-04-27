@@ -6,15 +6,15 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/messageTextOtherRoot"
+        android:id="@+id/messageTextSelfRoot"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         app:layout_constraintWidth_max="wrap"
         app:layout_constraintWidth_percent="0.65"
         app:cardBackgroundColor="@color/variant"
         style="@style/RoundedComponent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
@@ -23,14 +23,14 @@
             android:layout_height="match_parent">
 
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/messageImageOtherContent"
+                android:id="@+id/messageImageSelfContent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone"
                 tools:src="@tools:sample/avatars"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/messageImageOtherHideContent"
+                android:id="@+id/messageImageSelfHideContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
@@ -40,7 +40,7 @@
                 app:layout_constraintBottom_toBottomOf="parent">
 
                 <ImageView
-                    android:id="@+id/messageImageOtherButton"
+                    android:id="@+id/messageImageSelfButton"
                     android:layout_width="24dp"
                     android:layout_height="0dp"
                     android:src="@drawable/ic_arrow_back_24"
@@ -58,10 +58,10 @@
                     android:text="@string/generalPhoto"
                     android:textColor="@color/textBold"
                     android:textSize="15sp"
-                    app:layout_constraintStart_toEndOf="@id/messageImageOtherButton"
+                    app:layout_constraintStart_toEndOf="@id/messageImageSelfButton"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/messageImageOtherButton"
-                    app:layout_constraintBottom_toBottomOf="@id/messageImageOtherButton"/>
+                    app:layout_constraintTop_toTopOf="@id/messageImageSelfButton"
+                    app:layout_constraintBottom_toBottomOf="@id/messageImageSelfButton"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -70,14 +70,14 @@
     </com.google.android.material.card.MaterialCardView>
 
     <TextView
-        android:id="@+id/messageTextOtherDate"
+        android:id="@+id/messageTextSelfDate"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:text="@tools:sample/date/hhmm"
         android:textStyle="italic"
         android:textColor="@color/textBold"
         android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="@id/messageTextOtherRoot"
-        app:layout_constraintTop_toBottomOf="@id/messageTextOtherRoot" />
+        app:layout_constraintEnd_toEndOf="@id/messageTextSelfRoot"
+        app:layout_constraintTop_toBottomOf="@id/messageTextSelfRoot" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
