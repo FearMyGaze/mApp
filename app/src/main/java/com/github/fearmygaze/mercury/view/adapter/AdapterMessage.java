@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
@@ -14,6 +15,7 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.model.Message;
+import com.github.fearmygaze.mercury.util.Tools;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.database.DataSnapshot;
@@ -36,7 +38,7 @@ public class AdapterMessage extends FirebaseRecyclerAdapter<Message, RecyclerVie
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == 0) {
-            return new SelfTextVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.message_my_text, parent, false));
+            return new SelfTextVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.message_self_text, parent, false));
         }
         return new OtherTextVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.message_other_text, parent, false));
     }
@@ -73,16 +75,31 @@ public class AdapterMessage extends FirebaseRecyclerAdapter<Message, RecyclerVie
 
         public SelfTextVH(@NonNull View itemView) {
             super(itemView);
+            root = itemView.findViewById(R.id.messageTextSelfRoot);
+            content = itemView.findViewById(R.id.messageTextSelfContent);
+            date = itemView.findViewById(R.id.messageTextSelfDate);
         }
     }
 
     protected static class SelfImageVH extends RecyclerView.ViewHolder {
         MaterialCardView root;
+        ConstraintLayout hiddenContent;
         ShapeableImageView content;
         TextView date;
 
         public SelfImageVH(@NonNull View itemView) {
             super(itemView);
+            root = itemView.findViewById(R.id.messageImageSelfRoot);
+            hiddenContent = itemView.findViewById(R.id.messageImageSelfHiddenContent);
+            content = itemView.findViewById(R.id.messageImageSelfContent);
+            date = itemView.findViewById(R.id.messageImageSelfDate);
+            if (Tools.getPreference("showImage", itemView.getContext())) {
+                content.setVisibility(View.GONE);
+                hiddenContent.setVisibility(View.VISIBLE);
+            } else {
+                content.setVisibility(View.VISIBLE);
+                hiddenContent.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -103,11 +120,23 @@ public class AdapterMessage extends FirebaseRecyclerAdapter<Message, RecyclerVie
 
     protected static class OtherImageVH extends RecyclerView.ViewHolder {
         MaterialCardView root;
+        ConstraintLayout hiddenContent;
         ShapeableImageView content;
         TextView date;
 
         public OtherImageVH(@NonNull View itemView) {
             super(itemView);
+            root = itemView.findViewById(R.id.messageImageOtherRoot);
+            hiddenContent = itemView.findViewById(R.id.messageImageOtherHiddenContent);
+            content = itemView.findViewById(R.id.messageImageOtherContent);
+            date = itemView.findViewById(R.id.messageImageOtherDate);
+            if (Tools.getPreference("showImage", itemView.getContext())) {
+                content.setVisibility(View.GONE);
+                hiddenContent.setVisibility(View.VISIBLE);
+            } else {
+                content.setVisibility(View.VISIBLE);
+                hiddenContent.setVisibility(View.GONE);
+            }
         }
     }
 

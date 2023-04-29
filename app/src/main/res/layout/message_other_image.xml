@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/messageTextOtherRoot"
+        android:id="@+id/messageImageOtherRoot"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -26,14 +26,15 @@
                 android:id="@+id/messageImageOtherContent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"
+                android:visibility="visible"
                 tools:src="@tools:sample/avatars"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/messageImageOtherHideContent"
+                android:id="@+id/messageImageOtherHiddenContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -70,14 +71,14 @@
     </com.google.android.material.card.MaterialCardView>
 
     <TextView
-        android:id="@+id/messageTextOtherDate"
+        android:id="@+id/messageImageOtherDate"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:text="@tools:sample/date/hhmm"
         android:textStyle="italic"
         android:textColor="@color/textBold"
         android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="@id/messageTextOtherRoot"
-        app:layout_constraintTop_toBottomOf="@id/messageTextOtherRoot" />
+        app:layout_constraintEnd_toEndOf="@id/messageImageOtherRoot"
+        app:layout_constraintTop_toBottomOf="@id/messageImageOtherRoot" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
