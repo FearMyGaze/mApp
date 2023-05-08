@@ -70,7 +70,7 @@ public class PendingRequests extends AppCompatActivity {
 
     private void showRequests() {
         if ("ignored".equals(option)) {
-            Friends.ignoredList(userID, new Friends.OnExtendedListener() {
+            Friends.ignoredList(userID, new Friends.OnDataResultListener() {
                 @Override
                 public void onResult(int resultCode, List<User> list) {
                     switch (resultCode) {
@@ -96,7 +96,7 @@ public class PendingRequests extends AppCompatActivity {
                 }
             });
         } else {
-            Friends.pendingList(userID, new Friends.OnExtendedListener() {
+            Friends.pendingList(userID, new Friends.OnDataResultListener() {
                 @Override
                 public void onResult(int resultCode, List<User> list) {
                     switch (resultCode) {

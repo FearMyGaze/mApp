@@ -197,54 +197,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            app:constraint_referenced_ids="mainGroupFab, mainGroupFabHelper, mainPersonalFab,
-            mainPersonalFabHelper, mainSearchFab, mainSearchFabHelper"/>
+            app:constraint_referenced_ids="mainRoomFab, mainChatFabHelper,
+            mainSearchFab, mainSearchFabHelper" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/mainPersonalFab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            app:fabSize="mini"
-            android:src="@drawable/ic_person_24"
-            android:contentDescription="@string/mainPersonalFab"
-            app:shapeAppearanceOverlay="@style/RectComponent"
-            app:layout_constraintEnd_toEndOf="@id/mainExtendedFab"
-            app:layout_constraintBottom_toTopOf="@id/mainExtendedFab" />
-
-        <TextView
-            android:id="@+id/mainPersonalFabHelper"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:text="@string/mainPersonalFab"
-            android:textColor="@color/textRegular"
-            app:layout_constraintEnd_toStartOf="@id/mainPersonalFab"
-            app:layout_constraintTop_toTopOf="@id/mainPersonalFab"
-            app:layout_constraintBottom_toBottomOf="@id/mainPersonalFab"/>
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/mainGroupFab"
+            android:id="@+id/mainRoomFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             app:fabSize="mini"
             android:src="@drawable/ic_people_24"
-            android:contentDescription="@string/mainGroupFab"
+            android:contentDescription="@string/mainChatFab"
             app:shapeAppearanceOverlay="@style/RectComponent"
-            app:layout_constraintEnd_toEndOf="@id/mainPersonalFab"
-            app:layout_constraintBottom_toTopOf="@id/mainPersonalFab"/>
+            app:layout_constraintEnd_toEndOf="@id/mainExtendedFab"
+            app:layout_constraintBottom_toTopOf="@id/mainExtendedFab" />
 
         <TextView
-            android:id="@+id/mainGroupFabHelper"
+            android:id="@+id/mainChatFabHelper"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            android:text="@string/mainGroupFab"
+            android:text="@string/mainChatFab"
             android:textColor="@color/textRegular"
-            app:layout_constraintEnd_toStartOf="@id/mainGroupFab"
-            app:layout_constraintTop_toTopOf="@id/mainGroupFab"
-            app:layout_constraintBottom_toBottomOf="@id/mainGroupFab"/>
+            app:layout_constraintEnd_toStartOf="@id/mainRoomFab"
+            app:layout_constraintTop_toTopOf="@id/mainRoomFab"
+            app:layout_constraintBottom_toBottomOf="@id/mainRoomFab"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/mainSearchFab"
@@ -255,8 +232,8 @@
             android:src="@drawable/ic_search_24"
             android:contentDescription="@string/mainSearchFab"
             app:shapeAppearanceOverlay="@style/RectComponent"
-            app:layout_constraintEnd_toEndOf="@id/mainGroupFab"
-            app:layout_constraintBottom_toTopOf="@id/mainGroupFab"/>
+            app:layout_constraintEnd_toEndOf="@id/mainRoomFab"
+            app:layout_constraintBottom_toTopOf="@id/mainRoomFab"/>
 
         <TextView
             android:id="@+id/mainSearchFabHelper"

@@ -23,6 +23,7 @@
     <string name="generalIgnore">Ignore</string>
     <string name="generalConfirm">Confirm</string>
     <string name="generalPhoto">Photo</string>
+    <string name="generalCreate">Create</string>
 
     <!-- SignIn (Activity) -->
     <string name="signInWelcome">Welcome</string>
@@ -40,8 +41,7 @@
 
     <!-- Main (Activity) -->
     <string name="mainExtendedFab">Actions</string>
-    <string name="mainPersonalFab">Personal</string>
-    <string name="mainGroupFab">Group</string>
+    <string name="mainChatFab">Chat</string>
     <string name="mainSearchFab">Search</string>
 
     <!-- Search (Activity) -->
@@ -84,8 +84,12 @@
     <!-- ChatRoom (Activity) -->
     <string name="chatRoomMessageHint">Aa</string>
 
-    <!-- AdapterFriendRequest (Adapter)-->
+    <!-- AdapterFriendRequest (Adapter) -->
     <string name="adapterFriendRequest">Error while answering the request.</string>
+
+    <!-- Default Room Names -->
+    <string name="defaultPrivateRoomName">Private Conversation</string>
+    <string name="defaultGroupRoomName">Group Conversation</string>
 
     <!-- RegEx (Errors)-->
     <string name="regExEmpty">Can\'t be empty</string>

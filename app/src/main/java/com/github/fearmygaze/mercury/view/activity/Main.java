@@ -31,7 +31,7 @@ public class Main extends AppCompatActivity {
 
     //Actions
     ExtendedFloatingActionButton actions;
-    FloatingActionButton personalFab, groupFab, searchFab;
+    FloatingActionButton roomFab, searchFab;
     Group actionGroup;
 
     User user;
@@ -65,8 +65,7 @@ public class Main extends AppCompatActivity {
         //Actions
         actions = findViewById(R.id.mainExtendedFab);
         actions.shrink();
-        personalFab = findViewById(R.id.mainPersonalFab);
-        groupFab = findViewById(R.id.mainGroupFab);
+        roomFab = findViewById(R.id.mainRoomFab);
         searchFab = findViewById(R.id.mainSearchFab);
         actionGroup = findViewById(R.id.mainGroup);
 
@@ -126,14 +125,10 @@ public class Main extends AppCompatActivity {
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
 
-        groupFab.setOnClickListener(v -> {
-
-        });
-
-        personalFab.setOnClickListener(v -> {
+        roomFab.setOnClickListener(v -> {
             fabController();
             startActivity(new Intent(Main.this, RoomCreator.class)
-                    .putExtra("options", 0));
+                    .putExtra("id", user.userUID));
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
 

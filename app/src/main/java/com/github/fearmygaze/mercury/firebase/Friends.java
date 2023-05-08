@@ -104,7 +104,7 @@ public class Friends {
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
     }
 
-    public static void friendList(String senderID, OnExtendedListener listener) {
+    public static void friendList(String senderID, OnDataResultListener listener) {
         List<User> list = new ArrayList<>();
         FirebaseDatabase.getInstance().getReference().child(BUCKET_FRIENDS)
                 .child(senderID)
@@ -149,7 +149,7 @@ public class Friends {
                 });
     }
 
-    public static void pendingList(String senderID, OnExtendedListener listener) {
+    public static void pendingList(String senderID, OnDataResultListener listener) {
         List<User> list = new ArrayList<>();
         FirebaseDatabase.getInstance().getReference().child(BUCKET_FRIENDS)
                 .child(senderID)
@@ -194,7 +194,7 @@ public class Friends {
                 });
     }
 
-    public static void ignoredList(String senderID, OnExtendedListener listener) {
+    public static void ignoredList(String senderID, OnDataResultListener listener) {
         List<User> list = new ArrayList<>();
         FirebaseDatabase.getInstance().getReference().child(BUCKET_FRIENDS)
                 .child(senderID)
@@ -245,7 +245,7 @@ public class Friends {
         void onFailure(String message);
     }
 
-    public interface OnExtendedListener {
+    public interface OnDataResultListener {
         void onResult(int resultCode, List<User> list);
 
         void onFailure(String message);

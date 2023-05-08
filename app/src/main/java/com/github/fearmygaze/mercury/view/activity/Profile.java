@@ -85,7 +85,7 @@ public class Profile extends AppCompatActivity {
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
 
-        Friends.friendList(user.userUID, new Friends.OnExtendedListener() {
+        Friends.friendList(user.userUID, new Friends.OnDataResultListener() {
             @Override
             public void onResult(int resultCode, List<User> list) {
                 if (resultCode == 1) {

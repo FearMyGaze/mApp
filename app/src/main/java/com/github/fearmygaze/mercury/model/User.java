@@ -55,6 +55,10 @@ public class User {
     @ColumnInfo(name = "showFriends")
     public boolean showFriends;
 
+    @Exclude
+    @Ignore
+    public boolean isSelected;
+
     public User() {
     }
 

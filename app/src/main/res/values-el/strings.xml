@@ -22,6 +22,7 @@
     <string name="generalIgnore">Αγνόησε</string>
     <string name="generalConfirm">Επιβεβαίωση</string>
     <string name="generalPhoto">Εικόνα</string>
+    <string name="generalCreate">Δημιουργία</string>
 
     <!-- SignIn (Activity) -->
     <string name="signInWelcome">Καλώς Ήρθατε</string>
@@ -39,8 +40,7 @@
 
     <!-- Main (Activity) -->
     <string name="mainExtendedFab">Ενέργειες</string>
-    <string name="mainPersonalFab">Προσωπική</string>
-    <string name="mainGroupFab">Ομαδική</string>
+    <string name="mainChatFab">Συζήτηση</string>
     <string name="mainSearchFab">Αναζήτηση</string>
 
     <!-- Search (Activity) -->
@@ -83,8 +83,12 @@
     <!-- ChatRoom (Activity) -->
     <string name="chatRoomMessageHint">Αα</string>
 
-    <!-- AdapterFriendRequest (Adapter)-->
+    <!-- AdapterFriendRequest (Adapter) -->
     <string name="adapterFriendRequest">Σφάλμα κατα την απάντηση στο αίτημα</string>
+
+    <!-- Default Room Names -->
+    <string name="defaultPrivateRoomName">Ιδιωτική Συνομιλία</string>
+    <string name="defaultGroupRoomName">Ομαδική Συνομιλία</string>
 
     <!-- RegEx -->
     <string name="regExEmpty">Δεν μπορεί να είναι κενό</string>

@@ -108,7 +108,7 @@ public class ProfileViewer extends AppCompatActivity {
         }
 
         if (showFriends) {
-            Friends.friendList(receiverID, new Friends.OnExtendedListener() {
+            Friends.friendList(receiverID, new Friends.OnDataResultListener() {
                 @Override
                 public void onResult(int resultCode, List<User> list) {
                     if (resultCode == 1) {
