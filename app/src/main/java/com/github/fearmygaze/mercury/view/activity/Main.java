@@ -61,6 +61,8 @@ public class Main extends AppCompatActivity {
     BottomSheetBehavior<ConstraintLayout> requestsSheetBehavior;
     BottomSheetBehavior<ConstraintLayout> searchSheetBehavior;
 
+    List<User> users = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -194,7 +196,7 @@ public class Main extends AppCompatActivity {
         TextInputEditText searchBox = findViewById(R.id.searchContainer);
         ConstraintLayout errorLayout = findViewById(R.id.searchErrorLayout);
         RecyclerView recyclerView = findViewById(R.id.searchRecycler);
-        AdapterUser adapterUser = new AdapterUser(new ArrayList<>(), id, AdapterUser.TYPE_SEARCH);
+        AdapterUser adapterUser = new AdapterUser(users, id, AdapterUser.TYPE_SEARCH);
         recyclerView.setLayoutManager(new LinearLayoutManager(Main.this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(adapterUser);
 
@@ -220,7 +222,8 @@ public class Main extends AppCompatActivity {
                                 errorLayout.setVisibility(View.GONE);
                                 recyclerView.setVisibility(View.VISIBLE);
                                 adapterUser.clearData();
-                                adapterUser.setData(list);
+                                users.addAll(list);
+                                adapterUser.setData(users);
                             } else {
                                 errorLayout.setVisibility(View.VISIBLE);
                                 recyclerView.setVisibility(View.GONE);
