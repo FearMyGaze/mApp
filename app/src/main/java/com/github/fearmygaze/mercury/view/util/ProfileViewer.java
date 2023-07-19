@@ -1,139 +1,171 @@
 package com.github.fearmygaze.mercury.view.util;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.TypedValue;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.bumptech.glide.Glide;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.firebase.Friends;
+import com.github.fearmygaze.mercury.firebase.interfaces.OnDataResponseListener;
+import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
+import com.github.fearmygaze.mercury.firebase.interfaces.OnUsersResponseListener;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
-import com.github.fearmygaze.mercury.view.adapter.AdapterUserList;
+import com.github.fearmygaze.mercury.view.adapter.AdapterUser;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class ProfileViewer extends AppCompatActivity {
 
     Intent intent;
 
+    SwipeRefreshLayout swipeRefreshLayout;
+    MaterialToolbar toolbar;
+
     ShapeableImageView userImage;
-    MaterialButton button;
-    TextView username, name, status;
+    MaterialButton request;
+    TextView status;
     ChipGroup chipGroup;
 
-    AdapterUserList adapterUserList;
+    AdapterUser adapterUser;
     RecyclerView friendsView;
-
-    String senderID, receiverID, imageData;
-    boolean showFriends;
 
     TypedValue typedValue;
 
+    //Extra
+    String myID;
+    User otherUser;
+
+    @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_viewer);
 
+        swipeRefreshLayout = findViewById(R.id.profileViewerSwipe);
+        toolbar = findViewById(R.id.profileViewerToolBar);
+
         userImage = findViewById(R.id.profileViewerImage);
-        button = findViewById(R.id.profileViewerButton);
-        username = findViewById(R.id.profileViewerUsername);
-        name = findViewById(R.id.profileViewerName);
+        request = findViewById(R.id.profileViewerButton);
         status = findViewById(R.id.profileViewerStatus);
-        chipGroup = findViewById(R.id.profileViewerChipGroup);
+        chipGroup = findViewById(R.id.profileViewerExtraInfo);
         friendsView = findViewById(R.id.profileViewerRecycler);
 
         intent = getIntent();
-        senderID = intent.getStringExtra("senderID");
-        receiverID = intent.getStringExtra("receiverID");
-        showFriends = intent.getBooleanExtra("showFriends", false);
+        myID = intent.getStringExtra(User.ID);
+        otherUser = intent.getExtras().getParcelable("userData");
 
         typedValue = new TypedValue();
         getTheme().resolveAttribute(android.R.attr.colorPrimary, typedValue, true);
 
-        userInfo();
+        Tools.profileImage(otherUser.getImage(), ProfileViewer.this).into(userImage);
+        status.setText(otherUser.getStatus());
+        updateStats();
+        Tools.extraInfo(otherUser, false, typedValue.resourceId, chipGroup, ProfileViewer.this);
+
+        if (myID.equals(otherUser.getId())) {
+            request.setEnabled(false);
+        }
 
         userImage.setOnClickListener(v -> {
             startActivity(new Intent(ProfileViewer.this, ImageViewer.class)
-                    .putExtra("imageData", imageData)
+                    .putExtra("imageData", otherUser.getImage())
                     .putExtra("downloadImage", true));
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
 
-        if (!senderID.equals(receiverID)) {
-            button.setVisibility(View.VISIBLE);
-            Friends.status(senderID, receiverID, new Friends.OnResultListener() {
-                @Override
-                public void onResult(int result) {
-                    switch (result) {
-                        case 2:
-                            button.setText("Waiting for response");
-                            break;
-                        case 1:
-                            button.setText("Friends");
-                            break;
-                        case 0:
-                            button.setText("IGNORED");
-                            break;
-                    }
-                }
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+        toolbar.setTitle(otherUser.getUsername());
+        toolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.profileViewerOptionBlock) {
+                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(ProfileViewer.this);
+                builder.setBackground(AppCompatResources.getDrawable(ProfileViewer.this, R.color.basicBackground))
+                        .setTitle("Block" + otherUser.getUsername() + "?")
+                        .setMessage(otherUser.getUsername() + " will no longer be able to follow you or message you")
+                        .setPositiveButton(getString(R.string.generalConfirm), (dialog, i) ->
+                                Friends.block(myID, otherUser.getId(), ProfileViewer.this, new OnResponseListener() {
+                                    @Override
+                                    public void onSuccess(int code) {
+                                        if (code == 0) {
+                                            Toast.makeText(ProfileViewer.this, "User Blocked", Toast.LENGTH_SHORT).show();
+                                            request.setEnabled(false);
+                                        } else
+                                            Toast.makeText(ProfileViewer.this, "Error", Toast.LENGTH_SHORT).show();
+                                    }
 
-                @Override
-                public void onFailure(String message) {
-                    Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_SHORT).show();
-                }
-            });
-        } else {
-            button.setVisibility(View.GONE);
-        }
+                                    @Override
+                                    public void onFailure(String message) {
+                                        Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_SHORT).show();
+                                    }
+                                }))
+                        .setNegativeButton(getString(R.string.generalCancel), (dialog, i) -> dialog.dismiss())
+                        .show();
+            } else {
+                Toast.makeText(ProfileViewer.this, "Not Implemented", Toast.LENGTH_SHORT).show();
+            }
+            return true;
+        });
 
-        if (showFriends) {
-            Friends.friendList(receiverID, new Friends.OnDataResultListener() {
-                @Override
-                public void onResult(int resultCode, List<User> list) {
-                    if (resultCode == 1) {
-                        adapterUserList.setUsers(list);
-                    }
-                }
-
-                @Override
-                public void onFailure(String message) {
-                    Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_SHORT).show();
-                }
-            });
-
-            adapterUserList = new AdapterUserList(new ArrayList<>(), senderID, false);
-            friendsView.setLayoutManager(new LinearLayoutManager(ProfileViewer.this, LinearLayoutManager.VERTICAL, false));
-            friendsView.setAdapter(adapterUserList);
-        }
-
-        button.setOnClickListener(v -> {
-            if (button.getText().equals(getString(R.string.generalAdd))) {
-                Friends.sendRequest(senderID, receiverID, new Friends.OnResultListener() {
+        request.setOnClickListener(v -> {
+            String state = request.getText().toString().trim();
+            if (state.equals(getString(R.string.requestAccepted))) {
+                Friends.answerRequest(myID, otherUser.getId(), Friends.OPTION_REMOVE, ProfileViewer.this, new OnResponseListener() {
                     @Override
-                    public void onResult(int result) {
-                        if (result == 1) {
-                            Toast.makeText(ProfileViewer.this, "Request has be Send", Toast.LENGTH_SHORT).show();
+                    public void onSuccess(int code) {
+                        if (code == 0) {
+                            request.setText(getString(R.string.requestWaiting));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+                        Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_LONG).show();
+                    }
+                });
+            } else if (state.equals(getString(R.string.requestWaiting))) {
+                Friends.cancelRequest(myID, otherUser.getId(), ProfileViewer.this, new OnResponseListener() {
+                    @Override
+                    public void onSuccess(int code) {
+                        switch (code) {
+                            case -1:
+                                Toast.makeText(ProfileViewer.this, "Request changed state", Toast.LENGTH_SHORT).show();
+                                break;
+                            case 0:
+                                request.setText(getString(R.string.requestNone));
+                                break;
+                            case 1:
+                                Toast.makeText(ProfileViewer.this, "You didnt make the request to cancel it", Toast.LENGTH_SHORT).show();
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+
+                    }
+                });
+            } else if (state.equals(getString(R.string.requestNone))) {
+                Friends.sendRequest(myID, otherUser.getId(), ProfileViewer.this, new OnResponseListener() {
+                    @Override
+                    public void onSuccess(int code) {
+                        if (code == 0) {
+                            request.setText(getString(R.string.requestWaiting));
                         }
                     }
 
@@ -142,34 +174,53 @@ public class ProfileViewer extends AppCompatActivity {
                         Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_SHORT).show();
                     }
                 });
-            } else if (button.getText().equals("Friends")) {
-                Friends.removeFriend(senderID, receiverID, new Friends.OnResultListener() {
-                    @Override
-                    public void onResult(int result) {
-                        if (result == 1) {
-                            Toast.makeText(ProfileViewer.this, "Friend Removed", Toast.LENGTH_SHORT).show();
-                        }
-                    }
+            }
+        });
 
-                    @Override
-                    public void onFailure(String message) {
-                        Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_SHORT).show();
-                    }
-                });
-            } else if (button.getText().equals("Cancel")) {
-                Friends.cancelRequest(senderID, receiverID, new Friends.OnResultListener() {
-                    @Override
-                    public void onResult(int result) {
-                        if (result == 1) {
-                            Toast.makeText(ProfileViewer.this, "Request Canceled", Toast.LENGTH_SHORT).show();
-                        }
-                    }
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            updateStats();
+            swipeRefreshLayout.setRefreshing(false);
+        });
+        adapterUser = new AdapterUser(new ArrayList<>(), myID, AdapterUser.TYPE_SEARCH);
+        friendsView.setLayoutManager(new LinearLayoutManager(ProfileViewer.this, LinearLayoutManager.VERTICAL, false));
+        friendsView.setAdapter(adapterUser);
+    }
 
-                    @Override
-                    public void onFailure(String message) {
-                        Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_SHORT).show();
+    private void updateStats() {
+        Friends.requestStatus(myID, otherUser.getId(), ProfileViewer.this, new OnDataResponseListener() {
+            @Override
+            public void onSuccess(int code, Object data) {
+                if (code == 0) {
+                    request.setText(data.toString());
+                    if (request.getText().equals(getString(R.string.requestBlocked))) {
+                        request.setEnabled(false);
+                        onCreateOptionsMenu(toolbar.getMenu());
                     }
-                });
+                }
+            }
+
+            @Override
+            public void onFailure(String message) {
+                Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        Friends.getRequestedList(otherUser, Friends.LIST_FOLLOWERS, ProfileViewer.this, new OnUsersResponseListener() {
+            @Override
+            public void onSuccess(int code, List<User> list) {
+                if (code == 0 && !list.isEmpty()) {
+                    adapterUser.setData(list);
+                    toolbar.setSubtitle(getString(R.string.generalFollowing) + " " + list.size());
+                } else if (code == 1) {
+                    Toast.makeText(ProfileViewer.this, "Private Profile", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(ProfileViewer.this, "0", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(String message) {
+                Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -183,86 +234,4 @@ public class ProfileViewer extends AppCompatActivity {
         }
     }
 
-    private void userInfo() {
-        chipGroup.removeAllViews();
-        FirebaseDatabase.getInstance().getReference()
-                .child("users").orderByChild("userUID")
-                .equalTo(receiverID).limitToFirst(1)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()) {
-                            DataSnapshot userSnapshot = snapshot.getChildren().iterator().next();
-                            if (userSnapshot.child("job").exists()) {
-                                Chip chip = new Chip(ProfileViewer.this);
-                                chip.setText(userSnapshot.child("job").getValue(String.class));
-                                chip.setCheckable(false);
-                                chip.setChecked(false);
-                                chip.setClickable(false);
-                                chip.setChipIconResource(R.drawable.ic_repair_service_24);
-                                chip.setChipIconTintResource(typedValue.resourceId);
-                                chip.setChipBackgroundColorResource(R.color.basicBackgroundAlternate);
-                                chipGroup.addView(chip);
-                            }
-                            if (userSnapshot.child("website").exists()) {
-                                Chip chip = new Chip(ProfileViewer.this);
-                                chip.setText(Tools.removeHttp(Objects.requireNonNull(userSnapshot.child("website").getValue(String.class))));
-                                chip.setCheckable(false);
-                                chip.setChecked(false);
-                                chip.setChipIconResource(R.drawable.ic_link_24);
-                                chip.setChipIconTintResource(typedValue.resourceId);
-                                chip.setChipBackgroundColorResource(R.color.basicBackgroundAlternate);
-                                chip.setOnClickListener(v ->
-                                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(userSnapshot.child("website").getValue(String.class)))
-                                                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)));
-                                chipGroup.addView(chip);
-                            }
-                            if (userSnapshot.child("location").exists()) {
-                                Chip chip = new Chip(ProfileViewer.this);
-                                chip.setText(userSnapshot.child("location").getValue(String.class));
-                                chip.setCheckable(false);
-                                chip.setChecked(false);
-                                chip.setClickable(false);
-                                chip.setChipIconResource(R.drawable.ic_location_24);
-                                chip.setChipIconTintResource(typedValue.resourceId);
-                                chip.setChipBackgroundColorResource(R.color.basicBackgroundAlternate);
-                                chipGroup.addView(chip);
-                            }
-                            if (userSnapshot.child("createdAt").exists()) {
-                                Chip chip = new Chip(ProfileViewer.this);
-                                chip.setText(String.valueOf(Tools.setDate(userSnapshot.child("createdAt").getValue(Long.class))));
-                                chip.setCheckable(false);
-                                chip.setChecked(false);
-                                chip.setClickable(false);
-                                chip.setChipIconResource(R.drawable.ic_calendar_24);
-                                chip.setChipIconTintResource(typedValue.resourceId);
-                                chip.setChipBackgroundColorResource(R.color.basicBackgroundAlternate);
-                                chipGroup.addView(chip);
-                            }
-                            if (userSnapshot.child("status").exists()) {
-                                status.setText(userSnapshot.child("status").getValue(String.class));
-                            }
-                            if (userSnapshot.child("name").exists()) {
-                                name.setText(userSnapshot.child("name").getValue(String.class));
-                            }
-                            if (userSnapshot.child("username").exists()) {
-                                username.setText(userSnapshot.child("username").getValue(String.class));
-                            }
-                            if (userSnapshot.child("imageURL").exists()) {
-                                imageData = userSnapshot.child("imageURL").getValue(String.class);
-                                Glide.with(ProfileViewer.this).load(imageData).centerInside().into(userImage); //TODO Add placeholder
-                            }
-                        } else {
-                            Toast.makeText(ProfileViewer.this, "Error", Toast.LENGTH_SHORT).show();
-                            finish();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Toast.makeText(ProfileViewer.this, "error", Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
-                });
-    }
 }

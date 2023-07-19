@@ -10,18 +10,21 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.firebase.Auth;
+import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
 import com.github.fearmygaze.mercury.util.RegEx;
 import com.github.fearmygaze.mercury.util.Tools;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
 
 public class SignIn extends AppCompatActivity {
 
-    TextInputLayout credentialError, passwordError;
-    TextInputEditText credential, password;
+    TextInputLayout emailError, passwordError;
+    TextInputEditText email, password;
     MaterialButton signIn, signUp;
 
     @Override
@@ -29,14 +32,14 @@ public class SignIn extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        credentialError = findViewById(R.id.signInCredentialsError);
+        emailError = findViewById(R.id.signInEmailError);
+        email = findViewById(R.id.signInEmail);
         passwordError = findViewById(R.id.signInPasswordError);
-        credential = findViewById(R.id.signInCredentials);
         password = findViewById(R.id.signInPassword);
         signIn = findViewById(R.id.signIn);
         signUp = findViewById(R.id.signInCreateAccount);
 
-        credential.addTextChangedListener(new TextWatcher() {
+        email.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -49,10 +52,7 @@ public class SignIn extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (RegEx.isCredentialValid(credential, credentialError, SignIn.this)) {
-                    passwordError.setEnabled(true);
-                }
-
+                passwordError.setEnabled(RegEx.isEmailValid(email, emailError, SignIn.this));
             }
         });
 
@@ -69,25 +69,43 @@ public class SignIn extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (RegEx.isPasswordValid(password, passwordError, SignIn.this)) {
-                    signIn.setEnabled(true);
-                }
+                signIn.setEnabled(RegEx.isPasswordValid(password, passwordError, SignIn.this));
             }
         });
 
         signIn.setOnClickListener(v -> {
-            if (!credentialError.isErrorEnabled() && !passwordError.isErrorEnabled()) {
-                Auth.signInUser(Objects.requireNonNull(credential.getText()).toString().trim(),
-                        Objects.requireNonNull(password.getText()).toString().trim(), SignIn.this,
-                        new Auth.OnResponseListener() {
+            if (!emailError.isErrorEnabled() && !passwordError.isErrorEnabled()) {
+                Auth.signIn(Objects.requireNonNull(email.getText()).toString().trim(),
+                        Objects.requireNonNull(password.getText()).toString().trim(),
+                        SignIn.this, new OnResponseListener() {
                             @Override
-                            public void onResult(int resultCode) {
-                                if (resultCode == 1) {
+                            public void onSuccess(int code) {
+                                if (code == 0) {
                                     Tools.createSettingsPreference(SignIn.this);
                                     startActivity(new Intent(SignIn.this, Main.class));
                                     finish();
-                                } else if (resultCode == -1) {
-                                    Toast.makeText(SignIn.this, "You need to verify you email", Toast.LENGTH_SHORT).show();
+                                } else if (code == 1) {
+                                    Snackbar.make(signIn, "Please activate your account, or press 'send' to send a new verification email", 9000)
+                                            .setAction("Send", view ->
+                                                    Auth.sendVerificationEmail(FirebaseAuth.getInstance().getCurrentUser(), SignIn.this,
+                                                            new OnResponseListener() {
+                                                                @Override
+                                                                public void onSuccess(int code1) {
+                                                                    if (code1 == 0)
+                                                                        Toast.makeText(SignIn.this, "New Verification email send", Toast.LENGTH_SHORT).show();
+                                                                    else
+                                                                        Toast.makeText(SignIn.this, "Error", Toast.LENGTH_SHORT).show();
+                                                                }
+
+                                                                @Override
+                                                                public void onFailure(String message) {
+                                                                    Toast.makeText(SignIn.this, message, Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            }
+                                                    )
+                                            ).show();
+                                } else {
+                                    Toast.makeText(SignIn.this, "Error", Toast.LENGTH_SHORT).show();
                                 }
                             }
 

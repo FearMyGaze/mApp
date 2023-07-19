@@ -10,26 +10,31 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.fearmygaze.mercury.R;
+import com.github.fearmygaze.mercury.database.AppDatabase;
 import com.github.fearmygaze.mercury.firebase.Friends;
+import com.github.fearmygaze.mercury.firebase.interfaces.OnUsersResponseListener;
 import com.github.fearmygaze.mercury.model.User;
-import com.github.fearmygaze.mercury.view.adapter.AdapterUserList;
+import com.github.fearmygaze.mercury.view.adapter.AdapterUser;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RoomCreator extends AppCompatActivity {
 
-    ShapeableImageView goBack, group;
+    ShapeableImageView goBack;
+    MaterialButton create;
 
     TextInputLayout searchLayout;
     TextInputEditText searchBox;
 
-    AdapterUserList adapterFriendList;
+    AdapterUser adapterUser;
     RecyclerView friendList;
+
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,15 +42,16 @@ public class RoomCreator extends AppCompatActivity {
         setContentView(R.layout.activity_room_creator);
 
         goBack = findViewById(R.id.roomCreatorGoBack);
+        create = findViewById(R.id.roomCreatorCreate);
+
         searchLayout = findViewById(R.id.roomCreatorSearchError);
-        group = findViewById(R.id.roomCreatorEnableGroup);
         searchBox = findViewById(R.id.roomCreatorSearch);
+
         friendList = findViewById(R.id.roomCreatorUsers);
 
-        goBack.setOnClickListener(v -> onBackPressed());
-        group.setOnClickListener(v -> {//TODO: switch to groups
+        user = AppDatabase.getInstance(RoomCreator.this).userDao().getUserByUserID(getIntent().getStringExtra(User.ID));
 
-        });
+        goBack.setOnClickListener(v -> onBackPressed());
 
         searchBox.addTextChangedListener(new TextWatcher() {
             @Override
@@ -61,19 +67,47 @@ public class RoomCreator extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.toString().trim().length() > 3) {
-                    adapterFriendList.filterUsers(s.toString().trim());
+
                 } else {
-                    adapterFriendList.clearUsers();
-                    setFriends();
+
                 }
             }
         });
 
         setFriends();
 
-        adapterFriendList = new AdapterUserList(new ArrayList<>(), FirebaseAuth.getInstance().getUid(), true);
+        create.setOnClickListener(v -> {
+//            Room.Exists(user, adapterUser.getSelectedUsers(), new Room.OnDataResultListener() {
+//                @Override
+//                public void onResult(int resultCode, Object object) {
+//                    if (resultCode == 1) {//TODO: We need to pass the user roomData
+//                        Toast.makeText(RoomCreator.this, "Room Created", Toast.LENGTH_SHORT).show();
+//                        finish();
+//                        startActivity(new Intent(RoomCreator.this, ChatRoom.class)
+//                                .putExtra("roomID", object.toString()));
+//                    } else if (resultCode == 2)
+//                        Toast.makeText(RoomCreator.this, "Room already exists", Toast.LENGTH_SHORT).show();
+//                    else if (resultCode == -1)
+//                        Toast.makeText(RoomCreator.this, "Error", Toast.LENGTH_SHORT).show();
+//                    else
+//                        Toast.makeText(RoomCreator.this, resultCode + "", Toast.LENGTH_SHORT).show();
+//                }
+//
+//                @Override
+//                public void onFailure(String message) {
+//                    Toast.makeText(RoomCreator.this, message, Toast.LENGTH_SHORT).show();
+//                }
+//            });
+
+        });
+
+        adapterUser = new AdapterUser(new ArrayList<>(), user.getId(), AdapterUser.TYPE_ROOM, count -> {
+            if (count > 0) {
+                Toast.makeText(RoomCreator.this, "Users is: " + count, Toast.LENGTH_SHORT).show();
+            }
+        });
         friendList.setLayoutManager(new LinearLayoutManager(RoomCreator.this, LinearLayoutManager.VERTICAL, false));
-        friendList.setAdapter(adapterFriendList);
+        friendList.setAdapter(adapterUser);
     }
 
     @Override
@@ -83,12 +117,13 @@ public class RoomCreator extends AppCompatActivity {
     }
 
     private void setFriends() {
-        Friends.friendList(FirebaseAuth.getInstance().getUid(), new Friends.OnExtendedListener() {
-
+        Friends.getRequestedList(user, Friends.LIST_FOLLOWERS, RoomCreator.this, new OnUsersResponseListener() {
             @Override
-            public void onResult(int resultCode, List<User> list) {
-                if (resultCode == 1) {
-                    adapterFriendList.setUsers(list);
+            public void onSuccess(int code, List<User> list) {
+                if (code == 0 && !list.isEmpty()) {
+                    adapterUser.setData(list);
+                } else {
+                    Toast.makeText(RoomCreator.this, "Error", Toast.LENGTH_SHORT).show();
                 }
             }
 

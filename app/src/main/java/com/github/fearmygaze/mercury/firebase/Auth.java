@@ -5,228 +5,49 @@ import android.net.Uri;
 
 import androidx.annotation.NonNull;
 
-import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.database.AppDatabase;
+import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
+import com.github.fearmygaze.mercury.firebase.interfaces.OnUserResponseListener;
+import com.github.fearmygaze.mercury.firebase.interfaces.OnUsersResponseListener;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.util.Objects;
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import kotlin.NotImplementedError;
 
 public class Auth {
 
-    private static final String BUCKET_USERS = "users";
-    private static final String BUCKET_PROFILE_IMAGES = "profileImages/";
-    private static final String USER_VALUE_ID = "userUID";
-    private static final String USER_VALUE_EMAIL = "email";
-    private static final String USER_VALUE_USERNAME = "username";
-    private static final String USER_VALUE_NAME = "name";
-    private static final String USER_VALUE_IMAGE = "imageURL";
-    private static final String USER_VALUE_TOKEN = "notificationToken";
-    private static final String USER_VALUE_STATUS = "status";
-    private static final String USER_VALUE_LOCATION = "location";
-    private static final String USER_VALUE_JOB = "job";
-    private static final String USER_VALUE_WEBSITE = "website";
-    private static final String USER_VALUE_FRIENDS = "showFriends";
-    private static final String USER_VALUE_CREATED = "createdAt";
-
-    /**
-     * @param email    Email validation
-     * @param username Username validation
-     * @param listener Listener Returns <b>1</b> when passes, <b>0</b> when the user return null when getting him and a <b>String</b> when an error occurs
-     */
-    private static void validationForm(String email, String username, OnResponseListener listener) {
-        FirebaseAuth.getInstance().fetchSignInMethodsForEmail(email).addOnSuccessListener(result -> {
-            if (!Objects.requireNonNull(result.getSignInMethods()).isEmpty()) {
-                listener.onResult(0);
-            } else {
-                FirebaseDatabase.getInstance().getReference().child("users")
-                        .orderByChild("username").equalTo("@" + username).limitToFirst(1)
-                        .addListenerForSingleValueEvent(new ValueEventListener() {
+    public static void validateDataAndCreateUser(String username, String email, String password, Context context, OnResponseListener listener) {
+        FirebaseAuth.getInstance()
+                .fetchSignInMethodsForEmail(email)
+                .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                .addOnSuccessListener(signInMethodQueryResult -> {
+                    List<String> results = signInMethodQueryResult.getSignInMethods();
+                    if (results != null && !results.isEmpty()) {
+                        listener.onSuccess(1);
+                    } else {
+                        grantUsername(username, context, new OnResponseListener() {
                             @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                if (snapshot.exists()) {
-                                    if (Objects.equals(snapshot.getChildren().iterator().next().child("username").getValue(String.class), "@" + username)) {
-                                        listener.onResult(-1);
-                                    } else {
-                                        listener.onResult(1);
-                                    }
+                            public void onSuccess(int code) {
+                                if (code == 0) {
+                                    signUp(username, email, password, context, listener);
                                 } else {
-                                    listener.onResult(1);
+                                    listener.onSuccess(code);
                                 }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-                                listener.onFailure(error.getMessage());
-                            }
-                        });
-            }
-        }).addOnFailureListener(e -> listener.onFailure(e.getMessage()));
-    }
-
-    /**
-     * @param username Users Username
-     * @param name     Users name
-     * @param email    Users Email
-     * @param password Users password
-     * @param image    Users image Uri
-     * @param listener Listener Returns <b>1</b> when passes, <b>0</b> when the user return null when getting him and a <b>String</b> when an error occurs
-     */
-    private static void signUpUser(String username, String name, String email, String password, Uri image, OnResponseListener listener) {
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child(BUCKET_PROFILE_IMAGES + UUID.randomUUID().toString().trim());
-        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child(BUCKET_USERS);
-        storageRef.putFile(image).addOnSuccessListener(taskSnapshot -> {
-            storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
-                        .addOnSuccessListener(authResult -> {
-                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                            if (user != null) {
-                                UserProfileChangeRequest update = new UserProfileChangeRequest.Builder()
-                                        .setDisplayName(name).setPhotoUri(uri).build();
-                                user.updateProfile(update).addOnSuccessListener(unused0 -> {
-                                    user.sendEmailVerification().addOnSuccessListener(unused1 -> {
-                                        FirebaseMessaging.getInstance().getToken().addOnSuccessListener(token -> {
-                                            usersRef.child(user.getUid()).setValue(new User(
-                                                            user.getUid(),
-                                                            email,
-                                                            "@" + username,
-                                                            name,
-                                                            String.valueOf(uri),
-                                                            token)
-                                                            .toMap(true))
-                                                    .addOnSuccessListener(unused2 -> listener.onResult(1))
-                                                    .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
-                                        }).addOnFailureListener(e -> listener.onFailure(e.getMessage()));
-                                    }).addOnFailureListener(e -> listener.onFailure(e.getMessage()));
-                                }).addOnFailureListener(e -> listener.onFailure(e.getMessage()));
-                            } else
-                                listener.onResult(0);
-                        }).addOnFailureListener(e -> listener.onFailure(e.getMessage()));
-            }).addOnFailureListener(e -> listener.onFailure(e.getMessage()));
-        }).addOnFailureListener(e -> listener.onFailure(e.getMessage()));
-    }
-
-    /**
-     * @param credential Users Email Or Username
-     * @param password   Users Password
-     * @param context    Context for the Room database
-     * @param listener   Listener Returns <b>1</b> when passes, <b>0</b> when the user is not email verified and a <b>String</b> if an error occurs
-     */
-    public static void signInUser(String credential, String password, Context context, OnResponseListener listener) {
-        if (credential.contains("@")) {
-            FirebaseAuth.getInstance().signInWithEmailAndPassword(credential, password)
-                    .addOnSuccessListener(authResult -> {
-                        if (Objects.requireNonNull(authResult.getUser()).isEmailVerified()) {
-                            FirebaseDatabase.getInstance().getReference().child(BUCKET_USERS)
-                                    .orderByChild(USER_VALUE_EMAIL)
-                                    .equalTo(credential).limitToFirst(1)
-                                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            if (snapshot.exists()) {
-                                                DataSnapshot userSnapshot = snapshot.getChildren().iterator().next();
-                                                AppDatabase.getInstance(context)
-                                                        .userDao().insertUser(new User(
-                                                                Objects.requireNonNull(userSnapshot.child(USER_VALUE_ID).getValue(String.class)),
-                                                                userSnapshot.child(USER_VALUE_EMAIL).getValue(String.class),
-                                                                userSnapshot.child(USER_VALUE_USERNAME).getValue(String.class),
-                                                                userSnapshot.child(USER_VALUE_NAME).getValue(String.class),
-                                                                userSnapshot.child(USER_VALUE_IMAGE).getValue(String.class),
-                                                                userSnapshot.child(USER_VALUE_TOKEN).getValue(String.class),
-                                                                userSnapshot.child(USER_VALUE_STATUS).getValue(String.class),
-                                                                userSnapshot.child(USER_VALUE_LOCATION).getValue(String.class),
-                                                                userSnapshot.child(USER_VALUE_JOB).getValue(String.class),
-                                                                userSnapshot.child(USER_VALUE_WEBSITE).getValue(String.class),
-                                                                Boolean.TRUE.equals(userSnapshot.child(USER_VALUE_FRIENDS).getValue(Boolean.class)),
-                                                                userSnapshot.child(USER_VALUE_CREATED).getValue(Long.class)
-                                                        ));
-                                                listener.onResult(1);
-                                            } else listener.onResult(-1);
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError error) {
-                                            listener.onFailure(error.getMessage());
-                                        }
-                                    });
-                        } else
-                            listener.onResult(-1);
-                    }).addOnFailureListener(e -> listener.onFailure(e.getMessage()));
-        } else {
-            FirebaseDatabase.getInstance().getReference().child(BUCKET_USERS)
-                    .orderByChild(USER_VALUE_USERNAME)
-                    .equalTo("@" + credential).limitToFirst(1)
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (snapshot.hasChildren()) {
-                                DataSnapshot userSnapshot = snapshot.getChildren().iterator().next();
-                                FirebaseAuth.getInstance().signInWithEmailAndPassword(Objects.requireNonNull(userSnapshot.child(USER_VALUE_EMAIL).getValue(String.class)), password)
-                                        .addOnSuccessListener(authResult -> {
-                                            if (Objects.requireNonNull(authResult.getUser()).isEmailVerified()) {
-                                                AppDatabase.getInstance(context).userDao()
-                                                        .insertUser(new User(
-                                                                Objects.requireNonNull(userSnapshot.child(USER_VALUE_ID).getValue(String.class)),
-                                                                userSnapshot.child(USER_VALUE_EMAIL).getValue(String.class),
-                                                                userSnapshot.child(USER_VALUE_USERNAME).getValue(String.class),
-                                                                userSnapshot.child(USER_VALUE_NAME).getValue(String.class),
-                                                                userSnapshot.child(USER_VALUE_IMAGE).getValue(String.class),
-                                                                userSnapshot.child(USER_VALUE_TOKEN).getValue(String.class),
-                                                                userSnapshot.child(USER_VALUE_STATUS).getValue(String.class),
-                                                                userSnapshot.child(USER_VALUE_LOCATION).getValue(String.class),
-                                                                userSnapshot.child(USER_VALUE_JOB).getValue(String.class),
-                                                                userSnapshot.child(USER_VALUE_WEBSITE).getValue(String.class),
-                                                                Boolean.TRUE.equals(userSnapshot.child(USER_VALUE_FRIENDS).getValue(Boolean.class)),
-                                                                userSnapshot.child(USER_VALUE_CREATED).getValue(Long.class)
-                                                        ));
-                                                listener.onResult(1);
-                                            } else listener.onResult(-1);
-                                        }).addOnFailureListener(e -> listener.onFailure(e.getMessage()));
-                            } else listener.onResult(-1);
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                            listener.onFailure(error.getMessage());
-                        }
-                    });
-        }
-    }
-
-    /**
-     * @param email          Users email
-     * @param emailLayout    email TextInputLayout to set the Errors
-     * @param username       Users username
-     * @param usernameLayout username TextInputLayout to set the Errors
-     * @param name           Users name
-     * @param password       Users password
-     * @param image          Users Image
-     * @param context        Context for getting the String Resource
-     * @param listener       Listener Returns <b>1</b> when passes, <b>0</b> when email exists, <b>-1</b> when username exists and a <b>String</b> if an error occurs
-     */
-    public static void signUpForm(String email, TextInputLayout emailLayout, String username, TextInputLayout usernameLayout, String name, String password, Uri image, Context context, OnResponseListener listener) {
-        validationForm(email, username, new OnResponseListener() {
-            @Override
-            public void onResult(int resultCode) {
-                switch (resultCode) {
-                    case 1:
-                        signUpUser(username, name, email, password, image, new OnResponseListener() {
-                            @Override
-                            public void onResult(int resultCode) {
-                                listener.onResult(resultCode);
                             }
 
                             @Override
@@ -234,217 +55,258 @@ public class Auth {
                                 listener.onFailure(message);
                             }
                         });
-                        break;
-                    case 0:
-                        Tools.setTimedErrorToLayout(emailLayout, context.getString(R.string.authEmail), true, 5000);
-                        break;
-                    case -1:
-                        Tools.setTimedErrorToLayout(usernameLayout, context.getString(R.string.authUsername), true, 5000);
-                        break;
-                }
-            }
-
-            @Override
-            public void onFailure(String message) {
-                listener.onFailure(message);
-            }
-        });
-    }
-
-    /**
-     * @param context  Context is needed fro inserting data to Room database
-     * @param listener Listener returns <b>1</b> when passes, <b>0</b> when the user doesn't exists and -1 when the user isn't email verified
-     */
-    public static void rememberMe(FirebaseAuth auth, Context context, OnResponseListener listener) {
-        if (auth.getCurrentUser() == null) {
-            listener.onResult(-1);
-        } else if (!auth.getCurrentUser().isEmailVerified()) {
-            listener.onResult(-2);
-        } else {
-            auth.getCurrentUser().reload().addOnSuccessListener(unused ->
-                    FirebaseMessaging.getInstance().getToken().addOnSuccessListener(token -> {
-                        FirebaseDatabase.getInstance().getReference().child(BUCKET_USERS)
-                                .orderByChild(USER_VALUE_ID).equalTo(auth.getUid()).limitToFirst(1)
-                                .addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        if (snapshot.exists()) {
-                                            DataSnapshot userSnapshot = snapshot.getChildren().iterator().next();
-                                            AppDatabase.getInstance(context).userDao().updateUser(new User(
-                                                    Objects.requireNonNull(userSnapshot.child(USER_VALUE_ID).getValue(String.class)),
-                                                    userSnapshot.child(USER_VALUE_EMAIL).getValue(String.class),
-                                                    userSnapshot.child(USER_VALUE_USERNAME).getValue(String.class),
-                                                    userSnapshot.child(USER_VALUE_NAME).getValue(String.class),
-                                                    userSnapshot.child(USER_VALUE_IMAGE).getValue(String.class),
-                                                    token,
-                                                    userSnapshot.child(USER_VALUE_STATUS).getValue(String.class),
-                                                    userSnapshot.child(USER_VALUE_LOCATION).getValue(String.class),
-                                                    userSnapshot.child(USER_VALUE_JOB).getValue(String.class),
-                                                    userSnapshot.child(USER_VALUE_WEBSITE).getValue(String.class),
-                                                    Boolean.TRUE.equals(userSnapshot.child(USER_VALUE_FRIENDS).getValue(Boolean.class)),
-                                                    userSnapshot.child(USER_VALUE_CREATED).getValue(Long.class))
-                                            );
-                                            User user = AppDatabase.getInstance(context).userDao().getUserByUserUID(userSnapshot.child(USER_VALUE_ID).getValue(String.class));
-                                            FirebaseDatabase.getInstance().getReference().child(BUCKET_USERS)
-                                                    .child(user.userUID).setValue(user.toMap(false))
-                                                    .addOnSuccessListener(unused1 -> listener.onResult(1))
-                                                    .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
-                                        } else
-                                            listener.onResult(0);
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
-                                        listener.onFailure(error.getMessage());
-                                    }
-                                });
-                    })
-            ).addOnFailureListener(e -> listener.onFailure(e.getMessage()));
-        }
-    }
-
-    public static void getShowFriends(String senderID, OnResponseListener listener) {
-        FirebaseDatabase.getInstance().getReference().child(BUCKET_USERS)
-                .orderByChild(USER_VALUE_ID).equalTo(senderID).limitToFirst(1)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()) {
-                            DataSnapshot userSnapshot = snapshot.getChildren().iterator().next();
-                            if (Boolean.TRUE.equals(userSnapshot.child(USER_VALUE_FRIENDS).getValue(Boolean.class))) {
-                                listener.onResult(1);
-                            } else listener.onResult(0);
-                        } else listener.onResult(-1);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        listener.onFailure(error.getMessage());
                     }
                 });
     }
 
-    public static void setShowFriends(User user, boolean show, OnResponseListener listener) {
-        FirebaseDatabase.getInstance().getReference().child(BUCKET_USERS)
-                .child(user.userUID).setValue(new User(
-                        user.userUID,
-                        user.email,
-                        user.username,
-                        user.name,
-                        user.imageURL,
-                        user.notificationToken,
-                        user.status,
-                        user.location,
-                        user.job,
-                        user.website,
-                        show,
-                        user.createdAt
-                ).toMap(false))
-                .addOnSuccessListener(unused -> listener.onResult(1))
-                .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
-    }
-
-    public static void authenticate(String email, String password, Context context, OnResponseListener listener) {
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
-                .addOnSuccessListener(authResult -> {
-                    if (Objects.requireNonNull(authResult.getUser()).isEmailVerified()) {
-                        FirebaseDatabase.getInstance().getReference().child(BUCKET_USERS)
-                                .orderByChild(USER_VALUE_EMAIL).equalTo(email).limitToFirst(1)
-                                .addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        if (snapshot.exists()) {
-                                            DataSnapshot userSnapshot = snapshot.getChildren().iterator().next();
-                                            AppDatabase.getInstance(context)
-                                                    .userDao().insertUser(new User(
-                                                            Objects.requireNonNull(userSnapshot.child(USER_VALUE_ID).getValue(String.class)),
-                                                            userSnapshot.child(USER_VALUE_EMAIL).getValue(String.class),
-                                                            userSnapshot.child(USER_VALUE_USERNAME).getValue(String.class),
-                                                            userSnapshot.child(USER_VALUE_NAME).getValue(String.class),
-                                                            userSnapshot.child(USER_VALUE_IMAGE).getValue(String.class),
-                                                            userSnapshot.child(USER_VALUE_TOKEN).getValue(String.class),
-                                                            userSnapshot.child(USER_VALUE_STATUS).getValue(String.class),
-                                                            userSnapshot.child(USER_VALUE_LOCATION).getValue(String.class),
-                                                            userSnapshot.child(USER_VALUE_JOB).getValue(String.class),
-                                                            userSnapshot.child(USER_VALUE_WEBSITE).getValue(String.class),
-                                                            Boolean.TRUE.equals(userSnapshot.child(USER_VALUE_WEBSITE).getValue(Boolean.class)),
-                                                            userSnapshot.child(USER_VALUE_CREATED).getValue(Long.class)
-                                                    ));
-                                            listener.onResult(1);
-                                        } else listener.onResult(0);
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
-                                        listener.onFailure(error.getMessage());
-                                    }
-                                });
+    private static void grantUsername(String username, Context context, OnResponseListener listener) {
+        FirebaseFirestore.getInstance().collection(User.PUBLIC_DATA)
+                .whereEqualTo(User.USERNAME, username)
+                .limit(1)
+                .get()
+                .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        listener.onSuccess(2);
+                    } else {
+                        Map<String, Object> map = new HashMap<>();
+                        map.put(User.USERNAME, username);
+                        FirebaseFirestore.getInstance().collection(User.PUBLIC_DATA)
+                                .document()
+                                .set(map)
+                                .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                                .addOnSuccessListener(unused -> listener.onSuccess(0));
                     }
-                    listener.onResult(-1);//Didn't find the user
-                }).addOnFailureListener(e -> listener.onFailure(e.getMessage()));
+                });
     }
 
-    public static void updatePassword(String password, OnResponseListener listener) {
-        Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser())
-                .updatePassword(password)
-                .addOnSuccessListener(unused -> listener.onResult(1))
-                .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
+    protected static void deleteUsername(String username, Context context, OnResponseListener listener) {
+        FirebaseFirestore.getInstance().collection(User.PUBLIC_DATA)
+                .whereEqualTo(User.USERNAME, username)
+                .limit(1)
+                .get()
+                .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        queryDocumentSnapshots.getDocuments()
+                                .get(0)
+                                .getReference()
+                                .delete()
+                                .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                                .addOnSuccessListener(unused -> listener.onSuccess(0));
+                    } else listener.onSuccess(1);
+                });
     }
 
-    public static void updateEmail(String email, User user, Context context, OnResponseListener listener) {
-        FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (fUser != null) {
-            fUser.updateEmail(email)
-                    .addOnSuccessListener(unused ->
-                            fUser.sendEmailVerification()
-                                    .addOnSuccessListener(unused1 ->
-                                            FirebaseDatabase.getInstance().getReference().child(BUCKET_USERS)
-                                                    .child(user.userUID).setValue(new User(
-                                                            user.userUID,
-                                                            email,
-                                                            user.username,
-                                                            user.name,
-                                                            user.imageURL,
-                                                            user.notificationToken,
-                                                            user.status,
-                                                            user.location,
-                                                            user.job,
-                                                            user.website,
-                                                            user.showFriends,
-                                                            user.createdAt).toMap(false))
-                                                    .addOnSuccessListener(unused2 -> {
-                                                        AppDatabase.getInstance(context).userDao().updateUser(new User(
-                                                                user.userUID,
-                                                                email,
-                                                                user.username,
-                                                                user.name,
-                                                                user.imageURL,
-                                                                user.notificationToken,
-                                                                user.status,
-                                                                user.location,
-                                                                user.job,
-                                                                user.website,
-                                                                user.showFriends,
-                                                                user.createdAt));
-                                                        listener.onResult(1);
-                                                    })
-                                                    .addOnFailureListener(e -> listener.onFailure(e.getMessage())))
-                                    .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
-                    )
-                    .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
-        } else listener.onResult(-1);
+    private static void signUp(String username, String email, String password, Context context, OnResponseListener listener) {
+        FirebaseAuth.getInstance()
+                .createUserWithEmailAndPassword(email, password)
+                .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                .addOnSuccessListener(authResult -> {
+                    FirebaseUser user = authResult.getUser();
+                    if (user != null) {
+                        UserProfileChangeRequest changeRequest = new UserProfileChangeRequest.Builder()
+                                .setDisplayName(username)
+                                .build();
+                        user.updateProfile(changeRequest)
+                                .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                                .addOnSuccessListener(unused -> user.sendEmailVerification()
+                                        .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                                        .addOnSuccessListener(unused1 -> FirebaseFirestore.getInstance()
+                                                .collection(User.COLLECTION)
+                                                .document(user.getUid())
+                                                .set(new User(username))
+                                                .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                                                .addOnSuccessListener(unused2 -> listener.onSuccess(0)))
+                                );
+                    } else listener.onFailure("Error contacting with the server");
+                });
     }
 
-    public static void deleteAccount(String senderID, OnResponseListener listener) {
-        FirebaseDatabase.getInstance().getReference().child(BUCKET_USERS)
-                .child(senderID).removeValue()
-                .addOnSuccessListener(unused -> listener.onResult(1))
-                .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
+    public static void signIn(String email, String password, Context context, OnResponseListener listener) {
+        FirebaseAuth.getInstance()
+                .signInWithEmailAndPassword(email, password)
+                .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                .addOnSuccessListener(authResult -> {
+                    FirebaseUser user = authResult.getUser();
+                    if (user != null) {
+                        if (user.isEmailVerified()) {
+                            FirebaseFirestore.getInstance().collection(User.COLLECTION)
+                                    .document(user.getUid())
+                                    .get()
+                                    .addOnSuccessListener(documentSnapshot -> {
+                                        AppDatabase.getInstance(context).userDao().insertUser(User.convertFromDocument(documentSnapshot));
+                                        listener.onSuccess(0);
+                                    });
+                        } else {
+                            listener.onSuccess(1);
+                        }
+                    } else listener.onSuccess(-1);
+                });
     }
 
-    public interface OnResponseListener {
-        void onResult(int resultCode);
+    public static void sendVerificationEmail(FirebaseUser user, Context context, OnResponseListener listener) {
+        if (user != null) {
+            user.sendEmailVerification()
+                    .addOnFailureListener(e -> listener.onFailure("Error sending the verification email"))
+                    .addOnSuccessListener(unused -> listener.onSuccess(0));
+        } else listener.onSuccess(1);
+    }
 
-        void onFailure(String message);
+    public static void sendPasswordResetEmail(String email, Context context, OnResponseListener listener) {
+        FirebaseAuth.getInstance()
+                .sendPasswordResetEmail(email)
+                .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                .addOnSuccessListener(unused -> listener.onSuccess(0));
+    }
+
+    public static void rememberMe(Context context, OnUserResponseListener listener) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            listener.onSuccess(1, null);
+        } else if (!user.isEmailVerified()) {
+            listener.onSuccess(2, null);
+        } else {
+            user.reload()
+                    .addOnFailureListener(e -> listener.onFailure("Failed to update your user"))
+                    .addOnSuccessListener(unused -> FirebaseMessaging.getInstance()
+                            .getToken()
+                            .addOnFailureListener(e -> listener.onFailure("Failed to update your token"))
+                            .addOnSuccessListener(token -> FirebaseFirestore.getInstance()
+                                    .collection(User.COLLECTION)
+                                    .document(user.getUid())
+                                    .get()
+                                    .addOnFailureListener(e -> listener.onFailure("Error getting your user"))
+                                    .addOnSuccessListener(documentSnapshot -> {
+                                        if (documentSnapshot != null && documentSnapshot.exists()) {
+                                            FirebaseFirestore.getInstance().collection(User.COLLECTION)
+                                                    .document(user.getUid())
+                                                    .set(User.updateRoomToken(User.convertFromDocumentAndSave(documentSnapshot, context).getId(), token, context))
+                                                    .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                                                    .addOnSuccessListener(unused1 -> listener.onSuccess(0, User.getRoomUser(user.getUid(), context)));
+                                        } else {
+                                            listener.onFailure("Error getting your user");
+                                        }
+                                    })));
+        }
+    }
+
+    public static void updatePassword(String password, Context context, OnResponseListener listener) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            user.updatePassword(password)
+                    .addOnFailureListener(e -> listener.onFailure("Error updating your password"))
+                    .addOnSuccessListener(unused -> listener.onSuccess(0));
+        }
+    }
+
+    public static void updateEmail(String email, Context context, OnResponseListener listener) {
+        FirebaseUser user1 = FirebaseAuth.getInstance().getCurrentUser();
+        if (user1 != null) {
+            user1.updateEmail(email)
+                    .addOnFailureListener(e -> listener.onFailure("Failed to update your email"))
+                    .addOnSuccessListener(unused -> user1.sendEmailVerification()
+                            .addOnFailureListener(e -> listener.onFailure("Failed to send Verification Email"))
+                            .addOnSuccessListener(unused1 -> listener.onSuccess(0))
+                    );
+        }
+    }
+
+    public static void updateNotificationToken(@NonNull FirebaseUser user, String token, Context context) {
+        FirebaseFirestore.getInstance().collection(User.COLLECTION)
+                .document(user.getUid())
+                .set(User.updateRoomToken(user.getUid(), token, context));
+    }
+
+    public static void deleteAccount(Context context, OnResponseListener listener) {
+        throw new NotImplementedError();
+    }
+
+    public static void updateProfile(User user, boolean changed, Uri image, Context context, OnResponseListener listener) {
+        if (changed) {
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference()
+                    .child(User.IMAGE_COLLECTION)
+                    .child(Tools.createFileNameWithExtension(image, context));
+            storageReference.putFile(image)
+                    .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                    .addOnSuccessListener(taskSnapshot -> storageReference.getDownloadUrl()
+                            .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                            .addOnSuccessListener(link -> updateInformation(User.updateRoomImage(user.getId(), link, context), context, listener))
+                    );
+        } else {
+            updateInformation(user, context, listener);
+        }
+    }
+
+    public static void updateState(String id, boolean state, Context context, OnResponseListener listener) {
+        updateInformation(User.updateRoomState(id, state, context), context, listener);
+    }
+
+    private static void updateInformation(User user, Context context, OnResponseListener listener) {
+        FirebaseFirestore.getInstance().collection(User.COLLECTION)
+                .document(user.getId())
+                .set(User.updateRoomUser(user, context))
+                .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                .addOnSuccessListener(unused -> {
+                    User.updateRoomUser(user, context);
+                    listener.onSuccess(0);
+                });
+    }
+
+    public static void searchQuery(String search, Context context, OnUsersResponseListener listener) {
+        CollectionReference reference = FirebaseFirestore.getInstance().collection(User.COLLECTION);
+        Query query;
+        String pSearch;
+        if (search.startsWith("loc:") && search.length() >= 7) {
+            pSearch = search.replace("loc:", "");
+            query = reference
+                    .whereGreaterThanOrEqualTo(User.LOCATION, pSearch)
+                    .whereLessThanOrEqualTo(User.LOCATION, pSearch + "\uf8ff")
+                    .limit(40);
+        } else if (search.startsWith("job:") && search.length() >= 7) {
+            pSearch = search.replace("job:", "");
+            query = reference
+                    .whereGreaterThanOrEqualTo(User.JOB, pSearch)
+                    .whereLessThanOrEqualTo(User.JOB, pSearch + "\uf8ff")
+                    .limit(40);
+        } else if (search.startsWith("web:") && search.length() >= 7) {
+            pSearch = Tools.addHttp(search.replace("web:", ""));
+            query = reference
+                    .whereGreaterThanOrEqualTo(User.WEB, pSearch)
+                    .whereLessThanOrEqualTo(User.WEB, pSearch + "\uf8ff")
+                    .limit(40);
+        } else {
+            query = reference
+                    .whereGreaterThanOrEqualTo(User.USERNAME, search)
+                    .whereLessThanOrEqualTo(User.USERNAME, search + "\uf8ff")
+                    .limit(40);
+        }
+        query.get()
+                .addOnFailureListener(e -> listener.onFailure("Error getting users based on yous search"))
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots != null && !queryDocumentSnapshots.isEmpty()) {
+                        List<User> users = new ArrayList<>();
+                        for (DocumentSnapshot snapshot : queryDocumentSnapshots.getDocuments()) {
+                            User user = snapshot.toObject(User.class);
+                            if (user != null) {
+                                user.setId(snapshot.getId());
+                                users.add(user);
+                            }
+                        }
+                        listener.onSuccess(0, users);
+                    } else listener.onSuccess(-1, null);
+                });
+    }
+
+    public static void getUsersProfile(String id, Context context, OnUserResponseListener listener) {
+        FirebaseFirestore.getInstance().collection(User.COLLECTION)
+                .document(id)
+                .get()
+                .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot != null && documentSnapshot.exists()) {
+                        listener.onSuccess(0, User.convertFromDocument(documentSnapshot));
+                    } else listener.onSuccess(1, null);
+                });
     }
 }

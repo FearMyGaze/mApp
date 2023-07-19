@@ -1,253 +1,238 @@
 package com.github.fearmygaze.mercury.firebase;
 
-import androidx.annotation.NonNull;
+import android.content.Context;
+import android.util.Log;
 
+import androidx.annotation.IntRange;
+
+import com.github.fearmygaze.mercury.R;
+import com.github.fearmygaze.mercury.firebase.interfaces.OnDataResponseListener;
+import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
+import com.github.fearmygaze.mercury.firebase.interfaces.OnUsersResponseListener;
+import com.github.fearmygaze.mercury.model.Request;
 import com.github.fearmygaze.mercury.model.User;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 public class Friends {
 
-    private static final String BUCKET_FRIENDS = "friends";
-    private static final String BUCKET_USERS = "users";
-    private static final String USER_VALUE_ID = "userUID";
-    private static final String USER_VALUE_USERNAME = "username";
-    private static final String USER_VALUE_NAME = "name";
-    private static final String USER_VALUE_IMAGE = "imageURL";
-    private static final String USER_VALUE_FRIENDS = "showFriends";
-    private static final String STATUS_WAITING_RESPONSE = "waiting";
-    private static final String STATUS_IGNORED = "ignored";
-    private static final String STATUS_FRIENDS = "friends";
 
-    public static void status(String senderID, String receiverID, OnResultListener listener) {
-        FirebaseDatabase.getInstance().getReference().child(BUCKET_FRIENDS)
-                .child(receiverID).child(senderID)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()) {
-                            if (Objects.equals(snapshot.getValue(String.class), STATUS_FRIENDS)) {
-                                listener.onResult(1);
-                            } else if (Objects.equals(snapshot.getValue(String.class), STATUS_IGNORED)) {
-                                listener.onResult(0);
-                            } else {
-                                listener.onResult(2);
+    public static final int OPTION_ACCEPT = 0, OPTION_REMOVE = 1;
+    public static final int LIST_WAITING = 0, LIST_FOLLOWERS = 1, LIST_BLOCKED = 2;
+
+    public static void getRequestedList(User user, @IntRange(from = 0, to = 2) int option, Context context, OnUsersResponseListener listener) {
+        CollectionReference reference = FirebaseFirestore.getInstance().collection(Request.COLLECTION);
+        switch (option) {
+            case LIST_WAITING:
+                reference
+                        .whereEqualTo(Request.RECEIVER, user.getId()).whereEqualTo(Request.STATE, Request.WAITING)
+                        .orderBy(Request.DATE, Query.Direction.DESCENDING)
+                        .get()
+                        .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                        .addOnSuccessListener(querySnapshot -> getUsersFromRequests(user.getId(), Request.createRequests(querySnapshot), context, listener));
+                break;
+            case LIST_FOLLOWERS:
+                if (user.getIsProfileOpen()) {
+                    Task<List<QuerySnapshot>> combinedTask = Tasks.
+                            whenAllSuccess(
+                                    reference.whereEqualTo(Request.RECEIVER, user.getId()).whereEqualTo(Request.STATE, Request.ACCEPT)
+                                            .orderBy(Request.DATE, Query.Direction.ASCENDING).get(),
+                                    reference.whereEqualTo(Request.SENDER, user.getId()).whereEqualTo(Request.STATE, Request.ACCEPT)
+                                            .orderBy(Request.DATE, Query.Direction.ASCENDING).get()
+                            );
+                    combinedTask
+                            .addOnFailureListener(e -> Log.d("customLog", e.getMessage()))
+                            .addOnSuccessListener(querySnapshots -> getUsersFromRequests(user.getId(), Request.createRequests(querySnapshots), context, listener));
+                } else listener.onSuccess(1, null);
+                break;
+            case LIST_BLOCKED:
+                reference
+                        .whereEqualTo(Request.SENDER, user.getId()).whereEqualTo(Request.STATE, Request.BLOCKED)
+                        .orderBy(Request.DATE, Query.Direction.DESCENDING)
+                        .get()
+                        .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                        .addOnSuccessListener(querySnapshot -> getUsersFromRequests(user.getId(), Request.createRequests(querySnapshot), context, listener));
+                break;
+        }
+    }
+
+    public static void requestStatus(String myID, String otherID, Context context, OnDataResponseListener listener) {
+        FirebaseFirestore.getInstance().collection(Request.COLLECTION)
+                .whereIn(Request.SENDER, Arrays.asList(myID, otherID)).whereIn(Request.RECEIVER, Arrays.asList(myID, otherID))
+                .limit(1)
+                .get()
+                .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                .addOnSuccessListener(querySnapshot -> {
+                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                        DocumentSnapshot document = querySnapshot.getDocuments().get(0);
+                        Request request = document.toObject(Request.class);
+                        if (request != null) {
+                            request.setId(document.getId());
+                            switch (request.getState()) {
+                                case Request.ACCEPT:
+                                    listener.onSuccess(0, context.getString(R.string.requestAccepted));
+                                    break;
+                                case Request.WAITING:
+                                    listener.onSuccess(0, context.getString(R.string.requestWaiting));
+                                    break;
+                                case Request.BLOCKED:
+                                    listener.onSuccess(0, context.getString(R.string.requestBlocked));
+                                    break;
+                                default:
+                                    listener.onSuccess(0, context.getString(R.string.requestNone));
+                                    break;
                             }
-                        } else listener.onResult(-1);
-                    }
+                        }
+                    } else listener.onSuccess(0, context.getString(R.string.requestNone));
+                });
+    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        listener.onFailure(error.getMessage());
+    public static void sendRequest(String myID, String otherID, Context context, OnResponseListener listener) {
+        FirebaseFirestore.getInstance().collection(Request.COLLECTION + "1")
+                .document()
+                .set(new Request(myID, otherID, Request.WAITING))
+                .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                .addOnSuccessListener(unused -> listener.onSuccess(0));
+    }
+
+    public static void cancelRequest(String myID, String otherID, Context context, OnResponseListener listener) {
+        FirebaseFirestore.getInstance().collection(Request.COLLECTION)
+                .whereEqualTo(Request.SENDER, myID).whereEqualTo(Request.RECEIVER, otherID)
+                .limit(1)
+                .get()
+                .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                .addOnSuccessListener(querySnapshot -> {
+                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                        DocumentSnapshot snapshot = querySnapshot.getDocuments().get(0);
+                        Request request = snapshot.toObject(Request.class);
+                        if (request != null && request.getState().equals(Request.WAITING)) {
+                            if (request.getSenderID().equals(myID)) {
+                                snapshot
+                                        .getReference()
+                                        .delete()
+                                        .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                                        .addOnSuccessListener(unused -> listener.onSuccess(0));
+                            } else listener.onSuccess(1);
+                        } else listener.onSuccess(-1);
                     }
                 });
     }
 
-    public static void sendRequest(String senderID, String receiverID, OnResultListener listener) {
-        FirebaseDatabase.getInstance().getReference().child(BUCKET_FRIENDS)
-                .child(receiverID).child(senderID)
-                .setValue(STATUS_WAITING_RESPONSE)
-                .addOnSuccessListener(unused -> listener.onResult(1))
-                .addOnCanceledListener(() -> listener.onResult(0))
-                .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
+    public static void answerRequest(String myID, String otherID, @IntRange(from = 0, to = 1) int option, Context context, OnResponseListener listener) {
+        FirebaseFirestore.getInstance().collection(Request.COLLECTION)
+                .whereEqualTo(Request.SENDER, otherID).whereEqualTo(Request.RECEIVER, myID)
+                .limit(1)
+                .get()
+                .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                .addOnSuccessListener(querySnapshot -> {
+                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                        DocumentSnapshot snapshot = querySnapshot.getDocuments().get(0);
+                        Request request = snapshot.toObject(Request.class);
+                        switch (option) {
+                            case OPTION_ACCEPT:
+                                if (request != null && request.getState().equals(Request.WAITING)) {
+                                    request.setState(Request.ACCEPT);
+                                    snapshot.getReference()
+                                            .set(request)
+                                            .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                                            .addOnSuccessListener(unused -> listener.onSuccess(0));
+                                }
+                                break;
+                            case OPTION_REMOVE:
+                                querySnapshot
+                                        .getDocuments()
+                                        .get(0)
+                                        .getReference()
+                                        .delete()
+                                        .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                                        .addOnSuccessListener(unused -> listener.onSuccess(0));
+                                break;
+                        }
+                    } else listener.onSuccess(-1);
+                });
     }
 
-    public static void cancelRequest(String senderID, String receiverID, OnResultListener listener) {
-        FirebaseDatabase.getInstance().getReference().child(BUCKET_FRIENDS)
-                .child(receiverID).child(senderID)
-                .removeValue()
-                .addOnSuccessListener(unused -> listener.onResult(1))
-                .addOnCanceledListener(() -> listener.onResult(0))
-                .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
-    }
-
-    public static void ignoreRequest(String senderID, String receiverID, OnResultListener listener) {
-        FirebaseDatabase.getInstance().getReference().child(BUCKET_FRIENDS)
-                .child(senderID).child(receiverID)
-                .setValue(STATUS_IGNORED)
-                .addOnSuccessListener(unused -> listener.onResult(1))
-                .addOnCanceledListener(() -> listener.onResult(0))
-                .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
-    }
-
-    public static void acceptRequest(String senderID, String receiverID, OnResultListener listener) {
-        FirebaseDatabase.getInstance().getReference().child(BUCKET_FRIENDS)
-                .child(receiverID).child(senderID).setValue(STATUS_FRIENDS)
-                .addOnSuccessListener(unused ->
-                        FirebaseDatabase.getInstance().getReference().child(BUCKET_FRIENDS)
-                                .child(senderID).child(receiverID).setValue(STATUS_FRIENDS)
-                                .addOnSuccessListener(unused1 -> listener.onResult(1))
-                                .addOnCanceledListener(() -> listener.onResult(0))
+    public static void block(String myID, String otherID, Context context, OnResponseListener listener) {
+        CollectionReference reference = FirebaseFirestore.getInstance().collection(Request.COLLECTION);
+        reference
+                .whereIn(Request.SENDER, Arrays.asList(myID, otherID)).whereIn(Request.RECEIVER, Arrays.asList(myID, otherID))
+                .limit(1)
+                .get()
+                .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                .addOnSuccessListener(querySnapshot -> {
+                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                        DocumentSnapshot document = querySnapshot.getDocuments().get(0);
+                        Request request = document.toObject(Request.class);
+                        if (request != null) {
+                            request.setId(document.getId());
+                            if (!request.getState().equals(Request.BLOCKED)) {
+                                request.setState(Request.BLOCKED);
+                                reference
+                                        .document(request.getId())
+                                        .set(request)
+                                        .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                                        .addOnSuccessListener(unused -> listener.onSuccess(0));
+                            } else listener.onSuccess(1);
+                        }
+                    } else {
+                        reference
+                                .document()
+                                .set(new Request(myID, otherID, Request.BLOCKED))
                                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
-                )
-                .addOnCanceledListener(() -> listener.onResult(0))
-                .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
-    }
-
-    public static void removeFriend(String senderID, String receiverID, OnResultListener listener) {
-        FirebaseDatabase.getInstance().getReference().child(BUCKET_FRIENDS)
-                .child(senderID).child(receiverID)
-                .removeValue()
-                .addOnSuccessListener(unused ->
-                        FirebaseDatabase.getInstance().getReference().child(BUCKET_FRIENDS)
-                                .child(receiverID).child(senderID)
-                                .removeValue()
-                                .addOnSuccessListener(unused1 -> listener.onResult(1))
-                                .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
-                )
-                .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
-    }
-
-    public static void friendList(String senderID, OnDataResultListener listener) {
-        List<User> list = new ArrayList<>();
-        FirebaseDatabase.getInstance().getReference().child(BUCKET_FRIENDS)
-                .child(senderID)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()) {
-                            for (DataSnapshot user : snapshot.getChildren()) {
-                                if (Objects.equals(user.getValue(String.class), STATUS_FRIENDS)) {
-                                    FirebaseDatabase.getInstance().getReference().child(BUCKET_USERS)
-                                            .orderByChild(USER_VALUE_ID).equalTo(user.getKey())
-                                            .addListenerForSingleValueEvent(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                    if (snapshot.exists()) {
-                                                        DataSnapshot user = snapshot.getChildren().iterator().next();
-                                                        list.add(new User(
-                                                                Objects.requireNonNull(user.child(USER_VALUE_ID).getValue(String.class)),
-                                                                user.child(USER_VALUE_USERNAME).getValue(String.class),
-                                                                user.child(USER_VALUE_NAME).getValue(String.class),
-                                                                user.child(USER_VALUE_IMAGE).getValue(String.class),
-                                                                Boolean.TRUE.equals(user.child(USER_VALUE_FRIENDS).getValue(Boolean.class))
-                                                        ));
-                                                        listener.onResult(1, list);
-                                                    } else listener.onResult(0, null);
-                                                }
-
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError error) {
-                                                    listener.onFailure(error.getMessage());
-                                                }
-                                            });
-                                } else listener.onResult(0, null);
-                            }
-                        } else listener.onResult(0, null);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        listener.onFailure(error.getMessage());
+                                .addOnSuccessListener(unused -> listener.onSuccess(0));
                     }
                 });
     }
 
-    public static void pendingList(String senderID, OnDataResultListener listener) {
-        List<User> list = new ArrayList<>();
-        FirebaseDatabase.getInstance().getReference().child(BUCKET_FRIENDS)
-                .child(senderID)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()) {
-                            for (DataSnapshot user : snapshot.getChildren()) {
-                                if (Objects.equals(user.getValue(String.class), STATUS_WAITING_RESPONSE)) {
-                                    FirebaseDatabase.getInstance().getReference().child(BUCKET_USERS)
-                                            .orderByChild(USER_VALUE_ID).equalTo(user.getKey())
-                                            .addListenerForSingleValueEvent(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                    if (snapshot.exists()) {
-                                                        DataSnapshot user = snapshot.getChildren().iterator().next();
-                                                        list.add(new User(
-                                                                Objects.requireNonNull(user.child(USER_VALUE_ID).getValue(String.class)),
-                                                                user.child(USER_VALUE_USERNAME).getValue(String.class),
-                                                                user.child(USER_VALUE_NAME).getValue(String.class),
-                                                                user.child(USER_VALUE_IMAGE).getValue(String.class),
-                                                                Boolean.TRUE.equals(user.child(USER_VALUE_FRIENDS).getValue(Boolean.class))
-                                                        ));
-                                                        listener.onResult(1, list);
-                                                    } else listener.onResult(0, null);
-                                                }
-
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError error) {
-                                                    listener.onFailure(error.getMessage());
-                                                }
-                                            });
-                                } else listener.onResult(0, null);
-                            }
-                        } else listener.onResult(0, null);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        listener.onFailure(error.getMessage());
-                    }
+    public static void removeBlock(String myID, String otherID, Context context, OnResponseListener listener) {
+        CollectionReference reference = FirebaseFirestore.getInstance().collection(Request.COLLECTION);
+        reference
+                .whereIn(Request.SENDER, Arrays.asList(myID, otherID)).whereIn(Request.RECEIVER, Arrays.asList(myID, otherID))
+                .limit(1)
+                .get()
+                .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                .addOnSuccessListener(querySnapshot -> {
+                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                        DocumentSnapshot document = querySnapshot.getDocuments().get(0);
+                        Request request = document.toObject(Request.class);
+                        if (request != null) {
+                            request.setId(document.getId());
+                            if (request.getState().equals(Request.BLOCKED)) {
+                                document.getReference().delete()
+                                        .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                                        .addOnSuccessListener(unused -> listener.onSuccess(0));
+                            } else listener.onSuccess(1);
+                        }
+                    } else listener.onSuccess(-1);
                 });
     }
 
-    public static void ignoredList(String senderID, OnDataResultListener listener) {
-        List<User> list = new ArrayList<>();
-        FirebaseDatabase.getInstance().getReference().child(BUCKET_FRIENDS)
-                .child(senderID)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()) {
-                            for (DataSnapshot user : snapshot.getChildren()) {
-                                if (Objects.equals(user.getValue(String.class), STATUS_IGNORED)) {
-                                    FirebaseDatabase.getInstance().getReference().child(BUCKET_USERS)
-                                            .orderByChild(USER_VALUE_ID).equalTo(user.getKey())
-                                            .addListenerForSingleValueEvent(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                    if (snapshot.exists()) {
-                                                        DataSnapshot user = snapshot.getChildren().iterator().next();
-                                                        list.add(new User(
-                                                                Objects.requireNonNull(user.child(USER_VALUE_ID).getValue(String.class)),
-                                                                user.child(USER_VALUE_USERNAME).getValue(String.class),
-                                                                user.child(USER_VALUE_NAME).getValue(String.class),
-                                                                user.child(USER_VALUE_IMAGE).getValue(String.class),
-                                                                Boolean.TRUE.equals(user.child(USER_VALUE_FRIENDS).getValue(Boolean.class))
-                                                        ));
-                                                        listener.onResult(1, list);
-                                                    } else listener.onResult(0, null);
-                                                }
-
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError error) {
-                                                    listener.onFailure(error.getMessage());
-                                                }
-                                            });
-                                } else listener.onResult(0, null);
+    private static void getUsersFromRequests(String myID, List<Request> requests, Context context, OnUsersResponseListener listener) {
+        if (requests != null && !requests.isEmpty()) {
+            List<User> users = new ArrayList<>();
+            CollectionReference reference = FirebaseFirestore.getInstance().collection(User.COLLECTION);
+            for (int i = 0; i < requests.size(); i++) {
+                reference
+                        .document(Request.getCorrectID(myID, requests.get(i)))
+                        .get()
+                        .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                        .addOnSuccessListener(documentSnapshot -> {
+                            if (documentSnapshot != null && documentSnapshot.exists()) {
+                                users.add(User.convertFromDocument(documentSnapshot));
+                                listener.onSuccess(0, users);
                             }
-                        } else listener.onResult(0, null);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        listener.onFailure(error.getMessage());
-                    }
-                });
+                        });
+            }
+        } else listener.onSuccess(-1, null);
     }
 
-    public interface OnResultListener {
-        void onResult(int result);
-
-        void onFailure(String message);
-    }
-
-    public interface OnDataResultListener {
-        void onResult(int resultCode, List<User> list);
-
-        void onFailure(String message);
-    }
 }

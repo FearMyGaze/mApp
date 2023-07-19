@@ -22,6 +22,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="20dp"
+        android:text="@string/settingsTitle"
+        android:textColor="@color/textBold"
+        android:textStyle="bold"
+        android:textSize="24sp"
+        app:layout_constraintStart_toEndOf="@id/settingsGoBack"
+        app:layout_constraintTop_toTopOf="@id/settingsGoBack"
+        app:layout_constraintBottom_toBottomOf="@id/settingsGoBack"/>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -267,7 +279,7 @@
                                 android:layout_width="30dp"
                                 android:layout_height="0dp"
                                 android:src="@drawable/ic_heart_broken_24"
-                                android:tint="@android:color/holo_red_dark"
+                                android:tint="?attr/colorPrimary"
                                 app:layout_constraintDimensionRatio="1:1"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
@@ -324,14 +336,14 @@
                     android:layout_height="match_parent">
 
                     <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/settingsPreferencesPending"
-                        android:layout_width="match_parent"
+                        android:id="@+id/settingsPreferencesPublicProfile"
+                        android:layout_width="0dp"
                         android:layout_height="55dp"
                         app:cardBackgroundColor="@color/basicBackgroundAlternate"
                         app:cardCornerRadius="12.5dp"
                         app:contentPadding="5dp"
                         app:cardElevation="0dp"
-                        android:contentDescription="@string/settingsPreferencesShowPending"
+                        android:contentDescription="@string/settingsPreferencesPublicProfile"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
@@ -341,7 +353,7 @@
                             android:layout_height="match_parent">
 
                             <com.google.android.material.imageview.ShapeableImageView
-                                android:id="@+id/settingsPreferencesPendingImage"
+                                android:id="@+id/settingsPreferencesPublicProfileImage"
                                 android:layout_width="30dp"
                                 android:layout_height="0dp"
                                 android:src="@drawable/ic_info_24"
@@ -355,124 +367,16 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="10dp"
-                                android:text="@string/settingsPreferencesShowPending"
+                                android:text="@string/settingsPreferencesPublicProfile"
                                 android:textSize="17sp"
                                 android:textStyle="bold"
                                 android:textColor="@color/textBold"
-                                app:layout_constraintStart_toEndOf="@id/settingsPreferencesPendingImage"
+                                app:layout_constraintStart_toEndOf="@id/settingsPreferencesPublicProfileImage"
                                 app:layout_constraintTop_toTopOf="parent"
                                 app:layout_constraintBottom_toBottomOf="parent"/>
 
                             <com.google.android.material.switchmaterial.SwitchMaterial
-                                android:id="@+id/settingsPreferencesPendingSwitch"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:clickable="false"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintBottom_toBottomOf="parent"/>
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/settingsPreferencesIgnored"
-                        android:layout_width="match_parent"
-                        android:layout_height="55dp"
-                        android:layout_marginTop="10dp"
-                        app:cardBackgroundColor="@color/basicBackgroundAlternate"
-                        app:cardCornerRadius="12.5dp"
-                        app:contentPadding="5dp"
-                        app:cardElevation="0dp"
-                        android:contentDescription="@string/settingsPreferencesShowIgnored"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/settingsPreferencesPending">
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                            <com.google.android.material.imageview.ShapeableImageView
-                                android:id="@+id/settingsPreferencesIgnoredImage"
-                                android:layout_width="30dp"
-                                android:layout_height="0dp"
-                                android:src="@drawable/ic_info_24"
-                                android:tint="?attr/colorPrimary"
-                                app:layout_constraintDimensionRatio="1:1"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintBottom_toBottomOf="parent"/>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="10dp"
-                                android:text="@string/settingsPreferencesShowIgnored"
-                                android:textSize="17sp"
-                                android:textStyle="bold"
-                                android:textColor="@color/textBold"
-                                app:layout_constraintStart_toEndOf="@id/settingsPreferencesIgnoredImage"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintBottom_toBottomOf="parent"/>
-
-                            <com.google.android.material.switchmaterial.SwitchMaterial
-                                android:id="@+id/settingsPreferencesIgnoredSwitch"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:clickable="false"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintBottom_toBottomOf="parent"/>
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/settingsPreferencesFriends"
-                        android:layout_width="0dp"
-                        android:layout_height="55dp"
-                        android:layout_marginTop="10dp"
-                        app:cardBackgroundColor="@color/basicBackgroundAlternate"
-                        app:cardCornerRadius="12.5dp"
-                        app:contentPadding="5dp"
-                        app:cardElevation="0dp"
-                        android:contentDescription="@string/settingsPreferencesShowFriends"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/settingsPreferencesIgnored">
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                            <com.google.android.material.imageview.ShapeableImageView
-                                android:id="@+id/settingsPreferencesFriendsImage"
-                                android:layout_width="30dp"
-                                android:layout_height="0dp"
-                                android:src="@drawable/ic_info_24"
-                                android:tint="?attr/colorPrimary"
-                                app:layout_constraintDimensionRatio="1:1"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintBottom_toBottomOf="parent"/>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="10dp"
-                                android:text="@string/settingsPreferencesShowFriends"
-                                android:textSize="17sp"
-                                android:textStyle="bold"
-                                android:textColor="@color/textBold"
-                                app:layout_constraintStart_toEndOf="@id/settingsPreferencesFriendsImage"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintBottom_toBottomOf="parent"/>
-
-                            <com.google.android.material.switchmaterial.SwitchMaterial
-                                android:id="@+id/settingsPreferencesFriendsSwitch"
+                                android:id="@+id/settingsPreferencesPublicProfileSwitch"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:clickable="false"
@@ -495,7 +399,7 @@
                         android:contentDescription="@string/settingsPreferencesShowImages"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/settingsPreferencesFriends">
+                        app:layout_constraintTop_toBottomOf="@id/settingsPreferencesPublicProfile">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"

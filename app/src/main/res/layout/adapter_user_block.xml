@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/adapterUserBlockedRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    app:cardCornerRadius="12.5dp"
+    app:cardElevation="2dp"
+    app:contentPadding="10dp"
+    app:cardBackgroundColor="@color/basicBackgroundAlternate"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/adapterUserBlockedImage"
+            android:layout_width="60dp"
+            android:layout_height="0dp"
+            tools:src="@tools:sample/avatars"
+            app:shapeAppearance="@style/RectComponent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/adapterUserBlockedUsername"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            tools:text="@tools:sample/full_names"
+            android:textStyle="bold"
+            android:textSize="17sp"
+            android:textColor="@color/textBold"
+            android:maxLines="1"
+            android:maxEms="50"
+            android:maxLength="50"
+            app:layout_constraintStart_toEndOf="@id/adapterUserBlockedImage"
+            app:layout_constraintEnd_toStartOf="@id/adapterUserBlockedUnBlock"
+            app:layout_constraintTop_toTopOf="@id/adapterUserBlockedImage"/>
+
+        <TextView
+            android:id="@+id/adapterUserBlockedStatus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="1dp"
+            tools:text="@tools:sample/lorem/random"
+            android:textSize="15sp"
+            android:textColor="@color/textBold"
+            android:maxLines="2"
+            android:maxEms="50"
+            android:maxLength="50"
+            app:layout_constraintStart_toEndOf="@id/adapterUserBlockedImage"
+            app:layout_constraintEnd_toStartOf="@id/adapterUserBlockedUnBlock"
+            app:layout_constraintTop_toBottomOf="@id/adapterUserBlockedUsername"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/adapterUserBlockedUnBlock"
+            android:layout_width="30dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="10dp"
+            app:cardBackgroundColor="@color/basicBackgroundAlternate"
+            app:cardCornerRadius="60dp"
+            app:contentPadding="5dp"
+            app:strokeColor="?colorPrimary"
+            app:strokeWidth="2dp"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_close_24"
+                android:tint="?colorPrimary"/>
+        </com.google.android.material.card.MaterialCardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

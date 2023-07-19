@@ -122,38 +122,6 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/signUpDisplayNameError"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginTop="20dp"
-                android:hint="@string/generalName"
-                app:endIconMode="clear_text"
-                app:helperTextEnabled="true"
-                app:helperText="@string/helperName"
-                app:counterEnabled="true"
-                app:counterMaxLength="50"
-                app:boxCornerRadiusTopStart="12.5dp"
-                app:boxCornerRadiusTopEnd="12.5dp"
-                app:boxCornerRadiusBottomStart="12.5dp"
-                app:boxCornerRadiusBottomEnd="12.5dp"
-                android:enabled="false"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/signUpUsernameError">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/signUpDisplayName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:maxEms="50"
-                    android:inputType="textPersonName|textAutoComplete"/>
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/signUpPasswordError"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -172,7 +140,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/signUpDisplayNameError">
+                app:layout_constraintTop_toBottomOf="@id/signUpUsernameError">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/signUpPassword"
@@ -182,31 +150,6 @@
                     android:inputType="textPassword"/>
 
             </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/signUpUserImage"
-                android:layout_width="70dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="20dp"
-                android:src="@drawable/ic_launcher_background"
-                app:shapeAppearance="@style/RectComponent"
-                app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/signUpPasswordError"/>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/signUpChooseImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:text="@string/generalChoose"
-                android:textAllCaps="false"
-                app:cornerRadius="12.5dp"
-                android:enabled="false"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/signUpUserImage"
-                app:layout_constraintBottom_toBottomOf="@id/signUpUserImage"/>
 
             <TextView
                 android:id="@+id/signUpTerms"
@@ -221,7 +164,7 @@
                 android:textColor="@color/textBold"
                 app:layout_constraintStart_toStartOf="@id/signUpCreateAccount"
                 app:layout_constraintEnd_toEndOf="@id/signUpCreateAccount"
-                app:layout_constraintTop_toBottomOf="@id/signUpUserImage"/>
+                app:layout_constraintTop_toBottomOf="@id/signUpPasswordError"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/signUpCreateAccount"

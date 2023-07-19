@@ -13,16 +13,25 @@ import com.github.fearmygaze.mercury.model.User;
 import java.util.List;
 
 @Dao
-public interface UserDao {
+public interface UserRoomDao {
 
-    @Query("SELECT * FROM users")
+    @Query("SELECT * FROM USERS")
     List<User> getAllUsers();
 
-    @Query("SELECT * FROM users WHERE userUID = :str")
-    User getUserByUserUID(String str);
+    @Query("DELETE FROM users")
+    void deleteAllUsers();
 
-    @Query("UPDATE users SET token =:token WHERE userUID= :id")
+    @Query("SELECT * FROM users WHERE id = :id")
+    User getUserByUserID(String id);
+
+    @Query("UPDATE users SET notificationToken = :token WHERE id = :id")
     void updateUserToken(String token, String id);
+
+    @Query("UPDATE users SET image = :image WHERE id = :id")
+    void updateUserImage(String image, String id);
+
+    @Query("UPDATE users SET isProfileOpen = :state WHERE id = :id")
+    void updateProfileState(boolean state, String id);
 
     @Insert(onConflict = REPLACE)
     void insertUser(User user);
@@ -33,6 +42,4 @@ public interface UserDao {
     @Delete
     void deleteUser(User user);
 
-    @Query("DELETE FROM users")
-    void deleteAllUsers();
 }

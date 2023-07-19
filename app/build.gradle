@@ -40,9 +40,13 @@ dependencies {
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
 
-    implementation 'com.github.bumptech.glide:glide:4.15.1'                 //https://www.bumptech.github.io/glide/doc/download-setup.html
-    implementation "com.github.MikeOrtiz:TouchImageView:1.4.1"              //https://github.com/MikeOrtiz/TouchImageView DO NOT UPDATE
+    //https://www.bumptech.github.io/glide/doc/download-setup.html
+    implementation 'com.github.bumptech.glide:glide:4.15.1'
+
+    //https://github.com/MikeOrtiz/TouchImageView DO NOT UPDATE
+    implementation "com.github.MikeOrtiz:TouchImageView:1.4.1"
 
     //Room
     annotationProcessor "androidx.room:room-compiler:2.5.1"
@@ -52,10 +56,12 @@ dependencies {
     //FireBase
     implementation 'com.google.android.gms:play-services-gcm:17.0.0'
     implementation 'com.google.firebase:firebase-messaging:23.1.2'
-    implementation 'com.google.firebase:firebase-auth:21.2.0'
-    implementation 'com.google.firebase:firebase-database:20.1.0'
-    implementation 'com.google.firebase:firebase-storage:20.1.0'
+    implementation 'com.google.firebase:firebase-auth:22.0.0'
+    implementation 'com.google.firebase:firebase-database:20.2.2'
     implementation 'com.firebaseui:firebase-ui-database:8.0.2'
+
+    implementation 'com.google.firebase:firebase-storage:20.2.1'
+    implementation 'com.google.firebase:firebase-firestore:24.6.1'
 
     //Test
     testImplementation 'junit:junit:4.13.2'

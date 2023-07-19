@@ -9,13 +9,14 @@ import com.github.fearmygaze.mercury.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RegEx {
 
     public static boolean isPasswordValid(@NonNull TextInputEditText text, TextInputLayout layout, Context context) {
-        if (text.getText().length() == 0) {
+        if (Objects.requireNonNull(text.getText()).toString().isEmpty()) {
             Tools.setErrorToLayout(layout, context.getString(R.string.regExEmpty), true);
             return false;
         }
@@ -43,7 +44,7 @@ public class RegEx {
     }
 
     public static boolean isEmailValid(@NonNull TextInputEditText text, TextInputLayout layout, Context context) {
-        if (text.getText().length() == 0) {
+        if (Objects.requireNonNull(text.getText()).toString().isEmpty()) {
             Tools.setErrorToLayout(layout, context.getString(R.string.regExEmpty), true);
             return false;
         }
@@ -68,7 +69,7 @@ public class RegEx {
     }
 
     public static boolean isUsernameValid(@NonNull TextInputEditText text, TextInputLayout layout, Context context) {
-        if (text.getText().length() == 0) {
+        if (Objects.requireNonNull(text.getText()).toString().isEmpty()) {
             Tools.setErrorToLayout(layout, context.getString(R.string.regExEmpty), true);
             return false;
         }
@@ -95,36 +96,8 @@ public class RegEx {
         }
     }
 
-    public static boolean isNameValid(@NonNull TextInputEditText text, TextInputLayout layout, Context context) {
-        if (text.getText().length() == 0) {
-            Tools.setErrorToLayout(layout, context.getString(R.string.regExEmpty), true);
-            return false;
-        }
-
-        if (text.getText().length() < 8) {
-            Tools.setErrorToLayout(layout, context.getString(R.string.regExSmaller) + 8, true);
-            return false;
-        }
-
-        if (text.getText().length() > layout.getCounterMaxLength()) {
-            Tools.setErrorToLayout(layout, context.getString(R.string.regExBigger) + layout.getCounterMaxLength(), true);
-            return false;
-        }
-
-        Tools.setErrorToLayout(layout, null, false);
-
-        Pattern pattern = Pattern.compile("^[a-zA-Z.\\p{IsGreek}]{6,}(?:\\s[a-zA-Z\\p{IsGreek}]{2,})?$");
-        Matcher matcher = pattern.matcher(text.getText().toString().trim());
-
-        if (matcher.matches()) return true;
-        else {
-            Tools.setErrorToLayout(layout, context.getString(R.string.regExName), true);
-            return false;
-        }
-    }
-
     public static boolean isUrlValid(TextInputEditText text, TextInputLayout layout, Context context) {
-        if (text.getText().length() == 0) {
+        if (Objects.requireNonNull(text.getText()).toString().isEmpty()) {
             Tools.setErrorToLayout(layout, context.getString(R.string.regExEmpty), true);
             return false;
         }
@@ -146,13 +119,6 @@ public class RegEx {
             Tools.setErrorToLayout(layout, context.getString(R.string.regExURL), true);
             return false;
         }
-    }
-
-    public static boolean isCredentialValid(@NonNull TextInputEditText text, TextInputLayout layout, Context context) {
-        if (text.getText().toString().trim().contains("@")) {
-            return isEmailValid(text, layout, context);
-        }
-        return isUsernameValid(text, layout, context);
     }
 
 }

@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.firebase.Auth;
+import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
 import com.github.fearmygaze.mercury.util.RegEx;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -52,23 +53,24 @@ public class ChangePassword extends AppCompatActivity {
             }
         });
 
-        next.setOnClickListener(v ->
-                Auth.updatePassword(Objects.requireNonNull(password.getText()).toString().trim(), new Auth.OnResponseListener() {
-                    @Override
-                    public void onResult(int resultCode) {
-                        if (resultCode == 1) {
-                            Toast.makeText(ChangePassword.this, "Success", Toast.LENGTH_SHORT).show();
-                            onBackPressed();
-                        } else
-                            Toast.makeText(ChangePassword.this, "Error", Toast.LENGTH_SHORT).show();
-                    }
+        next.setOnClickListener(v -> {
+            String updatedPassword = Objects.requireNonNull(password.getText()).toString().trim();
+            Auth.updatePassword(updatedPassword, ChangePassword.this, new OnResponseListener() {
+                @Override
+                public void onSuccess(int code) {
+                    if (code == 0) {
+                        Toast.makeText(ChangePassword.this, "Success", Toast.LENGTH_SHORT).show();
+                        onBackPressed();
+                    } else
+                        Toast.makeText(ChangePassword.this, "Error", Toast.LENGTH_SHORT).show();
+                }
 
-                    @Override
-                    public void onFailure(String message) {
-                        Toast.makeText(ChangePassword.this, message, Toast.LENGTH_SHORT).show();
-                    }
-                })
-        );
+                @Override
+                public void onFailure(String message) {
+                    Toast.makeText(ChangePassword.this, message, Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
     }
 
     @Override

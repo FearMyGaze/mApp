@@ -12,11 +12,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.database.AppDatabase;
 import com.github.fearmygaze.mercury.firebase.Auth;
+import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.RegEx;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
 
@@ -29,6 +31,8 @@ public class ChangeInformation extends AppCompatActivity {
 
     Intent intent;
     String changeType, senderID;
+
+    String userEmail;
     User user;
 
     @Override
@@ -42,7 +46,8 @@ public class ChangeInformation extends AppCompatActivity {
         senderID = intent.getStringExtra("userID");
         changeType = intent.getStringExtra("type");
 
-        user = AppDatabase.getInstance(ChangeInformation.this).userDao().getUserByUserUID(senderID);
+        user = AppDatabase.getInstance(ChangeInformation.this).userDao().getUserByUserID(senderID);
+        userEmail = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail();
 
         verifyPasswordError = findViewById(R.id.changeInformationVerifyPasswordError);
         verifyPassword = findViewById(R.id.changeInformationVerifyPassword);
@@ -69,29 +74,34 @@ public class ChangeInformation extends AppCompatActivity {
             }
         });
 
-        next.setOnClickListener(v ->
-                Auth.authenticate(user.email, Objects.requireNonNull(verifyPassword.getText()).toString().trim(), ChangeInformation.this, new Auth.OnResponseListener() {
-                    @Override
-                    public void onResult(int resultCode) {
-                        if (resultCode == 1) {
-                            if (changeType.equals("email")) {
-                                startActivity(new Intent(ChangeInformation.this, ChangeEmail.class)
-                                        .putExtra("userID", user.userUID));
-                                finish();
-                            } else {
-                                startActivity(new Intent(ChangeInformation.this, ChangePassword.class)
-                                        .putExtra("userID", user.userUID));
-                                finish();
-                            }
+        next.setOnClickListener(v -> {
+            FirebaseAuth.getInstance().signOut();
+            String password = Objects.requireNonNull(verifyPassword.getText()).toString().trim();
+            Auth.signIn(userEmail, password, ChangeInformation.this, new OnResponseListener() {
+                @Override
+                public void onSuccess(int code) {
+                    if (code == 0) {
+                        if (changeType.equals("email")) {
+                            startActivity(new Intent(ChangeInformation.this, ChangeEmail.class)
+                                    .putExtra("id", user.getId())
+                                    .putExtra("email", userEmail));
+                            finish();
+                        } else {
+                            startActivity(new Intent(ChangeInformation.this, ChangePassword.class)
+                                    .putExtra("id", user.getId())
+                                    .putExtra("email", userEmail));
+                            finish();
                         }
-                    }
+                    } else
+                        Toast.makeText(ChangeInformation.this, "Error", Toast.LENGTH_SHORT).show();
+                }
 
-                    @Override
-                    public void onFailure(String message) {
-                        Toast.makeText(ChangeInformation.this, message, Toast.LENGTH_SHORT).show();
-                    }
-                })
-        );
+                @Override
+                public void onFailure(String message) {
+                    Toast.makeText(ChangeInformation.this, message, Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
     }
 
     @Override

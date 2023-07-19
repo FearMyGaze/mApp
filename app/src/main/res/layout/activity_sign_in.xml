@@ -58,7 +58,7 @@
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/signInCredentialsError"
+                android:id="@+id/signInEmailError"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
@@ -78,7 +78,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/signInCredentials"
+                    android:id="@+id/signInEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLength="345"
@@ -105,7 +105,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/signInCredentialsError">
+                app:layout_constraintTop_toBottomOf="@id/signInEmailError">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/signInPassword"

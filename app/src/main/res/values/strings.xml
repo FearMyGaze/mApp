@@ -17,18 +17,17 @@
     <string name="generalWebsite">Website</string>
     <string name="generalSave">Save</string>
     <string name="generalAdd">Add</string>
-    <string name="generalRemove">Remove</string>
     <string name="generalFriends">Friends</string>
-    <string name="generalAccept">Accept</string>
-    <string name="generalIgnore">Ignore</string>
     <string name="generalConfirm">Confirm</string>
     <string name="generalPhoto">Photo</string>
     <string name="generalCreate">Create</string>
 
+    <string name="generalFollowing">Following</string>
+
     <!-- SignIn (Activity) -->
     <string name="signInWelcome">Welcome</string>
     <string name="signInToContinue">To Continue Sign In or Create an account</string>
-    <string name="signInCredential">Username Or Email</string>
+    <string name="signInCredential">Email</string>
     <string name="signInPassword">Password</string>
     <string name="signInSignIn">Sign In</string>
     <string name="signInSignUp">Sign Up</string>
@@ -37,6 +36,7 @@
     <string name="signUpGoBack">Go Back</string>
     <string name="signUpCreateAcc">Create Account</string>
     <string name="signUpTerms">By tapping Create Account you Agree to Terms and Conditions</string>
+    <string name="signUpDialogTitle">Warning</string>
     <string name="signUpDialogMessage">Please wait while we create your user</string>
 
     <!-- Main (Activity) -->
@@ -50,23 +50,17 @@
     <!-- ProfileEdit (Activity) -->
     <string name="profileEditHelper">Edit Profile</string>
 
-    <!-- PendingRequests (Activity) -->
-    <string name="pendingRequestsFriends">Pending requests:</string>
-    <string name="pendingRequestsIgnored">Ignored requests:</string>
-    <string name="pendingRequestsError">We couldn\'t find Pending Requests</string>
-
     <!-- Settings (Activity) -->
+    <string name="settingsTitle">Settings</string>
     <string name="settingsAccountTitle">Account</string>
-    <string name="settingsPreferencesTitle">Preference</string>
+    <string name="settingsPreferencesTitle">Preferences</string>
     <string name="settingsDocumentsTitle">Documents</string>
     <string name="settingsAccountSignOut">Sign out</string>
     <string name="settingsAccountChangeEmail">Change email</string>
     <string name="settingsAccountChangePassword">Change password</string>
     <string name="settingsAccountEditProfile">Edit profile</string>
     <string name="settingsAccountCloseAccount">Close account</string>
-    <string name="settingsPreferencesShowPending">Show Pending</string>
-    <string name="settingsPreferencesShowIgnored">Show ignored</string>
-    <string name="settingsPreferencesShowFriends">Show friends</string>
+    <string name="settingsPreferencesPublicProfile">Public Profile</string>
     <string name="settingsPreferencesShowImages">Show images</string>
     <string name="settingsPreferencesChangeTheme">Change theme</string>
     <string name="settingsDocumentsPrivacy">Privacy policy</string>
@@ -81,15 +75,17 @@
     <string name="changePasswordSubTitle">Type bellow the new password of your choice</string>
     <string name="changePasswordForgot">Forgot password?</string>
 
+    <!-- Requests -->
+    <string name="requestAccepted">Following</string>
+    <string name="requestBlocked">Blocked</string>
+    <string name="requestWaiting">Pending</string>
+    <string name="requestNone">Follow</string>
+
     <!-- ChatRoom (Activity) -->
     <string name="chatRoomMessageHint">Aa</string>
 
     <!-- AdapterFriendRequest (Adapter) -->
     <string name="adapterFriendRequest">Error while answering the request.</string>
-
-    <!-- Default Room Names -->
-    <string name="defaultPrivateRoomName">Private Conversation</string>
-    <string name="defaultGroupRoomName">Group Conversation</string>
 
     <!-- RegEx (Errors)-->
     <string name="regExEmpty">Can\'t be empty</string>
@@ -109,6 +105,10 @@
     <!-- Auth (Errors) -->
     <string name="authEmail">Email Already Exists!</string>
     <string name="authUsername">Username Already Exists!</string>
+
+    <!-- ProfileViewer -->
+    <string name="profileViewerOptionBlock">Block</string>
+    <string name="profileViewerOptionReport">Report</string>
 
     <!--Programming (Errors)  -->
     <string name="blameError" translatable="false">An Error has occurred</string>

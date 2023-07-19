@@ -16,18 +16,17 @@
     <string name="generalWebsite">Ιστοσελίδα</string>
     <string name="generalSave">Αποθύκευση</string>
     <string name="generalAdd">Προσθήκη</string>
-    <string name="generalRemove">Αφαίρεση</string>
     <string name="generalFriends">Φίλοι</string>
-    <string name="generalAccept">Επιβεβαίωση</string>
-    <string name="generalIgnore">Αγνόησε</string>
     <string name="generalConfirm">Επιβεβαίωση</string>
     <string name="generalPhoto">Εικόνα</string>
     <string name="generalCreate">Δημιουργία</string>
 
+    <string name="generalFollowing">Ακόλουθη</string>
+
     <!-- SignIn (Activity) -->
     <string name="signInWelcome">Καλώς Ήρθατε</string>
     <string name="signInToContinue">Για να συνεχίσετε συνδεθείτε ή δημηουργήστε λογαριασμό</string>
-    <string name="signInCredential">Όνομα χρήστη ή Ηλ. Διεύθυνση</string>
+    <string name="signInCredential">Ηλ. Διεύθυνση</string>
     <string name="signInPassword">Κώδ. χρήστη</string>
     <string name="signInSignIn">Σύνδέση</string>
     <string name="signInSignUp">Δημιουργία</string>
@@ -36,6 +35,7 @@
     <string name="signUpGoBack">Πηγαίντε πίσω</string>
     <string name="signUpCreateAcc">Δημιουργία Λογαριασμού</string>
     <string name="signUpTerms">Πατώντας Δημιουργία Λογαριασμού συμφωνείς με τους Όρους και Προϋποθέσεις</string>
+    <string name="signUpDialogTitle">Προσοχή</string>
     <string name="signUpDialogMessage">Δημιουργία χρήστη παρακαλώ περιμένεται</string>
 
     <!-- Main (Activity) -->
@@ -49,12 +49,8 @@
     <!-- ProfileEdit (Activity) -->
     <string name="profileEditHelper">Τροποποίση Προφίλ</string>
 
-    <!-- PendingRequests (Activity) -->
-    <string name="pendingRequestsFriends">Αιτήματα φιλίας:</string>
-    <string name="pendingRequestsIgnored">Αγνωημένα αιτήματα:</string>
-    <string name="pendingRequestsError">Δεν μπορέσαμε να βρούμε αιτήματα φιλίας</string>
-
     <!-- Settings (Activity) -->
+    <string name="settingsTitle">Ρυθμίσεις</string>
     <string name="settingsAccountTitle">Λογαριασμός</string>
     <string name="settingsPreferencesTitle">Προτιμήσεις</string>
     <string name="settingsDocumentsTitle">Έγραφα</string>
@@ -63,9 +59,7 @@
     <string name="settingsAccountChangePassword">Αλλαγή Κωδικού</string>
     <string name="settingsAccountEditProfile">Τροποποίση Προφίλ</string>
     <string name="settingsAccountCloseAccount">Κλείσιμο λογαριασμού</string>
-    <string name="settingsPreferencesShowPending">Εμφάνηση Αιτημάτων</string>
-    <string name="settingsPreferencesShowIgnored">Εμφάνηση Αγνωημένων</string>
-    <string name="settingsPreferencesShowFriends">Εμφάνιση φίλων</string>
+    <string name="settingsPreferencesPublicProfile">Δημόσιο Προφίλ</string>
     <string name="settingsPreferencesShowImages">Εμφάνιση εικόνων</string>
     <string name="settingsPreferencesChangeTheme">Αλλαγή θέματος</string>
     <string name="settingsDocumentsPrivacy">Πολιτική απορρήτου</string>
@@ -80,15 +74,17 @@
     <string name="changePasswordSubTitle">Τοποθετήστε κάτω τον νέο κωδικό της επιλογής σας</string>
     <string name="changePasswordForgot">Ξέχασες τον κωδικό σου?</string>
 
+    <!-- Requests -->
+    <string name="requestAccepted">Ακουλουθείς</string>
+    <string name="requestBlocked">Αποκλεισμένοι</string>
+    <string name="requestWaiting">Αναμονή</string>
+    <string name="requestNone">Ακουλούθησε</string>
+
     <!-- ChatRoom (Activity) -->
     <string name="chatRoomMessageHint">Αα</string>
 
     <!-- AdapterFriendRequest (Adapter) -->
     <string name="adapterFriendRequest">Σφάλμα κατα την απάντηση στο αίτημα</string>
-
-    <!-- Default Room Names -->
-    <string name="defaultPrivateRoomName">Ιδιωτική Συνομιλία</string>
-    <string name="defaultGroupRoomName">Ομαδική Συνομιλία</string>
 
     <!-- RegEx -->
     <string name="regExEmpty">Δεν μπορεί να είναι κενό</string>
@@ -103,5 +99,9 @@
     <!-- Auth -->
     <string name="authEmail">Η Ηλ. διέυθυνση υπάρχη ήδη!</string>
     <string name="authUsername">Το όνομα χρήστη υπάρχει ήδη!</string>
+
+    <!-- ProfileViewer (Menu Options) -->
+    <string name="profileViewerOptionBlock">Αποκλεισμός</string>
+    <string name="profileViewerOptionReport">Αναφορά</string>
 
 </resources>

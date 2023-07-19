@@ -1,5 +1,6 @@
 package com.github.fearmygaze.mercury.view.util;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -11,8 +12,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.database.AppDatabase;
 import com.github.fearmygaze.mercury.firebase.Auth;
+import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.RegEx;
+import com.github.fearmygaze.mercury.view.activity.Main;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -28,6 +31,7 @@ public class ChangeEmail extends AppCompatActivity {
     MaterialButton cancel, next;
 
     User user;
+    String userEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +44,9 @@ public class ChangeEmail extends AppCompatActivity {
         cancel = findViewById(R.id.changeEmailCancel);
         next = findViewById(R.id.changeEmailNext);
 
-        user = AppDatabase.getInstance(ChangeEmail.this).userDao().getUserByUserUID(getIntent().getStringExtra("userID"));
-        currentEmail.setText(user.email);
+        user = AppDatabase.getInstance(ChangeEmail.this).userDao().getUserByUserID(getIntent().getStringExtra("id"));
+        userEmail = getIntent().getStringExtra("email");
+        currentEmail.setText(userEmail);
 
         cancel.setOnClickListener(v -> onBackPressed());
 
@@ -62,23 +67,26 @@ public class ChangeEmail extends AppCompatActivity {
             }
         });
 
-        next.setOnClickListener(v ->
-                Auth.updateEmail(Objects.requireNonNull(email.getText()).toString().trim(), user, ChangeEmail.this, new Auth.OnResponseListener() {
-                    @Override
-                    public void onResult(int resultCode) {
-                        if (resultCode == 1) {
-                            Toast.makeText(ChangeEmail.this, "Success", Toast.LENGTH_SHORT).show();
-                            onBackPressed();
-                        } else Toast.makeText(ChangeEmail.this, "Error", Toast.LENGTH_SHORT).show();
+        next.setOnClickListener(v -> {
+            String updatedEmail = Objects.requireNonNull(email.getText()).toString().trim();
+            Auth.updateEmail(updatedEmail, ChangeEmail.this, new OnResponseListener() {
+                @Override
+                public void onSuccess(int code) {
+                    if (code == 0) {
+                        Toast.makeText(ChangeEmail.this, "Email Updated Successfully", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(ChangeEmail.this, Main.class));
+                        finish();
+                    } else {
+                        Toast.makeText(ChangeEmail.this, "Stuff happened", Toast.LENGTH_SHORT).show();
                     }
+                }
 
-                    @Override
-                    public void onFailure(String message) {
-                        Toast.makeText(ChangeEmail.this, message, Toast.LENGTH_SHORT).show();
-                    }
-                })
-        );
-
+                @Override
+                public void onFailure(String message) {
+                    Toast.makeText(ChangeEmail.this, message, Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
     }
 
     @Override
