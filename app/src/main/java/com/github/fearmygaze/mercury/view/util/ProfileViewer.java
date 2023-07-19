@@ -210,7 +210,7 @@ public class ProfileViewer extends AppCompatActivity {
             public void onSuccess(int code, List<User> list) {
                 if (code == 0 && !list.isEmpty()) {
                     adapterUser.setData(list);
-                    toolbar.setSubtitle(getString(R.string.generalFollowing) + " " + list.size());
+                    toolbar.setSubtitle(getString(R.string.generalFriends) + " " + list.size());
                 } else if (code == 1) {
                     Toast.makeText(ProfileViewer.this, "Private Profile", Toast.LENGTH_SHORT).show();
                 } else {

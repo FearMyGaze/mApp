@@ -5,8 +5,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.github.fearmygaze.mercury.view.tab.FragmentBlocked;
-import com.github.fearmygaze.mercury.view.tab.FragmentRequests;
+import com.github.fearmygaze.mercury.view.tab.FragmentBlockedRequest;
+import com.github.fearmygaze.mercury.view.tab.FragmentWaitingRequest;
 
 public class AdapterRequests extends FragmentStateAdapter {
 
@@ -21,8 +21,8 @@ public class AdapterRequests extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         if (position == 1) {
-            return FragmentBlocked.newInstance(id);
-        } else return FragmentRequests.newInstance(id);
+            return FragmentBlockedRequest.newInstance(id);
+        } else return FragmentWaitingRequest.newInstance(id);
     }
 
     @Override

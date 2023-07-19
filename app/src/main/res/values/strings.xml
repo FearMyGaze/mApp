@@ -22,8 +22,6 @@
     <string name="generalPhoto">Photo</string>
     <string name="generalCreate">Create</string>
 
-    <string name="generalFollowing">Following</string>
-
     <!-- SignIn (Activity) -->
     <string name="signInWelcome">Welcome</string>
     <string name="signInToContinue">To Continue Sign In or Create an account</string>
@@ -76,10 +74,10 @@
     <string name="changePasswordForgot">Forgot password?</string>
 
     <!-- Requests -->
-    <string name="requestAccepted">Following</string>
+    <string name="requestAccepted">Friends</string>
     <string name="requestBlocked">Blocked</string>
     <string name="requestWaiting">Pending</string>
-    <string name="requestNone">Follow</string>
+    <string name="requestNone">Add</string>
 
     <!-- ChatRoom (Activity) -->
     <string name="chatRoomMessageHint">Aa</string>

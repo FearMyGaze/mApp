@@ -21,8 +21,6 @@
     <string name="generalPhoto">Εικόνα</string>
     <string name="generalCreate">Δημιουργία</string>
 
-    <string name="generalFollowing">Ακόλουθη</string>
-
     <!-- SignIn (Activity) -->
     <string name="signInWelcome">Καλώς Ήρθατε</string>
     <string name="signInToContinue">Για να συνεχίσετε συνδεθείτε ή δημηουργήστε λογαριασμό</string>
@@ -75,10 +73,10 @@
     <string name="changePasswordForgot">Ξέχασες τον κωδικό σου?</string>
 
     <!-- Requests -->
-    <string name="requestAccepted">Ακουλουθείς</string>
+    <string name="requestAccepted">Φίλοι</string>
     <string name="requestBlocked">Αποκλεισμένοι</string>
     <string name="requestWaiting">Αναμονή</string>
-    <string name="requestNone">Ακουλούθησε</string>
+    <string name="requestNone">Πρόσθεσε</string>
 
     <!-- ChatRoom (Activity) -->
     <string name="chatRoomMessageHint">Αα</string>

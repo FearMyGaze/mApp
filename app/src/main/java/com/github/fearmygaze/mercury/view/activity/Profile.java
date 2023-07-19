@@ -120,9 +120,8 @@ public class Profile extends AppCompatActivity {
                 swipe.setRefreshing(false);
                 if (code == 0 && list != null) {
                     title.setVisibility(View.VISIBLE);
-//                    adapterUser.clearData();
                     adapterUser.setData(list);
-                    toolbar.setSubtitle(getString(R.string.generalFollowing) + " " + list.size());
+                    toolbar.setSubtitle(getString(R.string.generalFriends) + " " + list.size());
                 } else {
                     title.setVisibility(View.GONE);
                     counter.setVisibility(View.GONE);

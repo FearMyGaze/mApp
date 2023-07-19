@@ -25,9 +25,9 @@ import com.github.fearmygaze.mercury.view.adapter.AdapterUser;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FragmentRequests extends Fragment {
+public class FragmentBlockedRequest extends Fragment {
 
-    public FragmentRequests() {
+    public FragmentBlockedRequest() {
     }
 
     View view;
@@ -44,13 +44,13 @@ public class FragmentRequests extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_requests, container, false);
-        SwipeRefreshLayout swipe = view.findViewById(R.id.fragmentRequestsSwipe);
-        RecyclerView recyclerView = view.findViewById(R.id.fragmentRequestsRecycler);
-        ConstraintLayout errorLayout = view.findViewById(R.id.fragmentRequestsErrorLayout);
+        view = inflater.inflate(R.layout.fragment_blocked, container, false);
+        SwipeRefreshLayout swipe = view.findViewById(R.id.fragmentBlockedSwipe);
+        RecyclerView recyclerView = view.findViewById(R.id.fragmentBlockedRecycler);
+        ConstraintLayout errorLayout = view.findViewById(R.id.fragmentBlockedErrorLayout);
 
         User user = AppDatabase.getInstance(view.getContext()).userDao().getUserByUserID(id);
-        AdapterUser adapterUser = new AdapterUser(new ArrayList<>(), user.getId(), AdapterUser.TYPE_REQUESTS);
+        AdapterUser adapterUser = new AdapterUser(new ArrayList<>(), user.getId(), AdapterUser.TYPE_BLOCKED);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(adapterUser);
 
@@ -60,8 +60,8 @@ public class FragmentRequests extends Fragment {
         return view;
     }
 
-    public static FragmentRequests newInstance(String id) {
-        FragmentRequests fragment = new FragmentRequests();
+    public static FragmentBlockedRequest newInstance(String id) {
+        FragmentBlockedRequest fragment = new FragmentBlockedRequest();
         Bundle bundle = new Bundle();
         bundle.putString(User.ID, id);
         fragment.setArguments(bundle);
@@ -69,7 +69,7 @@ public class FragmentRequests extends Fragment {
     }
 
     public static void getList(User user, AdapterUser adapterUser, Context context, SwipeRefreshLayout swipe, ConstraintLayout errorLayout) {
-        Friends.getRequestedList(user, Friends.LIST_WAITING, context, new OnUsersResponseListener() {
+        Friends.getRequestedList(user, Friends.LIST_BLOCKED, context, new OnUsersResponseListener() {
             @Override
             public void onSuccess(int code, List<User> list) {
                 if (code == 0) {
