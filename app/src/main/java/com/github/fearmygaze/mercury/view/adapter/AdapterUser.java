@@ -1,6 +1,5 @@
 package com.github.fearmygaze.mercury.view.adapter;
 
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +8,6 @@ import android.widget.Toast;
 
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,12 +17,12 @@ import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnRoomListener;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
-import com.github.fearmygaze.mercury.view.util.ProfileViewer;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class AdapterUser extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -32,9 +30,7 @@ public class AdapterUser extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public static final int TYPE_REQUESTS = 0, TYPE_SEARCH = 1, TYPE_BLOCKED = 2, TYPE_ROOM = 3;
 
     List<User> users;
-    List<User> originalUsers;
     String id;
-    boolean showProfile;
     int type;
 
     private OnRoomListener listener;
@@ -75,22 +71,14 @@ public class AdapterUser extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 Tools.profileImage(users.get(position).getImage(), searchVH.image.getContext()).into(searchVH.image);
                 searchVH.username.setText(users.get(position).getUsername());
                 searchVH.status.setText(users.get(position).getStatus());
-                searchVH.root.setOnClickListener(v -> v.getContext()
-                        .startActivity(new Intent(v.getContext(), ProfileViewer.class)
-                                .putExtra(User.ID, id)
-                                .putExtra("userData", users.get(holder.getAbsoluteAdapterPosition())))
-                );
+                searchVH.root.setOnClickListener(v -> Tools.goToProfileViewer(v.getContext(), id, users.get(holder.getAbsoluteAdapterPosition())));
                 break;
             case 2:
                 UserBlockedVH blockedVH = (UserBlockedVH) holder;
                 Tools.profileImage(users.get(position).getImage(), blockedVH.image.getContext()).into(blockedVH.image);
                 blockedVH.username.setText(users.get(position).getUsername());
                 blockedVH.status.setText(users.get(position).getStatus());
-                blockedVH.root.setOnClickListener(v -> v.getContext()
-                        .startActivity(new Intent(v.getContext(), ProfileViewer.class)
-                                .putExtra(User.ID, id)
-                                .putExtra("userData", users.get(holder.getAbsoluteAdapterPosition())))
-                );
+                blockedVH.root.setOnClickListener(v -> Tools.goToProfileViewer(v.getContext(), id, users.get(holder.getAbsoluteAdapterPosition())));
                 blockedVH.unBlock.setOnClickListener(v -> {
                     MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(v.getContext());
                     builder.setBackground(AppCompatResources.getDrawable(v.getContext(), R.color.basicBackground))
@@ -132,17 +120,17 @@ public class AdapterUser extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         listener.onAction(getSelectedUsers().size());
                     }
                 });
+                roomVH.root.setOnLongClickListener(v -> {
+                    Tools.goToProfileViewer(v.getContext(), id, users.get(holder.getAbsoluteAdapterPosition()));
+                    return true;
+                });
                 break;
             default:
                 UserRequestVH requestVH = (UserRequestVH) holder;
                 Tools.profileImage(users.get(position).getImage(), requestVH.image.getContext()).into(requestVH.image);
                 requestVH.username.setText(users.get(position).getUsername());
                 requestVH.status.setText(users.get(position).getStatus());
-                requestVH.root.setOnClickListener(v -> v.getContext()
-                        .startActivity(new Intent(v.getContext(), ProfileViewer.class)
-                                .putExtra(User.ID, id)
-                                .putExtra("userData", users.get(holder.getAbsoluteAdapterPosition())))
-                );
+                requestVH.root.setOnClickListener(v -> Tools.goToProfileViewer(v.getContext(), id, users.get(holder.getAbsoluteAdapterPosition())));
                 requestVH.accept.setOnClickListener(v ->
                         Friends.answerRequest(id, users.get(position).getId(), Friends.OPTION_ACCEPT, v.getContext(), new OnResponseListener() {
                             @Override
@@ -196,53 +184,6 @@ public class AdapterUser extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         users.remove(position);
     }
 
-//    public void filterUsers(String name) {
-//        Iterator<User> iterator = users.iterator();
-//        if (name.startsWith("@")) {
-//            while (iterator.hasNext()) {
-//                User user = iterator.next();
-//                if (!user.username.startsWith("@" + name)) {
-//                    iterator.remove();
-//                    notifyItemRemoved(users.indexOf(user));
-//                }
-//            }
-//        } else {
-//            while (iterator.hasNext()) {
-//                User user = iterator.next();
-//                if (!user.name.startsWith(name)) {
-//                    iterator.remove();
-//                    notifyItemRemoved(users.indexOf(user));
-//                }
-//            }
-//        }
-//    }
-
-    public void filterUsers(@Nullable String text) {
-//        if (text == null) {
-//            users.clear();
-//            users.addAll(originalUsers);
-////            notifyItemRangeChanged(0, users.size());
-//            notifyDataSetChanged(); // display the full list
-//        } else {
-//            Iterator<User> iterator = users.iterator();
-//            while (iterator.hasNext()) {
-//                User user = iterator.next();
-//                if (!user.name.startsWith(text)) {
-//                    int position = users.indexOf(user);
-//                    iterator.remove();
-//                    notifyItemRemoved(position); // remove the item from the list
-//                }
-//            }
-//            for (int i = 0; i < originalUsers.size(); i++) {
-//                User user = originalUsers.get(i);
-//                if (user.name.startsWith(text) && !users.contains(user)) {
-//                    users.add(i, user);
-//                    notifyItemInserted(i); // add the item to the list
-//                }
-//            }
-//        }
-    }
-
     @Override
     public int getItemCount() {
         return users.size();
@@ -256,6 +197,20 @@ public class AdapterUser extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             }
         }
         return selectedUsers;
+    }
+
+    public void setFilteredUsers(String name) {
+        if (name.length() > 0) {
+            Iterator<User> iterator = users.iterator();
+            while (iterator.hasNext()) {
+                User user = iterator.next();
+                if (!user.getUsername().startsWith(name)) {
+                    notifyItemRemoved(users.indexOf(user));
+                    iterator.remove();
+                    break;
+                }
+            }
+        }
     }
 
     protected static class UserSearchVH extends RecyclerView.ViewHolder {

@@ -66,11 +66,7 @@ public class RoomCreator extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.toString().trim().length() > 3) {
-
-                } else {
-
-                }
+                adapterUser.setFilteredUsers(s.toString().trim());
             }
         });
 
@@ -101,11 +97,7 @@ public class RoomCreator extends AppCompatActivity {
 
         });
 
-        adapterUser = new AdapterUser(new ArrayList<>(), user.getId(), AdapterUser.TYPE_ROOM, count -> {
-            if (count > 0) {
-                Toast.makeText(RoomCreator.this, "Users is: " + count, Toast.LENGTH_SHORT).show();
-            }
-        });
+        adapterUser = new AdapterUser(new ArrayList<>(), user.getId(), AdapterUser.TYPE_ROOM, count -> create.setEnabled(count > 0));
         friendList.setLayoutManager(new LinearLayoutManager(RoomCreator.this, LinearLayoutManager.VERTICAL, false));
         friendList.setAdapter(adapterUser);
     }
@@ -114,6 +106,12 @@ public class RoomCreator extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setFriends();
     }
 
     private void setFriends() {

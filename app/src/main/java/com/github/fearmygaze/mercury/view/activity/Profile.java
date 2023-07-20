@@ -102,7 +102,7 @@ public class Profile extends AppCompatActivity {
             Tools.profileImage(user.getImage(), Profile.this).into(userImage);
             toolbar.setTitle(user.getUsername());
             status.setText(user.getStatus());
-            Tools.extraInfo(user, true, typedValue.resourceId, chipGroup, Profile.this);
+            User.extraInfo(user, true, typedValue.resourceId, chipGroup, Profile.this);
         }
     }
 

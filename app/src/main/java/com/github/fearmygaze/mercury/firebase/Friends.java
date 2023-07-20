@@ -1,7 +1,6 @@
 package com.github.fearmygaze.mercury.firebase;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.IntRange;
 
@@ -50,7 +49,7 @@ public class Friends {
                                             .orderBy(Request.DATE, Query.Direction.ASCENDING).get()
                             );
                     combinedTask
-                            .addOnFailureListener(e -> Log.d("customLog", e.getMessage()))
+                            .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                             .addOnSuccessListener(querySnapshots -> getUsersFromRequests(user.getId(), Request.createRequests(querySnapshots), context, listener));
                 } else listener.onSuccess(1, null);
                 break;

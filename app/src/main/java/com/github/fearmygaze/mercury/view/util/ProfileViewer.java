@@ -77,7 +77,7 @@ public class ProfileViewer extends AppCompatActivity {
         Tools.profileImage(otherUser.getImage(), ProfileViewer.this).into(userImage);
         status.setText(otherUser.getStatus());
         updateStats();
-        Tools.extraInfo(otherUser, false, typedValue.resourceId, chipGroup, ProfileViewer.this);
+        User.extraInfo(otherUser, false, typedValue.resourceId, chipGroup, ProfileViewer.this);
 
         if (myID.equals(otherUser.getId())) {
             request.setEnabled(false);
@@ -96,7 +96,7 @@ public class ProfileViewer extends AppCompatActivity {
             if (item.getItemId() == R.id.profileViewerOptionBlock) {
                 MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(ProfileViewer.this);
                 builder.setBackground(AppCompatResources.getDrawable(ProfileViewer.this, R.color.basicBackground))
-                        .setTitle("Block" + otherUser.getUsername() + "?")
+                        .setTitle("Block " + otherUser.getUsername() + "?")
                         .setMessage(otherUser.getUsername() + " will no longer be able to follow you or message you")
                         .setPositiveButton(getString(R.string.generalConfirm), (dialog, i) ->
                                 Friends.block(myID, otherUser.getId(), ProfileViewer.this, new OnResponseListener() {

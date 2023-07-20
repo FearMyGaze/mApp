@@ -2,6 +2,7 @@ package com.github.fearmygaze.mercury.firebase;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -161,8 +162,13 @@ public class Auth {
     }
 
     public static void rememberMe(Context context, OnUserResponseListener listener) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        if (auth == null) {
+            Log.e("customLog", "Auth came null");
+        }
         if (user == null) {
+            Log.d("customLog", "User came null");
             listener.onSuccess(1, null);
         } else if (!user.isEmailVerified()) {
             listener.onSuccess(2, null);

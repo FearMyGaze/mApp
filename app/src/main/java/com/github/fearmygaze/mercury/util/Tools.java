@@ -17,11 +17,8 @@ import androidx.appcompat.content.res.AppCompatResources;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.custom.TimestampConverter;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.view.util.ProfileViewer;
-import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.DateFormat;
@@ -74,18 +71,6 @@ public class Tools {
         }
     }
 
-    public static String getCorrectDate(long time) {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(time), ZoneId.systemDefault());
-            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy");
-            return localDateTime.format(dateTimeFormatter);
-        } else {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(time);
-            return DateFormat.getDateInstance(DateFormat.LONG).format(calendar.getTime());
-        }
-    }
-
     public static void createSettingsPreference(Context context) {
         PrivatePreference preference = new PrivatePreference(context);
         if (!preference.contains("showImages")) {
@@ -129,63 +114,6 @@ public class Tools {
                 .centerCrop();
     }
 
-    public static void extraInfo(User user, boolean showAll, int resourceId, ChipGroup chipGroup, Context context) {
-        chipGroup.removeAllViews();
-
-        if (!user.getJob().isEmpty()) {
-            Chip chip = new Chip(context);
-            chip.setText(user.getJob());
-            chip.setCheckable(false);
-            chip.setChecked(false);
-            chip.setClickable(false);
-            chip.setChipIconResource(R.drawable.ic_repair_service_24);
-            chip.setChipIconTintResource(resourceId);
-            chip.setChipBackgroundColorResource(R.color.basicBackground);
-            chipGroup.addView(chip);
-        }
-
-        if (!user.getWebsite().isEmpty()) {
-            Chip chip = new Chip(context);
-            chip.setText(Tools.removeHttp(user.getWebsite()));
-            chip.setTextColor(context.getColor(R.color.textBold));
-            chip.setCheckable(false);
-            chip.setChecked(false);
-            chip.setClickable(false);
-            chip.setChipIconResource(R.drawable.ic_link_24);
-            chip.setChipIconTintResource(resourceId);
-            chip.setChipBackgroundColorResource(R.color.basicBackground);
-            chip.setOnClickListener(v -> context.startActivity(new Intent(Intent.ACTION_VIEW,
-                    Uri.parse(Tools.addHttp(user.getWebsite())))
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)));
-            chipGroup.addView(chip);
-        }
-
-        if (!user.getLocation().isEmpty()) {
-            Chip chip = new Chip(context);
-            chip.setText(user.getLocation());
-            chip.setCheckable(false);
-            chip.setChecked(false);
-            chip.setClickable(false);
-            chip.setChipIconResource(R.drawable.ic_location_24);
-            chip.setChipIconTintResource(resourceId);
-            chip.setChipBackgroundColorResource(R.color.basicBackground);
-            chipGroup.addView(chip);
-        }
-
-        if (showAll && user.getCreated() != null) {
-            Chip chip = new Chip(context);
-            chip.setText(Tools.getCorrectDate(TimestampConverter.dateToUnix(user.getCreated())));
-            chip.setCheckable(false);
-            chip.setChecked(false);
-            chip.setClickable(false);
-            chip.setChipIconResource(R.drawable.ic_calendar_24);
-            chip.setChipIconTintResource(resourceId);
-            chip.setChipBackgroundColorResource(R.color.basicBackground);
-            chipGroup.addView(chip);
-        }
-    }
-
-
     public static String createFileNameWithExtension(Uri image, Context context) {
         ContentResolver contentResolver = context.getContentResolver();
         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
@@ -200,20 +128,6 @@ public class Tools {
         } else {
             return fileName + "_" + new Random().nextInt() + "." + MimeTypeMap.getFileExtensionFromUrl(image.toString());
         }
-    }
-
-    public static String removeHttp(@NonNull String value) {
-        if (value.startsWith("https://www."))
-            return value.replace("https://www.", "");
-        if (value.startsWith("http://www."))
-            return value.replace("http://www.", "");
-        if (value.startsWith("http://"))
-            return value.replace("http://", "");
-        if (value.startsWith("https://"))
-            return value.replace("https://", "");
-        if (value.startsWith("www."))
-            return value.replace("www.", "");
-        return value;
     }
 
     public static String addHttp(@NonNull String value) {

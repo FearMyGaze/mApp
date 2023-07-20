@@ -1,6 +1,7 @@
 package com.github.fearmygaze.mercury.model;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -11,12 +12,22 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import com.github.fearmygaze.mercury.R;
+import com.github.fearmygaze.mercury.custom.TimestampConverter;
 import com.github.fearmygaze.mercury.database.AppDatabase;
 import com.github.fearmygaze.mercury.database.UserRoomDao;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.ServerTimestamp;
 
+import java.text.DateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
 
 @Entity(tableName = "users")
@@ -258,6 +269,96 @@ public class User implements Parcelable {
 
     public static void deleteAllRoomUsers(Context context) {
         AppDatabase.getInstance(context).userDao().deleteAllUsers();
+    }
+
+    public static void extraInfo(User user, boolean showAll, int resourceId, ChipGroup chipGroup, Context context) {
+        chipGroup.removeAllViews();
+
+        if (!user.getJob().isEmpty()) {
+            Chip chip = new Chip(context);
+            chip.setText(user.getJob());
+            chip.setCheckable(false);
+            chip.setChecked(false);
+            chip.setClickable(false);
+            chip.setChipIconResource(R.drawable.ic_repair_service_24);
+            chip.setChipIconTintResource(resourceId);
+            chip.setChipBackgroundColorResource(R.color.basicBackground);
+            chipGroup.addView(chip);
+        }
+
+        if (!user.getWebsite().isEmpty()) {
+            Chip chip = new Chip(context);
+            chip.setText(removeHttp(user.getWebsite()));
+            chip.setTextColor(context.getColor(R.color.textBold));
+            chip.setCheckable(false);
+            chip.setChecked(false);
+            chip.setClickable(false);
+            chip.setChipIconResource(R.drawable.ic_link_24);
+            chip.setChipIconTintResource(resourceId);
+            chip.setChipBackgroundColorResource(R.color.basicBackground);
+            chip.setOnClickListener(v -> context.startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse(addHttp(user.getWebsite())))
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)));
+            chipGroup.addView(chip);
+        }
+
+        if (!user.getLocation().isEmpty()) {
+            Chip chip = new Chip(context);
+            chip.setText(user.getLocation());
+            chip.setCheckable(false);
+            chip.setChecked(false);
+            chip.setClickable(false);
+            chip.setChipIconResource(R.drawable.ic_location_24);
+            chip.setChipIconTintResource(resourceId);
+            chip.setChipBackgroundColorResource(R.color.basicBackground);
+            chipGroup.addView(chip);
+        }
+
+        if (showAll && user.getCreated() != null) {
+            Chip chip = new Chip(context);
+            chip.setText(setCorrectDateFormat(TimestampConverter.dateToUnix(user.getCreated())));
+            chip.setCheckable(false);
+            chip.setChecked(false);
+            chip.setClickable(false);
+            chip.setChipIconResource(R.drawable.ic_calendar_24);
+            chip.setChipIconTintResource(resourceId);
+            chip.setChipBackgroundColorResource(R.color.basicBackground);
+            chipGroup.addView(chip);
+        }
+    }
+
+    public static String removeHttp(@NonNull String link) {
+        if (link.startsWith("https://www."))
+            return link.replace("https://www.", "");
+        if (link.startsWith("http://www."))
+            return link.replace("http://www.", "");
+        if (link.startsWith("http://"))
+            return link.replace("http://", "");
+        if (link.startsWith("https://"))
+            return link.replace("https://", "");
+        if (link.startsWith("www."))
+            return link.replace("www.", "");
+        return link;
+    }
+
+    public static String addHttp(@NonNull String link) {
+        if (!link.startsWith("http://www.") && !link.startsWith("https://www.")) {
+            return "https://" + link;
+        } else if (!link.startsWith("http://") && !link.startsWith("https://")) {
+            return "https://www." + link;
+        } else return link;
+    }
+
+    private static String setCorrectDateFormat(long time) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(time), ZoneId.systemDefault());
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy");
+            return localDateTime.format(dateTimeFormatter);
+        } else {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(time);
+            return DateFormat.getDateInstance(DateFormat.LONG).format(calendar.getTime());
+        }
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
