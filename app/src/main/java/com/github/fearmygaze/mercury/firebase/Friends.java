@@ -96,7 +96,7 @@ public class Friends {
     }
 
     public static void sendRequest(String myID, String otherID, Context context, OnResponseListener listener) {
-        FirebaseFirestore.getInstance().collection(Request.COLLECTION + "1")
+        FirebaseFirestore.getInstance().collection(Request.COLLECTION)
                 .document()
                 .set(new Request(myID, otherID, Request.WAITING))
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))

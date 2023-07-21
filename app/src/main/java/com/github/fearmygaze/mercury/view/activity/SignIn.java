@@ -25,7 +25,7 @@ public class SignIn extends AppCompatActivity {
 
     TextInputLayout emailError, passwordError;
     TextInputEditText email, password;
-    MaterialButton signIn, signUp;
+    MaterialButton forgotPassword, signIn, signUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +36,7 @@ public class SignIn extends AppCompatActivity {
         email = findViewById(R.id.signInEmail);
         passwordError = findViewById(R.id.signInPasswordError);
         password = findViewById(R.id.signInPassword);
+        forgotPassword = findViewById(R.id.signInForgotPassword);
         signIn = findViewById(R.id.signIn);
         signUp = findViewById(R.id.signInCreateAccount);
 
@@ -53,6 +54,7 @@ public class SignIn extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 passwordError.setEnabled(RegEx.isEmailValid(email, emailError, SignIn.this));
+                forgotPassword.setEnabled(RegEx.isEmailValid(email, emailError, SignIn.this));
             }
         });
 
@@ -71,6 +73,22 @@ public class SignIn extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 signIn.setEnabled(RegEx.isPasswordValid(password, passwordError, SignIn.this));
             }
+        });
+
+        forgotPassword.setOnClickListener(v -> {
+            Auth.sendPasswordResetEmail(Objects.requireNonNull(email.getText()).toString().trim(), SignIn.this, new OnResponseListener() {
+                @Override
+                public void onSuccess(int code) {
+                    if (code == 0) {
+                        Toast.makeText(SignIn.this, "Email has been send", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(String message) {
+                    Toast.makeText(SignIn.this, message, Toast.LENGTH_SHORT).show();
+                }
+            });
         });
 
         signIn.setOnClickListener(v -> {

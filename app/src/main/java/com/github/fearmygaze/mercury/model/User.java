@@ -405,6 +405,7 @@ public class User implements Parcelable {
         parcel.writeByte((byte) (isSelected ? 1 : 0));
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "User{" +
