@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.firebase.Friends;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
-import com.github.fearmygaze.mercury.firebase.interfaces.OnRoomListener;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
 import com.google.android.material.card.MaterialCardView;
@@ -22,8 +21,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class AdapterUser extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -33,7 +34,7 @@ public class AdapterUser extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     String id;
     int type;
 
-    private OnRoomListener listener;
+    private OnCounterListener listener;
 
     public AdapterUser(List<User> users, String id, @IntRange(from = 0, to = 3) int type) {
         this.users = users;
@@ -41,7 +42,7 @@ public class AdapterUser extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.type = type;
     }
 
-    public AdapterUser(List<User> users, String id, @IntRange(from = 0, to = 3) int type, OnRoomListener listener) {
+    public AdapterUser(List<User> users, String id, @IntRange(from = 0, to = 3) int type, OnCounterListener listener) {
         this.users = users;
         this.id = id;
         this.type = type;
@@ -71,14 +72,14 @@ public class AdapterUser extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 Tools.profileImage(users.get(position).getImage(), searchVH.image.getContext()).into(searchVH.image);
                 searchVH.username.setText(users.get(position).getUsername());
                 searchVH.status.setText(users.get(position).getStatus());
-                searchVH.root.setOnClickListener(v -> Tools.goToProfileViewer(v.getContext(), id, users.get(holder.getAbsoluteAdapterPosition())));
+                searchVH.root.setOnClickListener(v -> Tools.goToProfileViewer(id, users.get(holder.getAbsoluteAdapterPosition()), v.getContext()));
                 break;
             case 2:
                 UserBlockedVH blockedVH = (UserBlockedVH) holder;
                 Tools.profileImage(users.get(position).getImage(), blockedVH.image.getContext()).into(blockedVH.image);
                 blockedVH.username.setText(users.get(position).getUsername());
                 blockedVH.status.setText(users.get(position).getStatus());
-                blockedVH.root.setOnClickListener(v -> Tools.goToProfileViewer(v.getContext(), id, users.get(holder.getAbsoluteAdapterPosition())));
+                blockedVH.root.setOnClickListener(v -> Tools.goToProfileViewer(id, users.get(holder.getAbsoluteAdapterPosition()), v.getContext()));
                 blockedVH.unBlock.setOnClickListener(v -> {
                     MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(v.getContext());
                     builder.setBackground(AppCompatResources.getDrawable(v.getContext(), R.color.basicBackground))
@@ -114,14 +115,14 @@ public class AdapterUser extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     roomVH.root.setChecked(!roomVH.root.isChecked());
                     if (roomVH.root.isChecked()) {
                         users.get(holder.getAbsoluteAdapterPosition()).setSelected(true);
-                        listener.onAction(getSelectedUsers().size());
+                        listener.count(getSelectedUsers().size());
                     } else {
                         users.get(holder.getAbsoluteAdapterPosition()).setSelected(false);
-                        listener.onAction(getSelectedUsers().size());
+                        listener.count(getSelectedUsers().size());
                     }
                 });
                 roomVH.root.setOnLongClickListener(v -> {
-                    Tools.goToProfileViewer(v.getContext(), id, users.get(holder.getAbsoluteAdapterPosition()));
+                    Tools.goToProfileViewer(id, users.get(holder.getAbsoluteAdapterPosition()), v.getContext());
                     return true;
                 });
                 break;
@@ -130,7 +131,7 @@ public class AdapterUser extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 Tools.profileImage(users.get(position).getImage(), requestVH.image.getContext()).into(requestVH.image);
                 requestVH.username.setText(users.get(position).getUsername());
                 requestVH.status.setText(users.get(position).getStatus());
-                requestVH.root.setOnClickListener(v -> Tools.goToProfileViewer(v.getContext(), id, users.get(holder.getAbsoluteAdapterPosition())));
+                requestVH.root.setOnClickListener(v -> Tools.goToProfileViewer(id, users.get(holder.getAbsoluteAdapterPosition()), v.getContext()));
                 requestVH.accept.setOnClickListener(v ->
                         Friends.answerRequest(id, users.get(position).getId(), Friends.OPTION_ACCEPT, v.getContext(), new OnResponseListener() {
                             @Override
@@ -189,14 +190,24 @@ public class AdapterUser extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return users.size();
     }
 
-    public List<String> getSelectedUsers() {
-        List<String> selectedUsers = new ArrayList<>();
+    public Map<String, Boolean> getSelectedUsers() {
+        Map<String, Boolean> map = new HashMap<>();
         for (User user : users) {
             if (user.isSelected()) {
-                selectedUsers.add(user.getId());
+                map.put(user.getId(), true);
             }
         }
-        return selectedUsers;
+        return map;
+    }
+
+    public List<User> getUsers() {
+        List<User> list = new ArrayList<>();
+        for (User user : users) {
+            if (user.isSelected()) {
+                list.add(user);
+            }
+        }
+        return list;
     }
 
     public void setFilteredUsers(String name) {
@@ -270,5 +281,9 @@ public class AdapterUser extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             username = itemView.findViewById(R.id.adapterUserRoomUsername);
             status = itemView.findViewById(R.id.adapterUserRoomStatus);
         }
+    }
+
+    public interface OnCounterListener {
+        void count(int count);
     }
 }

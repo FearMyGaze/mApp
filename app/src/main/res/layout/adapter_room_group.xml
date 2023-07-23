@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/adapterRoomGroupRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="12.5dp"
+    app:cardBackgroundColor="@color/basicBackgroundAlternate"
+    app:cardElevation="2dp"
+    app:contentPadding="10dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/adapterRoomGroupImage"
+            android:layout_width="60dp"
+            android:layout_height="0dp"
+            tools:src="@tools:sample/avatars"
+            app:shapeAppearance="@style/RectComponent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/adapterRoomGroupName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            tools:text="@tools:sample/lorem/random"
+            android:textColor="@color/textBold"
+            android:textStyle="bold"
+            android:textSize="17sp"
+            android:maxLines="1"
+            app:layout_constraintStart_toEndOf="@id/adapterRoomGroupImage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/adapterRoomGroupMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            tools:text="@tools:sample/lorem/random"
+            android:textColor="@color/textBold"
+            android:textSize="15sp"
+            android:maxLines="1"
+            app:layout_constraintStart_toEndOf="@id/adapterRoomGroupImage"
+            app:layout_constraintEnd_toStartOf="@id/adapterRoomGroupTime"
+            app:layout_constraintTop_toBottomOf="@id/adapterRoomGroupName"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/adapterRoomGroupTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            tools:text="@tools:sample/date/mmddyy"
+            android:textColor="@color/textBold"
+            android:textStyle="italic"
+            android:textSize="14sp"
+            android:maxLines="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/adapterRoomGroupName"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

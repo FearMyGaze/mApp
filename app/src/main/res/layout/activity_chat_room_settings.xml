@@ -1,8 +1,544 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.activity.ChatRoomSettings">
+    android:background="@color/basicBackground"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/chatRoomSettingsTopBar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        app:contentPadding="10dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="@color/basicBackground"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/chatRoomSettingsBack"
+                android:layout_width="35dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="1:1"
+                app:cardElevation="0dp"
+                app:contentPadding="3dp"
+                app:cardCornerRadius="6.5dp"
+                app:cardBackgroundColor="@android:color/transparent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_arrow_back_24"
+                    android:tint="?attr/colorPrimary"
+                    app:shapeAppearance="@style/RectComponent"/>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/chatRoomSettingsRoomName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="15dp"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:textColor="@color/textBold"
+                android:textAlignment="center"
+                android:maxLines="1"
+                android:ellipsize="end"
+                app:layout_constraintStart_toEndOf="@id/chatRoomSettingsBack"
+                app:layout_constraintEnd_toStartOf="@id/chatRoomSettingsReport"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/chatRoomSettingsReport"
+                android:layout_width="35dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="1:1"
+                app:cardElevation="0dp"
+                app:contentPadding="3dp"
+                app:cardCornerRadius="6.5dp"
+                app:cardBackgroundColor="@android:color/transparent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_report_24"
+                    android:tint="?attr/colorPrimary"
+                    app:shapeAppearance="@style/RectComponent"/>
+            </com.google.android.material.card.MaterialCardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/chatRoomSettingsDivider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        app:dividerThickness="1dp"
+        app:layout_constraintTop_toBottomOf="@id/chatRoomSettingsTopBar"/>
+
+    <ScrollView
+        android:id="@+id/chatRoomSettingsScroll"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:overScrollMode="never"
+        app:layout_constraintTop_toBottomOf="@id/chatRoomSettingsDivider"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/chatRoomSettingsRoomImage"
+                android:layout_width="120dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="20dp"
+                tools:src="@tools:sample/avatars"
+                app:shapeAppearance="@style/RectComponent"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/chatRoomSettingsMembers"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                app:cardElevation="0dp"
+                app:contentPadding="10dp"
+                app:cardCornerRadius="12.5dp"
+                android:contentDescription="@string/chatRoomSettingsMembers"
+                app:cardBackgroundColor="@color/basicBackgroundAlternate"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/chatRoomSettingsRoomImage">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/chatRoomSettingsMembersText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/chatRoomSettingsMembers"
+                        android:textAlignment="center"
+                        android:textStyle="bold"
+                        android:textSize="14sp"
+                        android:textColor="@color/textBold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                    <TextView
+                        android:id="@+id/chatRoomSettingsMembersValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLength="4"
+                        android:textAlignment="center"
+                        android:textStyle="bold"
+                        android:textSize="14sp"
+                        android:textColor="@color/textBold"
+                        app:layout_constraintTop_toBottomOf="@id/chatRoomSettingsMembersText"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/chatRoomSettingsCreated"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                app:cardElevation="0dp"
+                app:contentPadding="10dp"
+                app:cardCornerRadius="12.5dp"
+                android:contentDescription="@string/chatRoomSettingsCreated"
+                app:cardBackgroundColor="@color/basicBackgroundAlternate"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/chatRoomSettingsRoomImage">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/chatRoomSettingsCreatedText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/chatRoomSettingsCreated"
+                        android:textAlignment="center"
+                        android:textStyle="bold"
+                        android:textSize="14sp"
+                        android:textColor="@color/textBold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                    <TextView
+                        android:id="@+id/chatRoomSettingsCreatedValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLength="10"
+                        android:textAlignment="center"
+                        android:textStyle="bold"
+                        android:textSize="14sp"
+                        android:textColor="@color/textBold"
+                        app:layout_constraintTop_toBottomOf="@id/chatRoomSettingsCreatedText"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/chatRoomSettingsUpdateHelper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/chatRoomSettingsUpdate"
+                android:textColor="@color/textBold"
+                android:textStyle="bold"
+                android:textSize="24sp"
+                app:layout_constraintTop_toBottomOf="@id/chatRoomSettingsCreated"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/chatRoomSettingsUpdate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:cardElevation="0dp"
+                app:contentPadding="10dp"
+                app:cardCornerRadius="12.5dp"
+                app:cardBackgroundColor="@color/basicBackgroundAlternate"
+                app:layout_constraintTop_toBottomOf="@id/chatRoomSettingsUpdateHelper">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/chatRoomSettingsUpdateRoomName"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        app:cardBackgroundColor="@color/basicBackgroundAlternate"
+                        app:cardCornerRadius="12.5dp"
+                        app:contentPadding="5dp"
+                        app:cardElevation="0dp"
+                        android:contentDescription="@string/chatRoomSettingsChangeName"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/chatRoomSettingsUpdateNameImage"
+                                android:layout_width="30dp"
+                                android:layout_height="0dp"
+                                android:src="@drawable/ic_document_24"
+                                android:tint="?attr/colorPrimary"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:text="@string/chatRoomSettingsChangeName"
+                                android:textSize="17sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/textBold"
+                                app:layout_constraintStart_toEndOf="@id/chatRoomSettingsUpdateNameImage"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/chatRoomSettingsUpdateRoomImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:layout_marginTop="10dp"
+                        app:cardBackgroundColor="@color/basicBackgroundAlternate"
+                        app:cardCornerRadius="12.5dp"
+                        app:contentPadding="5dp"
+                        app:cardElevation="0dp"
+                        android:contentDescription="@string/chatRoomSettingsChangeImage"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/chatRoomSettingsUpdateRoomName">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/chatRoomSettingsUpdateRoomImageImg"
+                                android:layout_width="30dp"
+                                android:layout_height="0dp"
+                                android:src="@drawable/ic_document_24"
+                                android:tint="?attr/colorPrimary"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:text="@string/chatRoomSettingsChangeImage"
+                                android:textSize="17sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/textBold"
+                                app:layout_constraintStart_toEndOf="@id/chatRoomSettingsUpdateRoomImageImg"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/chatRoomSettingsUpdateAddMember"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:layout_marginTop="10dp"
+                        app:cardBackgroundColor="@color/basicBackgroundAlternate"
+                        app:cardCornerRadius="12.5dp"
+                        app:contentPadding="5dp"
+                        app:cardElevation="0dp"
+                        android:contentDescription="@string/chatRoomSettingsAddMember"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/chatRoomSettingsUpdateRoomImage">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/chatRoomSettingsUpdateAddMemberImage"
+                                android:layout_width="30dp"
+                                android:layout_height="0dp"
+                                android:src="@drawable/ic_person_add_24"
+                                android:tint="?attr/colorPrimary"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:text="@string/chatRoomSettingsAddMember"
+                                android:textSize="17sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/textBold"
+                                app:layout_constraintStart_toEndOf="@id/chatRoomSettingsUpdateAddMemberImage"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/chatRoomSettingsUpdateRemoveMember"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:layout_marginTop="10dp"
+                        app:cardBackgroundColor="@color/basicBackgroundAlternate"
+                        app:cardCornerRadius="12.5dp"
+                        app:contentPadding="5dp"
+                        app:cardElevation="0dp"
+                        android:contentDescription="@string/chatRoomSettingsRemoveMember"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/chatRoomSettingsUpdateAddMember">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/chatRoomSettingsUpdateRemoveMemberImage"
+                                android:layout_width="30dp"
+                                android:layout_height="0dp"
+                                android:src="@drawable/ic_person_remove_24"
+                                android:tint="?attr/colorPrimary"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:text="@string/chatRoomSettingsRemoveMember"
+                                android:textSize="17sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/textBold"
+                                app:layout_constraintStart_toEndOf="@id/chatRoomSettingsUpdateRemoveMemberImage"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/chatRoomSettingsDangerHelper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/chatRoomSettingsDanger"
+                android:textColor="@color/textBold"
+                android:textStyle="bold"
+                android:textSize="24sp"
+                app:layout_constraintTop_toBottomOf="@id/chatRoomSettingsUpdate"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/chatRoomSettingsDanger"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                app:cardElevation="0dp"
+                app:contentPadding="10dp"
+                app:cardCornerRadius="12.5dp"
+                app:cardBackgroundColor="@color/basicBackgroundAlternate"
+                app:layout_constraintTop_toBottomOf="@id/chatRoomSettingsDangerHelper">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/chatRoomSettingsDangerOwner"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        app:cardBackgroundColor="@color/basicBackgroundAlternate"
+                        app:cardCornerRadius="12.5dp"
+                        app:contentPadding="5dp"
+                        app:cardElevation="0dp"
+                        android:contentDescription="@string/chatRoomSettingsChangeOwner"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/chatRoomSettingsDangerOwnerImage"
+                                android:layout_width="30dp"
+                                android:layout_height="0dp"
+                                android:src="@drawable/ic_person_24"
+                                android:tint="?attr/colorPrimary"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:text="@string/chatRoomSettingsChangeOwner"
+                                android:textSize="17sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/textBold"
+                                app:layout_constraintStart_toEndOf="@id/chatRoomSettingsDangerOwnerImage"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/chatRoomSettingsDangerDeleteRoom"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:layout_marginTop="10dp"
+                        app:cardBackgroundColor="@color/basicBackgroundAlternate"
+                        app:cardCornerRadius="12.5dp"
+                        app:contentPadding="5dp"
+                        app:cardElevation="0dp"
+                        android:contentDescription="@string/chatRoomSettingsDeleteRoom"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/chatRoomSettingsDangerOwner">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/chatRoomSettingsDangerDeleteRoomImage"
+                                android:layout_width="30dp"
+                                android:layout_height="0dp"
+                                android:src="@drawable/ic_delete_24"
+                                android:tint="?attr/colorPrimary"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:text="@string/chatRoomSettingsDeleteRoom"
+                                android:textSize="17sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/textBold"
+                                app:layout_constraintStart_toEndOf="@id/chatRoomSettingsDangerDeleteRoomImage"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

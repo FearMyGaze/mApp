@@ -43,7 +43,7 @@ public class ChangeInformation extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
 
         intent = getIntent();
-        senderID = intent.getStringExtra("userID");
+        senderID = intent.getStringExtra(User.ID);
         changeType = intent.getStringExtra("type");
 
         user = AppDatabase.getInstance(ChangeInformation.this).userDao().getUserByUserID(senderID);

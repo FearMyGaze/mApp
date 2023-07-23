@@ -57,7 +57,7 @@ public class Settings extends AppCompatActivity {
         privacy = findViewById(R.id.settingsDocumentsPrivacy);
         terms = findViewById(R.id.settingsDocumentsTerms);
 
-        user = AppDatabase.getInstance(Settings.this).userDao().getUserByUserID(FirebaseAuth.getInstance().getUid());
+        user = AppDatabase.getInstance(Settings.this).userDao().getUserByUserID(getIntent().getStringExtra(User.ID));
 
         contentSwitch.setChecked(Tools.getPreference("showImages", Settings.this));
         profileSwitch.setChecked(user.getIsProfileOpen());
@@ -66,14 +66,14 @@ public class Settings extends AppCompatActivity {
 
         changeEmail.setOnClickListener(v -> {
             startActivity(new Intent(Settings.this, ChangeInformation.class)
-                    .putExtra("userID", user.getId())
+                    .putExtra(User.ID, user.getId())
                     .putExtra("type", "email"));
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         });
 
         changePassword.setOnClickListener(v -> {
             startActivity(new Intent(Settings.this, ChangeInformation.class)
-                    .putExtra("userID", user.getId())
+                    .putExtra(User.ID, user.getId())
                     .putExtra("type", "password"));
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         });

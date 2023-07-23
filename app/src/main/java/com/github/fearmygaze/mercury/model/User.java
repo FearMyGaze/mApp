@@ -48,7 +48,7 @@ public class User implements Parcelable {
             CREATED = "created",
             PROFILE = "isProfileOpen";
 
-    @Exclude
+
     @NonNull
     @PrimaryKey
     @ColumnInfo(name = "id", index = true)
@@ -90,7 +90,8 @@ public class User implements Parcelable {
     }
 
     @Ignore //Register
-    public User(String username) {
+    public User(@NonNull String id, String username) {
+        this.id = id;
         this.username = username;
         this.isProfileOpen = true;
         this.image = "default";
@@ -128,12 +129,10 @@ public class User implements Parcelable {
     }
 
     @NonNull
-    @Exclude
     public String getId() {
         return id;
     }
 
-    @Exclude
     public void setId(@NonNull String id) {
         this.id = id;
     }
@@ -220,17 +219,9 @@ public class User implements Parcelable {
         isSelected = selected;
     }
 
-    public static User convertFromDocument(DocumentSnapshot document) {
-        User user = document.toObject(User.class);
-        if (user != null) {
-            user.setId(document.getId());
-        }
-        return user;
-    }
-
     public static User convertFromDocumentAndSave(DocumentSnapshot document, Context context) {
         UserRoomDao dao = AppDatabase.getInstance(context).userDao();
-        dao.updateUser(convertFromDocument(document));
+        dao.updateUser(document.toObject(User.class));
         return dao.getUserByUserID(document.getId());
     }
 

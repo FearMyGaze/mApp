@@ -11,8 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.database.AppDatabase;
+import com.github.fearmygaze.mercury.firebase.Communications;
 import com.github.fearmygaze.mercury.firebase.Friends;
+import com.github.fearmygaze.mercury.firebase.interfaces.OnRoomDataListener;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnUsersResponseListener;
+import com.github.fearmygaze.mercury.model.Room;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.view.adapter.AdapterUser;
 import com.google.android.material.button.MaterialButton;
@@ -73,28 +76,17 @@ public class RoomCreator extends AppCompatActivity {
         setFriends();
 
         create.setOnClickListener(v -> {
-//            Room.Exists(user, adapterUser.getSelectedUsers(), new Room.OnDataResultListener() {
-//                @Override
-//                public void onResult(int resultCode, Object object) {
-//                    if (resultCode == 1) {//TODO: We need to pass the user roomData
-//                        Toast.makeText(RoomCreator.this, "Room Created", Toast.LENGTH_SHORT).show();
-//                        finish();
-//                        startActivity(new Intent(RoomCreator.this, ChatRoom.class)
-//                                .putExtra("roomID", object.toString()));
-//                    } else if (resultCode == 2)
-//                        Toast.makeText(RoomCreator.this, "Room already exists", Toast.LENGTH_SHORT).show();
-//                    else if (resultCode == -1)
-//                        Toast.makeText(RoomCreator.this, "Error", Toast.LENGTH_SHORT).show();
-//                    else
-//                        Toast.makeText(RoomCreator.this, resultCode + "", Toast.LENGTH_SHORT).show();
-//                }
-//
-//                @Override
-//                public void onFailure(String message) {
-//                    Toast.makeText(RoomCreator.this, message, Toast.LENGTH_SHORT).show();
-//                }
-//            });
+            Communications.roomExists(user, adapterUser.getUsers(), RoomCreator.this, new OnRoomDataListener() {
+                @Override
+                public void onSuccess(int code, Room data) {
+                    Toast.makeText(RoomCreator.this, code + "  " + data.toString(), Toast.LENGTH_SHORT).show();
+                }
 
+                @Override
+                public void onFailure(String message) {
+                    Toast.makeText(RoomCreator.this, message, Toast.LENGTH_SHORT).show();
+                }
+            });
         });
 
         adapterUser = new AdapterUser(new ArrayList<>(), user.getId(), AdapterUser.TYPE_ROOM, count -> create.setEnabled(count > 0));

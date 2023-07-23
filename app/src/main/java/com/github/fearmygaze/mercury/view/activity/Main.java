@@ -17,14 +17,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.github.fearmygaze.mercury.R;
+import com.github.fearmygaze.mercury.custom.CustomLinearLayout;
 import com.github.fearmygaze.mercury.database.AppDatabase;
 import com.github.fearmygaze.mercury.firebase.Auth;
+import com.github.fearmygaze.mercury.firebase.Communications;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnUserResponseListener;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnUsersResponseListener;
+import com.github.fearmygaze.mercury.model.Room;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
 import com.github.fearmygaze.mercury.view.adapter.AdapterRequests;
+import com.github.fearmygaze.mercury.view.adapter.AdapterRoom;
 import com.github.fearmygaze.mercury.view.adapter.AdapterUser;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.card.MaterialCardView;
@@ -51,16 +56,18 @@ public class Main extends AppCompatActivity {
     FloatingActionButton roomFab, searchFab;
     Group actionGroup;
 
+    //User
     User user;
 
-    //General
+    //ChatRooms
     SwipeRefreshLayout refreshLayout;
+    RecyclerView recyclerView;
+    AdapterRoom adapterRoom;
 
     //BottomSheets
     BottomSheetBehavior<ConstraintLayout> notificationSheetBehavior;
     BottomSheetBehavior<ConstraintLayout> requestsSheetBehavior;
     BottomSheetBehavior<ConstraintLayout> searchSheetBehavior;
-
     List<User> users = new ArrayList<>();
 
     @Override
@@ -87,12 +94,22 @@ public class Main extends AppCompatActivity {
         searchFab = findViewById(R.id.mainSearchFab);
         actionGroup = findViewById(R.id.mainGroup);
 
+        //ChatRooms
+        recyclerView = findViewById(R.id.mainRecycler);
+
+        //User
         rememberMe();
+
+        adapterRoom = new AdapterRoom(user,
+                new FirestoreRecyclerOptions.Builder<Room>().setQuery(Communications.getRooms(user), Room.class).build(),
+                recyclerView, this);
+        recyclerView.setLayoutManager(new CustomLinearLayout(Main.this, LinearLayoutManager.VERTICAL, false));
+        recyclerView.setAdapter(adapterRoom);
 
         actions.setOnClickListener(v -> fabController());
 
         settingsBtn.setOnClickListener(v -> {
-            startActivity(new Intent(Main.this, Settings.class));
+            startActivity(new Intent(Main.this, Settings.class).putExtra(User.ID, user.getId()));
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         });
 
@@ -100,10 +117,11 @@ public class Main extends AppCompatActivity {
 
         requestsBtn.setOnClickListener(v -> requestsSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED));
 
-        profileBtn.setOnClickListener(v -> {
-            startActivity(new Intent(Main.this, Profile.class)
-                    .putExtra("id", user.getId()));
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        profileBtn.setOnClickListener(v -> Tools.goToProfile(user.getId(), this, this));
+
+        profileBtn.setOnLongClickListener(v -> {
+            //Account Switching here
+            return true;
         });
 
         searchFab.setOnClickListener(v -> {
@@ -114,7 +132,7 @@ public class Main extends AppCompatActivity {
         roomFab.setOnClickListener(v -> {
             fabController();
             startActivity(new Intent(Main.this, RoomCreator.class)
-                    .putExtra("id", user.getId()));
+                    .putExtra(User.ID, user.getId()));
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
 
@@ -134,17 +152,19 @@ public class Main extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        adapterRoom.startListening();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        adapterRoom.stopListening();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         rememberMe();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
     }
 
     @Override

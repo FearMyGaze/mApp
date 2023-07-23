@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Handler;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.MimeTypeMap;
@@ -17,7 +16,10 @@ import androidx.appcompat.content.res.AppCompatResources;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.github.fearmygaze.mercury.R;
+import com.github.fearmygaze.mercury.model.Room;
 import com.github.fearmygaze.mercury.model.User;
+import com.github.fearmygaze.mercury.view.activity.Chat;
+import com.github.fearmygaze.mercury.view.activity.Profile;
 import com.github.fearmygaze.mercury.view.util.ProfileViewer;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -38,11 +40,6 @@ public class Tools {
         layout.setError(message);
     }
 
-    public static void setTimedErrorToLayout(TextInputLayout layout, String message, boolean enabled, int ms) {
-        setErrorToLayout(layout, message, enabled);
-        new Handler().postDelayed(() -> setErrorToLayout(layout, null, false), ms);
-    }
-
     public static void closeKeyboard(Context context) {
         View view = ((Activity) context).getWindow().getDecorView().findViewById(android.R.id.content);
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -51,14 +48,7 @@ public class Tools {
         }
     }
 
-    public static void openKeyboard(Context context) {
-        View view = ((Activity) context).getWindow().getDecorView().findViewById(android.R.id.content);
-        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (!imm.isAcceptingText()) {
-            imm.showSoftInput((View) view.getWindowToken(), InputMethodManager.SHOW_IMPLICIT);
-        }
-    }
-
+    //Move this to the Room controller
     public static String setDateTime(long time) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(time), ZoneId.systemDefault());
@@ -100,10 +90,23 @@ public class Tools {
                 .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
     }
 
-    public static void goToProfileViewer(Context context, String myID, User user) {
+    public static void goToProfile(String myID, Context context, Activity activity) {
+        context.startActivity(new Intent(context, Profile.class)
+                .putExtra(User.ID, myID));
+        activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
+
+    public static void goToProfileViewer(String myID, User user, Context context) {
         context.startActivity(new Intent(context, ProfileViewer.class)
                 .putExtra(User.ID, myID)
                 .putExtra("userData", user));
+    }
+
+    public static void goToChat(User user, Room room, Context context, Activity activity) {
+        context.startActivity(new Intent(context, Chat.class)
+                .putExtra("user", user)
+                .putExtra("room", room));
+        activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     public static RequestBuilder<Drawable> profileImage(String image, Context context) {

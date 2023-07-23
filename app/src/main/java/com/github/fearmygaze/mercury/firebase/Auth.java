@@ -81,6 +81,7 @@ public class Auth {
                 });
     }
 
+    //FIXME: Possibly deleting this
     protected static void deleteUsername(String username, Context context, OnResponseListener listener) {
         FirebaseFirestore.getInstance().collection(User.PUBLIC_DATA)
                 .whereEqualTo(User.USERNAME, username)
@@ -116,7 +117,7 @@ public class Auth {
                                         .addOnSuccessListener(unused1 -> FirebaseFirestore.getInstance()
                                                 .collection(User.COLLECTION)
                                                 .document(user.getUid())
-                                                .set(new User(username))
+                                                .set(new User(user.getUid(), username))
                                                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                                                 .addOnSuccessListener(unused2 -> listener.onSuccess(0)))
                                 );
@@ -136,7 +137,7 @@ public class Auth {
                                     .document(user.getUid())
                                     .get()
                                     .addOnSuccessListener(documentSnapshot -> {
-                                        AppDatabase.getInstance(context).userDao().insertUser(User.convertFromDocument(documentSnapshot));
+                                        AppDatabase.getInstance(context).userDao().insertUser(documentSnapshot.toObject(User.class));
                                         listener.onSuccess(0);
                                     });
                         } else {
@@ -162,13 +163,9 @@ public class Auth {
     }
 
     public static void rememberMe(Context context, OnUserResponseListener listener) {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        FirebaseUser user = auth.getCurrentUser();
-        if (auth == null) {
-            Log.e("customLog", "Auth came null");
-        }
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
-            Log.d("customLog", "User came null");
+            Log.e("customLog", "User came null");
             listener.onSuccess(1, null);
         } else if (!user.isEmailVerified()) {
             listener.onSuccess(2, null);
@@ -207,11 +204,11 @@ public class Auth {
     }
 
     public static void updateEmail(String email, Context context, OnResponseListener listener) {
-        FirebaseUser user1 = FirebaseAuth.getInstance().getCurrentUser();
-        if (user1 != null) {
-            user1.updateEmail(email)
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            user.updateEmail(email)
                     .addOnFailureListener(e -> listener.onFailure("Failed to update your email"))
-                    .addOnSuccessListener(unused -> user1.sendEmailVerification()
+                    .addOnSuccessListener(unused -> user.sendEmailVerification()
                             .addOnFailureListener(e -> listener.onFailure("Failed to send Verification Email"))
                             .addOnSuccessListener(unused1 -> listener.onSuccess(0))
                     );
@@ -304,15 +301,16 @@ public class Auth {
                 });
     }
 
-    public static void getUsersProfile(String id, Context context, OnUserResponseListener listener) {
+    public static void getUserProfile(String id, Context context, OnUserResponseListener listener) {
         FirebaseFirestore.getInstance().collection(User.COLLECTION)
                 .document(id)
                 .get()
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot != null && documentSnapshot.exists()) {
-                        listener.onSuccess(0, User.convertFromDocument(documentSnapshot));
+                        listener.onSuccess(0, documentSnapshot.toObject(User.class));
                     } else listener.onSuccess(1, null);
                 });
     }
+
 }

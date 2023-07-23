@@ -79,9 +79,25 @@
     <string name="requestWaiting">Pending</string>
     <string name="requestNone">Add</string>
 
+    <!-- AdapterRoom -->
+    <string name="adapterRoomYou">You</string>
+    <string name="adapterRoomOther">Other</string>
+
     <!-- ChatRoom (Activity) -->
     <string name="chatRoomMessageHint">Aa</string>
 
+    <!-- ChatRoomSettings (Activity) -->
+    <string name="chatRoomSettingsMembers">Members</string>
+    <string name="chatRoomSettingsCreated">Date</string>
+    <string name="chatRoomSettingsUpdate">Update</string>
+    <string name="chatRoomSettingsChangeName">Change name</string>
+    <string name="chatRoomSettingsChangeImage">Change image</string>
+    <string name="chatRoomSettingsAddMember">Add member</string>
+    <string name="chatRoomSettingsRemoveMember">Remove member</string>
+    <string name="chatRoomSettingsDanger">Danger</string>
+    <string name="chatRoomSettingsChangeOwner">Change owner</string>
+    <string name="chatRoomSettingsDeleteRoom">Delete room</string>
+    
     <!-- AdapterFriendRequest (Adapter) -->
     <string name="adapterFriendRequest">Error while answering the request.</string>
 

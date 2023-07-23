@@ -78,8 +78,24 @@
     <string name="requestWaiting">Αναμονή</string>
     <string name="requestNone">Πρόσθεσε</string>
 
+    <!-- AdapterRoom -->
+    <string name="adapterRoomYou">Εσύ</string>
+    <string name="adapterRoomOther">Άλλος</string>
+
     <!-- ChatRoom (Activity) -->
     <string name="chatRoomMessageHint">Αα</string>
+
+    <!-- ChatRoomSettings (Activity) -->
+    <string name="chatRoomSettingsMembers">Μέλη</string>
+    <string name="chatRoomSettingsCreated">Ημ/νια</string>
+    <string name="chatRoomSettingsUpdate">Ενημέρωση</string>
+    <string name="chatRoomSettingsChangeName">Αλλαγή Ονόματος</string>
+    <string name="chatRoomSettingsChangeImage">Αλλαγή εικόνας</string>
+    <string name="chatRoomSettingsAddMember">Προσθήκη μέλους</string>
+    <string name="chatRoomSettingsRemoveMember">Αφαίρεση μέλους</string>
+    <string name="chatRoomSettingsDanger">Κίνδυνος</string>
+    <string name="chatRoomSettingsChangeOwner">Αλλαγή ιδιοκτήτη</string>
+    <string name="chatRoomSettingsDeleteRoom">Διαγραγή δωματίου</string>
 
     <!-- AdapterFriendRequest (Adapter) -->
     <string name="adapterFriendRequest">Σφάλμα κατα την απάντηση στο αίτημα</string>

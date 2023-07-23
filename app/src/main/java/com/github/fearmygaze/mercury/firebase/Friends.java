@@ -215,6 +215,7 @@ public class Friends {
                 });
     }
 
+    //TODO: This needs to be moved in the Auth
     private static void getUsersFromRequests(String myID, List<Request> requests, Context context, OnUsersResponseListener listener) {
         if (requests != null && !requests.isEmpty()) {
             List<User> users = new ArrayList<>();
@@ -226,7 +227,7 @@ public class Friends {
                         .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                         .addOnSuccessListener(documentSnapshot -> {
                             if (documentSnapshot != null && documentSnapshot.exists()) {
-                                users.add(User.convertFromDocument(documentSnapshot));
+                                users.add(documentSnapshot.toObject(User.class));
                                 listener.onSuccess(0, users);
                             }
                         });
