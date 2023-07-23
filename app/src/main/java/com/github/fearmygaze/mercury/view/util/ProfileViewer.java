@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.TypedValue;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,8 +22,8 @@ import com.github.fearmygaze.mercury.firebase.interfaces.OnUsersResponseListener
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
 import com.github.fearmygaze.mercury.view.adapter.AdapterUser;
-import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -36,7 +37,10 @@ public class ProfileViewer extends AppCompatActivity {
     Intent intent;
 
     SwipeRefreshLayout swipeRefreshLayout;
-    MaterialToolbar toolbar;
+
+    //TopBar
+    MaterialCardView goBack, block, report;
+    TextView username, friendsValue;
 
     ShapeableImageView userImage;
     MaterialButton request;
@@ -59,7 +63,12 @@ public class ProfileViewer extends AppCompatActivity {
         setContentView(R.layout.activity_profile_viewer);
 
         swipeRefreshLayout = findViewById(R.id.profileViewerSwipe);
-        toolbar = findViewById(R.id.profileViewerToolBar);
+
+        goBack = findViewById(R.id.profileViewerGoBack);
+        username = findViewById(R.id.profileViewerUsername);
+        friendsValue = findViewById(R.id.profileViewerFriendsValue);
+        block = findViewById(R.id.profileViewerBlock);
+        report = findViewById(R.id.profileViewerReport);
 
         userImage = findViewById(R.id.profileViewerImage);
         request = findViewById(R.id.profileViewerButton);
@@ -90,36 +99,34 @@ public class ProfileViewer extends AppCompatActivity {
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
 
-        toolbar.setNavigationOnClickListener(v -> onBackPressed());
-        toolbar.setTitle(otherUser.getUsername());
-        toolbar.setOnMenuItemClickListener(item -> {
-            if (item.getItemId() == R.id.profileViewerOptionBlock) {
-                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(ProfileViewer.this);
-                builder.setBackground(AppCompatResources.getDrawable(ProfileViewer.this, R.color.basicBackground))
-                        .setTitle("Block " + otherUser.getUsername() + "?")
-                        .setMessage(otherUser.getUsername() + " will no longer be able to follow you or message you")
-                        .setPositiveButton(getString(R.string.generalConfirm), (dialog, i) ->
-                                Friends.block(myID, otherUser.getId(), ProfileViewer.this, new OnResponseListener() {
-                                    @Override
-                                    public void onSuccess(int code) {
-                                        if (code == 0) {
-                                            Toast.makeText(ProfileViewer.this, "User Blocked", Toast.LENGTH_SHORT).show();
-                                            request.setEnabled(false);
-                                        } else
-                                            Toast.makeText(ProfileViewer.this, "Error", Toast.LENGTH_SHORT).show();
-                                    }
+        goBack.setOnClickListener(v -> onBackPressed());
+        username.setText(otherUser.getUsername());
+        block.setOnClickListener(v -> {
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(ProfileViewer.this);
+            builder.setBackground(AppCompatResources.getDrawable(ProfileViewer.this, R.color.basicBackground))
+                    .setTitle("Block " + otherUser.getUsername() + "?")
+                    .setMessage(otherUser.getUsername() + " will no longer be able to follow you or message you")
+                    .setPositiveButton(getString(R.string.generalConfirm), (dialog, i) ->
+                            Friends.block(myID, otherUser.getId(), ProfileViewer.this, new OnResponseListener() {
+                                @Override
+                                public void onSuccess(int code) {
+                                    if (code == 0) {
+                                        Toast.makeText(ProfileViewer.this, "User Blocked", Toast.LENGTH_SHORT).show();
+                                        request.setEnabled(false);
+                                    } else
+                                        Toast.makeText(ProfileViewer.this, "Error", Toast.LENGTH_SHORT).show();
+                                }
 
-                                    @Override
-                                    public void onFailure(String message) {
-                                        Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_SHORT).show();
-                                    }
-                                }))
-                        .setNegativeButton(getString(R.string.generalCancel), (dialog, i) -> dialog.dismiss())
-                        .show();
-            } else {
-                Toast.makeText(ProfileViewer.this, "Not Implemented", Toast.LENGTH_SHORT).show();
-            }
-            return true;
+                                @Override
+                                public void onFailure(String message) {
+                                    Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_SHORT).show();
+                                }
+                            }))
+                    .setNegativeButton(getString(R.string.generalCancel), (dialog, i) -> dialog.dismiss())
+                    .show();
+        });
+        report.setOnClickListener(v -> {
+            Toast.makeText(ProfileViewer.this, "Not Implemented", Toast.LENGTH_SHORT).show();
         });
 
         request.setOnClickListener(v -> {
@@ -194,7 +201,7 @@ public class ProfileViewer extends AppCompatActivity {
                     request.setText(data.toString());
                     if (request.getText().equals(getString(R.string.requestBlocked))) {
                         request.setEnabled(false);
-                        onCreateOptionsMenu(toolbar.getMenu());
+                        block.setVisibility(View.GONE);
                     }
                 }
             }
@@ -210,7 +217,8 @@ public class ProfileViewer extends AppCompatActivity {
             public void onSuccess(int code, List<User> list) {
                 if (code == 0 && !list.isEmpty()) {
                     adapterUser.setData(list);
-                    toolbar.setSubtitle(getString(R.string.generalFriends) + " " + list.size());
+                    friendsValue.setVisibility(View.VISIBLE);
+                    friendsValue.setText(getString(R.string.generalFriends) + " " + list.size());
                 } else if (code == 1) {
                     Toast.makeText(ProfileViewer.this, "Private Profile", Toast.LENGTH_SHORT).show();
                 } else {
