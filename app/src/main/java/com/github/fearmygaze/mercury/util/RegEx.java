@@ -22,7 +22,7 @@ public class RegEx {
         }
 
         if (text.getText().length() < 8) {
-            Tools.setErrorToLayout(layout, context.getString(R.string.regExSmaller) + 8, true);
+            Tools.setErrorToLayout(layout, context.getString(R.string.regExSmaller) + " " + 8, true);
             return false;
         }
 
@@ -50,7 +50,7 @@ public class RegEx {
         }
 
         if (text.getText().length() < 8) {
-            Tools.setErrorToLayout(layout, context.getString(R.string.regExSmaller) + 8, true);
+            Tools.setErrorToLayout(layout, context.getString(R.string.regExSmaller) + " " + 8, true);
             return false;
         }
 
@@ -75,7 +75,7 @@ public class RegEx {
         }
 
         if (text.getText().length() < 8) {
-            Tools.setErrorToLayout(layout, context.getString(R.string.regExSmaller) + 8, true);
+            Tools.setErrorToLayout(layout, context.getString(R.string.regExSmaller) + " " + 8, true);
             return false;
         }
 
@@ -103,7 +103,7 @@ public class RegEx {
         }
 
         if (text.getText().length() < 8) {
-            Tools.setErrorToLayout(layout, context.getString(R.string.regExSmaller) + 8, true);
+            Tools.setErrorToLayout(layout, context.getString(R.string.regExSmaller) + " " + 8, true);
             return false;
         }
 
