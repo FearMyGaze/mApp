@@ -1,7 +1,6 @@
 package com.github.fearmygaze.mercury.view.activity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -30,8 +29,6 @@ public class SignUp extends AppCompatActivity {
     TextInputLayout usernameError, emailError, passwordError;
     TextInputEditText username, email, password;
     MaterialButton createAccount;
-
-    Uri imageData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

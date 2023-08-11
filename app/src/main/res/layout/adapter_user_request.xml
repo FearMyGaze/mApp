@@ -41,24 +41,7 @@
             android:maxLength="50"
             app:layout_constraintStart_toEndOf="@id/adapterUserRequestImage"
             app:layout_constraintEnd_toStartOf="@id/adapterUserRequestAccept"
-            app:layout_constraintTop_toTopOf="@id/adapterUserRequestImage"/>
-
-        <TextView
-            android:id="@+id/adapterUserRequestStatus"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="1dp"
-            tools:text="@tools:sample/lorem/random"
-            android:textSize="15sp"
-            android:textColor="@color/textBold"
-            android:maxLines="2"
-            android:maxEms="50"
-            android:maxLength="50"
-            app:layout_constraintStart_toEndOf="@id/adapterUserRequestImage"
-            app:layout_constraintEnd_toStartOf="@id/adapterUserRequestAccept"
-            app:layout_constraintTop_toBottomOf="@id/adapterUserRequestUsername"
+            app:layout_constraintTop_toTopOf="@id/adapterUserRequestImage"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
         <com.google.android.material.card.MaterialCardView

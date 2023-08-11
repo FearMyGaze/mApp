@@ -41,24 +41,7 @@
             android:maxLength="50"
             app:layout_constraintStart_toEndOf="@id/adapterUserBlockedImage"
             app:layout_constraintEnd_toStartOf="@id/adapterUserBlockedUnBlock"
-            app:layout_constraintTop_toTopOf="@id/adapterUserBlockedImage"/>
-
-        <TextView
-            android:id="@+id/adapterUserBlockedStatus"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="1dp"
-            tools:text="@tools:sample/lorem/random"
-            android:textSize="15sp"
-            android:textColor="@color/textBold"
-            android:maxLines="2"
-            android:maxEms="50"
-            android:maxLength="50"
-            app:layout_constraintStart_toEndOf="@id/adapterUserBlockedImage"
-            app:layout_constraintEnd_toStartOf="@id/adapterUserBlockedUnBlock"
-            app:layout_constraintTop_toBottomOf="@id/adapterUserBlockedUsername"
+            app:layout_constraintTop_toTopOf="@id/adapterUserBlockedImage"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
         <com.google.android.material.card.MaterialCardView

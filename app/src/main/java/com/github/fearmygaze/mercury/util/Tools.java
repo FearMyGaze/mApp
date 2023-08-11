@@ -1,14 +1,11 @@
 package com.github.fearmygaze.mercury.util;
 
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.webkit.MimeTypeMap;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
@@ -24,14 +21,11 @@ import com.github.fearmygaze.mercury.view.util.ProfileViewer;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
-import java.util.Locale;
-import java.util.Random;
 
 public class Tools {
 
@@ -73,12 +67,20 @@ public class Tools {
         preference.putBoolean(key, value);
     }
 
-    public static boolean getPreference(String key, Context context) {
+    public static boolean getBoolPreference(String key, Context context) {
         PrivatePreference preference = new PrivatePreference(context);
         if (preference.contains(key)) {
             return preference.getBoolean(key);
         }
         return false;
+    }
+
+    public static String getStrPreference(String key, Context context) {
+        PrivatePreference preference = new PrivatePreference(context);
+        if (preference.contains(key)) {
+            return preference.getString(key);
+        }
+        return null;
     }
 
     public static Intent imageSelector() {
@@ -114,23 +116,8 @@ public class Tools {
                 .load(image)
                 .placeholder(AppCompatResources.getDrawable(context, R.drawable.ic_launcher_background))
                 .error(AppCompatResources.getDrawable(context, R.drawable.ic_launcher_background))
+                .skipMemoryCache(false)
                 .centerCrop();
-    }
-
-    public static String createFileNameWithExtension(Uri image, Context context) {
-        ContentResolver contentResolver = context.getContentResolver();
-        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
-
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy_HHmmss", Locale.ENGLISH);
-
-        String fileName = dateFormat.format(calendar.getTime());
-
-        if (ContentResolver.SCHEME_CONTENT.equals(image.getScheme())) {
-            return fileName + "_" + new Random().nextInt() + "." + mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(image));
-        } else {
-            return fileName + "_" + new Random().nextInt() + "." + MimeTypeMap.getFileExtensionFromUrl(image.toString());
-        }
     }
 
     public static String addHttp(@NonNull String value) {

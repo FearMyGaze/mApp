@@ -1,7 +1,7 @@
 <resources>
     <!-- App name -->
     <string name="app_name" translatable="false">Mercury</string>
-
+    <string name="default_image" translatable="false">default.webp</string>
     <!-- General Purpose -->
     <string name="generalChoose">Choose</string>
     <string name="generalOK">OK</string>
@@ -57,12 +57,13 @@
     <string name="settingsAccountChangeEmail">Change email</string>
     <string name="settingsAccountChangePassword">Change password</string>
     <string name="settingsAccountEditProfile">Edit profile</string>
-    <string name="settingsAccountCloseAccount">Close account</string>
-    <string name="settingsPreferencesPublicProfile">Public Profile</string>
-    <string name="settingsPreferencesShowImages">Show images</string>
+    <string name="settingsPrivacyPublicProfile">Public Profile</string>
+    <string name="settingsPrivacyShowImages">Preview images</string>
+    <string name="settingsPrivacyShowBlocked">Blocked users</string>
     <string name="settingsPreferencesChangeTheme">Change theme</string>
     <string name="settingsDocumentsPrivacy">Privacy policy</string>
     <string name="settingsDocumentsTerms">Terms &amp; Conditions</string>
+    <string name="settingsDangerCloseAccount">Close account</string>
 
     <!-- ChangeInformation (Activity) -->
     <string name="changeVerifyTitle">Verify your password</string>
@@ -97,7 +98,7 @@
     <string name="chatRoomSettingsDanger">Danger</string>
     <string name="chatRoomSettingsChangeOwner">Change owner</string>
     <string name="chatRoomSettingsDeleteRoom">Delete room</string>
-    
+
     <!-- AdapterFriendRequest (Adapter) -->
     <string name="adapterFriendRequest">Error while answering the request.</string>
 

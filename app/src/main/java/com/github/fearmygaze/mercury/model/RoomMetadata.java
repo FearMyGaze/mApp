@@ -8,16 +8,16 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RoomMetaData implements Parcelable {
+public class RoomMetadata implements Parcelable {
 
     String id;
     String username;
     String image;
 
-    public RoomMetaData() {
+    public RoomMetadata() {
     }
 
-    public RoomMetaData(String id, String username, String image) {
+    public RoomMetadata(String id, String username, String image) {
         this.id = id;
         this.username = username;
         this.image = image;
@@ -47,31 +47,31 @@ public class RoomMetaData implements Parcelable {
         this.image = image;
     }
 
-    public static List<RoomMetaData> create(User user, List<User> users) {
+    public static List<RoomMetadata> create(User user, List<User> users) {
         users.add(0, user);
-        List<RoomMetaData> data = new ArrayList<>();
+        List<RoomMetadata> data = new ArrayList<>();
         for (int i = 0; i < users.size(); i++) {
-            RoomMetaData metaData = new RoomMetaData(users.get(i).getId(), users.get(i).getUsername(), users.get(i).getImage());
+            RoomMetadata metaData = new RoomMetadata(users.get(i).getId(), users.get(i).getUsername(), users.get(i).getImage());
             data.add(metaData);
         }
         return data;
     }
 
-    protected RoomMetaData(Parcel in) {
+    protected RoomMetadata(Parcel in) {
         id = in.readString();
         username = in.readString();
         image = in.readString();
     }
 
-    public static final Creator<RoomMetaData> CREATOR = new Creator<RoomMetaData>() {
+    public static final Creator<RoomMetadata> CREATOR = new Creator<RoomMetadata>() {
         @Override
-        public RoomMetaData createFromParcel(Parcel in) {
-            return new RoomMetaData(in);
+        public RoomMetadata createFromParcel(Parcel in) {
+            return new RoomMetadata(in);
         }
 
         @Override
-        public RoomMetaData[] newArray(int size) {
-            return new RoomMetaData[size];
+        public RoomMetadata[] newArray(int size) {
+            return new RoomMetadata[size];
         }
     };
 

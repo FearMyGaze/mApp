@@ -3,9 +3,7 @@ package com.github.fearmygaze.mercury.view.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.TypedValue;
-import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,8 +12,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.database.AppDatabase;
-import com.github.fearmygaze.mercury.firebase.Friends;
-import com.github.fearmygaze.mercury.firebase.interfaces.OnUsersResponseListener;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
 import com.github.fearmygaze.mercury.view.adapter.AdapterUser;
@@ -28,7 +24,6 @@ import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Profile extends AppCompatActivity {
 
@@ -80,7 +75,7 @@ public class Profile extends AppCompatActivity {
 
         edit.setOnClickListener(v -> {
             startActivity(new Intent(Profile.this, ProfileEdit.class));
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         });
 
         refreshList(swipe);
@@ -110,28 +105,10 @@ public class Profile extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     private void refreshList(SwipeRefreshLayout swipe) {
-        Friends.getRequestedList(user, Friends.LIST_FOLLOWERS, Profile.this, new OnUsersResponseListener() {
-            @Override
-            public void onSuccess(int code, List<User> list) {
-                swipe.setRefreshing(false);
-                if (code == 0 && list != null) {
-                    title.setVisibility(View.VISIBLE);
-                    adapterUser.setData(list);
-                    toolbar.setSubtitle(getString(R.string.generalFriends) + " " + list.size());
-                } else {
-                    title.setVisibility(View.GONE);
-                    counter.setVisibility(View.GONE);
-                }
-            }
 
-            @Override
-            public void onFailure(String message) {
-                Toast.makeText(Profile.this, message, Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 }

@@ -8,33 +8,41 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.database.AppDatabase;
 import com.github.fearmygaze.mercury.firebase.Auth;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
 import com.github.fearmygaze.mercury.view.util.ChangeInformation;
 import com.github.fearmygaze.mercury.view.util.ProfileEdit;
+import com.github.fearmygaze.mercury.view.util.ShowBlockedUsers;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class Settings extends AppCompatActivity {
 
     //General
-    ShapeableImageView goBack;
+    MaterialToolbar toolbar;
 
     //Account
-    MaterialCardView changeEmail, changePassword, editProfile, signOut, closeAccount;
+    MaterialCardView changeEmail, changePassword, editProfile, signOut;
+
+    //Privacy & Safety
+    MaterialCardView showBlocked, profile, content;
+    SwitchMaterial profileSwitch, contentSwitch;
 
     //Preferences
-    MaterialCardView profile, content, theme;
-    SwitchMaterial profileSwitch, contentSwitch;
+    MaterialCardView theme;
 
     //Documents
     MaterialCardView privacy, terms;
+
+    //Danger
+    MaterialCardView closeAccount;
+
+    Bundle bundle;
 
     User user;
 
@@ -43,26 +51,35 @@ public class Settings extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        goBack = findViewById(R.id.settingsGoBack);
+        toolbar = findViewById(R.id.settingsToolBar);
         changeEmail = findViewById(R.id.settingsAccountChangeEmail);
         changePassword = findViewById(R.id.settingsAccountChangePassword);
         editProfile = findViewById(R.id.settingsAccountEditProfile);
         signOut = findViewById(R.id.settingsAccountSignOut);
-        closeAccount = findViewById(R.id.settingsAccountDelete);
-        profile = findViewById(R.id.settingsPreferencesPublicProfile);
-        profileSwitch = findViewById(R.id.settingsPreferencesPublicProfileSwitch);
-        content = findViewById(R.id.settingsPreferencesContent);
+
+        profile = findViewById(R.id.settingsPrivacyPublicProfile);
+        profileSwitch = findViewById(R.id.settingsPrivacyPublicProfileSwitch);
+        content = findViewById(R.id.settingsPrivacyViewContent);
         contentSwitch = findViewById(R.id.settingsPreferencesContentSwitch);
+        showBlocked = findViewById(R.id.settingsPrivacyBlocked);
+
         theme = findViewById(R.id.settingsPreferencesAlternate);
+
         privacy = findViewById(R.id.settingsDocumentsPrivacy);
         terms = findViewById(R.id.settingsDocumentsTerms);
 
-        user = AppDatabase.getInstance(Settings.this).userDao().getUserByUserID(getIntent().getStringExtra(User.ID));
+        closeAccount = findViewById(R.id.settingsDangerCloseAccount);
 
-        contentSwitch.setChecked(Tools.getPreference("showImages", Settings.this));
+        bundle = getIntent().getExtras();
+
+        if (bundle == null) onBackPressed();
+
+        user = bundle.getParcelable("user");
+
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+
+        contentSwitch.setChecked(Tools.getBoolPreference("showImages", Settings.this));
         profileSwitch.setChecked(user.getIsProfileOpen());
-
-        goBack.setOnClickListener(v -> onBackPressed());
 
         changeEmail.setOnClickListener(v -> {
             startActivity(new Intent(Settings.this, ChangeInformation.class)
@@ -87,6 +104,11 @@ public class Settings extends AppCompatActivity {
             FirebaseAuth.getInstance().signOut();
             User.deleteRoomUser(user, Settings.this);
             onBackPressed();
+        });
+
+        showBlocked.setOnClickListener(v -> {
+            startActivity(new Intent(Settings.this, ShowBlockedUsers.class)
+                    .putExtra("user", user));
         });
 
         closeAccount.setOnClickListener(v -> {
@@ -155,6 +177,6 @@ public class Settings extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 }

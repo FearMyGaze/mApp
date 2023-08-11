@@ -11,23 +11,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.firebase.ui.common.ChangeEventType;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.model.Message;
 import com.github.fearmygaze.mercury.util.Tools;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.imageview.ShapeableImageView;
-import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.Objects;
 
-public class AdapterMessage extends FirebaseRecyclerAdapter<Message, RecyclerView.ViewHolder> {
+public class AdapterMessage extends FirestoreRecyclerAdapter<Message, RecyclerView.ViewHolder> {
 
     String userID;
     RecyclerView recyclerView;
 
-    public AdapterMessage(@NonNull FirebaseRecyclerOptions<Message> options, String userID, RecyclerView recyclerView) {
+    public AdapterMessage(@NonNull FirestoreRecyclerOptions<Message> options, String userID, RecyclerView recyclerView) {
         super(options);
         this.userID = userID;
         this.recyclerView = recyclerView;
@@ -44,12 +44,12 @@ public class AdapterMessage extends FirebaseRecyclerAdapter<Message, RecyclerVie
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position, @NonNull Message model) {
+    protected void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position, @NonNull Message message) {
 
     }
 
     @Override
-    public void onChildChanged(@NonNull ChangeEventType type, @NonNull DataSnapshot snapshot, int newIndex, int oldIndex) {
+    public void onChildChanged(@NonNull ChangeEventType type, @NonNull DocumentSnapshot snapshot, int newIndex, int oldIndex) {
         super.onChildChanged(type, snapshot, newIndex, oldIndex);
         switch (type) {
             case ADDED:
@@ -93,7 +93,7 @@ public class AdapterMessage extends FirebaseRecyclerAdapter<Message, RecyclerVie
             hiddenContent = itemView.findViewById(R.id.messageImageSelfHiddenContent);
             content = itemView.findViewById(R.id.messageImageSelfContent);
             date = itemView.findViewById(R.id.messageImageSelfDate);
-            if (Tools.getPreference("showImage", itemView.getContext())) {
+            if (Tools.getBoolPreference("showImage", itemView.getContext())) {
                 content.setVisibility(View.GONE);
                 hiddenContent.setVisibility(View.VISIBLE);
             } else {
@@ -130,7 +130,7 @@ public class AdapterMessage extends FirebaseRecyclerAdapter<Message, RecyclerVie
             hiddenContent = itemView.findViewById(R.id.messageImageOtherHiddenContent);
             content = itemView.findViewById(R.id.messageImageOtherContent);
             date = itemView.findViewById(R.id.messageImageOtherDate);
-            if (Tools.getPreference("showImage", itemView.getContext())) {
+            if (Tools.getBoolPreference("showImage", itemView.getContext())) {
                 content.setVisibility(View.GONE);
                 hiddenContent.setVisibility(View.VISIBLE);
             } else {

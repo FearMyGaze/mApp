@@ -12,9 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.database.AppDatabase;
 import com.github.fearmygaze.mercury.firebase.Communications;
-import com.github.fearmygaze.mercury.firebase.Friends;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnRoomDataListener;
-import com.github.fearmygaze.mercury.firebase.interfaces.OnUsersResponseListener;
 import com.github.fearmygaze.mercury.model.Room;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.view.adapter.AdapterUser;
@@ -24,7 +22,6 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class RoomCreator extends AppCompatActivity {
 
@@ -107,20 +104,20 @@ public class RoomCreator extends AppCompatActivity {
     }
 
     private void setFriends() {
-        Friends.getRequestedList(user, Friends.LIST_FOLLOWERS, RoomCreator.this, new OnUsersResponseListener() {
-            @Override
-            public void onSuccess(int code, List<User> list) {
-                if (code == 0 && !list.isEmpty()) {
-                    adapterUser.setData(list);
-                } else {
-                    Toast.makeText(RoomCreator.this, "Error", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(String message) {
-                Toast.makeText(RoomCreator.this, message, Toast.LENGTH_SHORT).show();
-            }
-        });
+//        Friends.getRequestedList(user,RoomCreator.this, new OnUsersResponseListener() {
+//            @Override
+//            public void onSuccess(int code, List<User> list) {
+//                if (code == 0 && !list.isEmpty()) {
+//                    adapterUser.setData(list);
+//                } else {
+//                    Toast.makeText(RoomCreator.this, "Error", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(String message) {
+//                Toast.makeText(RoomCreator.this, message, Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
 }

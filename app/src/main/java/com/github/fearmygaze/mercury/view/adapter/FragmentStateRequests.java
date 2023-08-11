@@ -8,11 +8,11 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import com.github.fearmygaze.mercury.view.tab.FragmentBlockedRequest;
 import com.github.fearmygaze.mercury.view.tab.FragmentWaitingRequest;
 
-public class AdapterRequests extends FragmentStateAdapter {
+public class FragmentStateRequests extends FragmentStateAdapter {
 
     String id;
 
-    public AdapterRequests(@NonNull FragmentActivity fragmentActivity, @NonNull String myID) {
+    public FragmentStateRequests(@NonNull FragmentActivity fragmentActivity, @NonNull String myID) {
         super(fragmentActivity);
         this.id = myID;
     }
@@ -27,6 +27,6 @@ public class AdapterRequests extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 2;
+        return 3;
     }
 }

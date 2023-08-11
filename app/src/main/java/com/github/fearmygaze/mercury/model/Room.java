@@ -42,7 +42,7 @@ public class Room implements Parcelable {
     @Exclude
     String lastMessageUserID;
 
-    List<RoomMetaData> metaData;
+    List<RoomMetadata> metaData;
 
     public Room() {
     }
@@ -56,7 +56,7 @@ public class Room implements Parcelable {
         this.members = members;
     }
 
-    public Room(String id, String name, String creatorID, boolean isGroup, List<String> members, List<RoomMetaData> metaData) {
+    public Room(String id, String name, String creatorID, boolean isGroup, List<String> members, List<RoomMetadata> metaData) {
         this.id = id;
         this.name = name;
         this.creatorID = creatorID;
@@ -75,7 +75,7 @@ public class Room implements Parcelable {
         lastMessage = in.readString();
         lastMessageTime = in.readString();
         lastMessageUserID = in.readString();
-        metaData = in.createTypedArrayList(RoomMetaData.CREATOR);
+        metaData = in.createTypedArrayList(RoomMetadata.CREATOR);
     }
 
     @Override
@@ -186,11 +186,11 @@ public class Room implements Parcelable {
         this.created = created;
     }
 
-    public List<RoomMetaData> getMetaData() {
+    public List<RoomMetadata> getMetaData() {
         return metaData;
     }
 
-    public void setMetaData(List<RoomMetaData> metaData) {
+    public void setMetaData(List<RoomMetadata> metaData) {
         this.metaData = metaData;
     }
 

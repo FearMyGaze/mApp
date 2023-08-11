@@ -94,7 +94,7 @@
         android:id="@+id/chatRoomSettingsScroll"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:overScrollMode="never"
+        android:scrollbarThumbVertical="@drawable/scrollbar_color"
         app:layout_constraintTop_toBottomOf="@id/chatRoomSettingsDivider"
         app:layout_constraintBottom_toBottomOf="parent">
 

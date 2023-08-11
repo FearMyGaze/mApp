@@ -7,51 +7,50 @@
     android:background="@color/basicBackground"
     tools:context=".view.activity.Settings">
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/settingsGoBack"
-        android:layout_width="30dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:src="@drawable/ic_arrow_back_24"
-        android:tint="?attr/colorPrimary"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        app:shapeAppearance="@style/RoundedComponent"
-        android:contentDescription="@string/signUpGoBack"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/settingsTopBar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginStart="20dp"
-        android:text="@string/settingsTitle"
-        android:textColor="@color/textBold"
-        android:textStyle="bold"
-        android:textSize="24sp"
-        app:layout_constraintStart_toEndOf="@id/settingsGoBack"
-        app:layout_constraintTop_toTopOf="@id/settingsGoBack"
-        app:layout_constraintBottom_toBottomOf="@id/settingsGoBack"/>
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/settingsToolBar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:navigationIcon="@drawable/ic_arrow_back_24"
+            app:navigationContentDescription="@string/signUpGoBack"
+            app:title="@string/settingsTitle"
+            app:titleTextColor="@color/textBold"
+            android:background="@color/basicBackground"
+            style="@style/ToolBar"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/settingsTopBarDivider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:dividerThickness="2dp"
+        app:layout_constraintTop_toBottomOf="@id/settingsTopBar"/>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="5dp"
-        app:layout_constraintTop_toBottomOf="@id/settingsGoBack"
+        android:scrollbarThumbVertical="@drawable/scrollbar_color"
+        app:layout_constraintTop_toBottomOf="@id/settingsTopBarDivider"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="20dp"
-            android:paddingEnd="20dp">
+            android:paddingEnd="20dp"
+            android:paddingBottom="20dp">
 
             <TextView
                 android:id="@+id/settingsAccountTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:text="@string/settingsAccountTitle"
                 android:textColor="@color/textBold"
                 android:textStyle="bold"
@@ -256,29 +255,62 @@
 
                     </com.google.android.material.card.MaterialCardView>
 
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/settingsPrivacyTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Privacy &amp; Safety"
+                android:textColor="@color/textBold"
+                android:textStyle="bold"
+                android:textSize="24sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/settingsAccountParent"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/settingsPrivacyParent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:cardBackgroundColor="@color/basicBackgroundAlternate"
+                app:cardCornerRadius="12.5dp"
+                app:cardElevation="0dp"
+                app:contentPadding="10dp"
+                app:layout_constraintStart_toStartOf="@id/settingsPrivacyTitle"
+                app:layout_constraintEnd_toEndOf="@id/settingsPrivacyTitle"
+                app:layout_constraintTop_toBottomOf="@id/settingsPrivacyTitle">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
                     <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/settingsAccountDelete"
-                        android:layout_width="match_parent"
+                        android:id="@+id/settingsPrivacyPublicProfile"
+                        android:layout_width="0dp"
                         android:layout_height="55dp"
-                        android:layout_marginTop="10dp"
                         app:cardBackgroundColor="@color/basicBackgroundAlternate"
                         app:cardCornerRadius="12.5dp"
                         app:contentPadding="5dp"
                         app:cardElevation="0dp"
-                        android:contentDescription="@string/settingsAccountCloseAccount"
+                        android:contentDescription="@string/settingsPrivacyPublicProfile"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/settingsAccountSignOut">
+                        app:layout_constraintTop_toTopOf="parent">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
 
                             <com.google.android.material.imageview.ShapeableImageView
-                                android:id="@+id/settingsAccountDeleteImage"
+                                android:id="@+id/settingsPrivacyPublicProfileImage"
                                 android:layout_width="30dp"
                                 android:layout_height="0dp"
-                                android:src="@drawable/ic_heart_broken_24"
+                                android:src="@drawable/ic_info_24"
                                 android:tint="?attr/colorPrimary"
                                 app:layout_constraintDimensionRatio="1:1"
                                 app:layout_constraintStart_toStartOf="parent"
@@ -289,15 +321,123 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="10dp"
-                                android:text="@string/settingsAccountCloseAccount"
+                                android:text="@string/settingsPrivacyPublicProfile"
                                 android:textSize="17sp"
                                 android:textStyle="bold"
                                 android:textColor="@color/textBold"
-                                app:layout_constraintStart_toEndOf="@id/settingsAccountDeleteImage"
+                                app:layout_constraintStart_toEndOf="@id/settingsPrivacyPublicProfileImage"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/settingsPrivacyPublicProfileSwitch"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:clickable="false"
+                                app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
                                 app:layout_constraintBottom_toBottomOf="parent"/>
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/settingsPrivacyViewContent"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:layout_marginTop="10dp"
+                        app:cardBackgroundColor="@color/basicBackgroundAlternate"
+                        app:cardCornerRadius="12.5dp"
+                        app:contentPadding="5dp"
+                        app:cardElevation="0dp"
+                        android:contentDescription="@string/settingsPrivacyShowImages"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/settingsPrivacyPublicProfile">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/settingsPrivacyViewContentImage"
+                                android:layout_width="30dp"
+                                android:layout_height="0dp"
+                                android:src="@drawable/ic_info_24"
+                                android:tint="?attr/colorPrimary"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:text="@string/settingsPrivacyShowImages"
+                                android:textSize="17sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/textBold"
+                                app:layout_constraintStart_toEndOf="@id/settingsPrivacyViewContentImage"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/settingsPreferencesContentSwitch"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:clickable="false"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/settingsPrivacyBlocked"
+                        android:layout_width="0dp"
+                        android:layout_height="55dp"
+                        android:layout_marginTop="10dp"
+                        app:cardBackgroundColor="@color/basicBackgroundAlternate"
+                        app:cardCornerRadius="12.5dp"
+                        app:contentPadding="5dp"
+                        app:cardElevation="0dp"
+                        android:contentDescription="@string/settingsPrivacyShowBlocked"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/settingsPrivacyViewContent">
+
+                       <androidx.constraintlayout.widget.ConstraintLayout
+                           android:layout_width="match_parent"
+                           android:layout_height="match_parent">
+
+                           <com.google.android.material.imageview.ShapeableImageView
+                               android:id="@+id/settingsPrivacyBlockedImage"
+                               android:layout_width="30dp"
+                               android:layout_height="0dp"
+                               android:src="@drawable/ic_info_24"
+                               android:tint="?attr/colorPrimary"
+                               app:layout_constraintDimensionRatio="1:1"
+                               app:layout_constraintStart_toStartOf="parent"
+                               app:layout_constraintTop_toTopOf="parent"
+                               app:layout_constraintBottom_toBottomOf="parent"/>
+
+                           <TextView
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:layout_marginStart="10dp"
+                               android:text="@string/settingsPrivacyShowBlocked"
+                               android:textSize="17sp"
+                               android:textStyle="bold"
+                               android:textColor="@color/textBold"
+                               app:layout_constraintStart_toEndOf="@id/settingsPrivacyBlockedImage"
+                               app:layout_constraintTop_toTopOf="parent"
+                               app:layout_constraintBottom_toBottomOf="parent"/>
+
+                       </androidx.constraintlayout.widget.ConstraintLayout>
 
                     </com.google.android.material.card.MaterialCardView>
 
@@ -316,7 +456,7 @@
                 android:textSize="24sp"
                 app:layout_constraintStart_toStartOf="@id/settingsAccountTitle"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/settingsAccountParent"/>
+                app:layout_constraintTop_toBottomOf="@id/settingsPrivacyParent"/>
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/settingsPreferenceParent"
@@ -336,116 +476,9 @@
                     android:layout_height="match_parent">
 
                     <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/settingsPreferencesPublicProfile"
-                        android:layout_width="0dp"
-                        android:layout_height="55dp"
-                        app:cardBackgroundColor="@color/basicBackgroundAlternate"
-                        app:cardCornerRadius="12.5dp"
-                        app:contentPadding="5dp"
-                        app:cardElevation="0dp"
-                        android:contentDescription="@string/settingsPreferencesPublicProfile"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                            <com.google.android.material.imageview.ShapeableImageView
-                                android:id="@+id/settingsPreferencesPublicProfileImage"
-                                android:layout_width="30dp"
-                                android:layout_height="0dp"
-                                android:src="@drawable/ic_info_24"
-                                android:tint="?attr/colorPrimary"
-                                app:layout_constraintDimensionRatio="1:1"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintBottom_toBottomOf="parent"/>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="10dp"
-                                android:text="@string/settingsPreferencesPublicProfile"
-                                android:textSize="17sp"
-                                android:textStyle="bold"
-                                android:textColor="@color/textBold"
-                                app:layout_constraintStart_toEndOf="@id/settingsPreferencesPublicProfileImage"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintBottom_toBottomOf="parent"/>
-
-                            <com.google.android.material.switchmaterial.SwitchMaterial
-                                android:id="@+id/settingsPreferencesPublicProfileSwitch"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:clickable="false"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintBottom_toBottomOf="parent"/>
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/settingsPreferencesContent"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:cardBackgroundColor="@color/basicBackgroundAlternate"
-                        app:cardCornerRadius="12.5dp"
-                        app:contentPadding="5dp"
-                        app:cardElevation="0dp"
-                        android:contentDescription="@string/settingsPreferencesShowImages"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/settingsPreferencesPublicProfile">
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                            <com.google.android.material.imageview.ShapeableImageView
-                                android:id="@+id/settingsPreferencesContentImage"
-                                android:layout_width="30dp"
-                                android:layout_height="0dp"
-                                android:src="@drawable/ic_info_24"
-                                android:tint="?attr/colorPrimary"
-                                app:layout_constraintDimensionRatio="1:1"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintBottom_toBottomOf="parent"/>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="10dp"
-                                android:text="@string/settingsPreferencesShowImages"
-                                android:textSize="17sp"
-                                android:textStyle="bold"
-                                android:textColor="@color/textBold"
-                                app:layout_constraintStart_toEndOf="@id/settingsPreferencesContentImage"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintBottom_toBottomOf="parent"/>
-
-                            <com.google.android.material.switchmaterial.SwitchMaterial
-                                android:id="@+id/settingsPreferencesContentSwitch"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:clickable="false"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintBottom_toBottomOf="parent"/>
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
                         android:id="@+id/settingsPreferencesAlternate"
                         android:layout_width="match_parent"
                         android:layout_height="55dp"
-                        android:layout_marginTop="10dp"
                         app:cardBackgroundColor="@color/basicBackgroundAlternate"
                         app:cardCornerRadius="12.5dp"
                         app:contentPadding="5dp"
@@ -453,7 +486,7 @@
                         android:contentDescription="@string/settingsPreferencesChangeTheme"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/settingsPreferencesContent">
+                        app:layout_constraintTop_toTopOf="parent">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"
@@ -602,6 +635,83 @@
                                 android:textStyle="bold"
                                 android:textColor="@color/textBold"
                                 app:layout_constraintStart_toEndOf="@id/settingsDocumentsTermsImage"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/settingsDangerTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/chatRoomSettingsDanger"
+                android:textColor="@color/textBold"
+                android:textStyle="bold"
+                android:textSize="24sp"
+                app:layout_constraintStart_toStartOf="@id/settingsDocumentsTitle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/settingsDocuments"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:cardBackgroundColor="@color/basicBackgroundAlternate"
+                app:cardCornerRadius="12.5dp"
+                app:cardElevation="0dp"
+                app:contentPadding="10dp"
+                app:layout_constraintStart_toStartOf="@id/settingsDangerTitle"
+                app:layout_constraintEnd_toEndOf="@id/settingsDangerTitle"
+                app:layout_constraintTop_toBottomOf="@id/settingsDangerTitle">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/settingsDangerCloseAccount"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        app:cardBackgroundColor="@color/basicBackgroundAlternate"
+                        app:cardCornerRadius="12.5dp"
+                        app:contentPadding="5dp"
+                        app:cardElevation="0dp"
+                        android:contentDescription="@string/settingsDocumentsPrivacy"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/settingsDangerCloseAccountImage"
+                                android:layout_width="30dp"
+                                android:layout_height="0dp"
+                                android:src="@drawable/ic_heart_broken_24"
+                                android:tint="?attr/colorPrimary"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:text="@string/settingsDangerCloseAccount"
+                                android:textSize="17sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/textBold"
+                                app:layout_constraintStart_toEndOf="@id/settingsDangerCloseAccountImage"
                                 app:layout_constraintTop_toTopOf="parent"
                                 app:layout_constraintBottom_toBottomOf="parent"/>
 

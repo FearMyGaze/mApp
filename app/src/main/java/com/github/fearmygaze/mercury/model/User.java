@@ -90,16 +90,11 @@ public class User implements Parcelable {
     }
 
     @Ignore //Register
-    public User(@NonNull String id, String username) {
+    public User(@NonNull String id, String username, String image) {
         this.id = id;
         this.username = username;
         this.isProfileOpen = true;
-        this.image = "default";
-        this.status = "";
-        this.location = "";
-        this.job = "";
-        this.website = "";
-        this.notificationToken = "";
+        this.image = image;
     }
 
     @Ignore //UserProfile

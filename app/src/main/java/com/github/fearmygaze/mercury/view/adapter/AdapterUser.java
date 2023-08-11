@@ -4,7 +4,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
@@ -12,8 +11,6 @@ import androidx.appcompat.content.res.AppCompatResources;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.firebase.Friends;
-import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
 import com.google.android.material.card.MaterialCardView;
@@ -78,7 +75,7 @@ public class AdapterUser extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 UserBlockedVH blockedVH = (UserBlockedVH) holder;
                 Tools.profileImage(users.get(position).getImage(), blockedVH.image.getContext()).into(blockedVH.image);
                 blockedVH.username.setText(users.get(position).getUsername());
-                blockedVH.status.setText(users.get(position).getStatus());
+//                blockedVH.status.setText(users.get(position).getStatus());
                 blockedVH.root.setOnClickListener(v -> Tools.goToProfileViewer(id, users.get(holder.getAbsoluteAdapterPosition()), v.getContext()));
                 blockedVH.unBlock.setOnClickListener(v -> {
                     MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(v.getContext());
@@ -86,23 +83,24 @@ public class AdapterUser extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             .setTitle("Unblock" + users.get(position).getUsername() + "?")
                             .setMessage("They will be able to follow you")
                             .setNegativeButton(R.string.generalCancel, (dialog, i) -> dialog.dismiss())
-                            .setPositiveButton(R.string.generalConfirm, (dialog, i) ->
-                                    Friends.removeBlock(id, users.get(position).getId(), v.getContext(), new OnResponseListener() {
-                                        @Override
-                                        public void onSuccess(int code) {
-                                            if (code == 0) {
-                                                Toast.makeText(v.getContext(), "Success", Toast.LENGTH_SHORT).show();
-                                                clearUser(holder.getAbsoluteAdapterPosition());
-                                            } else {
-                                                Toast.makeText(v.getContext(), "An Error has occurred", Toast.LENGTH_SHORT).show();
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onFailure(String message) {
-                                            Toast.makeText(v.getContext(), message, Toast.LENGTH_SHORT).show();
-                                        }
-                                    }))
+                            .setPositiveButton(R.string.generalConfirm, (dialog, i) ->{
+//                                Friends.unBlock(id, users.get(position).getId(), v.getContext(), new OnResponseListener() {
+//                                    @Override
+//                                    public void onSuccess(int code) {
+//                                        if (code == 0) {
+//                                            Toast.makeText(v.getContext(), "Success", Toast.LENGTH_SHORT).show();
+//                                            clearUser(holder.getAbsoluteAdapterPosition());
+//                                        } else {
+//                                            Toast.makeText(v.getContext(), "An Error has occurred", Toast.LENGTH_SHORT).show();
+//                                        }
+//                                    }
+//
+//                                    @Override
+//                                    public void onFailure(String message) {
+//                                        Toast.makeText(v.getContext(), message, Toast.LENGTH_SHORT).show();
+//                                    }
+//                                });
+                            })
                             .show();
                 });
                 break;
@@ -132,40 +130,40 @@ public class AdapterUser extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 requestVH.username.setText(users.get(position).getUsername());
                 requestVH.status.setText(users.get(position).getStatus());
                 requestVH.root.setOnClickListener(v -> Tools.goToProfileViewer(id, users.get(holder.getAbsoluteAdapterPosition()), v.getContext()));
-                requestVH.accept.setOnClickListener(v ->
-                        Friends.answerRequest(id, users.get(position).getId(), Friends.OPTION_ACCEPT, v.getContext(), new OnResponseListener() {
-                            @Override
-                            public void onSuccess(int code) {
-                                if (code == 0) {
-                                    Toast.makeText(v.getContext(), "Success", Toast.LENGTH_SHORT).show();
-                                    clearUser(holder.getAbsoluteAdapterPosition());
-                                } else
-                                    Toast.makeText(v.getContext(), "Error", Toast.LENGTH_SHORT).show();
-                            }
-
-                            @Override
-                            public void onFailure(String message) {
-                                Toast.makeText(v.getContext(), message, Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                );
-                requestVH.dismiss.setOnClickListener(v ->
-                        Friends.answerRequest(id, users.get(position).getId(), Friends.OPTION_ACCEPT, v.getContext(), new OnResponseListener() {
-                            @Override
-                            public void onSuccess(int code) {
-                                if (code == 0) {
-                                    Toast.makeText(v.getContext(), "Success", Toast.LENGTH_SHORT).show();
-                                    clearUser(holder.getAbsoluteAdapterPosition());
-                                } else
-                                    Toast.makeText(v.getContext(), "Error", Toast.LENGTH_SHORT).show();
-                            }
-
-                            @Override
-                            public void onFailure(String message) {
-                                Toast.makeText(v.getContext(), message, Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                );
+                requestVH.accept.setOnClickListener(v -> {
+//                    Friends.answerRequest(id, users.get(position).getId(), Friends.OPTION_ACCEPT, v.getContext(), new OnResponseListener() {
+//                        @Override
+//                        public void onSuccess(int code) {
+//                            if (code == 0) {
+//                                Toast.makeText(v.getContext(), "Success", Toast.LENGTH_SHORT).show();
+//                                clearUser(holder.getAbsoluteAdapterPosition());
+//                            } else
+//                                Toast.makeText(v.getContext(), "Error", Toast.LENGTH_SHORT).show();
+//                        }
+//
+//                        @Override
+//                        public void onFailure(String message) {
+//                            Toast.makeText(v.getContext(), message, Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
+                });
+                requestVH.dismiss.setOnClickListener(v -> {
+//                    Friends.answerRequest(id, users.get(position).getId(), Friends.OPTION_ACCEPT, v.getContext(), new OnResponseListener() {
+//                        @Override
+//                        public void onSuccess(int code) {
+//                            if (code == 0) {
+//                                Toast.makeText(v.getContext(), "Success", Toast.LENGTH_SHORT).show();
+//                                clearUser(holder.getAbsoluteAdapterPosition());
+//                            } else
+//                                Toast.makeText(v.getContext(), "Error", Toast.LENGTH_SHORT).show();
+//                        }
+//
+//                        @Override
+//                        public void onFailure(String message) {
+//                            Toast.makeText(v.getContext(), message, Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
+                });
                 break;
         }
     }
@@ -248,7 +246,7 @@ public class AdapterUser extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             root = itemView.findViewById(R.id.adapterUserRequestRoot);
             image = itemView.findViewById(R.id.adapterUserRequestImage);
             username = itemView.findViewById(R.id.adapterUserRequestUsername);
-            status = itemView.findViewById(R.id.adapterUserRequestStatus);
+//            status = itemView.findViewById(R.id.adapterUserRequestStatus);
             accept = itemView.findViewById(R.id.adapterUserRequestAccept);
             dismiss = itemView.findViewById(R.id.adapterUserRequestDismiss);
         }
@@ -257,14 +255,14 @@ public class AdapterUser extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     protected static class UserBlockedVH extends RecyclerView.ViewHolder {
         MaterialCardView root, unBlock;
         ShapeableImageView image;
-        TextView username, status;
+        TextView username;
 
         public UserBlockedVH(@NonNull View itemView) {
             super(itemView);
             root = itemView.findViewById(R.id.adapterUserBlockedRoot);
             image = itemView.findViewById(R.id.adapterUserBlockedImage);
             username = itemView.findViewById(R.id.adapterUserBlockedUsername);
-            status = itemView.findViewById(R.id.adapterUserBlockedStatus);
+//            status = itemView.findViewById(R.id.adapterUserBlockedStatus);
             unBlock = itemView.findViewById(R.id.adapterUserBlockedUnBlock);
         }
     }

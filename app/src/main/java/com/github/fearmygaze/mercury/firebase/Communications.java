@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.github.fearmygaze.mercury.firebase.interfaces.OnRoomDataListener;
 import com.github.fearmygaze.mercury.model.Room;
-import com.github.fearmygaze.mercury.model.RoomMetaData;
+import com.github.fearmygaze.mercury.model.RoomMetadata;
 import com.github.fearmygaze.mercury.model.User;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -45,7 +45,7 @@ public class Communications {
 
     private static void createRoom(User user, List<User> users, Context context, OnRoomDataListener listener) {
         DocumentReference reference = FirebaseFirestore.getInstance().collection(Room.COLLECTION).document();
-        Room data = new Room(reference.getId(), Room.createName(user, users), user.getId(), users.size() > 1, Room.addMembers(user, users), RoomMetaData.create(user, users));
+        Room data = new Room(reference.getId(), Room.createName(user, users), user.getId(), users.size() > 1, Room.addMembers(user, users), RoomMetadata.create(user, users));
         reference
                 .set(data)
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
