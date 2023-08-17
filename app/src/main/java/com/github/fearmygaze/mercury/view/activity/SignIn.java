@@ -30,7 +30,7 @@ public class SignIn extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_in);
+        setContentView(R.layout.fragment_sign_in);
 
         emailError = findViewById(R.id.signInEmailError);
         email = findViewById(R.id.signInEmail);

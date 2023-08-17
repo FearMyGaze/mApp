@@ -15,20 +15,24 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Mercury"
-        android:usesCleartextTraffic="true"
         tools:targetApi="33">
         <activity
-            android:name=".view.activity.Main"
+            android:name=".view.activity.Starting"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustNothing"
+            android:windowSoftInputMode="adjustResize"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".view.activity.Main"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustNothing"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".view.util.ShowBlockedUsers"
             android:exported="false"
