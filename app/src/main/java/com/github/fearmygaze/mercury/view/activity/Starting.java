@@ -1,43 +1,75 @@
 package com.github.fearmygaze.mercury.view.activity;
 
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
+import com.github.fearmygaze.mercury.BuildConfig;
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.database.AppDatabase;
-import com.github.fearmygaze.mercury.view.fragment.Loading;
-import com.github.fearmygaze.mercury.view.fragment.SignIn;
+import com.github.fearmygaze.mercury.firebase.AuthRefresh;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class Starting extends AppCompatActivity {
+
+    private FirebaseAuth.AuthStateListener authStateListener;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_starting);
 
-        if (AppDatabase.getInstance(Starting.this).userDao().getAllUsers().size() > 0) {
-            replaceFragment(Loading.newInstance());
-        } else {
-            replaceFragment(SignIn.newInstance());
-        }
+        JobScheduler jobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
+        JobInfo jobInfo = new JobInfo.Builder(123, new ComponentName(Starting.this, AuthRefresh.class))
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                .setPersisted(true)
+                .setPeriodic(interval())
+                .build();
+        jobScheduler.schedule(jobInfo);
 
+        authStateListener = firebaseAuth -> {
+            FirebaseUser user = firebaseAuth.getCurrentUser();
+            if (user == null) {
+                finish();
+                startActivity(new Intent(Starting.this, SignIn.class));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            } else if (!user.isEmailVerified()) {
+                finish();
+                startActivity(new Intent(Starting.this, SignIn.class));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            } else {
+                finish();
+                startActivity(new Intent(Starting.this, Main.class));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        };
     }
-
 
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
+    protected void onStart() {
+        super.onStart();
+        FirebaseAuth.getInstance().addAuthStateListener(authStateListener);
     }
 
-    public void replaceFragment(Fragment fragment) {
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = manager.beginTransaction();
-        fragmentTransaction.replace(R.id.startingFrame, fragment, fragment.getTag());
-        fragmentTransaction.commit();
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (authStateListener != null) {
+            FirebaseAuth.getInstance().removeAuthStateListener(authStateListener);
+        }
+    }
+
+    private static int interval() {
+        if (BuildConfig.DEBUG) {
+            return 900_000;
+        } else {
+            return 1_800_000;
+        }
     }
 }

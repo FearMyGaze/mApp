@@ -67,6 +67,11 @@ public class Tools {
         preference.putBoolean(key, value);
     }
 
+    public static void writeStrPreference(String key, String value, Context context) {
+        PrivatePreference preference = new PrivatePreference(context);
+        preference.putString(key, value);
+    }
+
     public static boolean getBoolPreference(String key, Context context) {
         PrivatePreference preference = new PrivatePreference(context);
         if (preference.contains(key)) {

@@ -112,6 +112,46 @@ public class Main extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        if (navigation.getSelectedItemId() != R.id.mainOptionHome) {
+            navigation.setSelectedItemId(R.id.mainOptionHome);
+        }
+        FirebaseUser oldFireUser = FirebaseAuth.getInstance().getCurrentUser();
+        Auth.rememberMe(oldFireUser, Main.this, new OnUserResponseListener() {
+            @Override
+            public void onSuccess(int code, User data) {
+                switch (code) {
+                    case 0:
+                        user = data;
+                        Tools.profileImage(user.getImage(), Main.this).into(profileImage);
+                        break;
+                    case 1:
+                        FirebaseAuth.getInstance().signOut();
+                        Toast.makeText(Main.this, "An unexpected error occurred", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(Main.this, SignIn.class));
+                        finish();
+                        break;
+                    case 2:
+                        FirebaseAuth.getInstance().signOut();
+                        Toast.makeText(Main.this, "You need to activate your account", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(Main.this, SignIn.class));
+                        finish();
+                        break;
+                }
+            }
+
+            @Override
+            public void onFailure(String message) {
+                FirebaseAuth.getInstance().signOut();
+                Toast.makeText(Main.this, message, Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(Main.this, SignIn.class));
+                finish();
+            }
+        });
+        super.onResume();
+    }
+
+    @Override
     public void onBackPressed() {
         super.onBackPressed();
     }
@@ -132,9 +172,9 @@ public class Main extends AppCompatActivity {
     }
 
     private void rememberMe(Bundle bundle) {
-        FirebaseUser oldFireUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (oldFireUser != null) {
-            User oldUser = AppDatabase.getInstance(Main.this).userDao().getUserByUserID(oldFireUser.getUid());
+        String id = Tools.getStrPreference("current", Main.this);
+        if (id != null) {
+            User oldUser = AppDatabase.getInstance(Main.this).userDao().getUserByUserID(id);
             if (oldUser != null) {
                 user = oldUser;
                 Tools.profileImage(user.getImage(), Main.this).into(profileImage);
@@ -142,39 +182,7 @@ public class Main extends AppCompatActivity {
                     navigation.setSelectedItemId(R.id.mainOptionHome);
                 }
             }
-        } else FirebaseAuth.getInstance().signOut();
-
-        Auth.rememberMe(oldFireUser, Main.this, new OnUserResponseListener() {
-            @Override
-            public void onSuccess(int code, User data) {
-                switch (code) {
-                    case 0:
-                        user = data;
-                        Tools.profileImage(user.getImage(), Main.this).into(profileImage);
-                        break;
-                    case 1:
-                        FirebaseAuth.getInstance().signOut();
-                        Toast.makeText(Main.this, "An unexpected error occurred", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(Main.this, Starting.class));
-                        finish();
-                        break;
-                    case 2:
-                        FirebaseAuth.getInstance().signOut();
-                        Toast.makeText(Main.this, "You need to activate your account", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(Main.this, Starting.class));
-                        finish();
-                        break;
-                }
-            }
-
-            @Override
-            public void onFailure(String message) {
-                FirebaseAuth.getInstance().signOut();
-                Toast.makeText(Main.this, message, Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(Main.this, SignIn.class));
-                finish();
-            }
-        });
+        }
     }
 
 }

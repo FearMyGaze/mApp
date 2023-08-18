@@ -114,7 +114,7 @@ public class Auth {
                 });
     }
 
-    public static void signIn(String email, String password, Context context, OnResponseListener listener) {
+    public static void signIn(String email, String password, Context context, OnDataResponseListener listener) {
         FirebaseAuth.getInstance()
                 .signInWithEmailAndPassword(email, password)
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
@@ -127,12 +127,12 @@ public class Auth {
                                     .get()
                                     .addOnSuccessListener(documentSnapshot -> {
                                         AppDatabase.getInstance(context).userDao().insertUser(documentSnapshot.toObject(User.class));
-                                        listener.onSuccess(0);
+                                        listener.onSuccess(0, user.getUid());
                                     });
                         } else {
-                            listener.onSuccess(1);
+                            listener.onSuccess(1, null);
                         }
-                    } else listener.onSuccess(-1);
+                    } else listener.onSuccess(-1, null);
                 });
     }
 

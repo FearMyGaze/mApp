@@ -33,7 +33,7 @@ public class SignUp extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_sign_up);
+        setContentView(R.layout.activity_sign_up);
 
         goBack = findViewById(R.id.signupGoBack);
         usernameError = findViewById(R.id.signUpUsernameError);
@@ -121,9 +121,11 @@ public class SignUp extends AppCompatActivity {
                                 break;
                             case 1:
                                 Tools.setErrorToLayout(emailError, getString(R.string.authEmail), true);
+                                email.requestFocus();
                                 break;
                             case 2:
                                 Tools.setErrorToLayout(usernameError, getString(R.string.authUsername), true);
+                                username.requestFocus();
                                 break;
                         }
                     }

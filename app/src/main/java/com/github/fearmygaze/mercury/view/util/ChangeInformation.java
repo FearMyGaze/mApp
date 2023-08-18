@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.database.AppDatabase;
 import com.github.fearmygaze.mercury.firebase.Auth;
-import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
+import com.github.fearmygaze.mercury.firebase.interfaces.OnDataResponseListener;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.RegEx;
 import com.google.android.material.button.MaterialButton;
@@ -77,13 +77,13 @@ public class ChangeInformation extends AppCompatActivity {
         next.setOnClickListener(v -> {
             FirebaseAuth.getInstance().signOut();
             String password = Objects.requireNonNull(verifyPassword.getText()).toString().trim();
-            Auth.signIn(userEmail, password, ChangeInformation.this, new OnResponseListener() {
+            Auth.signIn(userEmail, password, ChangeInformation.this, new OnDataResponseListener() {
                 @Override
-                public void onSuccess(int code) {
+                public void onSuccess(int code, Object data) {
                     if (code == 0) {
                         if (changeType.equals("email")) {
                             startActivity(new Intent(ChangeInformation.this, ChangeEmail.class)
-                                    .putExtra("id", user.getId())
+                                    .putExtra("id", data.toString())
                                     .putExtra("email", userEmail));
                             finish();
                         } else {

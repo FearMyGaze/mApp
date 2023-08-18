@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.firebase.Auth;
+import com.github.fearmygaze.mercury.firebase.interfaces.OnDataResponseListener;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
 import com.github.fearmygaze.mercury.util.RegEx;
 import com.github.fearmygaze.mercury.util.Tools;
@@ -30,7 +31,7 @@ public class SignIn extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_sign_in);
+        setContentView(R.layout.activity_sign_in);
 
         emailError = findViewById(R.id.signInEmailError);
         email = findViewById(R.id.signInEmail);
@@ -57,7 +58,6 @@ public class SignIn extends AppCompatActivity {
                 forgotPassword.setEnabled(RegEx.isEmailValid(email, emailError, SignIn.this));
             }
         });
-
 
         password.addTextChangedListener(new TextWatcher() {
             @Override
@@ -94,15 +94,18 @@ public class SignIn extends AppCompatActivity {
 
         signIn.setOnClickListener(v -> {
             if (!emailError.isErrorEnabled() && !passwordError.isErrorEnabled()) {
+                Tools.closeKeyboard(SignIn.this);
                 Auth.signIn(Objects.requireNonNull(email.getText()).toString().trim(),
                         Objects.requireNonNull(password.getText()).toString().trim(),
-                        SignIn.this, new OnResponseListener() {
+                        SignIn.this, new OnDataResponseListener() {
                             @Override
-                            public void onSuccess(int code) {
+                            public void onSuccess(int code, Object data) {
                                 if (code == 0) {
                                     Tools.createSettingsPreference(SignIn.this);
-                                    startActivity(new Intent(SignIn.this, Main.class));
+                                    Tools.writeStrPreference("current", data.toString(), SignIn.this);
                                     finish();
+                                    startActivity(new Intent(SignIn.this, Main.class));
+                                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                                 } else if (code == 1) {
                                     Snackbar.make(signIn, "Please activate your account, or press 'send' to send a new verification email", 9000)
                                             .setAction("Send", view ->
