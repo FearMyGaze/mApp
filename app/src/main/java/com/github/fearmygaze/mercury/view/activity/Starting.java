@@ -6,6 +6,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +26,8 @@ public class Starting extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_starting);
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
 
         JobScheduler jobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
         JobInfo jobInfo = new JobInfo.Builder(123, new ComponentName(Starting.this, AuthRefresh.class))
@@ -44,9 +48,11 @@ public class Starting extends AppCompatActivity {
                 startActivity(new Intent(Starting.this, SignIn.class));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             } else {
-                finish();
-                startActivity(new Intent(Starting.this, Main.class));
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                new Handler().postDelayed(() -> {
+                    finish();
+                    startActivity(new Intent(Starting.this, Main.class));
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                }, 1000);
             }
         };
     }
