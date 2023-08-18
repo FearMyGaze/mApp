@@ -11,7 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.database.AppDatabase;
 import com.github.fearmygaze.mercury.view.fragment.Loading;
-import com.github.fearmygaze.mercury.view.fragment.SignUp;
+import com.github.fearmygaze.mercury.view.fragment.SignIn;
 
 public class Starting extends AppCompatActivity {
 
@@ -20,16 +20,10 @@ public class Starting extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_starting);
 
-        /*
-         * TODO: We need to check if the room has saved users
-         *       if yes then start the AuthStateListener
-         *           if that pass the Main else SignIn
-         *       if not show the signUp
-         * */
         if (AppDatabase.getInstance(Starting.this).userDao().getAllUsers().size() > 0) {
-            replaceFragment(Loading.newInstance(), getSupportFragmentManager());
-        }else {
-            replaceFragment(SignUp.newInstance(), getSupportFragmentManager());
+            replaceFragment(Loading.newInstance());
+        } else {
+            replaceFragment(SignIn.newInstance());
         }
 
     }
@@ -40,7 +34,8 @@ public class Starting extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    public static void replaceFragment(Fragment fragment, FragmentManager manager) {
+    public void replaceFragment(Fragment fragment) {
+        FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = manager.beginTransaction();
         fragmentTransaction.replace(R.id.startingFrame, fragment, fragment.getTag());
         fragmentTransaction.commit();
