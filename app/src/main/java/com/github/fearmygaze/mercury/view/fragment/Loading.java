@@ -45,14 +45,12 @@ public class Loading extends Fragment {
                 ((Starting) requireActivity()).replaceFragment(SignIn.newInstance());
             } else {
                 JobScheduler jobScheduler = (JobScheduler) view.getContext().getSystemService(Context.JOB_SCHEDULER_SERVICE);
-
                 JobInfo jobInfo = new JobInfo.Builder(123, new ComponentName(view.getContext(), AuthRefresh.class))
-                        .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY) // Specify network requirements
+                        .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
                         .setPersisted(true)
                         .setPeriodic(interval())
                         .build();
                 jobScheduler.schedule(jobInfo);
-
                 startActivity(new Intent(view.getContext(), Main.class));
                 requireActivity().finish();
             }

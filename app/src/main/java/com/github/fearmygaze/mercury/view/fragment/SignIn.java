@@ -114,6 +114,7 @@ public class SignIn extends Fragment {
                         view.getContext(), new OnResponseListener() {
                             @Override
                             public void onSuccess(int code) {
+                                Tools.closeKeyboard(v.getContext());
                                 if (code == 0) {
                                     Tools.createSettingsPreference(view.getContext());
                                     ((Starting) requireActivity()).replaceFragment(Loading.newInstance());

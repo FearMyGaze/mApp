@@ -155,13 +155,13 @@ public class Main extends AppCompatActivity {
                     case 1:
                         FirebaseAuth.getInstance().signOut();
                         Toast.makeText(Main.this, "An unexpected error occurred", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(Main.this, SignIn.class));
+                        startActivity(new Intent(Main.this, Starting.class));
                         finish();
                         break;
                     case 2:
                         FirebaseAuth.getInstance().signOut();
                         Toast.makeText(Main.this, "You need to activate your account", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(Main.this, SignIn.class));
+                        startActivity(new Intent(Main.this, Starting.class));
                         finish();
                         break;
                 }
