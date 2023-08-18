@@ -52,7 +52,7 @@ public class Starting extends AppCompatActivity {
                     finish();
                     startActivity(new Intent(Starting.this, Main.class));
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                }, 1000);
+                }, 1234);
             }
         };
     }
