@@ -21,6 +21,7 @@
     <string name="generalConfirm">Confirm</string>
     <string name="generalPhoto">Photo</string>
     <string name="generalCreate">Create</string>
+    <string name="generalClear">Clear</string>
 
     <!-- SignIn (Activity) -->
     <string name="signInWelcome">Welcome</string>
@@ -37,10 +38,14 @@
     <string name="signUpDialogTitle">Warning</string>
     <string name="signUpDialogMessage">Please wait while we create your user</string>
 
-    <!-- Main (Activity) -->
-    <string name="mainExtendedFab">Actions</string>
-    <string name="mainChatFab">Chat</string>
-    <string name="mainSearchFab">Search</string>
+    <!-- Search (Sheet) -->
+    <string name="searchBox">Search…</string>
+    <string name="searchClear">Clear</string>
+    <string name="searchCachedTitle">Recent</string>
+    <string name="dialogDeleteAllCachedTitle">Clear all recent searches?</string>
+    <string name="dialogDeleteAllCachedMessage">This can\'t be undone and you will remove all your recent searches.</string>
+    <string name="dialogDeleteCachedPart1">Remove</string>
+    <string name="dialogDeleteCachedPart2">from your history?</string>
 
     <!-- Search (Activity) -->
     <string name="searchContainer">Search</string>

@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.SimpleItemAnimator;
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.github.fearmygaze.mercury.R;
+import com.github.fearmygaze.mercury.database.AppDatabase;
+import com.github.fearmygaze.mercury.model.CachedProfile;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
 import com.google.android.material.card.MaterialCardView;
@@ -26,11 +28,14 @@ public class AdapterSearch extends FirestorePagingAdapter<User, AdapterSearch.Se
     RecyclerView recyclerView;
     Activity activity;
 
-    public AdapterSearch(User user, @NonNull FirestorePagingOptions<User> options, RecyclerView recyclerView, Activity activity) {
+    private final SearchAdapter listener;
+
+    public AdapterSearch(User user, @NonNull FirestorePagingOptions<User> options, RecyclerView recyclerView, Activity activity, SearchAdapter listener) {
         super(options);
         this.myUser = user;
         this.recyclerView = recyclerView;
         this.activity = activity;
+        this.listener = listener;
         ((SimpleItemAnimator) Objects.requireNonNull(recyclerView.getItemAnimator())).setSupportsChangeAnimations(false);
     }
 
@@ -45,7 +50,11 @@ public class AdapterSearch extends FirestorePagingAdapter<User, AdapterSearch.Se
         Tools.profileImage(model.getImage(), holder.itemView.getContext()).into(holder.image);
         holder.username.setText(model.getUsername());
         holder.status.setText(model.getStatus());
-        holder.root.setOnClickListener(v -> Tools.goToProfileViewer(myUser.getId(), model, v.getContext()));
+        holder.root.setOnClickListener(v -> {
+            listener.onClick();
+            AppDatabase.getInstance(v.getContext()).cachedProfile().insert(new CachedProfile(model.getId(), model.getUsername(), model.getImage()));
+            Tools.goToProfileViewer(myUser.getId(), model, v.getContext());
+        });
     }
 
     public static class SearchVH extends RecyclerView.ViewHolder {
@@ -62,4 +71,7 @@ public class AdapterSearch extends FirestorePagingAdapter<User, AdapterSearch.Se
         }
     }
 
+    public interface SearchAdapter {
+        void onClick();
+    }
 }

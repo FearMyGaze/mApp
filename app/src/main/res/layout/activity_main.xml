@@ -1,138 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/basicBackground"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/mainAppBar"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
-        android:background="@color/basicBackground"
-        app:elevation="0dp"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/mainAppBar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="5dp">
+            android:layout_height="?actionBarSize"
+            android:background="@color/basicBackground"
+            app:elevation="0dp"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/mainProfileImageParent"
-                android:layout_width="40dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="5dp"
-                app:cardCornerRadius="12.5dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="@color/basicBackground"
-                app:contentPadding="0dp"
-                app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent">
-
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/mainProfileImage"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_launcher_background"
-                    app:shapeAppearance="@style/RectComponent"/>
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <TextView
-                android:id="@+id/mainAppName"
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="20dp"
-                android:gravity="center"
-                android:text="@string/app_name"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="@color/textBold"
-                android:textAlignment="center"
-                app:layout_constraintStart_toEndOf="@id/mainProfileImageParent"/>
+                android:padding="5dp">
 
-            <EditText
-                android:id="@+id/mainSearchBar"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="10dp"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:visibility="gone"
-                android:background="@drawable/search_color"
-                android:textColor="@color/textBold"
-                android:hint="Search..."
-                android:autofillHints="name"
-                android:contentDescription="Search..."
-                android:textColorHint="#A0A0A0"
-                android:textSize="16sp"
-                android:imeOptions="actionDone"
-                android:inputType="text"
-                app:layout_constraintStart_toEndOf="@id/mainProfileImageParent"
-                app:layout_constraintEnd_toStartOf="@id/mainSettings"
-                app:layout_constraintTop_toTopOf="@id/mainProfileImageParent"
-                app:layout_constraintBottom_toBottomOf="@id/mainProfileImageParent" />
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/mainProfileImageParent"
+                    android:layout_width="40dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="5dp"
+                    app:cardCornerRadius="12.5dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@color/basicBackground"
+                    app:contentPadding="0dp"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent">
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/mainSettings"
-                android:layout_width="30dp"
-                android:layout_height="0dp"
-                android:layout_marginEnd="8dp"
-                app:cardCornerRadius="60dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="@color/basicBackground"
-                app:contentPadding="2dp"
-                app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent">
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/mainProfileImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_launcher_background"
+                        app:shapeAppearance="@style/RectComponent"/>
 
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="match_parent"
+                </com.google.android.material.card.MaterialCardView>
+
+                <TextView
+                    android:id="@+id/mainAppName"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:src="@drawable/ic_settings_24"
-                    android:scaleType="fitCenter"
-                    app:tint="?colorPrimary"
-                    app:shapeAppearance="@style/RectComponent"/>
+                    android:layout_marginStart="20dp"
+                    android:gravity="center"
+                    android:text="@string/app_name"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/textBold"
+                    android:textAlignment="center"
+                    app:layout_constraintStart_toEndOf="@id/mainProfileImageParent"/>
 
-            </com.google.android.material.card.MaterialCardView>
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/mainSearch"
+                    android:layout_width="30dp"
+                    android:layout_height="0dp"
+                    android:layout_marginEnd="8dp"
+                    app:cardCornerRadius="60dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@color/basicBackground"
+                    app:contentPadding="2dp"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toStartOf="@id/mainSettings"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent">
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_search_24"
+                        android:scaleType="fitCenter"
+                        app:tint="?colorPrimary"
+                        app:shapeAppearance="@style/RectComponent"/>
 
-    </com.google.android.material.appbar.AppBarLayout>
+                </com.google.android.material.card.MaterialCardView>
 
-    <com.google.android.material.divider.MaterialDivider
-        android:id="@+id/mainAppBarDivider"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/mainAppBar"/>
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/mainSettings"
+                    android:layout_width="30dp"
+                    android:layout_height="0dp"
+                    android:layout_marginEnd="8dp"
+                    app:cardCornerRadius="60dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@color/basicBackground"
+                    app:contentPadding="2dp"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent">
 
-    <FrameLayout
-        android:id="@+id/mainFrame"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:configChanges="uiMode"
-        app:layout_constraintTop_toBottomOf="@id/mainAppBarDivider"
-        app:layout_constraintBottom_toTopOf="@id/mainBottomNavigationDivider"/>
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_settings_24"
+                        android:scaleType="fitCenter"
+                        app:tint="?colorPrimary"
+                        app:shapeAppearance="@style/RectComponent"/>
 
-    <com.google.android.material.divider.MaterialDivider
-        android:id="@+id/mainBottomNavigationDivider"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/mainBottomNavigation"/>
+                </com.google.android.material.card.MaterialCardView>
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/mainBottomNavigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:menu="@menu/main_navigation"
-        android:background="@color/basicBackground"
-        style="@style/Widget.MaterialComponents.BottomNavigationView"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/mainAppBarDivider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/mainAppBar"/>
+
+        <FrameLayout
+            android:id="@+id/mainFrame"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:configChanges="uiMode"
+            app:layout_constraintTop_toBottomOf="@id/mainAppBarDivider"
+            app:layout_constraintBottom_toTopOf="@id/mainBottomNavigationDivider"/>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/mainBottomNavigationDivider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/mainBottomNavigation"/>
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/mainBottomNavigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:menu="@menu/main_navigation"
+            android:background="@color/basicBackground"
+            style="@style/Widget.MaterialComponents.BottomNavigationView"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <include layout="@layout/search_sheet"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

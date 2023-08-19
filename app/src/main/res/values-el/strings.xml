@@ -20,6 +20,7 @@
     <string name="generalConfirm">Επιβεβαίωση</string>
     <string name="generalPhoto">Εικόνα</string>
     <string name="generalCreate">Δημιουργία</string>
+    <string name="generalClear">Καθαρισμός</string>
 
     <!-- SignIn (Activity) -->
     <string name="signInWelcome">Καλώς Ήρθατε</string>
@@ -36,10 +37,14 @@
     <string name="signUpDialogTitle">Προσοχή</string>
     <string name="signUpDialogMessage">Δημιουργία χρήστη παρακαλώ περιμένεται</string>
 
-    <!-- Main (Activity) -->
-    <string name="mainExtendedFab">Ενέργειες</string>
-    <string name="mainChatFab">Συζήτηση</string>
-    <string name="mainSearchFab">Αναζήτηση</string>
+    <!-- Search (Sheet) -->
+    <string name="searchBox">Αναζήτηση…</string>
+    <string name="searchClear">Καθάρισμα</string>
+    <string name="searchCachedTitle">Πρόσφατα</string>
+    <string name="dialogDeleteAllCachedTitle">Καθαρισμός όλων το πρόσφατων αναζητήσεων</string>
+    <string name="dialogDeleteAllCachedMessage">Αυτή η ενέργεια δεν μπορεί να αντισταφεί.\n  Σίγουρα θέλετε να καθαρίσεται την πρόσαφατες αναζητήσεις;</string>
+    <string name="dialogDeleteCachedPart1">Αφαίρεση</string>
+    <string name="dialogDeleteCachedPart2">απο το ιστορικό σου;</string>
 
     <!-- Search (Activity) -->
     <string name="searchContainer">Αναζήτηση</string>
