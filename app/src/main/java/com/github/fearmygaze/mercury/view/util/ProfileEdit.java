@@ -57,7 +57,7 @@ public class ProfileEdit extends AppCompatActivity {
         websiteLayout = findViewById(R.id.profileEditWebsiteError);
         websiteCell = findViewById(R.id.profileEditWebsite);
 
-        user = AppDatabase.getInstance(ProfileEdit.this).userDao().getUserByUserID(FirebaseAuth.getInstance().getUid());
+        user = AppDatabase.getInstance(ProfileEdit.this).userDao().getByID(FirebaseAuth.getInstance().getUid());
 
         Tools.profileImage(user.getImage(), ProfileEdit.this).into(userImage);
         statusCell.setText(user.getStatus());

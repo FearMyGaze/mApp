@@ -49,7 +49,7 @@ public class RoomCreator extends AppCompatActivity {
 
         friendList = findViewById(R.id.roomCreatorUsers);
 
-        user = AppDatabase.getInstance(RoomCreator.this).userDao().getUserByUserID(getIntent().getStringExtra(User.ID));
+        user = AppDatabase.getInstance(RoomCreator.this).userDao().getByID(getIntent().getStringExtra(User.ID));
 
         goBack.setOnClickListener(v -> onBackPressed());
 

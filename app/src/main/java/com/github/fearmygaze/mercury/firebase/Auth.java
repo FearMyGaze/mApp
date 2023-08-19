@@ -126,7 +126,7 @@ public class Auth {
                                     .document(user.getUid())
                                     .get()
                                     .addOnSuccessListener(documentSnapshot -> {
-                                        AppDatabase.getInstance(context).userDao().insertUser(documentSnapshot.toObject(User.class));
+                                        AppDatabase.getInstance(context).userDao().insert(documentSnapshot.toObject(User.class));
                                         listener.onSuccess(0, user.getUid());
                                     });
                         } else {

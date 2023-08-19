@@ -49,7 +49,7 @@ public class Profile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        user = AppDatabase.getInstance(Profile.this).userDao().getUserByUserID(getIntent().getStringExtra(User.ID));
+        user = AppDatabase.getInstance(Profile.this).userDao().getByID(getIntent().getStringExtra(User.ID));
         typedValue = new TypedValue();
         getTheme().resolveAttribute(android.R.attr.colorPrimary, typedValue, true);
 
@@ -93,7 +93,7 @@ public class Profile extends AppCompatActivity {
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             finish();
         } else {
-            user = AppDatabase.getInstance(Profile.this).userDao().getUserByUserID(FirebaseAuth.getInstance().getUid());
+            user = AppDatabase.getInstance(Profile.this).userDao().getByID(FirebaseAuth.getInstance().getUid());
             Tools.profileImage(user.getImage(), Profile.this).into(userImage);
             toolbar.setTitle(user.getUsername());
             status.setText(user.getStatus());

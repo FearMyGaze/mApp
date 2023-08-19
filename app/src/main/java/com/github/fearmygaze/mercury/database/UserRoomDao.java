@@ -16,30 +16,30 @@ import java.util.List;
 public interface UserRoomDao {
 
     @Query("SELECT * FROM USERS")
-    List<User> getAllUsers();
+    List<User> getAll();
 
     @Query("DELETE FROM users")
-    void deleteAllUsers();
+    void deleteAll();
 
     @Query("SELECT * FROM users WHERE id = :id")
-    User getUserByUserID(String id);
+    User getByID(String id);
 
     @Query("UPDATE users SET notificationToken = :token WHERE id = :id")
-    void updateUserToken(String token, String id);
+    void updateToken(String token, String id);
 
     @Query("UPDATE users SET image = :image WHERE id = :id")
-    void updateUserImage(String image, String id);
+    void updateImage(String image, String id);
 
     @Query("UPDATE users SET isProfileOpen = :state WHERE id = :id")
     void updateProfileState(boolean state, String id);
 
     @Insert(onConflict = REPLACE)
-    void insertUser(User user);
+    void insert(User user);
 
     @Update
-    void updateUser(User user);
+    void update(User user);
 
     @Delete
-    void deleteUser(User user);
+    void delete(User user);
 
 }

@@ -44,7 +44,7 @@ public class ChangeEmail extends AppCompatActivity {
         cancel = findViewById(R.id.changeEmailCancel);
         next = findViewById(R.id.changeEmailNext);
 
-        user = AppDatabase.getInstance(ChangeEmail.this).userDao().getUserByUserID(getIntent().getStringExtra("id"));
+        user = AppDatabase.getInstance(ChangeEmail.this).userDao().getByID(getIntent().getStringExtra("id"));
         userEmail = getIntent().getStringExtra("email");
         currentEmail.setText(userEmail);
 

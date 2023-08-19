@@ -305,7 +305,7 @@ public class Main extends AppCompatActivity {
     private void rememberMe(Bundle bundle) {
         String id = Tools.getStrPreference("current", Main.this);
         if (id != null) {
-            User oldUser = AppDatabase.getInstance(Main.this).userDao().getUserByUserID(id);
+            User oldUser = AppDatabase.getInstance(Main.this).userDao().getByID(id);
             if (oldUser != null) {
                 user = oldUser;
                 Tools.profileImage(user.getImage(), Main.this).into(profileImage);

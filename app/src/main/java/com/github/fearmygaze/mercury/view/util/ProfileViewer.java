@@ -74,7 +74,7 @@ public class ProfileViewer extends AppCompatActivity {
         }
 
         //TODO: Send the whole user and not the id
-        myUser = AppDatabase.getInstance(ProfileViewer.this).userDao().getUserByUserID(intent.getStringExtra(User.ID));
+        myUser = AppDatabase.getInstance(ProfileViewer.this).userDao().getByID(intent.getStringExtra(User.ID));
         otherUser = bundle.getParcelable("userData");
 
         typedValue = new TypedValue();

@@ -50,7 +50,7 @@ public class FragmentWaitingRequest extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.fragmentRequestsRecycler);
         ConstraintLayout errorLayout = view.findViewById(R.id.fragmentRequestsErrorLayout);
 
-        User user = AppDatabase.getInstance(view.getContext()).userDao().getUserByUserID(id);
+        User user = AppDatabase.getInstance(view.getContext()).userDao().getByID(id);
         PagingConfig config = new PagingConfig(20, 10);
         options = new FirestorePagingOptions.Builder<Request>()
                 .setLifecycleOwner(this)

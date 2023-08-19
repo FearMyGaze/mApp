@@ -216,45 +216,45 @@ public class User implements Parcelable {
 
     public static User convertFromDocumentAndSave(DocumentSnapshot document, Context context) {
         UserRoomDao dao = AppDatabase.getInstance(context).userDao();
-        dao.updateUser(document.toObject(User.class));
-        return dao.getUserByUserID(document.getId());
+        dao.update(document.toObject(User.class));
+        return dao.getByID(document.getId());
     }
 
     public static User updateRoomUser(User user, Context context) {
         UserRoomDao dao = AppDatabase.getInstance(context).userDao();
-        dao.updateUser(user);
-        return dao.getUserByUserID(user.getId());
+        dao.update(user);
+        return dao.getByID(user.getId());
     }
 
     public static User updateRoomToken(String id, String token, Context context) {
         UserRoomDao dao = AppDatabase.getInstance(context).userDao();
-        dao.updateUserToken(token, id);
-        return dao.getUserByUserID(id);
+        dao.updateToken(token, id);
+        return dao.getByID(id);
     }
 
     public static User updateRoomImage(String id, Uri link, Context context) {
         UserRoomDao dao = AppDatabase.getInstance(context).userDao();
-        dao.updateUserImage(String.valueOf(link), id);
-        return dao.getUserByUserID(id);
+        dao.updateImage(String.valueOf(link), id);
+        return dao.getByID(id);
     }
 
     public static User updateRoomState(String id, boolean state, Context context) {
         UserRoomDao dao = AppDatabase.getInstance(context).userDao();
         dao.updateProfileState(state, id);
-        return dao.getUserByUserID(id);
+        return dao.getByID(id);
     }
 
     public static User getRoomUser(String id, Context context) {
-        return AppDatabase.getInstance(context).userDao().getUserByUserID(id);
+        return AppDatabase.getInstance(context).userDao().getByID(id);
     }
 
     public static void deleteRoomUser(User user, Context context) {
         UserRoomDao dao = AppDatabase.getInstance(context).userDao();
-        dao.deleteUser(user);
+        dao.delete(user);
     }
 
     public static void deleteAllRoomUsers(Context context) {
-        AppDatabase.getInstance(context).userDao().deleteAllUsers();
+        AppDatabase.getInstance(context).userDao().deleteAll();
     }
 
     public static void extraInfo(User user, boolean showAll, int resourceId, ChipGroup chipGroup, Context context) {

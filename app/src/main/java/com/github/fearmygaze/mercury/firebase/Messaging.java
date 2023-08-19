@@ -15,7 +15,7 @@ public class Messaging extends FirebaseMessagingService {
         super.onNewToken(token);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            User localUser = AppDatabase.getInstance(getApplicationContext()).userDao().getUserByUserID(user.getUid());
+            User localUser = AppDatabase.getInstance(getApplicationContext()).userDao().getByID(user.getUid());
             if (!localUser.getNotificationToken().equals(token)) {
                 Auth.updateNotificationToken(user, token, getApplicationContext());
             }

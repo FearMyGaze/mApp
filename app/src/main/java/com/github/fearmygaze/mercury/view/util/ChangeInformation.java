@@ -46,7 +46,7 @@ public class ChangeInformation extends AppCompatActivity {
         senderID = intent.getStringExtra(User.ID);
         changeType = intent.getStringExtra("type");
 
-        user = AppDatabase.getInstance(ChangeInformation.this).userDao().getUserByUserID(senderID);
+        user = AppDatabase.getInstance(ChangeInformation.this).userDao().getByID(senderID);
         userEmail = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail();
 
         verifyPasswordError = findViewById(R.id.changeInformationVerifyPasswordError);

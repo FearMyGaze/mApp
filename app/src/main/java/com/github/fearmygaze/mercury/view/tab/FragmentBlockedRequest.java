@@ -46,7 +46,7 @@ public class FragmentBlockedRequest extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.fragmentBlockedRecycler);
         ConstraintLayout errorLayout = view.findViewById(R.id.fragmentBlockedErrorLayout);
 
-        User user = AppDatabase.getInstance(view.getContext()).userDao().getUserByUserID(id);
+        User user = AppDatabase.getInstance(view.getContext()).userDao().getByID(id);
 //        PagingConfig config = new PagingConfig(3, 15);
 //        options = new FirestorePagingOptions.Builder<Request1>()
 //                .setLifecycleOwner(this)
