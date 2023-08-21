@@ -12,8 +12,8 @@ android {
         applicationId "com.github.fearmygaze.mercury"
         minSdk 23
         targetSdk 33
-        versionCode 4
-        versionName "0.2.6"
+        versionCode 5
+        versionName "0.2.7"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -25,6 +25,7 @@ android {
         }
     }
     compileOptions {
+        coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -46,18 +47,21 @@ dependencies {
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation "androidx.viewpager2:viewpager2:1.0.0"
 
+    //Desugaring
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
+
     implementation('androidx.lifecycle:lifecycle-viewmodel:2.6.1') {
         exclude group: 'androidx.lifecycle', module: 'lifecycle-viewmodel-ktx'
     }
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.9.0'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.21'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel:2.6.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
 
 
     //https://www.bumptech.github.io/glide/doc/download-setup.html
     implementation 'com.github.bumptech.glide:glide:4.15.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.15.1'
 
     //https://github.com/MikeOrtiz/TouchImageView DO NOT UPDATE
     implementation "com.github.MikeOrtiz:TouchImageView:1.4.1"

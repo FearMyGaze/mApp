@@ -86,7 +86,7 @@ public class RegEx {
 
         Tools.setErrorToLayout(layout, null, false);
 
-        Pattern pattern = Pattern.compile("^[0-9a-zA-Z\\p{IsGreek}]{6,}?$");
+        Pattern pattern = Pattern.compile("^[0-9a-zA-ZΑ-Ωα-ω]{6,}?$");
         Matcher matcher = pattern.matcher(text.getText().toString().trim());
 
         if (matcher.matches()) return true;
