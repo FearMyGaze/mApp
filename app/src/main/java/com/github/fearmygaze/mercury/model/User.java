@@ -260,7 +260,7 @@ public class User implements Parcelable {
     public static void extraInfo(User user, boolean showAll, int resourceId, ChipGroup chipGroup, Context context) {
         chipGroup.removeAllViews();
 
-        if (!user.getJob().isEmpty()) {
+        if (user.getJob() != null && !user.getJob().isEmpty()) {
             Chip chip = new Chip(context);
             chip.setText(user.getJob());
             chip.setCheckable(false);
@@ -272,7 +272,7 @@ public class User implements Parcelable {
             chipGroup.addView(chip);
         }
 
-        if (!user.getWebsite().isEmpty()) {
+        if (user.getWebsite() != null && !user.getWebsite().isEmpty()) {
             Chip chip = new Chip(context);
             chip.setText(removeHttp(user.getWebsite()));
             chip.setTextColor(context.getColor(R.color.textBold));
@@ -288,7 +288,7 @@ public class User implements Parcelable {
             chipGroup.addView(chip);
         }
 
-        if (!user.getLocation().isEmpty()) {
+        if (user.getLocation() != null && !user.getLocation().isEmpty()) {
             Chip chip = new Chip(context);
             chip.setText(user.getLocation());
             chip.setCheckable(false);

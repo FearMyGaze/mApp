@@ -13,7 +13,7 @@ import com.github.fearmygaze.mercury.model.CachedQuery;
 import com.github.fearmygaze.mercury.model.User;
 
 @Database(entities = {User.class, CachedProfile.class, CachedQuery.class}, version = 1, exportSchema = false)
-@TypeConverters({TimestampConverter.class}) //TODO: Change the version num
+@TypeConverters({TimestampConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract UserRoomDao userDao();

@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -36,21 +37,23 @@ public class Auth {
                     if (results != null && !results.isEmpty()) {
                         listener.onSuccess(1);
                     } else {
-                        grantUsername(username, context, new OnResponseListener() {
+                        grantUsername(username, context, new OnDataResponseListener() {
                             @Override
-                            public void onSuccess(int code) {
+                            public void onSuccess(int code, Object data) {
                                 if (code == 0) {
-                                    FireStorage.uploadDefaultImage(username, context, new OnDataResponseListener() {
+                                    signUp(username, email, password, data.toString(), context, new OnResponseListener() {
                                         @Override
-                                        public void onSuccess(int code, Object data) {
-                                            if (code == 0) {
-                                                signUp(username, email, password, Uri.parse(data.toString()), context, listener);
-                                            }
+                                        public void onSuccess(int code) {
+                                            listener.onSuccess(code);
                                         }
 
                                         @Override
                                         public void onFailure(String message) {
-                                            listener.onFailure(message);
+                                            if (message.equals("acc")) {
+                                                deleteUsername(data.toString(), context, listener);
+                                            } else {
+                                                listener.onFailure(message);
+                                            }
                                         }
                                     });
                                 } else {
@@ -67,7 +70,7 @@ public class Auth {
                 });
     }
 
-    private static void grantUsername(String username, Context context, OnResponseListener listener) {
+    private static void grantUsername(String username, Context context, OnDataResponseListener listener) {
         FirebaseFirestore.getInstance().collection(User.PUBLIC_DATA)
                 .whereEqualTo(User.USERNAME, username)
                 .limit(1)
@@ -75,41 +78,65 @@ public class Auth {
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (!queryDocumentSnapshots.isEmpty()) {
-                        listener.onSuccess(2);
+                        listener.onSuccess(2, null);
                     } else {
                         Map<String, Object> map = new HashMap<>();
                         map.put(User.USERNAME, username);
-                        FirebaseFirestore.getInstance().collection(User.PUBLIC_DATA)
-                                .document()
+                        DocumentReference docReference = FirebaseFirestore.getInstance()
+                                .collection(User.PUBLIC_DATA)
+                                .document();
+                        docReference
                                 .set(map)
                                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
-                                .addOnSuccessListener(unused -> listener.onSuccess(0));
+                                .addOnSuccessListener(unused -> listener.onSuccess(0, docReference.getId()));
                     }
                 });
     }
 
-    private static void signUp(String username, String email, String password, Uri url, Context context, OnResponseListener listener) {
+    private static void deleteUsername(String reference, Context context, OnResponseListener listener) {
+        FirebaseFirestore.getInstance().collection(User.PUBLIC_DATA)
+                .document(reference)
+                .delete()
+                .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                .addOnSuccessListener(unused -> listener.onSuccess(0));
+    }
+
+    private static void signUp(String username, String email, String password, String dataID, Context context, OnResponseListener listener) {
         FirebaseAuth.getInstance()
                 .createUserWithEmailAndPassword(email, password)
-                .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                .addOnFailureListener(e -> listener.onFailure("acc"))
                 .addOnSuccessListener(authResult -> {
                     FirebaseUser user = authResult.getUser();
                     if (user != null) {
-                        UserProfileChangeRequest changeRequest = new UserProfileChangeRequest.Builder()
-                                .setDisplayName(username)
-                                .setPhotoUri(url)
-                                .build();
-                        user.updateProfile(changeRequest)
-                                .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
-                                .addOnSuccessListener(unused -> user.sendEmailVerification()
-                                        .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
-                                        .addOnSuccessListener(unused1 -> FirebaseFirestore.getInstance()
-                                                .collection(User.COLLECTION)
-                                                .document(user.getUid())
-                                                .set(new User(user.getUid(), username, String.valueOf(url)))
-                                                .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
-                                                .addOnSuccessListener(unused2 -> listener.onSuccess(0)))
-                                );
+                        FireStorage.uploadDefaultImage(username, context, new OnDataResponseListener() {
+                            @Override
+                            public void onSuccess(int code, Object data) {
+                                if (code == 0) {
+                                    UserProfileChangeRequest changeRequest = new UserProfileChangeRequest.Builder()
+                                            .setDisplayName(username)
+                                            .setPhotoUri(Uri.parse(data.toString()))
+                                            .build();
+                                    user.updateProfile(changeRequest)
+                                            .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                                            .addOnSuccessListener(unused -> user.sendEmailVerification()
+                                                    .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                                                    .addOnSuccessListener(unused1 -> FirebaseFirestore.getInstance()
+                                                            .collection(User.COLLECTION)
+                                                            .document(user.getUid())
+                                                            .set(new User(user.getUid(), username, data.toString()))
+                                                            .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                                                            .addOnSuccessListener(unused2 -> listener.onSuccess(0)))
+                                            );
+                                } else {
+                                    listener.onSuccess(code);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(String message) {
+                                listener.onFailure(message);
+                            }
+                        });
                     } else listener.onFailure("Error contacting with the server");
                 });
     }
@@ -158,7 +185,7 @@ public class Auth {
             listener.onSuccess(2, null);
         } else {
             user.reload()
-                    .addOnFailureListener(e -> listener.onFailure("Failed to update your user")) //If i dont open my app for a while crashes here
+                    .addOnFailureListener(e -> listener.onFailure("Failed to update your user"))
                     .addOnSuccessListener(unused -> FirebaseMessaging.getInstance()
                             .getToken()
                             .addOnFailureListener(e -> listener.onFailure("Failed to update your token"))
