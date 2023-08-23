@@ -185,7 +185,7 @@ public class Main extends AppCompatActivity {
         searchBehaviour = BottomSheetBehavior.from(parent);
 
         //General
-        ShapeableImageView close = findViewById(R.id.searchGoBack);
+        MaterialCardView close = findViewById(R.id.searchGoBack);
         MaterialCardView clear = findViewById(R.id.searchClear);
         ShapeableImageView clearCache = findViewById(R.id.searchCachedClear);
         Group profileGroup = findViewById(R.id.searchCachedProfilesGroup);

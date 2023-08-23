@@ -27,20 +27,29 @@
                 android:layout_height="match_parent"
                 android:padding="5dp">
 
-                <com.google.android.material.imageview.ShapeableImageView
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/searchGoBack"
                     android:layout_width="30dp"
                     android:layout_height="0dp"
-                    android:layout_marginStart="5dp"
-                    android:src="@drawable/ic_arrow_back_24"
-                    android:tint="?attr/colorPrimary"
-                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:layout_marginEnd="8dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="@color/basicBackground"
+                    app:contentPadding="2dp"
                     app:shapeAppearance="@style/RoundedComponent"
-                    android:contentDescription="@string/signUpGoBack"
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
+                    app:layout_constraintBottom_toBottomOf="parent">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_arrow_back_24"
+                        android:scaleType="fitCenter"
+                        app:tint="?colorPrimary"
+                        app:shapeAppearance="@style/RectComponent"/>
+
+                </com.google.android.material.card.MaterialCardView>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/searchContainer"
