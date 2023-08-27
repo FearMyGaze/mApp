@@ -106,7 +106,7 @@ public class ProfileEdit extends AppCompatActivity {
                     Objects.requireNonNull(locationCell.getText()).toString().trim(),
                     Objects.requireNonNull(jobCell.getText()).toString().trim(),
                     Objects.requireNonNull(websiteCell.getText()).toString().trim(),
-                    user.getIsProfileOpen(),
+                    user.isProfileOpen(),
                     user.getCreated()
             );
             Auth.updateProfile(localUserData, imageChanged, imageData, ProfileEdit.this, new OnResponseListener() {

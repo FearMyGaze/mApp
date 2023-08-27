@@ -4,38 +4,35 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.model.User;
-import com.github.fearmygaze.mercury.view.adapter.FragmentStateRequests;
+import com.github.fearmygaze.mercury.view.adapter.RequestsStateAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 public class People extends Fragment {
 
     View view;
-    String id;
+    User user;
 
     TabLayout tabLayout;
     ViewPager2 pager2;
-    FragmentStateRequests stateRequests;
-    SwipeRefreshLayout refreshLayout;
+    RequestsStateAdapter stateRequests;
 
     public People() {
 
     }
 
-    public static People newInstance(String id) {
+    public static People newInstance(User user) {
         People people = new People();
         Bundle bundle = new Bundle();
-        bundle.putString(User.ID, id);
+        bundle.putParcelable("user", user);
         people.setArguments(bundle);
         return people;
     }
@@ -44,7 +41,7 @@ public class People extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            id = getArguments().getString(User.ID);
+            user = getArguments().getParcelable("user");
         }
     }
 
@@ -52,29 +49,27 @@ public class People extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_people, container, false);
-        refreshLayout = view.findViewById(R.id.peopleRefresh);
         tabLayout = view.findViewById(R.id.peopleTabLayout);
         pager2 = view.findViewById(R.id.peopleViewPager);
 
-        stateRequests = new FragmentStateRequests(requireActivity(), id);
+        stateRequests = new RequestsStateAdapter(requireActivity(), user);
         pager2.setAdapter(stateRequests);
         new TabLayoutMediator(tabLayout, pager2, ((tab, position) -> {
-            switch (position) {
-                case 1:
-                    tab.setText("Pending");
-                    return;
-                case 2:
-                    tab.setText("Blocked");
-                    return;
-                default:
-                    tab.setText("Friends");
+            if (position == 1) {
+                tab.setText(getString(R.string.peopleTabPending));
+            } else {
+                tab.setText(getString(R.string.peopleTabFriends));
             }
         })).attach();
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-
+                if (tab.getPosition() == 0) {
+                    stateRequests.getTabFriends().fetch(user);
+                } else {
+                    stateRequests.getTabPending().fetch(user);
+                }
             }
 
             @Override
@@ -84,15 +79,14 @@ public class People extends Fragment {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                Toast.makeText(view.getContext(), "ReSelected", Toast.LENGTH_SHORT).show();
+                if (tab.getPosition() == 0) {
+                    stateRequests.getTabFriends().fetch(user);
+                } else {
+                    stateRequests.getTabPending().fetch(user);
+                }
             }
         });
 
-        refreshLayout.setOnRefreshListener(() -> refreshLayout.setRefreshing(false));
-
         return view;
-    }
-
-    public void onRefresh() {
     }
 }

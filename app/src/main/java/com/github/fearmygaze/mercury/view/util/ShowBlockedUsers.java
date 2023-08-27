@@ -57,7 +57,7 @@ public class ShowBlockedUsers extends AppCompatActivity {
                 .setQuery(Friends.blockedQuery(user), config, Request.class)
                 .build();
 
-        adapterBlocked = new AdapterBlocked(user, options, recyclerView, this);
+        adapterBlocked = new AdapterBlocked(user, options, recyclerView);
         recyclerView.setAdapter(adapterBlocked);
         recyclerView.setLayoutManager(new CustomLinearLayout(ShowBlockedUsers.this, LinearLayoutManager.VERTICAL, false));
 
@@ -75,10 +75,7 @@ public class ShowBlockedUsers extends AppCompatActivity {
         });
 
         swipe.setOnRefreshListener(() -> {
-            adapterBlocked.updateOptions(new FirestorePagingOptions.Builder<Request>()
-                    .setLifecycleOwner(this)
-                    .setQuery(Friends.blockedQuery(user), config, Request.class)
-                    .build());
+            adapterBlocked.updateOptions(options);
             swipe.setRefreshing(false);
         });
 

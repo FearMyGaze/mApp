@@ -1,18 +1,18 @@
 package com.github.fearmygaze.mercury.model;
 
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "cachedProfiles")
-public class CachedProfile {
+public class Profile {
 
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "aa")
-    long aa;
 
+    @NonNull
+    @PrimaryKey()
     @ColumnInfo(name = "id")
     String id;
 
@@ -22,29 +22,22 @@ public class CachedProfile {
     @ColumnInfo(name = "image")
     String image;
 
-    public CachedProfile() {
+    public Profile() {
     }
 
     @Ignore
-    public CachedProfile(String id, String username, String image) {
+    public Profile(@NonNull String id, String username, String image) {
         this.id = id;
         this.username = username;
         this.image = image;
     }
 
-    public void setAa(long aa) {
-        this.aa = aa;
-    }
-
-    public long getAa() {
-        return aa;
-    }
-
+    @NonNull
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(@NonNull String id) {
         this.id = id;
     }
 
@@ -66,9 +59,8 @@ public class CachedProfile {
 
     @Override
     public String toString() {
-        return "CachedProfile{" +
-                "aa=" + aa +
-                ", id='" + id + '\'' +
+        return "Profile{" +
+                "id='" + id + '\'' +
                 ", username='" + username + '\'' +
                 ", image='" + image + '\'' +
                 '}';

@@ -6,7 +6,7 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import com.github.fearmygaze.mercury.model.CachedProfile;
+import com.github.fearmygaze.mercury.model.Profile;
 
 import java.util.List;
 
@@ -14,15 +14,15 @@ import java.util.List;
 public interface CProfileDao {
 
     @Query("SELECT * FROM cachedProfiles")
-    List<CachedProfile> getAll();
+    List<Profile> getAll();
 
     @Query("DELETE FROM cachedProfiles")
     void deleteAll();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    long insert(CachedProfile profile);
+    long insert(Profile profile);
 
     @Delete
-    void delete(CachedProfile profile);
+    void delete(Profile profile);
 
 }

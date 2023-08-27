@@ -38,6 +38,10 @@
     <string name="signUpDialogTitle">Warning</string>
     <string name="signUpDialogMessage">Please wait while we create your user</string>
 
+    <!-- Main (Options)-->
+    <string name="mainOptionsHome">Chats</string>
+    <string name="mainOptionsPeople">Friends</string>
+
     <!-- Search (Sheet) -->
     <string name="searchBox">Search…</string>
     <string name="searchClear">Clear</string>
@@ -49,6 +53,10 @@
 
     <!-- Search (Activity) -->
     <string name="searchContainer">Search</string>
+
+    <!-- People (Fragment) -->
+    <string name="peopleTabFriends">Friends</string>
+    <string name="peopleTabPending">Requests</string>
 
     <!-- ProfileEdit (Activity) -->
     <string name="profileEditHelper">Edit Profile</string>

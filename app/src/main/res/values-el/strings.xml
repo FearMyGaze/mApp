@@ -37,6 +37,10 @@
     <string name="signUpDialogTitle">Προσοχή</string>
     <string name="signUpDialogMessage">Δημιουργία χρήστη παρακαλώ περιμένεται</string>
 
+    <!-- Main (Options)-->
+    <string name="mainOptionsHome">Μυνήματα</string>
+    <string name="mainOptionsPeople">Φίλοι</string>
+
     <!-- Search (Sheet) -->
     <string name="searchBox">Αναζήτηση…</string>
     <string name="searchClear">Καθάρισμα</string>
@@ -48,6 +52,10 @@
 
     <!-- Search (Activity) -->
     <string name="searchContainer">Αναζήτηση</string>
+
+    <!-- People (Fragment) -->
+    <string name="peopleTabFriends">Φίλοι</string>
+    <string name="peopleTabPending">Αιτήματα</string>
 
     <!-- ProfileEdit (Activity) -->
     <string name="profileEditHelper">Τροποποίση Προφίλ</string>

@@ -39,6 +39,7 @@ public class User implements Parcelable {
             COLLECTION = "users",
             ID = "id",
             USERNAME = "username",
+            USERNAME_LOWERED = "usernameLowered",
             IMAGE = "image",
             NOTIFICATION = "notificationToken",
             STATUS = "status",
@@ -56,6 +57,9 @@ public class User implements Parcelable {
 
     @ColumnInfo(name = "username")
     String username;
+
+    @ColumnInfo(name = "usernameLowered")
+    String usernameLowered;
 
     @ColumnInfo(name = "image")
     String image;
@@ -97,18 +101,6 @@ public class User implements Parcelable {
         this.image = image;
     }
 
-    @Ignore //UserProfile
-    public User(@NonNull String id, String username, String image, boolean isProfileOpen, String status, String location, String job, String website) {
-        this.id = id;
-        this.username = username;
-        this.image = image;
-        this.isProfileOpen = isProfileOpen;
-        this.status = status;
-        this.location = location;
-        this.job = job;
-        this.website = website;
-    }
-
     @Ignore
     public User(@NonNull String id, String username, String image, String notificationToken, String status, String location, String job, String website, boolean isProfileOpen, Date created) {
         this.id = id;
@@ -138,6 +130,14 @@ public class User implements Parcelable {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getUsernameLowered() {
+        return usernameLowered;
+    }
+
+    public void setUsernameLowered(String usernameLowered) {
+        this.usernameLowered = usernameLowered;
     }
 
     public String getImage() {
@@ -196,7 +196,7 @@ public class User implements Parcelable {
         this.created = created;
     }
 
-    public boolean getIsProfileOpen() {
+    public boolean isProfileOpen() {
         return isProfileOpen;
     }
 
@@ -204,12 +204,10 @@ public class User implements Parcelable {
         isProfileOpen = profileOpen;
     }
 
-    @Exclude
     public boolean isSelected() {
         return isSelected;
     }
 
-    @Exclude
     public void setSelected(boolean selected) {
         isSelected = selected;
     }

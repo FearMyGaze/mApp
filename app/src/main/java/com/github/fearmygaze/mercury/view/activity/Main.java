@@ -37,7 +37,6 @@ import com.github.fearmygaze.mercury.view.adapter.AdapterCachedProfile;
 import com.github.fearmygaze.mercury.view.adapter.AdapterCachedQuery;
 import com.github.fearmygaze.mercury.view.adapter.AdapterSearch;
 import com.github.fearmygaze.mercury.view.fragment.Home;
-import com.github.fearmygaze.mercury.view.fragment.Notifications;
 import com.github.fearmygaze.mercury.view.fragment.People;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -83,14 +82,11 @@ public class Main extends AppCompatActivity {
         settings = findViewById(R.id.mainSettings);
 
         navigation.setOnItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.mainOptionHome) {
+            if (item.getItemId() == R.id.mainOptionChat) {
                 replaceFragment(Home.newInstance(user), "home");
                 return true;
-            } else if (item.getItemId() == R.id.mainOptionPeople) {
-                replaceFragment(People.newInstance(user.getId()), "people");
-                return true;
-            } else if (item.getItemId() == R.id.mainOptionNotifications) {
-                replaceFragment(Notifications.newInstance(user), "people");
+            } else if (item.getItemId() == R.id.mainOptionFriends) {
+                replaceFragment(People.newInstance(user), "people");
                 return true;
             }
             return false;
@@ -100,9 +96,9 @@ public class Main extends AppCompatActivity {
         searchSheet();
 
         navigation.setOnItemReselectedListener(item -> {
-            if (item.getItemId() == R.id.mainOptionHome) {
+            if (item.getItemId() == R.id.mainOptionChat) {
                 Toast.makeText(Main.this, "We need to refresh or go to the top", Toast.LENGTH_SHORT).show();
-            } else if (item.getItemId() == R.id.mainOptionPeople) {
+            } else if (item.getItemId() == R.id.mainOptionFriends) {
 
             } else {
 
@@ -111,7 +107,7 @@ public class Main extends AppCompatActivity {
 
         profile.setOnClickListener(v -> {
             startActivity(new Intent(Main.this, Profile.class)
-                    .putExtra(User.ID, user.getId()));
+                    .putExtra("user", user));
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         });
 
@@ -171,10 +167,10 @@ public class Main extends AppCompatActivity {
             searchBox.setText("");
             searchBehaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
         } else {
-            if (navigation.getSelectedItemId() == R.id.mainOptionHome) {
+            if (navigation.getSelectedItemId() == R.id.mainOptionChat) {
                 super.onBackPressed();
             } else {
-                navigation.setSelectedItemId(R.id.mainOptionHome);
+                navigation.setSelectedItemId(R.id.mainOptionChat);
             }
         }
 
@@ -310,7 +306,7 @@ public class Main extends AppCompatActivity {
                 user = oldUser;
                 Tools.profileImage(user.getImage(), Main.this).into(profileImage);
                 if (bundle == null) {
-                    navigation.setSelectedItemId(R.id.mainOptionHome);
+                    navigation.setSelectedItemId(R.id.mainOptionChat);
                 }
             }
         }

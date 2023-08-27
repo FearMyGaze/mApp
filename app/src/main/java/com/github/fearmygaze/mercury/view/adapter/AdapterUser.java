@@ -57,7 +57,7 @@ public class AdapterUser extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             case 3:
                 return new UserRoomVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_user_room, parent, false));
             default:
-                return new UserRequestVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_user_request, parent, false));
+                return new UserRequestVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_user_pending, parent, false));
         }
     }
 
@@ -69,14 +69,14 @@ public class AdapterUser extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 Tools.profileImage(users.get(position).getImage(), searchVH.image.getContext()).into(searchVH.image);
                 searchVH.username.setText(users.get(position).getUsername());
                 searchVH.status.setText(users.get(position).getStatus());
-                searchVH.root.setOnClickListener(v -> Tools.goToProfileViewer(id, users.get(holder.getAbsoluteAdapterPosition()), v.getContext()));
+//                searchVH.root.setOnClickListener(v -> Tools.goToProfileViewer(id, users.get(holder.getAbsoluteAdapterPosition()), v.getContext()));
                 break;
             case 2:
                 UserBlockedVH blockedVH = (UserBlockedVH) holder;
                 Tools.profileImage(users.get(position).getImage(), blockedVH.image.getContext()).into(blockedVH.image);
                 blockedVH.username.setText(users.get(position).getUsername());
 //                blockedVH.status.setText(users.get(position).getStatus());
-                blockedVH.root.setOnClickListener(v -> Tools.goToProfileViewer(id, users.get(holder.getAbsoluteAdapterPosition()), v.getContext()));
+//                blockedVH.root.setOnClickListener(v -> Tools.goToProfileViewer(id, users.get(holder.getAbsoluteAdapterPosition()), v.getContext()));
                 blockedVH.unBlock.setOnClickListener(v -> {
                     MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(v.getContext());
                     builder.setBackground(AppCompatResources.getDrawable(v.getContext(), R.color.basicBackground))
@@ -120,7 +120,7 @@ public class AdapterUser extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     }
                 });
                 roomVH.root.setOnLongClickListener(v -> {
-                    Tools.goToProfileViewer(id, users.get(holder.getAbsoluteAdapterPosition()), v.getContext());
+//                    Tools.goToProfileViewer(id, users.get(holder.getAbsoluteAdapterPosition()), v.getContext());
                     return true;
                 });
                 break;
@@ -129,7 +129,7 @@ public class AdapterUser extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 Tools.profileImage(users.get(position).getImage(), requestVH.image.getContext()).into(requestVH.image);
                 requestVH.username.setText(users.get(position).getUsername());
                 requestVH.status.setText(users.get(position).getStatus());
-                requestVH.root.setOnClickListener(v -> Tools.goToProfileViewer(id, users.get(holder.getAbsoluteAdapterPosition()), v.getContext()));
+//                requestVH.root.setOnClickListener(v -> Tools.goToProfileViewer(id, users.get(holder.getAbsoluteAdapterPosition()), v.getContext()));
                 requestVH.accept.setOnClickListener(v -> {
 //                    Friends.answerRequest(id, users.get(position).getId(), Friends.OPTION_ACCEPT, v.getContext(), new OnResponseListener() {
 //                        @Override
@@ -229,10 +229,10 @@ public class AdapterUser extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         public UserSearchVH(@NonNull View itemView) {
             super(itemView);
-            root = itemView.findViewById(R.id.adapterUserSearchRoot);
-            image = itemView.findViewById(R.id.adapterUserSearchImage);
-            username = itemView.findViewById(R.id.adapterUserSearchUsername);
-            status = itemView.findViewById(R.id.adapterUserSearchStatus);
+//            root = itemView.findViewById(R.id.adapterUserSearchRoot);
+//            image = itemView.findViewById(R.id.adapterUserSearchImage);
+//            username = itemView.findViewById(R.id.adapterUserSearchUsername);
+//            status = itemView.findViewById(R.id.adapterUserSearchStatus);
         }
     }
 

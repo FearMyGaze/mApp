@@ -285,8 +285,8 @@ public class Auth {
                     .limit(40);
         } else {
             return reference
-                    .whereGreaterThanOrEqualTo(User.USERNAME, search)
-                    .whereLessThanOrEqualTo(User.USERNAME, search + "\uf8ff")
+                    .whereGreaterThanOrEqualTo(User.USERNAME_LOWERED, search.toLowerCase())
+                    .whereLessThanOrEqualTo(User.USERNAME_LOWERED, search.toLowerCase() + "\uf8ff")
                     .limit(40);
         }
     }

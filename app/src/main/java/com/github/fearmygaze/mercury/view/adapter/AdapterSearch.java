@@ -14,7 +14,7 @@ import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.database.AppDatabase;
-import com.github.fearmygaze.mercury.model.CachedProfile;
+import com.github.fearmygaze.mercury.model.Profile;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
 import com.google.android.material.card.MaterialCardView;
@@ -52,8 +52,8 @@ public class AdapterSearch extends FirestorePagingAdapter<User, AdapterSearch.Se
         holder.status.setText(model.getStatus());
         holder.root.setOnClickListener(v -> {
             listener.onClick();
-            AppDatabase.getInstance(v.getContext()).cachedProfile().insert(new CachedProfile(model.getId(), model.getUsername(), model.getImage()));
-            Tools.goToProfileViewer(myUser.getId(), model, v.getContext());
+            AppDatabase.getInstance(v.getContext()).cachedProfile().insert(new Profile(model.getId(), model.getUsername(), model.getImage()));
+            Tools.goToProfileViewer(myUser, model, v.getContext());
         });
     }
 

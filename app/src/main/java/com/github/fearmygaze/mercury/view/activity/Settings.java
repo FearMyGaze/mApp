@@ -79,7 +79,7 @@ public class Settings extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         contentSwitch.setChecked(Tools.getBoolPreference("showImages", Settings.this));
-        profileSwitch.setChecked(user.getIsProfileOpen());
+        profileSwitch.setChecked(user.isProfileOpen());
 
         changeEmail.setOnClickListener(v -> {
             startActivity(new Intent(Settings.this, ChangeInformation.class)

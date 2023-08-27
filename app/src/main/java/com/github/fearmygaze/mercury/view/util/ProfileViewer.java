@@ -12,25 +12,23 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.database.AppDatabase;
+import com.github.fearmygaze.mercury.custom.CustomLinearLayout;
 import com.github.fearmygaze.mercury.firebase.Friends;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnDataResponseListener;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
+import com.github.fearmygaze.mercury.model.Request;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
-import com.github.fearmygaze.mercury.view.adapter.AdapterUser;
+import com.github.fearmygaze.mercury.view.adapter.AdapterFriends;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.util.ArrayList;
-
 public class ProfileViewer extends AppCompatActivity {
-
-    Intent intent;
 
     SwipeRefreshLayout swipeRefreshLayout;
 
@@ -42,7 +40,8 @@ public class ProfileViewer extends AppCompatActivity {
     TextView status;
     ChipGroup chipGroup;
 
-    AdapterUser adapterUser;
+    AdapterFriends adapterFriends;
+    FirestoreRecyclerOptions<Request> options;
     RecyclerView friendsView;
 
     TypedValue typedValue;
@@ -66,19 +65,22 @@ public class ProfileViewer extends AppCompatActivity {
         chipGroup = findViewById(R.id.profileViewerExtraInfo);
         friendsView = findViewById(R.id.profileViewerRecycler);
 
-        intent = getIntent();
         bundle = getIntent().getExtras();
 
-        if (bundle == null && intent.getStringExtra(User.ID) == null) {
+        if (bundle == null) {
             onBackPressed();
         }
 
-        //TODO: Send the whole user and not the id
-        myUser = AppDatabase.getInstance(ProfileViewer.this).userDao().getByID(intent.getStringExtra(User.ID));
+        myUser = bundle.getParcelable("user");
         otherUser = bundle.getParcelable("userData");
 
         typedValue = new TypedValue();
         getTheme().resolveAttribute(android.R.attr.colorPrimary, typedValue, true);
+
+        options = new FirestoreRecyclerOptions.Builder<Request>()
+                .setQuery(Friends.friendsQuery(otherUser), Request.class)
+                .setLifecycleOwner(this)
+                .build();
 
         Tools.profileImage(otherUser.getImage(), ProfileViewer.this).into(userImage);
         status.setText(otherUser.getStatus());
@@ -132,19 +134,19 @@ public class ProfileViewer extends AppCompatActivity {
         request.setOnClickListener(v -> {
             String state = request.getText().toString().trim();
             if (state.equals(getString(R.string.requestAccepted))) {
-                Friends.answerRequest(myUser, otherUser, Friends.OPTION_REMOVE, ProfileViewer.this, new OnResponseListener() {
-                    @Override
-                    public void onSuccess(int code) {
-                        if (code == 0) {
-                            request.setText(getString(R.string.requestNone));
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(String message) {
-                        Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_LONG).show();
-                    }
-                });
+//                Friends.answerRequest(myUser, otherUser, Friends.OPTION_REMOVE, ProfileViewer.this, new OnResponseListener() {
+//                    @Override
+//                    public void onSuccess(int code) {
+//                        if (code == 0) {
+//                            request.setText(getString(R.string.requestNone));
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(String message) {
+//                        Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_LONG).show();
+//                    }
+//                });
             } else if (state.equals(getString(R.string.requestWaiting))) {
                 Friends.cancelRequest(myUser, otherUser, ProfileViewer.this, new OnResponseListener() {
                     @Override
@@ -182,13 +184,19 @@ public class ProfileViewer extends AppCompatActivity {
             updateStats();
             swipeRefreshLayout.setRefreshing(false);
         });
-        adapterUser = new AdapterUser(new ArrayList<>(), myUser.getId(), AdapterUser.TYPE_SEARCH);
-        friendsView.setLayoutManager(new LinearLayoutManager(ProfileViewer.this, LinearLayoutManager.VERTICAL, false));
-        friendsView.setAdapter(adapterUser);
+
+        if (otherUser.isProfileOpen()) {
+            adapterFriends = new AdapterFriends(myUser, options);
+            friendsView.setLayoutManager(new CustomLinearLayout(ProfileViewer.this, LinearLayoutManager.VERTICAL, false));
+            friendsView.setAdapter(adapterFriends);
+            toolbar.setSubtitle("Friends: " + adapterFriends.getItemCount());
+        } else {
+
+        }
     }
 
     private void updateStats() {
-        Friends.requestStatus(myUser.getId(), otherUser.getId(), ProfileViewer.this, new OnDataResponseListener() {
+        Friends.getStatus(myUser, otherUser, ProfileViewer.this, new OnDataResponseListener() {
             @Override
             public void onSuccess(int code, Object data) {
                 if (code == 0) {
@@ -204,26 +212,6 @@ public class ProfileViewer extends AppCompatActivity {
                 Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_SHORT).show();
             }
         });
-
-//        Friends.getRequestedList(otherUser, ProfileViewer.this, new OnUsersResponseListener() {
-//            @Override
-//            public void onSuccess(int code, List<User> list) {
-//                if (code == 0 && !list.isEmpty()) {
-//                    adapterUser.setData(list);
-//                    friendsValue.setVisibility(View.VISIBLE);
-//                    friendsValue.setText(getString(R.string.generalFriends) + " " + list.size());
-//                } else if (code == 1) {
-//                    Toast.makeText(ProfileViewer.this, "Private Profile", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    Toast.makeText(ProfileViewer.this, "0", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(String message) {
-//                Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_SHORT).show();
-//            }
-//        });
     }
 
     @Override

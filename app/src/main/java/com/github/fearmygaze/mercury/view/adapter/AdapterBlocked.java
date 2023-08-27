@@ -1,6 +1,5 @@
 package com.github.fearmygaze.mercury.view.adapter;
 
-import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +8,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SimpleItemAnimator;
 
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
@@ -17,23 +17,25 @@ import com.github.fearmygaze.mercury.firebase.Auth;
 import com.github.fearmygaze.mercury.firebase.Friends;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnUserResponseListener;
+import com.github.fearmygaze.mercury.model.Profile;
 import com.github.fearmygaze.mercury.model.Request;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.imageview.ShapeableImageView;
 
+import java.util.Objects;
+
 public class AdapterBlocked extends FirestorePagingAdapter<Request, AdapterBlocked.BlockedVH> {
 
     User user;
     RecyclerView recyclerView;
-    Activity activity;
 
-    public AdapterBlocked(User user, @NonNull FirestorePagingOptions<Request> options, RecyclerView recyclerView, Activity activity) {
+    public AdapterBlocked(User user, @NonNull FirestorePagingOptions<Request> options, RecyclerView recyclerView) {
         super(options);
         this.user = user;
         this.recyclerView = recyclerView;
-        this.activity = activity;
+        ((SimpleItemAnimator) Objects.requireNonNull(recyclerView.getItemAnimator())).setSupportsChangeAnimations(false);
     }
 
     @NonNull
@@ -45,40 +47,42 @@ public class AdapterBlocked extends FirestorePagingAdapter<Request, AdapterBlock
     @Override
     protected void onBindViewHolder(@NonNull BlockedVH holder, int position, @NonNull Request request) {
         //We only pass the Receiver values because we search as sender
-        Tools.profileImage(request.getReceiverImage(), recyclerView.getContext()).into(holder.image);
-        holder.username.setText(request.getReceiverUsername());
-        holder.root.setOnClickListener(v -> Auth
-                .getUserProfile(request.getReceiverID(), v.getContext(), new OnUserResponseListener() {
-                    @Override
-                    public void onSuccess(int code, User requestedUser) {
-                        if (code == 0) {
-                            Tools.goToProfileViewer(user.getId(), requestedUser, v.getContext());
-                        }
+        Profile profile = request.getReceiverProfile();
+        Tools.profileImage(profile.getImage(), holder.itemView.getContext()).into(holder.image);
+        holder.username.setText(profile.getUsername());
+        holder.root.setOnClickListener(v -> {
+            Auth.getUserProfile(profile.getId(), v.getContext(), new OnUserResponseListener() {
+                @Override
+                public void onSuccess(int code, User requested) {
+                    if (code == 0) {
+                        Tools.goToProfileViewer(user, requested, v.getContext());
                     }
+                }
 
-                    @Override
-                    public void onFailure(String message) {
-                        Toast.makeText(v.getContext(), message, Toast.LENGTH_SHORT).show();
-                    }
-                })
-        );
-        holder.unBlock.setOnClickListener(v -> Friends
-                .unBlock(request, v.getContext(), new OnResponseListener() {
-                    @Override
-                    public void onSuccess(int code) {
-                        if (code == 0) {
-                            notifyItemRemoved(holder.getAbsoluteAdapterPosition());
-                        } else {
-                            Toast.makeText(v.getContext(), "Unexpected error occurred", Toast.LENGTH_SHORT).show();
-                        }
-                    }
+                @Override
+                public void onFailure(String message) {
+                    Toast.makeText(v.getContext(), message, Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
 
-                    @Override
-                    public void onFailure(String message) {
-                        Toast.makeText(v.getContext(), message, Toast.LENGTH_SHORT).show();
+        holder.unBlock.setOnClickListener(v -> {
+            Friends.removeBlock(request, v.getContext(), new OnResponseListener() {
+                @Override
+                public void onSuccess(int code) {
+                    if (code == 0) {
+                        notifyItemRemoved(holder.getAbsoluteAdapterPosition());
+                    } else {
+                        Toast.makeText(v.getContext(), "Unexpected error occurred", Toast.LENGTH_SHORT).show();
                     }
-                })
-        );
+                }
+
+                @Override
+                public void onFailure(String message) {
+                    Toast.makeText(v.getContext(), message, Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
     }
 
     protected static class BlockedVH extends RecyclerView.ViewHolder {

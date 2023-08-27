@@ -17,7 +17,7 @@
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/adapterUserRequestImage"
-            android:layout_width="60dp"
+            android:layout_width="40dp"
             android:layout_height="0dp"
             tools:src="@tools:sample/avatars"
             app:shapeAppearance="@style/RectComponent"
@@ -42,7 +42,7 @@
             app:layout_constraintStart_toEndOf="@id/adapterUserRequestImage"
             app:layout_constraintEnd_toStartOf="@id/adapterUserRequestAccept"
             app:layout_constraintTop_toTopOf="@id/adapterUserRequestImage"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="@id/adapterUserRequestImage"/>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/adapterUserRequestAccept"

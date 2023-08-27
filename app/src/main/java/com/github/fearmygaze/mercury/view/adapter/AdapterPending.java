@@ -1,6 +1,5 @@
 package com.github.fearmygaze.mercury.view.adapter;
 
-import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,54 +8,50 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SimpleItemAnimator;
 
-import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
-import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.firebase.Auth;
 import com.github.fearmygaze.mercury.firebase.Friends;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnUserResponseListener;
+import com.github.fearmygaze.mercury.model.Profile;
 import com.github.fearmygaze.mercury.model.Request;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.imageview.ShapeableImageView;
 
-import java.util.Objects;
+import java.util.List;
 
-public class AdapterRequest extends FirestorePagingAdapter<Request, AdapterRequest.RequestVH> {
+public class AdapterPending extends RecyclerView.Adapter<AdapterPending.PendingVH> {
 
     User user;
-    RecyclerView recyclerView;
-    Activity activity;
+    List<Request> requests;
 
-    public AdapterRequest(User user, @NonNull FirestorePagingOptions<Request> options, RecyclerView recyclerView, Activity activity) {
-        super(options);
+    public AdapterPending(User user, List<Request> requests) {
         this.user = user;
-        this.recyclerView = recyclerView;
-        this.activity = activity;
-        ((SimpleItemAnimator) Objects.requireNonNull(recyclerView.getItemAnimator())).setSupportsChangeAnimations(false);
+        this.requests = requests;
     }
 
     @NonNull
     @Override
-    public AdapterRequest.RequestVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new RequestVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_user_request, parent, false));
+    public PendingVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new PendingVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_user_pending, parent, false));
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull AdapterRequest.RequestVH holder, int position, @NonNull Request request) {
+    public void onBindViewHolder(@NonNull PendingVH holder, int position) {
         //We only pass the Sender values because we search as receiver
-        Tools.profileImage(request.getSenderImage(), recyclerView.getContext()).into(holder.image);
-        holder.username.setText(request.getSenderUsername());
+        Request request = requests.get(holder.getAbsoluteAdapterPosition());
+        Profile profile = requests.get(holder.getAbsoluteAdapterPosition()).getSenderProfile();
+        Tools.profileImage(profile.getImage(), holder.itemView.getContext()).into(holder.image);
+        holder.username.setText(profile.getUsername());
         holder.root.setOnClickListener(v -> {
-            Auth.getUserProfile(request.getSenderID(), v.getContext(), new OnUserResponseListener() {
+            Auth.getUserProfile(profile.getId(), v.getContext(), new OnUserResponseListener() {
                 @Override
                 public void onSuccess(int code, User requestedUser) {
                     if (code == 0) {
-                        Tools.goToProfileViewer(user.getId(), requestedUser, v.getContext());
+                        Tools.goToProfileViewer(user, requestedUser, v.getContext());
                     }
                 }
 
@@ -71,7 +66,7 @@ public class AdapterRequest extends FirestorePagingAdapter<Request, AdapterReque
                 @Override
                 public void onSuccess(int code) {
                     if (code == 0) {
-                        notifyItemRemoved(holder.getAbsoluteAdapterPosition());
+                        clear(holder.getAbsoluteAdapterPosition());
                     } else {
                         Toast.makeText(v.getContext(), "Unexpected error occurred", Toast.LENGTH_SHORT).show();
                     }
@@ -88,8 +83,7 @@ public class AdapterRequest extends FirestorePagingAdapter<Request, AdapterReque
                 @Override
                 public void onSuccess(int code) {
                     if (code == 0) {
-                        notifyItemRemoved(holder.getAbsoluteAdapterPosition());
-                        notifyDataSetChanged();
+                        clear(holder.getAbsoluteAdapterPosition());
                     } else {
                         Toast.makeText(v.getContext(), "Unexpected error occurred", Toast.LENGTH_SHORT).show();
                     }
@@ -103,12 +97,32 @@ public class AdapterRequest extends FirestorePagingAdapter<Request, AdapterReque
         });
     }
 
-    protected static class RequestVH extends RecyclerView.ViewHolder {
+    @Override
+    public int getItemCount() {
+        return requests.size();
+    }
+
+    public void set(List<Request> list) {
+        requests = list;
+        notifyItemRangeChanged(0, list.size());
+    }
+
+    public void clear(int pos) {
+        requests.remove(pos);
+        notifyItemRemoved(pos);
+    }
+
+    public void clear() {
+        notifyItemRangeRemoved(0, requests.size());
+        requests.clear();
+    }
+
+    protected static class PendingVH extends RecyclerView.ViewHolder {
         MaterialCardView root, accept, remove;
         ShapeableImageView image;
         TextView username;
 
-        public RequestVH(@NonNull View itemView) {
+        public PendingVH(@NonNull View itemView) {
             super(itemView);
             root = itemView.findViewById(R.id.adapterUserRequestRoot);
             image = itemView.findViewById(R.id.adapterUserRequestImage);

@@ -16,7 +16,7 @@ import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.database.AppDatabase;
 import com.github.fearmygaze.mercury.firebase.Auth;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnUserResponseListener;
-import com.github.fearmygaze.mercury.model.CachedProfile;
+import com.github.fearmygaze.mercury.model.Profile;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
 import com.google.android.material.card.MaterialCardView;
@@ -27,7 +27,7 @@ import java.util.List;
 
 public class AdapterCachedProfile extends RecyclerView.Adapter<AdapterCachedProfile.CachedProfilesVH> {
 
-    List<CachedProfile> profiles;
+    List<Profile> profiles;
     Group group;
     User user;
     Activity activity;
@@ -55,7 +55,7 @@ public class AdapterCachedProfile extends RecyclerView.Adapter<AdapterCachedProf
                     @Override
                     public void onSuccess(int code, User otherUser) {
                         if (code == 0) {
-                            Tools.goToProfileViewer(user.getId(), otherUser, v.getContext());
+                            Tools.goToProfileViewer(user, otherUser, v.getContext());
                         }
                     }
 
@@ -76,7 +76,7 @@ public class AdapterCachedProfile extends RecyclerView.Adapter<AdapterCachedProf
         });
     }
 
-    public void set(List<CachedProfile> list) {
+    public void set(List<Profile> list) {
         if (list != null) {
             profiles = list;
             notifyItemRangeChanged(0, profiles.size());

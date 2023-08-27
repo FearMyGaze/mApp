@@ -103,9 +103,9 @@ public class Tools {
         activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
-    public static void goToProfileViewer(String myID, User user, Context context) {
+    public static void goToProfileViewer(User myUser, User user, Context context) {
         context.startActivity(new Intent(context, ProfileViewer.class)
-                .putExtra(User.ID, myID)
+                .putExtra("user", myUser)
                 .putExtra("userData", user));
     }
 

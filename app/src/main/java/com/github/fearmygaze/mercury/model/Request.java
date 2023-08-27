@@ -4,44 +4,45 @@ import androidx.annotation.NonNull;
 
 import com.google.firebase.firestore.ServerTimestamp;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Request {
+
     public static final String
             COLLECTION = "requests",
-            SENDER_ID = "senderID",
-            RECEIVER_ID = "receiverID",
-            CREATED = "created",
+            SENDER = "sender",
+            RECEIVER = "receiver",
             STATUS = "status",
-            WAITING = "waiting",
-            ACCEPTED = "accepted",
-            BLOCKED = "blocked";
+            S_FRIEND = "friends",
+            S_WAITING = "waiting",
+            S_BLOCKED = "blocked",
+            BETWEEN = "refers",
+            CREATED = "created";
 
     String id;
     String status;
-    String senderID;
-    String senderUsername;
-    String senderImage;
-    String receiverID;
-    String receiverUsername;
-    String receiverImage;
-
+    String sender;
+    String receiver;
+    List<String> refers;
+    Profile senderProfile;
+    Profile receiverProfile;
     @ServerTimestamp
     Date created;
 
-
     public Request() {
+
     }
 
-    public Request(String id, String status, String senderID, String senderUsername, String senderImage, String receiverID, String receiverUsername, String receiverImage) {
+    public Request(String id, String status, String sender, String receiver, List<String> refers, Profile senderProfile, Profile receiverProfile) {
         this.id = id;
         this.status = status;
-        this.senderID = senderID;
-        this.senderUsername = senderUsername;
-        this.senderImage = senderImage;
-        this.receiverID = receiverID;
-        this.receiverUsername = receiverUsername;
-        this.receiverImage = receiverImage;
+        this.sender = sender;
+        this.receiver = receiver;
+        this.refers = refers;
+        this.senderProfile = senderProfile;
+        this.receiverProfile = receiverProfile;
     }
 
     public String getId() {
@@ -60,52 +61,44 @@ public class Request {
         this.status = status;
     }
 
-    public String getSenderID() {
-        return senderID;
+    public String getSender() {
+        return sender;
     }
 
-    public void setSenderID(String senderID) {
-        this.senderID = senderID;
+    public void setSender(String sender) {
+        this.sender = sender;
     }
 
-    public String getSenderUsername() {
-        return senderUsername;
+    public String getReceiver() {
+        return receiver;
     }
 
-    public void setSenderUsername(String senderUsername) {
-        this.senderUsername = senderUsername;
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
     }
 
-    public String getSenderImage() {
-        return senderImage;
+    public List<String> getRefers() {
+        return refers;
     }
 
-    public void setSenderImage(String senderImage) {
-        this.senderImage = senderImage;
+    public void setRefers(List<String> refers) {
+        this.refers = refers;
     }
 
-    public String getReceiverID() {
-        return receiverID;
+    public Profile getSenderProfile() {
+        return senderProfile;
     }
 
-    public void setReceiverID(String receiverID) {
-        this.receiverID = receiverID;
+    public void setSenderProfile(Profile senderProfile) {
+        this.senderProfile = senderProfile;
     }
 
-    public String getReceiverUsername() {
-        return receiverUsername;
+    public Profile getReceiverProfile() {
+        return receiverProfile;
     }
 
-    public void setReceiverUsername(String receiverUsername) {
-        this.receiverUsername = receiverUsername;
-    }
-
-    public String getReceiverImage() {
-        return receiverImage;
-    }
-
-    public void setReceiverImage(String receiverImage) {
-        this.receiverImage = receiverImage;
+    public void setReceiverProfile(Profile receiverProfile) {
+        this.receiverProfile = receiverProfile;
     }
 
     public Date getCreated() {
@@ -116,18 +109,29 @@ public class Request {
         this.created = created;
     }
 
+    public static List<String> createRefers(User fromUser, User toUser) {
+        List<String> list = new ArrayList<>();
+        list.add(fromUser.getId());
+        list.add(toUser.getId());
+        return list;
+    }
+
+    public static Profile createProfile(User user) {
+        return new Profile(user.getId(), user.getUsername(), user.getImage());
+    }
+
     @NonNull
     @Override
     public String toString() {
-        return "Request1{" +
+
+        return "Requests{" +
                 "id='" + id + '\'' +
                 ", status='" + status + '\'' +
-                ", senderID='" + senderID + '\'' +
-                ", senderName='" + senderUsername + '\'' +
-                ", senderImage='" + senderImage + '\'' +
-                ", receiverID='" + receiverID + '\'' +
-                ", receiverName='" + receiverUsername + '\'' +
-                ", receiverImage='" + receiverImage + '\'' +
+                ", sender='" + sender + '\'' +
+                ", receiver='" + receiver + '\'' +
+                ", refers=" + refers +
+                ", senderProfile=" + senderProfile +
+                ", receiverProfile=" + receiverProfile +
                 ", created=" + created +
                 '}';
     }
