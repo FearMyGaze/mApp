@@ -94,11 +94,11 @@ public class User implements Parcelable {
     }
 
     @Ignore //Register
-    public User(@NonNull String id, String username, String image) {
+    public User(@NonNull String id, String username) {
         this.id = id;
         this.username = username;
+        this.usernameLowered = username.toLowerCase();
         this.isProfileOpen = true;
-        this.image = image;
     }
 
     @Ignore

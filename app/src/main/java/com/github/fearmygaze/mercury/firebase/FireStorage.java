@@ -5,48 +5,17 @@ import android.content.Context;
 import android.net.Uri;
 import android.webkit.MimeTypeMap;
 
-import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.firebase.interfaces.OnDataResponseListener;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
 import com.github.fearmygaze.mercury.model.User;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.Random;
 
 public class FireStorage {
-
-    public static void uploadDefaultImage(String username, Context context, OnDataResponseListener listener) {
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child(User.IMAGE_COLLECTION);
-        StorageReference defFile = storageRef.child(context.getString(R.string.default_image));
-        String fileType = defFile.getName().substring(defFile.getName().lastIndexOf('.') + 1);
-        StorageReference updFile = storageRef.child(username + "." + fileType);
-        File localFile;
-        try {
-            localFile = File.createTempFile(username, fileType);
-            defFile.getFile(localFile)
-                    .addOnFailureListener(e -> {
-                        localFile.delete();
-                        listener.onFailure(e.getMessage());
-                    })
-                    .addOnSuccessListener(taskSnapshot -> updFile
-                            .putFile(Uri.fromFile(localFile))
-                            .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
-                            .addOnSuccessListener(taskSnapshot1 -> updFile.getDownloadUrl()
-                                    .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
-                                    .addOnSuccessListener(url -> {
-                                        localFile.delete();
-                                        listener.onSuccess(0, url);
-                                    })));
-        } catch (IOException e) {
-            listener.onFailure(e.getMessage());
-        }
-    }
 
     public static void updateProfileImage(User user, Uri uri, Context context, OnResponseListener listener) {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference().child(User.IMAGE_COLLECTION);
