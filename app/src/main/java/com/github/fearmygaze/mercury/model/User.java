@@ -105,6 +105,7 @@ public class User implements Parcelable {
     public User(@NonNull String id, String username, String image, String notificationToken, String status, String location, String job, String website, boolean isProfileOpen, Date created) {
         this.id = id;
         this.username = username;
+        this.usernameLowered = username.toLowerCase();
         this.image = image;
         this.notificationToken = notificationToken;
         this.status = status;
@@ -204,10 +205,12 @@ public class User implements Parcelable {
         isProfileOpen = profileOpen;
     }
 
+    @Exclude
     public boolean isSelected() {
         return isSelected;
     }
 
+    @Exclude
     public void setSelected(boolean selected) {
         isSelected = selected;
     }
