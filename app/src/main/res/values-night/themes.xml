@@ -16,8 +16,6 @@
         <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
         <!-- Customize your theme here. -->
         <item name="bottomSheetDialogTheme">@style/CustomBottomSheetDialog</item>
-<!--        <item name="toolbarStyle">@style/ToolBar</item>-->
-        <item name="android:itemBackground">@color/basicBackground</item>
     </style>
 
     <style name="RectComponent" parent="">

@@ -42,6 +42,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -50,6 +51,7 @@ public class Main extends AppCompatActivity {
 
     FrameLayout frameLayout;
     BottomNavigationView navigation;
+    FloatingActionButton fab;
 
     MaterialCardView profile, search, settings;
     ShapeableImageView profileImage;
@@ -74,6 +76,7 @@ public class Main extends AppCompatActivity {
 
         frameLayout = findViewById(R.id.mainFrame);
         navigation = findViewById(R.id.mainBottomNavigation);
+        fab = findViewById(R.id.mainChatCreate);
 
         profile = findViewById(R.id.mainProfileImageParent);
         profileImage = findViewById(R.id.mainProfileImage);
@@ -83,9 +86,11 @@ public class Main extends AppCompatActivity {
 
         navigation.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.mainOptionChat) {
+                fab.setVisibility(View.VISIBLE);
                 replaceFragment(Home.newInstance(user), "home");
                 return true;
             } else if (item.getItemId() == R.id.mainOptionFriends) {
+                fab.setVisibility(View.GONE);
                 replaceFragment(People.newInstance(user), "people");
                 return true;
             }
@@ -118,7 +123,10 @@ public class Main extends AppCompatActivity {
                     .putExtra("user", user));
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
-
+        fab.setOnClickListener(v -> {
+            startActivity(new Intent(Main.this, RoomCreator.class)
+                    .putExtra(User.ID, user.getId()));
+        });
     }
 
     @Override

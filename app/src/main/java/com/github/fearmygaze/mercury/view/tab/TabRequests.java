@@ -1,10 +1,10 @@
 package com.github.fearmygaze.mercury.view.tab;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,6 +35,8 @@ public class TabRequests extends Fragment {
     String id;
 
     AdapterPending adapterPending;
+    RecyclerView recyclerView;
+    ConstraintLayout errorLayout;
 
     public static TabRequests newInstance(String id) {
         TabRequests fragment = new TabRequests();
@@ -58,8 +60,8 @@ public class TabRequests extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_requests, container, false);
         SwipeRefreshLayout swipe = view.findViewById(R.id.fragmentRequestsSwipe);
-        RecyclerView recyclerView = view.findViewById(R.id.fragmentRequestsRecycler);
-        ConstraintLayout errorLayout = view.findViewById(R.id.fragmentRequestsErrorLayout);
+        recyclerView = view.findViewById(R.id.fragmentRequestsRecycler);
+        errorLayout = view.findViewById(R.id.fragmentRequestsErrorLayout);
 
         User user = AppDatabase.getInstance(view.getContext()).userDao().getByID(id);
 
@@ -81,14 +83,19 @@ public class TabRequests extends Fragment {
         Friends.waitingQuery(user)
                 .limit(50)
                 .get()
-                .addOnFailureListener(e -> Log.d("customLog", e.getMessage()))
+                .addOnFailureListener(e -> Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show())
                 .addOnSuccessListener(querySnapshot -> {
                     if (querySnapshot != null && !querySnapshot.isEmpty()) {
                         List<Request> list = new ArrayList<>();
                         for (DocumentSnapshot snapshot : querySnapshot.getDocuments()) {
                             list.add(snapshot.toObject(Request.class));
                         }
+                        errorLayout.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
                         adapterPending.set(list);
+                    } else {
+                        recyclerView.setVisibility(View.GONE);
+                        errorLayout.setVisibility(View.VISIBLE);
                     }
                 });
     }

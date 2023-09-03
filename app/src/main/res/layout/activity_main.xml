@@ -125,6 +125,19 @@
             app:layout_constraintTop_toBottomOf="@id/mainAppBarDivider"
             app:layout_constraintBottom_toTopOf="@id/mainBottomNavigationDivider"/>
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/mainChatCreate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="15dp"
+            app:fabSize="mini"
+            android:src="@drawable/ic_add_24"
+            app:shapeAppearanceOverlay="@style/RectComponent"
+            android:contentDescription="@string/generalAdd"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/mainBottomNavigationDivider"/>
+
         <com.google.android.material.divider.MaterialDivider
             android:id="@+id/mainBottomNavigationDivider"
             android:layout_width="match_parent"

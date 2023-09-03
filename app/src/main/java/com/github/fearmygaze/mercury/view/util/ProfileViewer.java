@@ -8,6 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -25,6 +26,7 @@ import com.github.fearmygaze.mercury.view.adapter.AdapterFriends;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -66,10 +68,7 @@ public class ProfileViewer extends AppCompatActivity {
         friendsView = findViewById(R.id.profileViewerRecycler);
 
         bundle = getIntent().getExtras();
-
-        if (bundle == null) {
-            onBackPressed();
-        }
+        if (bundle == null) onBackPressed();
 
         myUser = bundle.getParcelable("user");
         otherUser = bundle.getParcelable("userData");
@@ -85,7 +84,7 @@ public class ProfileViewer extends AppCompatActivity {
         Tools.profileImage(otherUser.getImage(), ProfileViewer.this).into(userImage);
         status.setText(otherUser.getStatus());
         updateStats();
-        User.extraInfo(otherUser, false, typedValue.resourceId, chipGroup, ProfileViewer.this);
+        User.extraInfo(otherUser, typedValue.resourceId, chipGroup, ProfileViewer.this);
 
         if (myUser.getId().equals(otherUser.getId())) {
             request.setEnabled(false);
@@ -134,35 +133,52 @@ public class ProfileViewer extends AppCompatActivity {
         request.setOnClickListener(v -> {
             String state = request.getText().toString().trim();
             if (state.equals(getString(R.string.requestAccepted))) {
-//                Friends.answerRequest(myUser, otherUser, Friends.OPTION_REMOVE, ProfileViewer.this, new OnResponseListener() {
-//                    @Override
-//                    public void onSuccess(int code) {
-//                        if (code == 0) {
-//                            request.setText(getString(R.string.requestNone));
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailure(String message) {
-//                        Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_LONG).show();
-//                    }
-//                });
-            } else if (state.equals(getString(R.string.requestWaiting))) {
-                Friends.cancelRequest(myUser, otherUser, ProfileViewer.this, new OnResponseListener() {
+                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(v.getContext());
+                builder.setBackground(AppCompatResources.getDrawable(v.getContext(), R.color.basicBackground))
+                        .setTitle(String.format("%s %s %s?", "Remove", otherUser.getUsername(), "from friends"))
+                        .setMessage("You will not be able to message them but you will still be able to view their profile")
+                        .setNegativeButton(R.string.generalCancel, (dialog, i) -> dialog.dismiss())
+                        .setPositiveButton("Unfollow", (dialog, i) -> {
+                Friends.answerRequest(myUser, otherUser, Friends.OPTION_REMOVE, ProfileViewer.this, new OnResponseListener() {
                     @Override
                     public void onSuccess(int code) {
                         if (code == 0) {
                             request.setText(getString(R.string.requestNone));
-                        } else {
-                            Toast.makeText(ProfileViewer.this, "Request changed state", Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(String message) {
-
+                        Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_LONG).show();
                     }
                 });
+                        })
+                        .show();
+
+            } else if (state.equals(getString(R.string.requestWaiting))) {
+                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(v.getContext());
+                builder.setBackground(AppCompatResources.getDrawable(v.getContext(), R.color.basicBackground))
+                        .setTitle(String.format("%s %s?", "Do you want to remove the request to", otherUser.getUsername()))
+                        .setMessage("You will still be able to send again later if you changed your mind")
+                        .setNegativeButton(R.string.generalCancel, (dialog, i) -> dialog.dismiss())
+                        .setPositiveButton("Remove", (dialog, i) -> {
+                            Friends.cancelRequest(myUser, otherUser, ProfileViewer.this, new OnResponseListener() {
+                                @Override
+                                public void onSuccess(int code) {
+                                    if (code == 0) {
+                                        request.setText(getString(R.string.requestNone));
+                                    } else {
+                                        Toast.makeText(ProfileViewer.this, "Request changed state", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(String message) {
+
+                                }
+                            });
+                        })
+                        .show();
             } else if (state.equals(getString(R.string.requestNone))) {
                 Friends.sendRequest(myUser, otherUser, ProfileViewer.this, new OnResponseListener() {
                     @Override
@@ -177,6 +193,20 @@ public class ProfileViewer extends AppCompatActivity {
                         Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_SHORT).show();
                     }
                 });
+            } else if (state.equals(getString(R.string.requestAnswer))) {
+                Friends.answerRequest(myUser, otherUser, Friends.OPTION_ACCEPT, ProfileViewer.this, new OnResponseListener() {
+                    @Override
+                    public void onSuccess(int code) {
+                        if (code == 0) {
+                            request.setText(getString(R.string.generalFriends));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+                        Toast.makeText(v.getContext(), message, Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
 
@@ -189,9 +219,10 @@ public class ProfileViewer extends AppCompatActivity {
             adapterFriends = new AdapterFriends(myUser, options);
             friendsView.setLayoutManager(new CustomLinearLayout(ProfileViewer.this, LinearLayoutManager.VERTICAL, false));
             friendsView.setAdapter(adapterFriends);
+            friendsView.setItemAnimator(null);
             toolbar.setSubtitle("Friends: " + adapterFriends.getItemCount());
         } else {
-
+            Toast.makeText(ProfileViewer.this, "Profile Private", Toast.LENGTH_LONG).show();
         }
     }
 

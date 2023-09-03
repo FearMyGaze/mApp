@@ -21,6 +21,7 @@
     <string name="generalPhoto">Εικόνα</string>
     <string name="generalCreate">Δημιουργία</string>
     <string name="generalClear">Καθαρισμός</string>
+    <string name="generalJoined">Έγινε μέλος:</string>
 
     <!-- SignIn (Activity) -->
     <string name="signInWelcome">Καλώς Ήρθατε</string>
@@ -91,6 +92,7 @@
     <string name="requestBlocked">Αποκλεισμένοι</string>
     <string name="requestWaiting">Αναμονή</string>
     <string name="requestNone">Πρόσθεσε</string>
+    <string name="requestAnswer">Επιβεβαίωση</string>
 
     <!-- AdapterRoom -->
     <string name="adapterRoomYou">Εσύ</string>

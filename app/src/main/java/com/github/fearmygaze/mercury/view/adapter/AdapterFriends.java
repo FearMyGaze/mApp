@@ -25,7 +25,7 @@ import com.google.android.material.imageview.ShapeableImageView;
 public class AdapterFriends extends FirestoreRecyclerAdapter<Request, AdapterFriends.FriendsVH> {
 
     User user;
-    Profile profile;
+
     public AdapterFriends(User user, @NonNull FirestoreRecyclerOptions<Request> options) {
         super(options);
         this.user = user;
@@ -39,16 +39,11 @@ public class AdapterFriends extends FirestoreRecyclerAdapter<Request, AdapterFri
 
     @Override
     protected void onBindViewHolder(@NonNull FriendsVH holder, int position, @NonNull Request model) {
-        if (model.getReceiver().equals(user.getId())){
-            profile = model.getSenderProfile();
-        }else {
-            profile = model.getReceiverProfile();
-        }
         Context context = holder.itemView.getContext();
-        Tools.profileImage(profile.getImage(), context).into(holder.image);
-        holder.username.setText(profile.getUsername());
+        Tools.profileImage(getProfile(model).getImage(), context).into(holder.image);
+        holder.username.setText(getProfile(model).getUsername());
         holder.root.setOnClickListener(v -> {
-            Auth.getUserProfile(profile.getId(), context, new OnUserResponseListener() {
+            Auth.getUserProfile(getProfile(model).getId(), context, new OnUserResponseListener() {
                 @Override
                 public void onSuccess(int code, User requested) {
                     if (code == 0) {
@@ -66,6 +61,14 @@ public class AdapterFriends extends FirestoreRecyclerAdapter<Request, AdapterFri
             Toast.makeText(v.getContext(), "Add action", Toast.LENGTH_SHORT).show();
             return true;
         });
+    }
+
+    private Profile getProfile(Request request) {
+        if (user.getId().equals(request.getReceiver())) {
+            return request.getSenderProfile();
+        } else {
+            return request.getReceiverProfile();
+        }
     }
 
     public static class FriendsVH extends RecyclerView.ViewHolder {

@@ -12,17 +12,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.model.User;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class Home extends Fragment {
 
     View view;
-    String id;
-
     User user;
 
     RecyclerView recyclerView;
-    FloatingActionButton create;
 
     public Home() {
 
@@ -49,7 +45,6 @@ public class Home extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_home, container, false);
         recyclerView = view.findViewById(R.id.homeRecycler);
-        create = view.findViewById(R.id.homeCreate);
 
         return view;
     }

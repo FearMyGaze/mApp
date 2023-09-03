@@ -22,6 +22,7 @@
     <string name="generalPhoto">Photo</string>
     <string name="generalCreate">Create</string>
     <string name="generalClear">Clear</string>
+    <string name="generalJoined">Joined:</string>
 
     <!-- SignIn (Activity) -->
     <string name="signInWelcome">Welcome</string>
@@ -92,6 +93,7 @@
     <string name="requestBlocked">Blocked</string>
     <string name="requestWaiting">Pending</string>
     <string name="requestNone">Add</string>
+    <string name="requestAnswer">Accept</string>
 
     <!-- AdapterRoom -->
     <string name="adapterRoomYou">You</string>

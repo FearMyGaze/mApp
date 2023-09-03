@@ -96,6 +96,7 @@ public class Profile extends AppCompatActivity {
         adapterFriends = new AdapterFriends(user, options);
         friendsView.setLayoutManager(new CustomLinearLayout(Profile.this, LinearLayoutManager.VERTICAL, false));
         friendsView.setAdapter(adapterFriends);
+        friendsView.setItemAnimator(null);
 
         refreshList(swipe);
     }
@@ -110,7 +111,7 @@ public class Profile extends AppCompatActivity {
             Tools.profileImage(user.getImage(), Profile.this).into(userImage);
             toolbar.setTitle(user.getUsername());
             status.setText(user.getStatus());
-            User.extraInfo(user, true, typedValue.resourceId, chipGroup, Profile.this);
+            User.extraInfo(user, typedValue.resourceId, chipGroup, Profile.this);
         }
     }
 

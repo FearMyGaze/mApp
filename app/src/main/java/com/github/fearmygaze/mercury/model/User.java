@@ -80,7 +80,7 @@ public class User implements Parcelable {
     String website;
 
     @ServerTimestamp
-    @ColumnInfo(name = "Created")
+    @ColumnInfo(name = "created")
     Date created;
 
     @ColumnInfo(name = "isProfileOpen")
@@ -258,7 +258,7 @@ public class User implements Parcelable {
         AppDatabase.getInstance(context).userDao().deleteAll();
     }
 
-    public static void extraInfo(User user, boolean showAll, int resourceId, ChipGroup chipGroup, Context context) {
+    public static void extraInfo(User user, int resourceId, ChipGroup chipGroup, Context context) {
         chipGroup.removeAllViews();
 
         if (user.getJob() != null && !user.getJob().isEmpty()) {
@@ -268,7 +268,6 @@ public class User implements Parcelable {
             chip.setChecked(false);
             chip.setClickable(false);
             chip.setChipIconResource(R.drawable.ic_repair_service_24);
-            chip.setChipIconTintResource(resourceId);
             chip.setChipBackgroundColorResource(R.color.basicBackground);
             chipGroup.addView(chip);
         }
@@ -276,12 +275,11 @@ public class User implements Parcelable {
         if (user.getWebsite() != null && !user.getWebsite().isEmpty()) {
             Chip chip = new Chip(context);
             chip.setText(removeHttp(user.getWebsite()));
-            chip.setTextColor(context.getColor(R.color.textBold));
+            chip.setTextColor(context.getColor(resourceId));
             chip.setCheckable(false);
             chip.setChecked(false);
             chip.setClickable(false);
             chip.setChipIconResource(R.drawable.ic_link_24);
-            chip.setChipIconTintResource(resourceId);
             chip.setChipBackgroundColorResource(R.color.basicBackground);
             chip.setOnClickListener(v -> context.startActivity(new Intent(Intent.ACTION_VIEW,
                     Uri.parse(addHttp(user.getWebsite())))
@@ -296,19 +294,17 @@ public class User implements Parcelable {
             chip.setChecked(false);
             chip.setClickable(false);
             chip.setChipIconResource(R.drawable.ic_location_24);
-            chip.setChipIconTintResource(resourceId);
             chip.setChipBackgroundColorResource(R.color.basicBackground);
             chipGroup.addView(chip);
         }
 
-        if (showAll && user.getCreated() != null) {
+        if (user.getCreated() != null) {
             Chip chip = new Chip(context);
-            chip.setText(setCorrectDateFormat(TimestampConverter.dateToUnix(user.getCreated())));
+            chip.setText(String.format("%s %s", context.getString(R.string.generalJoined), setCorrectDateFormat(TimestampConverter.dateToUnix(user.getCreated()))));
             chip.setCheckable(false);
             chip.setChecked(false);
             chip.setClickable(false);
             chip.setChipIconResource(R.drawable.ic_calendar_24);
-            chip.setChipIconTintResource(resourceId);
             chip.setChipBackgroundColorResource(R.color.basicBackground);
             chipGroup.addView(chip);
         }
@@ -369,6 +365,7 @@ public class User implements Parcelable {
         location = in.readString();
         job = in.readString();
         website = in.readString();
+        created = TimestampConverter.unixToDate(in.readLong());
         isProfileOpen = in.readByte() != 0;
         isSelected = in.readByte() != 0;
     }
@@ -388,6 +385,7 @@ public class User implements Parcelable {
         parcel.writeString(location);
         parcel.writeString(job);
         parcel.writeString(website);
+        parcel.writeLong(TimestampConverter.dateToUnix(created));
         parcel.writeByte((byte) (isProfileOpen ? 1 : 0));
         parcel.writeByte((byte) (isSelected ? 1 : 0));
     }

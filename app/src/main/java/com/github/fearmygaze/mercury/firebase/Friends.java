@@ -61,7 +61,11 @@ public class Friends {
                                     listener.onSuccess(0, context.getString(R.string.requestAccepted));
                                     break;
                                 case Request.S_WAITING:
-                                    listener.onSuccess(0, context.getString(R.string.requestWaiting));
+                                    if (request.getReceiver().equals(fromUser.getId())) {
+                                        listener.onSuccess(0, context.getString(R.string.requestAnswer));
+                                    } else {
+                                        listener.onSuccess(0, context.getString(R.string.requestWaiting));
+                                    }
                                     break;
                                 case Request.S_BLOCKED:
                                     listener.onSuccess(0, context.getString(R.string.requestBlocked));
