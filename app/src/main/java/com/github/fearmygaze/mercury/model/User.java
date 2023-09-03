@@ -47,7 +47,7 @@ public class User implements Parcelable {
             JOB = "job",
             WEB = "website",
             CREATED = "created",
-            PROFILE = "isProfileOpen";
+            PROFILE = "profileOpen";
 
 
     @NonNull

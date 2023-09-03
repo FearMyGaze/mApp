@@ -15,12 +15,13 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.firebase.Auth;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnUserResponseListener;
-import com.github.fearmygaze.mercury.model.Profile;
 import com.github.fearmygaze.mercury.model.Request;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.imageview.ShapeableImageView;
+
+import java.util.Objects;
 
 public class AdapterFriends extends FirestoreRecyclerAdapter<Request, AdapterFriends.FriendsVH> {
 
@@ -40,35 +41,57 @@ public class AdapterFriends extends FirestoreRecyclerAdapter<Request, AdapterFri
     @Override
     protected void onBindViewHolder(@NonNull FriendsVH holder, int position, @NonNull Request model) {
         Context context = holder.itemView.getContext();
-        Tools.profileImage(getProfile(model).getImage(), context).into(holder.image);
-        holder.username.setText(getProfile(model).getUsername());
-        holder.root.setOnClickListener(v -> {
-            Auth.getUserProfile(getProfile(model).getId(), context, new OnUserResponseListener() {
-                @Override
-                public void onSuccess(int code, User requested) {
-                    if (code == 0) {
-                        Tools.goToProfileViewer(user, requested, context);
+        if (getItemViewType(holder.getAbsoluteAdapterPosition()) == 0) {
+            Tools.profileImage(model.getSenderProfile().getImage(), context).into(holder.image);
+            holder.username.setText(model.getSenderProfile().getUsername());
+            holder.root.setOnClickListener(v -> {
+                Auth.getUserProfile(model.getSenderProfile().getId(), context, new OnUserResponseListener() {
+                    @Override
+                    public void onSuccess(int code, User requested) {
+                        if (code == 0) {
+                            Tools.goToProfileViewer(user, requested, context);
+                        }
                     }
-                }
 
-                @Override
-                public void onFailure(String message) {
-                    Toast.makeText(v.getContext(), message, Toast.LENGTH_SHORT).show();
-                }
+                    @Override
+                    public void onFailure(String message) {
+                        Toast.makeText(v.getContext(), message, Toast.LENGTH_SHORT).show();
+                    }
+                });
             });
-        });
-        holder.root.setOnLongClickListener(v -> {
-            Toast.makeText(v.getContext(), "Add action", Toast.LENGTH_SHORT).show();
-            return true;
-        });
+            holder.root.setOnLongClickListener(v -> {
+                Toast.makeText(v.getContext(), "Add action", Toast.LENGTH_SHORT).show();
+                return true;
+            });
+        } else {
+            Tools.profileImage(model.getReceiverProfile().getImage(), context).into(holder.image);
+            holder.username.setText(model.getReceiverProfile().getUsername());
+            holder.root.setOnClickListener(v -> {
+                Auth.getUserProfile(model.getReceiverProfile().getId(), context, new OnUserResponseListener() {
+                    @Override
+                    public void onSuccess(int code, User requested) {
+                        if (code == 0) {
+                            Tools.goToProfileViewer(user, requested, context);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+                        Toast.makeText(v.getContext(), message, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            });
+            holder.root.setOnLongClickListener(v -> {
+                Toast.makeText(v.getContext(), "Add action", Toast.LENGTH_SHORT).show();
+                return true;
+            });
+        }
+
     }
 
-    private Profile getProfile(Request request) {
-        if (user.getId().equals(request.getReceiver())) {
-            return request.getSenderProfile();
-        } else {
-            return request.getReceiverProfile();
-        }
+    @Override
+    public int getItemViewType(int position) {
+        return Objects.equals(getItem(position).getReceiver(), user.getId()) ? 0 : 1;
     }
 
     public static class FriendsVH extends RecyclerView.ViewHolder {

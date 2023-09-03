@@ -216,7 +216,7 @@ public class ProfileViewer extends AppCompatActivity {
         });
 
         if (otherUser.isProfileOpen()) {
-            adapterFriends = new AdapterFriends(myUser, options);
+            adapterFriends = new AdapterFriends(otherUser, options);
             friendsView.setLayoutManager(new CustomLinearLayout(ProfileViewer.this, LinearLayoutManager.VERTICAL, false));
             friendsView.setAdapter(adapterFriends);
             friendsView.setItemAnimator(null);
