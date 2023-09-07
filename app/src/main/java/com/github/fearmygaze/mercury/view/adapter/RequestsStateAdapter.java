@@ -18,7 +18,7 @@ public class RequestsStateAdapter extends FragmentStateAdapter {
     public RequestsStateAdapter(@NonNull FragmentActivity fragmentActivity, @NonNull User user) {
         super(fragmentActivity);
         this.user = user;
-        this.tabRequests = TabRequests.newInstance(user.getId());
+        this.tabRequests = TabRequests.newInstance(user);
         this.tabFriends = TabFriends.newInstance(user);
     }
 
