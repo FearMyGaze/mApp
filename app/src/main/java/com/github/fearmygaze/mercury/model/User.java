@@ -19,7 +19,6 @@ import com.github.fearmygaze.mercury.database.UserRoomDao;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.Exclude;
 import com.google.firebase.firestore.ServerTimestamp;
 
 import java.text.DateFormat;
@@ -39,12 +38,14 @@ public class User implements Parcelable {
             COLLECTION = "users",
             ID = "id",
             USERNAME = "username",
-            USERNAME_LOWERED = "usernameLowered",
+            USERNAME_LOWERED = "usernameL",
             IMAGE = "image",
             NOTIFICATION = "notificationToken",
             STATUS = "status",
             LOCATION = "location",
+            LOCATION_LOWERED = "locationL",
             JOB = "job",
+            JOB_LOWERED = "jobL",
             WEB = "website",
             CREATED = "created",
             PROFILE = "profileOpen";
@@ -59,7 +60,7 @@ public class User implements Parcelable {
     String username;
 
     @ColumnInfo(name = "usernameLowered")
-    String usernameLowered;
+    String usernameL;
 
     @ColumnInfo(name = "image")
     String image;
@@ -73,8 +74,14 @@ public class User implements Parcelable {
     @ColumnInfo(name = "location")
     String location;
 
+    @ColumnInfo(name = "locationLowered")
+    String locationL;
+
     @ColumnInfo(name = "job")
     String job;
+
+    @ColumnInfo(name = "jobLowered")
+    String jobL;
 
     @ColumnInfo(name = "website")
     String website;
@@ -86,10 +93,6 @@ public class User implements Parcelable {
     @ColumnInfo(name = "isProfileOpen")
     boolean isProfileOpen;
 
-    @Exclude
-    @Ignore
-    boolean isSelected;
-
     public User() {
     }
 
@@ -97,7 +100,7 @@ public class User implements Parcelable {
     public User(@NonNull String id, String username) {
         this.id = id;
         this.username = username;
-        this.usernameLowered = username.toLowerCase();
+        this.usernameL = username.toLowerCase();
         this.isProfileOpen = true;
     }
 
@@ -105,12 +108,14 @@ public class User implements Parcelable {
     public User(@NonNull String id, String username, String image, String notificationToken, String status, String location, String job, String website, boolean isProfileOpen, Date created) {
         this.id = id;
         this.username = username;
-        this.usernameLowered = username.toLowerCase();
+        this.usernameL = username.toLowerCase();
         this.image = image;
         this.notificationToken = notificationToken;
         this.status = status;
         this.location = location;
+        this.locationL = location.toLowerCase();
         this.job = job;
+        this.jobL = job.toLowerCase();
         this.website = website;
         this.isProfileOpen = isProfileOpen;
         this.created = created;
@@ -133,12 +138,12 @@ public class User implements Parcelable {
         this.username = username;
     }
 
-    public String getUsernameLowered() {
-        return usernameLowered;
+    public String getUsernameL() {
+        return usernameL;
     }
 
-    public void setUsernameLowered(String usernameLowered) {
-        this.usernameLowered = usernameLowered;
+    public void setUsernameL(String usernameL) {
+        this.usernameL = usernameL;
     }
 
     public String getImage() {
@@ -173,12 +178,28 @@ public class User implements Parcelable {
         this.location = location;
     }
 
+    public String getLocationL() {
+        return locationL;
+    }
+
+    public void setLocationL(String locationL) {
+        this.locationL = locationL;
+    }
+
     public String getJob() {
         return job;
     }
 
     public void setJob(String job) {
         this.job = job;
+    }
+
+    public String getJobL() {
+        return jobL;
+    }
+
+    public void setJobL(String jobL) {
+        this.jobL = jobL;
     }
 
     public String getWebsite() {
@@ -203,16 +224,6 @@ public class User implements Parcelable {
 
     public void setProfileOpen(boolean profileOpen) {
         isProfileOpen = profileOpen;
-    }
-
-    @Exclude
-    public boolean isSelected() {
-        return isSelected;
-    }
-
-    @Exclude
-    public void setSelected(boolean selected) {
-        isSelected = selected;
     }
 
     public static User convertFromDocumentAndSave(DocumentSnapshot document, Context context) {
@@ -367,7 +378,6 @@ public class User implements Parcelable {
         website = in.readString();
         created = TimestampConverter.unixToDate(in.readLong());
         isProfileOpen = in.readByte() != 0;
-        isSelected = in.readByte() != 0;
     }
 
     @Override
@@ -387,7 +397,6 @@ public class User implements Parcelable {
         parcel.writeString(website);
         parcel.writeLong(TimestampConverter.dateToUnix(created));
         parcel.writeByte((byte) (isProfileOpen ? 1 : 0));
-        parcel.writeByte((byte) (isSelected ? 1 : 0));
     }
 
     @NonNull
@@ -404,7 +413,6 @@ public class User implements Parcelable {
                 ", website='" + website + '\'' +
                 ", created=" + created +
                 ", isProfileOpen=" + isProfileOpen +
-                ", isSelected=" + isSelected +
                 '}';
     }
 }

@@ -27,6 +27,8 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.Locale;
+
 public class Profile extends AppCompatActivity {
 
     //User Components
@@ -93,7 +95,13 @@ public class Profile extends AppCompatActivity {
 
         swipe.setOnRefreshListener(() -> refreshList(swipe));
 
-        adapterFriends = new AdapterFriends(user, options);
+        adapterFriends = new AdapterFriends(user, options, count -> {
+            if (count > 0) {
+                toolbar.setSubtitle(String.format(Locale.getDefault(), "%s: %d", getString(R.string.generalFriends), count));
+            } else {
+
+            }
+        });
         friendsView.setLayoutManager(new CustomLinearLayout(Profile.this, LinearLayoutManager.VERTICAL, false));
         friendsView.setAdapter(adapterFriends);
         friendsView.setItemAnimator(null);

@@ -51,8 +51,8 @@ public class AdapterSearch extends FirestorePagingAdapter<User, AdapterSearch.Se
         holder.username.setText(model.getUsername());
         holder.status.setText(model.getStatus());
         holder.root.setOnClickListener(v -> {
-            listener.onClick();
             AppDatabase.getInstance(v.getContext()).cachedProfile().insert(new Profile(model.getId(), model.getUsername(), model.getImage()));
+            listener.onClick();
             Tools.goToProfileViewer(myUser, model, v.getContext());
         });
     }

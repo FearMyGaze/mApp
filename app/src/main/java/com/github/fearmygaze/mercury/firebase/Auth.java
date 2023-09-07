@@ -249,14 +249,14 @@ public class Auth {
         if (search.startsWith("loc:") && search.length() >= 7) {
             pSearch = search.replace("loc:", "");
             return reference
-                    .whereGreaterThanOrEqualTo(User.LOCATION, pSearch)
-                    .whereLessThanOrEqualTo(User.LOCATION, pSearch + "\uf8ff")
+                    .whereGreaterThanOrEqualTo(User.LOCATION_LOWERED, pSearch.toLowerCase())
+                    .whereLessThanOrEqualTo(User.LOCATION_LOWERED, pSearch.toLowerCase() + "\uf8ff")
                     .limit(40);
         } else if (search.startsWith("job:") && search.length() >= 7) {
             pSearch = search.replace("job:", "");
             return reference
-                    .whereGreaterThanOrEqualTo(User.JOB, pSearch)
-                    .whereLessThanOrEqualTo(User.JOB, pSearch + "\uf8ff")
+                    .whereGreaterThanOrEqualTo(User.JOB_LOWERED, pSearch.toLowerCase())
+                    .whereLessThanOrEqualTo(User.JOB_LOWERED, pSearch.toLowerCase() + "\uf8ff")
                     .limit(40);
         } else if (search.startsWith("web:") && search.length() >= 7) {
             pSearch = Tools.addHttp(search.replace("web:", ""));

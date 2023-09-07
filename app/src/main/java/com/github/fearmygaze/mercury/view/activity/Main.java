@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -51,19 +52,35 @@ public class Main extends AppCompatActivity {
 
     FrameLayout frameLayout;
     BottomNavigationView navigation;
-    FloatingActionButton fab;
+    FloatingActionButton createRoom;
 
     MaterialCardView profile, search, settings;
     ShapeableImageView profileImage;
     TextView appName;
 
     User user;
+    AppDatabase database;
+
+    //Search Sheet
+    ConstraintLayout searchSheetParent;
+    BottomSheetBehavior<ConstraintLayout> searchBehaviour;
+    Group cachedComp;
+    MaterialCardView searchSheetClose;
+    MaterialCardView searchBoxClear;
+    ShapeableImageView clearCache;
+
+    //Cached Profiles
+    AdapterCachedProfile adapterCachedProfile;
+    RecyclerView cachedProfileRecycler;
+
+    //Cached Searches
+    AdapterCachedQuery adapterCachedQuery;
+    RecyclerView cachedSearchRecycler;
+
 
     //Search
-    BottomSheetBehavior<ConstraintLayout> searchBehaviour;
     EditText searchBox;
-    AdapterCachedProfile adapterCachedPr;
-    AdapterCachedQuery adapterCachedQuery;
+    RecyclerView searchRecycler;
     private final Handler searchHandler = new Handler();
     private Runnable searchRunnable;
 
@@ -73,10 +90,11 @@ public class Main extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+        database = AppDatabase.getInstance(Main.this);
 
         frameLayout = findViewById(R.id.mainFrame);
         navigation = findViewById(R.id.mainBottomNavigation);
-        fab = findViewById(R.id.mainChatCreate);
+        createRoom = findViewById(R.id.mainChatCreate);
 
         profile = findViewById(R.id.mainProfileImageParent);
         profileImage = findViewById(R.id.mainProfileImage);
@@ -84,13 +102,67 @@ public class Main extends AppCompatActivity {
         search = findViewById(R.id.mainSearch);
         settings = findViewById(R.id.mainSettings);
 
+        //Search sheet
+        searchSheetParent = findViewById(R.id.searchSheetParent);
+        cachedComp = findViewById(R.id.searchCachedComps);
+        searchSheetClose = findViewById(R.id.searchGoBack);
+        searchBox = findViewById(R.id.searchBox);
+        searchBoxClear = findViewById(R.id.searchClear);
+        clearCache = findViewById(R.id.searchCachedClear);
+        searchRecycler = findViewById(R.id.searchRecycler);
+
+        //Cached Profile
+        cachedProfileRecycler = findViewById(R.id.searchCachedProfileRecycler);
+        //Cached Query
+        cachedSearchRecycler = findViewById(R.id.searchCachedQueryRecycler);
+
+        //Search Sheet
+        searchBehaviour = BottomSheetBehavior.from(searchSheetParent);
+        searchSheetClose.setOnClickListener(v -> onBackPressed());
+        searchBoxClear.setOnClickListener(v -> searchBox.setText(""));
+
+        //Cached Profile
+        adapterCachedProfile = new AdapterCachedProfile(user, Main.this, count -> handleCachedComps());
+        cachedProfileRecycler.setLayoutManager(new CustomLinearLayout(Main.this, LinearLayoutManager.HORIZONTAL, false));
+        cachedProfileRecycler.setAdapter(adapterCachedProfile);
+        cachedProfileRecycler.setItemAnimator(null);
+
+        //Cached Search
+        adapterCachedQuery = new AdapterCachedQuery(Main.this, new AdapterCachedQuery.CQueryListener() {
+            @Override
+            public void send(String str) {
+                searchBox.setText(str);
+            }
+
+            @Override
+            public void getCount(int count) {
+                handleCachedComps();
+            }
+        });
+        cachedSearchRecycler.setLayoutManager(new CustomLinearLayout(Main.this, LinearLayoutManager.VERTICAL, false));
+        cachedSearchRecycler.setAdapter(adapterCachedQuery);
+        cachedSearchRecycler.setItemAnimator(null);
+
+        clearCache.setOnClickListener(v -> {
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(v.getContext());
+            builder.setBackground(AppCompatResources.getDrawable(v.getContext(), R.color.basicBackground))
+                    .setTitle(R.string.dialogDeleteAllCachedTitle)
+                    .setMessage(R.string.dialogDeleteAllCachedMessage)
+                    .setNegativeButton(R.string.generalCancel, (dialog, i) -> dialog.dismiss())
+                    .setPositiveButton(R.string.generalClear, (dialog, i) -> {
+                        adapterCachedProfile.clear();
+                        adapterCachedQuery.clear();
+                        handleCachedComps();
+                    }).show();
+        });
+
         navigation.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.mainOptionChat) {
-                fab.setVisibility(View.VISIBLE);
+                createRoom.setVisibility(View.VISIBLE);
                 replaceFragment(Home.newInstance(user), "home");
                 return true;
             } else if (item.getItemId() == R.id.mainOptionFriends) {
-                fab.setVisibility(View.GONE);
+                createRoom.setVisibility(View.GONE);
                 replaceFragment(People.newInstance(user), "people");
                 return true;
             }
@@ -100,40 +172,34 @@ public class Main extends AppCompatActivity {
         rememberMe(savedInstanceState);
         searchSheet();
 
-        navigation.setOnItemReselectedListener(item -> {
-            if (item.getItemId() == R.id.mainOptionChat) {
-                Toast.makeText(Main.this, "We need to refresh or go to the top", Toast.LENGTH_SHORT).show();
-            } else if (item.getItemId() == R.id.mainOptionFriends) {
-
-            } else {
-
-            }
-        });
-
         profile.setOnClickListener(v -> {
             startActivity(new Intent(Main.this, Profile.class)
                     .putExtra("user", user));
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         });
 
-        search.setOnClickListener(v -> searchBehaviour.setState(BottomSheetBehavior.STATE_EXPANDED));
+        search.setOnClickListener(v -> {
+            handleCachedComps();
+            searchBehaviour.setState(BottomSheetBehavior.STATE_EXPANDED);
+        });
 
         settings.setOnClickListener(v -> {
             startActivity(new Intent(Main.this, Settings.class)
                     .putExtra("user", user));
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
-        fab.setOnClickListener(v -> {
+        createRoom.setOnClickListener(v -> {
             startActivity(new Intent(Main.this, RoomCreator.class)
-                    .putExtra(User.ID, user.getId()));
+                    .putExtra("user", user));
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
     }
 
     @Override
     protected void onResume() {
+        super.onResume();
         FirebaseUser oldFireUser = FirebaseAuth.getInstance().getCurrentUser();
-        adapterCachedPr.set(AppDatabase.getInstance(Main.this).cachedProfile().getAll());
-        adapterCachedQuery.set(AppDatabase.getInstance(Main.this).cachedQueries().getAll());
+        handleCachedComps();
         Auth.rememberMe(oldFireUser, Main.this, new OnUserResponseListener() {
             @Override
             public void onSuccess(int code, User data) {
@@ -165,7 +231,6 @@ public class Main extends AppCompatActivity {
                 finish();
             }
         });
-        super.onResume();
     }
 
     @Override
@@ -173,6 +238,7 @@ public class Main extends AppCompatActivity {
         if (searchBehaviour.getState() == BottomSheetBehavior.STATE_EXPANDED) {
             searchBox.clearFocus();
             searchBox.setText("");
+            Tools.closeKeyboard(Main.this);
             searchBehaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
         } else {
             if (navigation.getSelectedItemId() == R.id.mainOptionChat) {
@@ -185,61 +251,24 @@ public class Main extends AppCompatActivity {
     }
 
     private void searchSheet() {
-        ConstraintLayout parent = findViewById(R.id.searchSheetParent);
-        searchBehaviour = BottomSheetBehavior.from(parent);
-
-        //General
-        MaterialCardView close = findViewById(R.id.searchGoBack);
-        MaterialCardView clear = findViewById(R.id.searchClear);
-        ShapeableImageView clearCache = findViewById(R.id.searchCachedClear);
-        Group profileGroup = findViewById(R.id.searchCachedProfilesGroup);
-        Group queryGroup = findViewById(R.id.searchCachedQueryGroup);
 
         //Search
-        searchBox = findViewById(R.id.searchBox);
-        RecyclerView searchRecycler = findViewById(R.id.searchRecycler);
-        PagingConfig config = new PagingConfig(3, 15, true);
+        PagingConfig config = new PagingConfig(3, 15, false);
         FirestorePagingOptions<User> searchOptions = new FirestorePagingOptions.Builder<User>()
                 .setLifecycleOwner(this)
                 .setQuery(Auth.searchQuery("@"), config, User.class)
                 .build();
+        ConstraintLayout errorLayout = findViewById(R.id.searchErrorLayout);
+        TextView errorText = findViewById(R.id.searchErrorText);
 
         AdapterSearch adapterSearch = new AdapterSearch(user, searchOptions, searchRecycler, Main.this, () -> {
             searchBox.setText("");
             searchBox.clearFocus();
+            handleCachedComps();
         });
 
         searchRecycler.setLayoutManager(new CustomLinearLayout(Main.this, LinearLayoutManager.VERTICAL, false));
         searchRecycler.setAdapter(adapterSearch);
-
-        clear.setOnClickListener(v -> searchBox.setText(""));
-        close.setOnClickListener(v -> onBackPressed());
-
-        //Cached Profiles
-        adapterCachedPr = new AdapterCachedProfile(profileGroup, user, Main.this);
-        RecyclerView prRecycler = findViewById(R.id.searchCachedProfileRecycler);
-        prRecycler.setLayoutManager(new CustomLinearLayout(Main.this, LinearLayoutManager.HORIZONTAL, false));
-        prRecycler.setAdapter(adapterCachedPr);
-
-        //Cached Queries
-        RecyclerView qrRecycler = findViewById(R.id.searchCachedQueryRecycler);
-        adapterCachedQuery = new AdapterCachedQuery(queryGroup, Main.this, searchBox::setText);
-        qrRecycler.setLayoutManager(new CustomLinearLayout(Main.this, LinearLayoutManager.VERTICAL, false));
-        qrRecycler.setAdapter(adapterCachedQuery);
-
-        //Clear Recent searches
-        clearCache.setOnClickListener(v -> {
-            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(v.getContext());
-            builder.setBackground(AppCompatResources.getDrawable(v.getContext(), R.color.basicBackground))
-                    .setTitle(R.string.dialogDeleteAllCachedTitle)
-                    .setMessage(R.string.dialogDeleteAllCachedMessage)
-                    .setNegativeButton(R.string.generalCancel, (dialog, i) -> dialog.dismiss())
-                    .setPositiveButton(R.string.generalClear, (dialog, i) -> {
-                        adapterCachedPr.clear();
-                        adapterCachedQuery.clear();
-                    })
-                    .show();
-        });
 
         searchBox.addTextChangedListener(new TextWatcher() {
             @Override
@@ -256,16 +285,20 @@ public class Main extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
                 String query = editable.toString().trim();
                 if (query.length() > 0) {
-                    clear.setVisibility(View.VISIBLE);
-                    profileGroup.setVisibility(View.GONE);
-                    queryGroup.setVisibility(View.GONE);
+                    searchBoxClear.setVisibility(View.VISIBLE);
+                    cachedComp.setVisibility(View.GONE);
+                    cachedProfileRecycler.setVisibility(View.GONE);
+                    cachedSearchRecycler.setVisibility(View.GONE);
                 } else {
-                    profileGroup.setVisibility(View.VISIBLE);
-                    queryGroup.setVisibility(View.VISIBLE);
-                    clear.setVisibility(View.GONE);
+                    searchBoxClear.setVisibility(View.GONE);
                     searchHandler.removeCallbacks(searchRunnable);
+                    cachedComp.setVisibility(View.VISIBLE);
+                    cachedProfileRecycler.setVisibility(View.VISIBLE);
+                    cachedSearchRecycler.setVisibility(View.VISIBLE);
+
                     adapterSearch.updateOptions(searchOptions);
                     searchRecycler.setVisibility(View.GONE);
+                    errorLayout.setVisibility(View.GONE);
                 }
 
                 if (editable.toString().length() >= 3) {
@@ -282,17 +315,24 @@ public class Main extends AppCompatActivity {
                 }
             }
         });
-        //TODO: When the return is empty show the error
-        adapterSearch.addLoadStateListener(combinedLoadStates -> {
-            LoadState append = combinedLoadStates.getAppend();
+
+        adapterSearch.addLoadStateListener(states -> {
+            LoadState append = states.getAppend();
             if (append instanceof LoadState.NotLoading) {
                 LoadState.NotLoading notLoading = (LoadState.NotLoading) append;
                 if (notLoading.getEndOfPaginationReached()) {
-                    if (adapterSearch.getItemCount() == 0) {
-//                        errorLayout.setVisibility(View.VISIBLE);
-                    } else {
-//                        errorLayout.setVisibility(View.GONE);
+                    Log.d("customLog", "finished loading");
+                    Log.d("customLog", adapterSearch.getItemCount() + "");
+                    if (searchRecycler.getVisibility() == View.VISIBLE) {
+                        if (adapterSearch.getItemCount() > 0) {
+                            errorLayout.setVisibility(View.GONE);
+                            searchRecycler.setVisibility(View.VISIBLE);
+                        } else {
+                            errorLayout.setVisibility(View.VISIBLE);
+                            searchRecycler.setVisibility(View.GONE);
+                        }
                     }
+                    return null;
                 }
             }
             return null;
@@ -317,6 +357,29 @@ public class Main extends AppCompatActivity {
                     navigation.setSelectedItemId(R.id.mainOptionChat);
                 }
             }
+        }
+    }
+
+    private void handleCachedComps() {
+        adapterCachedProfile.set(database.cachedProfile().getAll());
+        adapterCachedQuery.set(database.cachedQueries().getAll());
+
+        if (adapterCachedProfile.getItemCount() > 0 || adapterCachedQuery.getItemCount() > 0) {
+            cachedComp.setVisibility(View.VISIBLE);
+        } else {
+            cachedComp.setVisibility(View.GONE);
+        }
+
+        if (adapterCachedQuery.getItemCount() == 0) {
+            cachedSearchRecycler.setVisibility(View.GONE);
+        } else {
+            cachedSearchRecycler.setVisibility(View.VISIBLE);
+        }
+
+        if (adapterCachedProfile.getItemCount() == 0) {
+            cachedProfileRecycler.setVisibility(View.GONE);
+        } else {
+            cachedProfileRecycler.setVisibility(View.VISIBLE);
         }
     }
 

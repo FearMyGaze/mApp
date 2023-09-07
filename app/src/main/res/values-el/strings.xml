@@ -22,6 +22,7 @@
     <string name="generalCreate">Δημιουργία</string>
     <string name="generalClear">Καθαρισμός</string>
     <string name="generalJoined">Έγινε μέλος:</string>
+    <string name="generalDelete">Διαγραφή</string>
 
     <!-- SignIn (Activity) -->
     <string name="signInWelcome">Καλώς Ήρθατε</string>
@@ -46,6 +47,7 @@
     <string name="searchBox">Αναζήτηση…</string>
     <string name="searchClear">Καθάρισμα</string>
     <string name="searchCachedTitle">Πρόσφατα</string>
+    <string name="searchError">Δεν έχουμε τίποτα να δείξουμε</string>
     <string name="dialogDeleteAllCachedTitle">Καθαρισμός όλων το πρόσφατων αναζητήσεων</string>
     <string name="dialogDeleteAllCachedMessage">Αυτή η ενέργεια δεν μπορεί να αντισταφεί.\n  Σίγουρα θέλετε να καθαρίσεται την πρόσαφατες αναζητήσεις;</string>
     <string name="dialogDeleteCachedPart1">Αφαίρεση</string>
@@ -77,6 +79,9 @@
     <string name="settingsDocumentsPrivacy">Πολιτική απορρήτου</string>
     <string name="settingsDocumentsTerms">Όροι &amp; προϋποθέσεις</string>
     <string name="settingsDangerCloseAccount">Κλείσιμο λογαριασμού</string>
+    <string name="settingsDialogTitle">Προσοχή, Αυτή η πράξη δεν μπορεί να αναιρεθεί!</string>
+    <string name="settingsDialogMessagePart1">Εάν συνεχίσετε με την διαγραφή δεν θα μπορείτε να χρησιμοποιήσετε το ακόλουθο όνομα</string>
+    <string name="settingsDialogMessagePart2">ξανά</string>
 
     <!-- ChangeInformation (Activity) -->
     <string name="changeVerifyTitle">Επαλύθευση του κωδικόυ</string>
@@ -113,6 +118,11 @@
     <string name="chatRoomSettingsChangeOwner">Αλλαγή ιδιοκτήτη</string>
     <string name="chatRoomSettingsDeleteRoom">Διαγραγή δωματίου</string>
 
+    <!-- Room Creator -->
+    <string name="roomCreatorTitle">Δημιουργία δωματίου</string>
+    <string name="roomCreatorSelected">Επιλεγμένοι:</string>
+
+
     <!-- AdapterFriendRequest (Adapter) -->
     <string name="adapterFriendRequest">Σφάλμα κατα την απάντηση στο αίτημα</string>
 
@@ -131,6 +141,7 @@
     <string name="authUsername">Το όνομα χρήστη υπάρχει ήδη!</string>
 
     <!-- ProfileViewer (Menu Options) -->
+    <string name="profileViewerPrivateProfile">Ιδιωτικό προφίλ</string>
     <string name="profileViewerOptionBlock">Αποκλεισμός</string>
     <string name="profileViewerOptionReport">Αναφορά</string>
 

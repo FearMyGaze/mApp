@@ -23,6 +23,7 @@
     <string name="generalCreate">Create</string>
     <string name="generalClear">Clear</string>
     <string name="generalJoined">Joined:</string>
+    <string name="generalDelete">Delete</string>
 
     <!-- SignIn (Activity) -->
     <string name="signInWelcome">Welcome</string>
@@ -47,6 +48,7 @@
     <string name="searchBox">Search…</string>
     <string name="searchClear">Clear</string>
     <string name="searchCachedTitle">Recent</string>
+    <string name="searchError">Nothing to show here</string>
     <string name="dialogDeleteAllCachedTitle">Clear all recent searches?</string>
     <string name="dialogDeleteAllCachedMessage">This can\'t be undone and you will remove all your recent searches.</string>
     <string name="dialogDeleteCachedPart1">Remove</string>
@@ -78,6 +80,9 @@
     <string name="settingsDocumentsPrivacy">Privacy policy</string>
     <string name="settingsDocumentsTerms">Terms &amp; Conditions</string>
     <string name="settingsDangerCloseAccount">Close account</string>
+    <string name="settingsDialogTitle">Danger, This action cannot be undone!</string>
+    <string name="settingsDialogMessagePart1">If you proceed with the account deletion, you will not be able to use</string>
+    <string name="settingsDialogMessagePart2">again</string>
 
     <!-- ChangeInformation (Activity) -->
     <string name="changeVerifyTitle">Verify your password</string>
@@ -114,6 +119,10 @@
     <string name="chatRoomSettingsChangeOwner">Change owner</string>
     <string name="chatRoomSettingsDeleteRoom">Delete room</string>
 
+    <!-- Room Creator -->
+    <string name="roomCreatorTitle">Create room</string>
+    <string name="roomCreatorSelected">Selected:</string>
+
     <!-- AdapterFriendRequest (Adapter) -->
     <string name="adapterFriendRequest">Error while answering the request.</string>
 
@@ -137,6 +146,7 @@
     <string name="authUsername">Username Already Exists!</string>
 
     <!-- ProfileViewer -->
+    <string name="profileViewerPrivateProfile">Private Profile</string>
     <string name="profileViewerOptionBlock">Block</string>
     <string name="profileViewerOptionReport">Report</string>
 

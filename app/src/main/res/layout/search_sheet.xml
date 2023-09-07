@@ -132,22 +132,12 @@
             app:layout_constraintTop_toBottomOf="@id/searchAppBar" />
 
         <androidx.constraintlayout.widget.Group
-            android:id="@+id/searchCachedProfilesGroup"
+            android:id="@+id/searchCachedComps"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:constraint_referenced_ids="
             searchCachedTitle,
-            searchCachedClear,
-            searchCachedProfileRecycler"/>
-
-        <androidx.constraintlayout.widget.Group
-            android:id="@+id/searchCachedQueryGroup"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:constraint_referenced_ids="
-            searchCachedTitle,
-            searchCachedClear,
-            searchCachedQueryRecycler"/>
+            searchCachedClear" />
 
         <TextView
             android:id="@+id/searchCachedTitle"
@@ -213,9 +203,10 @@
             app:layout_constraintBottom_toBottomOf="parent">
 
             <TextView
+                android:id="@+id/searchErrorText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/blameError"
+                android:text="@string/searchError"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:textAlignment="center"

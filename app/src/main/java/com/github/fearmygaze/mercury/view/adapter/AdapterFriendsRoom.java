@@ -22,14 +22,17 @@ import com.github.fearmygaze.mercury.util.Tools;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.imageview.ShapeableImageView;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-public class AdapterFriends extends FirestoreRecyclerAdapter<Request, AdapterFriends.FriendsVH> {
+public class AdapterFriendsRoom extends FirestoreRecyclerAdapter<Request, AdapterFriendsRoom.FriendsRoomVH> {
 
     User user;
+    List<Profile> profiles = new ArrayList<>();
     private final SimpleInterface listener;
 
-    public AdapterFriends(User user, @NonNull FirestoreRecyclerOptions<Request> options, SimpleInterface listener) {
+    public AdapterFriendsRoom(User user, @NonNull FirestoreRecyclerOptions<Request> options, SimpleInterface listener) {
         super(options);
         this.user = user;
         this.listener = listener;
@@ -37,17 +40,27 @@ public class AdapterFriends extends FirestoreRecyclerAdapter<Request, AdapterFri
 
     @NonNull
     @Override
-    public FriendsVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new FriendsVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_user_friends, parent, false));
+    public FriendsRoomVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new FriendsRoomVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_user_friends, parent, false));
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull FriendsVH holder, int position, @NonNull Request model) {
-        listener.count(getItemCount());
+    protected void onBindViewHolder(@NonNull FriendsRoomVH holder, int position, @NonNull Request model) {
+        listener.itemCounter(getItemCount());
         if (getItemViewType(holder.getAbsoluteAdapterPosition()) == 0) {
             Tools.profileImage(model.getSenderProfile().getImage(), holder.itemView.getContext()).into(holder.image);
             holder.username.setText(model.getSenderProfile().getUsername());
             holder.root.setOnClickListener(v -> {
+                holder.root.setChecked(!holder.root.isChecked());
+                if (holder.root.isChecked()) {
+                    addProfile(model.getSenderProfile());
+                    listener.selectedUsers(profiles.size());
+                } else {
+                    removeProfile(model.getSenderProfile());
+                    listener.selectedUsers(profiles.size());
+                }
+            });
+            holder.root.setOnLongClickListener(v -> {
                 Auth.getUserProfile(model.getSenderProfile().getId(), holder.itemView.getContext(), new OnUserResponseListener() {
                     @Override
                     public void onSuccess(int code, User requested) {
@@ -64,15 +77,22 @@ public class AdapterFriends extends FirestoreRecyclerAdapter<Request, AdapterFri
                         Toast.makeText(v.getContext(), message, Toast.LENGTH_SHORT).show();
                     }
                 });
-            });
-            holder.root.setOnLongClickListener(v -> {
-                Toast.makeText(v.getContext(), "Add action", Toast.LENGTH_SHORT).show();
                 return true;
             });
         } else {
             Tools.profileImage(model.getReceiverProfile().getImage(), holder.itemView.getContext()).into(holder.image);
             holder.username.setText(model.getReceiverProfile().getUsername());
             holder.root.setOnClickListener(v -> {
+                holder.root.setChecked(!holder.root.isChecked());
+                if (holder.root.isChecked()) {
+                    addProfile(model.getReceiverProfile());
+                    listener.selectedUsers(profiles.size());
+                } else {
+                    removeProfile(model.getReceiverProfile());
+                    listener.selectedUsers(profiles.size());
+                }
+            });
+            holder.root.setOnLongClickListener(v -> {
                 Auth.getUserProfile(model.getReceiverProfile().getId(), holder.itemView.getContext(), new OnUserResponseListener() {
                     @Override
                     public void onSuccess(int code, User requested) {
@@ -89,9 +109,6 @@ public class AdapterFriends extends FirestoreRecyclerAdapter<Request, AdapterFri
                         Toast.makeText(v.getContext(), message, Toast.LENGTH_SHORT).show();
                     }
                 });
-            });
-            holder.root.setOnLongClickListener(v -> {
-                Toast.makeText(v.getContext(), "Add action", Toast.LENGTH_SHORT).show();
                 return true;
             });
         }
@@ -102,12 +119,24 @@ public class AdapterFriends extends FirestoreRecyclerAdapter<Request, AdapterFri
         return Objects.equals(getItem(position).getReceiver(), user.getId()) ? 0 : 1;
     }
 
-    public static class FriendsVH extends RecyclerView.ViewHolder {
+    public void addProfile(Profile profile) {
+        profiles.add(profile);
+    }
+
+    public void removeProfile(Profile profile) {
+        profiles.remove(profile);
+    }
+
+    public List<Profile> getSelectedProfiles() {
+        return profiles;
+    }
+
+    public static class FriendsRoomVH extends RecyclerView.ViewHolder {
         MaterialCardView root;
         ShapeableImageView image;
         TextView username;
 
-        public FriendsVH(@NonNull View itemView) {
+        public FriendsRoomVH(@NonNull View itemView) {
             super(itemView);
             root = itemView.findViewById(R.id.adapterUserFriendsRoot);
             image = itemView.findViewById(R.id.adapterUserFriendsImage);
@@ -116,6 +145,8 @@ public class AdapterFriends extends FirestoreRecyclerAdapter<Request, AdapterFri
     }
 
     public interface SimpleInterface {
-        void count(int count);
+        void itemCounter(int count);
+
+        void selectedUsers(int count);
     }
 }

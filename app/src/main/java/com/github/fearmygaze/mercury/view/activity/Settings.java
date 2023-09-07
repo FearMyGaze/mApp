@@ -115,10 +115,11 @@ public class Settings extends AppCompatActivity {
             new MaterialAlertDialogBuilder(Settings.this)
                     .setBackground(AppCompatResources.getDrawable(Settings.this, R.color.basicBackground))
                     .setCancelable(true)
-                    .setTitle("Danger, This action cannot be undone")
-                    .setMessage(String.format("%s, %s %s", "If you proceed with the account deletion, you will not be able to use", user.getUsername(), "again"))
-                    .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel())
-                    .setPositiveButton("Delete", (dialog, which) -> {
+                    .setTitle(getString(R.string.settingsDialogTitle))
+                    .setMessage(String.format("%s, %s %s", getString(R.string.settingsDialogMessagePart1), user.getUsername(), getString(R.string.settingsDialogMessagePart2)))
+                    .setNegativeButton(getString(R.string.generalCancel), (dialog, which) -> dialog.cancel())
+                    .setPositiveButton(getString(R.string.generalDelete), (dialog, which) -> {
+                        Toast.makeText(Settings.this, "Not implemented", Toast.LENGTH_SHORT).show();
 //                            Auth.deleteAccount("", new Auth.OnResponseListener() {
 //                                @Override
 //                                public void onResult(int resultCode) {

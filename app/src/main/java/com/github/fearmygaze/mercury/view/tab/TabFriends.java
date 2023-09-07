@@ -58,7 +58,9 @@ public class TabFriends extends Fragment {
                 .setLifecycleOwner(this)
                 .build();
 
-        adapterFriends = new AdapterFriends(user, options);
+        adapterFriends = new AdapterFriends(user, options, count -> {
+            //TODO: If users are less than 1 then show error
+        });
         recyclerView.setAdapter(adapterFriends);
         recyclerView.setLayoutManager(new CustomLinearLayout(requireActivity(), LinearLayoutManager.VERTICAL, false));
         recyclerView.setItemAnimator(null);

@@ -7,62 +7,25 @@
     android:background="@color/basicBackground"
     tools:context=".view.activity.RoomCreator">
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/roomCreatorGoBack"
-        android:layout_width="30dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="15dp"
-        android:src="@drawable/ic_arrow_back_24"
-        android:tint="?attr/colorPrimary"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        app:shapeAppearance="@style/RoundedComponent"
-        android:contentDescription="@string/signUpGoBack"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/roomCreatorSearchError"
-        app:layout_constraintBottom_toBottomOf="@id/roomCreatorSearchError"/>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/roomCreatorSearchError"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:hint="@string/searchContainer"
-        app:startIconDrawable="@drawable/ic_search_24"
-        app:endIconMode="clear_text"
-        app:boxCornerRadiusTopStart="12.5dp"
-        app:boxCornerRadiusTopEnd="12.5dp"
-        app:boxCornerRadiusBottomStart="12.5dp"
-        app:boxCornerRadiusBottomEnd="12.5dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        app:layout_constraintStart_toEndOf="@id/roomCreatorGoBack"
-        app:layout_constraintEnd_toStartOf="@id/roomCreatorCreate"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/roomCreatorAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        app:elevation="0dp"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/roomCreatorSearch"
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/roomCreatorToolBar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:imeOptions="actionDone"
-            android:inputType="textPersonName|textAutoComplete|textAutoCorrect"/>
+            app:navigationIcon="@drawable/ic_arrow_back_24"
+            app:navigationContentDescription="@string/signUpGoBack"
+            app:title="@string/roomCreatorTitle"
+            app:titleTextColor="@color/textBold"
+            android:background="@color/basicBackground"
+            style="@style/ToolBar"/>
 
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/roomCreatorCreate"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginEnd="10dp"
-        android:enabled="false"
-        android:text="@string/generalCreate"
-        android:textAllCaps="false"
-        app:cornerRadius="12.5dp"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/roomCreatorSearchError"
-        app:layout_constraintBottom_toBottomOf="@id/roomCreatorSearchError"/>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <com.google.android.material.divider.MaterialDivider
         android:id="@+id/roomCreatorDivider"
@@ -70,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         app:dividerThickness="2dp"
-        app:layout_constraintTop_toBottomOf="@id/roomCreatorSearchError"/>
+        app:layout_constraintTop_toBottomOf="@id/roomCreatorAppBar"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/roomCreatorUsers"
@@ -82,6 +45,57 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/roomCreatorDivider"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toTopOf="@id/roomCreatorBottomDivider"/>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/roomCreatorBottomDivider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        app:dividerThickness="2dp"
+        app:layout_constraintBottom_toTopOf="@id/roomCreatorBottomLayer"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/roomCreatorBottomLayer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/roomCreatorBottomGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/roomCreatorCreate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/generalCreate"
+            android:textAllCaps="false"
+            app:cornerRadius="12.5dp"
+            android:enabled="false"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/roomCreatorBottomGuideline"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/roomCreatorSelected"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/textBold"
+            android:textStyle="bold"
+            android:textSize="17sp"
+            android:textAlignment="center"
+            app:layout_constraintStart_toEndOf="@id/roomCreatorBottomGuideline"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

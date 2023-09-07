@@ -1,6 +1,5 @@
 package com.github.fearmygaze.mercury.view.util;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -30,6 +29,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.Locale;
+
 public class ProfileViewer extends AppCompatActivity {
 
     SwipeRefreshLayout swipeRefreshLayout;
@@ -52,7 +53,6 @@ public class ProfileViewer extends AppCompatActivity {
     Bundle bundle;
     User myUser, otherUser;
 
-    @SuppressLint("NonConstantResourceId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,19 +139,19 @@ public class ProfileViewer extends AppCompatActivity {
                         .setMessage("You will not be able to message them but you will still be able to view their profile")
                         .setNegativeButton(R.string.generalCancel, (dialog, i) -> dialog.dismiss())
                         .setPositiveButton("Unfollow", (dialog, i) -> {
-                Friends.answerRequest(myUser, otherUser, Friends.OPTION_REMOVE, ProfileViewer.this, new OnResponseListener() {
-                    @Override
-                    public void onSuccess(int code) {
-                        if (code == 0) {
-                            request.setText(getString(R.string.requestNone));
-                        }
-                    }
+                            Friends.answerRequest(myUser, otherUser, Friends.OPTION_REMOVE, ProfileViewer.this, new OnResponseListener() {
+                                @Override
+                                public void onSuccess(int code) {
+                                    if (code == 0) {
+                                        request.setText(getString(R.string.requestNone));
+                                    }
+                                }
 
-                    @Override
-                    public void onFailure(String message) {
-                        Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_LONG).show();
-                    }
-                });
+                                @Override
+                                public void onFailure(String message) {
+                                    Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_LONG).show();
+                                }
+                            });
                         })
                         .show();
 
@@ -216,13 +216,18 @@ public class ProfileViewer extends AppCompatActivity {
         });
 
         if (otherUser.isProfileOpen()) {
-            adapterFriends = new AdapterFriends(otherUser, options);
+            adapterFriends = new AdapterFriends(otherUser, options, count -> {
+                if (count > 0) {
+                    toolbar.setSubtitle(String.format(Locale.getDefault(), "%s: %d", getString(R.string.generalFriends), count));
+                } else {
+
+                }
+            });
             friendsView.setLayoutManager(new CustomLinearLayout(ProfileViewer.this, LinearLayoutManager.VERTICAL, false));
             friendsView.setAdapter(adapterFriends);
             friendsView.setItemAnimator(null);
-            toolbar.setSubtitle("Friends: " + adapterFriends.getItemCount());
         } else {
-            Toast.makeText(ProfileViewer.this, "Profile Private", Toast.LENGTH_LONG).show();
+            toolbar.setSubtitle(getString(R.string.profileViewerPrivateProfile));
         }
     }
 

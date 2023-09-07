@@ -1,6 +1,6 @@
 package com.github.fearmygaze.mercury.view.adapter;
 
-import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +9,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
-import androidx.constraintlayout.widget.Group;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.database.AppDatabase;
+import com.github.fearmygaze.mercury.database.CProfileDao;
 import com.github.fearmygaze.mercury.firebase.Auth;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnUserResponseListener;
 import com.github.fearmygaze.mercury.model.Profile;
@@ -28,16 +28,17 @@ import java.util.List;
 public class AdapterCachedProfile extends RecyclerView.Adapter<AdapterCachedProfile.CachedProfilesVH> {
 
     List<Profile> profiles;
-    Group group;
     User user;
-    Activity activity;
+    Context context;
+    CProfileDao database;
+    private final ItemInterface listener;
 
-
-    public AdapterCachedProfile(Group group, User user, Activity activity) {
-        this.profiles = AppDatabase.getInstance(activity.getApplicationContext()).cachedProfile().getAll();
-        this.group = group;
+    public AdapterCachedProfile(User user, Context context, ItemInterface listener) {
+        this.database = AppDatabase.getInstance(context).cachedProfile();
+        this.profiles = database.getAll();
         this.user = user;
-        this.activity = activity;
+        this.context = context;
+        this.listener = listener;
     }
 
     @NonNull
@@ -68,7 +69,10 @@ public class AdapterCachedProfile extends RecyclerView.Adapter<AdapterCachedProf
         holder.root.setOnLongClickListener(v -> {
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(v.getContext());
             builder.setBackground(AppCompatResources.getDrawable(v.getContext(), R.color.basicBackground))
-                    .setMessage(v.getContext().getString(R.string.dialogDeleteCachedPart1) + " " + profiles.get(position).getUsername() + " " + v.getContext().getString(R.string.dialogDeleteCachedPart2))
+                    .setMessage(String.format("%s %s %s",
+                            v.getContext().getString(R.string.dialogDeleteCachedPart1),
+                            profiles.get(holder.getAbsoluteAdapterPosition()).getUsername(),
+                            v.getContext().getString(R.string.dialogDeleteCachedPart2)))
                     .setNegativeButton(R.string.generalCancel, (dialog, i) -> dialog.dismiss())
                     .setPositiveButton(v.getContext().getText(R.string.generalClear), (dialog, i) -> clear(holder.getAbsoluteAdapterPosition()))
                     .show();
@@ -80,28 +84,21 @@ public class AdapterCachedProfile extends RecyclerView.Adapter<AdapterCachedProf
         if (list != null) {
             profiles = list;
             notifyItemRangeChanged(0, profiles.size());
-            if (profiles.size() > 0) {
-                group.setVisibility(View.VISIBLE);
-            } else {
-                group.setVisibility(View.GONE);
-            }
         }
     }
 
     public void clear(int pos) {
         notifyItemRemoved(pos);
-        AppDatabase.getInstance(activity).cachedProfile().delete(profiles.get(pos));
+        database.delete(profiles.get(pos));
         profiles.remove(pos);
-        if (profiles == null || profiles.size() == 0) {
-            group.setVisibility(View.GONE);
-        }
+        listener.getCount(profiles.size());
     }
 
     public void clear() {
         notifyItemRangeRemoved(0, profiles.size());
-        AppDatabase.getInstance(activity).cachedProfile().deleteAll();
+       database.deleteAll();
         profiles.clear();
-        group.setVisibility(View.GONE);
+        listener.getCount(0);
     }
 
     @Override
@@ -120,5 +117,9 @@ public class AdapterCachedProfile extends RecyclerView.Adapter<AdapterCachedProf
             image = itemView.findViewById(R.id.adapterCachedSearchImage);
             username = itemView.findViewById(R.id.adapterCachedSearchUsername);
         }
+    }
+
+    public interface ItemInterface {
+        void getCount(int count);
     }
 }
