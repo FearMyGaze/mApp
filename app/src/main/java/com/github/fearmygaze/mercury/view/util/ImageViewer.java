@@ -18,8 +18,9 @@ public class ImageViewer extends AppCompatActivity {
 
     MaterialToolbar toolbar;
     TouchImageView image;
+
+    Bundle bundle;
     String imageData;
-    boolean downloadEnabled;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,19 +34,20 @@ public class ImageViewer extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
 
-        imageData = getIntent().getStringExtra("imageData");
-        downloadEnabled = getIntent().getBooleanExtra("downloadImage", false);
+        bundle = getIntent().getExtras();
+        if (bundle == null) onBackPressed();
+        imageData = bundle.getString("imageData");
+        if (imageData == null) onBackPressed();
 
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
-        if (downloadEnabled) {
-            toolbar.setOnMenuItemClickListener(item -> {
-                if (item.getItemId() == R.id.imageViewerOptionSave) {
-                    Toast.makeText(ImageViewer.this, "Not Implemented", Toast.LENGTH_SHORT).show();
-                    return true;
-                } else return false;
-            });
-        }
+        toolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.imageViewerOptionSave) {
+                Toast.makeText(ImageViewer.this, "Not Implemented", Toast.LENGTH_SHORT).show();
+                return true;
+            } else return false;
+        });
+
 
         Glide.with(ImageViewer.this).load(imageData).into(image);
     }

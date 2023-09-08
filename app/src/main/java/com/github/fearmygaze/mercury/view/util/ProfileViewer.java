@@ -73,6 +73,8 @@ public class ProfileViewer extends AppCompatActivity {
         myUser = bundle.getParcelable(User.PARCEL);
         otherUser = bundle.getParcelable(User.PARCEL_OTHER);
 
+        if (myUser == null || otherUser == null) onBackPressed();
+
         typedValue = new TypedValue();
         getTheme().resolveAttribute(android.R.attr.colorPrimary, typedValue, true);
 
@@ -92,8 +94,7 @@ public class ProfileViewer extends AppCompatActivity {
 
         userImage.setOnClickListener(v -> {
             startActivity(new Intent(ProfileViewer.this, ImageViewer.class)
-                    .putExtra("imageData", otherUser.getImage())
-                    .putExtra("downloadImage", true));
+                    .putExtra("imageData", otherUser.getImage()));
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
 

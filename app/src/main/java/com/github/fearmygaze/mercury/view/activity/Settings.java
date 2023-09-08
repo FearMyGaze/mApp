@@ -73,24 +73,23 @@ public class Settings extends AppCompatActivity {
         bundle = getIntent().getExtras();
 
         if (bundle == null) onBackPressed();
-
         user = bundle.getParcelable(User.PARCEL);
+        if (user == null) onBackPressed();
 
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
-
         contentSwitch.setChecked(Tools.getBoolPreference("showImages", Settings.this));
         profileSwitch.setChecked(user.isProfileOpen());
 
         changeEmail.setOnClickListener(v -> {
             startActivity(new Intent(Settings.this, ChangeInformation.class)
-                    .putExtra(User.ID, user.getId())
+                    .putExtra(User.PARCEL, user)
                     .putExtra("type", "email"));
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         });
 
         changePassword.setOnClickListener(v -> {
             startActivity(new Intent(Settings.this, ChangeInformation.class)
-                    .putExtra(User.ID, user.getId())
+                    .putExtra(User.PARCEL, user)
                     .putExtra("type", "password"));
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         });

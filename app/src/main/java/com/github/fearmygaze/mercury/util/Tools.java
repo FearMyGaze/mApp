@@ -16,7 +16,6 @@ import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.model.Room;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.view.activity.Chat;
-import com.github.fearmygaze.mercury.view.activity.Profile;
 import com.github.fearmygaze.mercury.view.util.ProfileViewer;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -95,12 +94,6 @@ public class Tools {
                 .addCategory(Intent.CATEGORY_OPENABLE)
                 .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
-    }
-
-    public static void goToProfile(String myID, Context context, Activity activity) {
-        context.startActivity(new Intent(context, Profile.class)
-                .putExtra(User.ID, myID));
-        activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     public static void goToProfileViewer(User myUser, User user, Context context) {

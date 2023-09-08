@@ -59,6 +59,7 @@ public class ChatRoomSettings extends AppCompatActivity {
 
         user = bundle.getParcelable(User.PARCEL);
         room = bundle.getParcelable("room");
+        if (user == null || room == null) onBackPressed();
 
         setUpRoom(room);
 

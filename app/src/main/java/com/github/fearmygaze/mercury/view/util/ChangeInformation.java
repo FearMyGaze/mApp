@@ -10,7 +10,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.database.AppDatabase;
 import com.github.fearmygaze.mercury.firebase.Auth;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnDataResponseListener;
 import com.github.fearmygaze.mercury.model.User;
@@ -29,10 +28,10 @@ public class ChangeInformation extends AppCompatActivity {
 
     MaterialButton cancel, next;
 
-    Intent intent;
     String changeType, senderID;
 
     String userEmail;
+    Bundle bundle;
     User user;
 
     @Override
@@ -42,11 +41,12 @@ public class ChangeInformation extends AppCompatActivity {
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
 
-        intent = getIntent();
-        senderID = intent.getStringExtra(User.ID);
-        changeType = intent.getStringExtra("type");
+        bundle = getIntent().getExtras();
+        if (bundle == null) onBackPressed();
+        user = bundle.getParcelable(User.PARCEL);
+        changeType = bundle.getString("type");
+        if (user == null || changeType == null) onBackPressed();
 
-        user = AppDatabase.getInstance(ChangeInformation.this).userDao().getByID(senderID);
         userEmail = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail();
 
         verifyPasswordError = findViewById(R.id.changeInformationVerifyPasswordError);

@@ -58,8 +58,9 @@ public class Profile extends AppCompatActivity {
         bundle = getIntent().getExtras();
 
         if (bundle == null) onBackPressed();
-
         user = bundle.getParcelable(User.PARCEL);
+        if (user == null) onBackPressed();
+
         typedValue = new TypedValue();
         getTheme().resolveAttribute(android.R.attr.colorPrimary, typedValue, true);
 
@@ -78,13 +79,13 @@ public class Profile extends AppCompatActivity {
 
         userImage.setOnClickListener(v -> {
             startActivity(new Intent(Profile.this, ImageViewer.class)
-                    .putExtra("imageData", user.getImage())
-                    .putExtra("downloadImage", true));
+                    .putExtra("imageData", user.getImage()));
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
 
         edit.setOnClickListener(v -> {
-            startActivity(new Intent(Profile.this, ProfileEdit.class));
+            startActivity(new Intent(Profile.this, ProfileEdit.class)
+                    .putExtra(User.PARCEL, user));
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         });
 

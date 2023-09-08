@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.database.AppDatabase;
 import com.github.fearmygaze.mercury.firebase.Auth;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
 import com.github.fearmygaze.mercury.model.User;
@@ -23,7 +22,6 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
 
@@ -35,6 +33,7 @@ public class ProfileEdit extends AppCompatActivity {
     TextInputLayout statusLayout, locationLayout, jobLayout, websiteLayout;
     TextInputEditText statusCell, locationCell, jobCell, websiteCell;
 
+    Bundle bundle;
     User user;
     Uri imageData;
     boolean imageChanged = false;
@@ -57,7 +56,10 @@ public class ProfileEdit extends AppCompatActivity {
         websiteLayout = findViewById(R.id.profileEditWebsiteError);
         websiteCell = findViewById(R.id.profileEditWebsite);
 
-        user = AppDatabase.getInstance(ProfileEdit.this).userDao().getByID(FirebaseAuth.getInstance().getUid());
+        bundle = getIntent().getExtras();
+        if (bundle == null) onBackPressed();
+        user = bundle.getParcelable(User.PARCEL);
+        if (user == null) onBackPressed();
 
         Tools.profileImage(user.getImage(), ProfileEdit.this).into(userImage);
         statusCell.setText(user.getStatus());

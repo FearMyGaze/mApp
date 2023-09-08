@@ -49,6 +49,7 @@ public class RoomCreator extends AppCompatActivity {
         if (bundle == null) onBackPressed();
 
         user = bundle.getParcelable(User.PARCEL);
+        if (user == null) onBackPressed();
 
         navigation.setNavigationOnClickListener(v -> onBackPressed());
 
