@@ -1,6 +1,5 @@
 package com.github.fearmygaze.mercury.view.util;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -27,7 +26,7 @@ public class ChatRoomSettings extends AppCompatActivity {
     //Danger
     MaterialCardView changeOwner, deleteRoom;
 
-    Intent intent;
+    Bundle bundle;
     User user;
     Room room;
 
@@ -55,9 +54,11 @@ public class ChatRoomSettings extends AppCompatActivity {
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
 
-        intent = getIntent();
-        user = intent.getExtras().getParcelable("user");
-        room = intent.getExtras().getParcelable("room");
+        bundle = getIntent().getExtras();
+        if (bundle == null) onBackPressed();
+
+        user = bundle.getParcelable(User.PARCEL);
+        room = bundle.getParcelable("room");
 
         setUpRoom(room);
 

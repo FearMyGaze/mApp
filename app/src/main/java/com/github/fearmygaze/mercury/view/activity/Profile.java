@@ -59,7 +59,7 @@ public class Profile extends AppCompatActivity {
 
         if (bundle == null) onBackPressed();
 
-        user = bundle.getParcelable("user");
+        user = bundle.getParcelable(User.PARCEL);
         typedValue = new TypedValue();
         getTheme().resolveAttribute(android.R.attr.colorPrimary, typedValue, true);
 

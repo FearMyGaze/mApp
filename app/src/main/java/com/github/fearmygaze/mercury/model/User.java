@@ -33,6 +33,8 @@ import java.util.Locale;
 public class User implements Parcelable {
 
     public static final String
+            PARCEL = "user",
+            PARCEL_OTHER = "userData",
             PUBLIC_DATA = "publicData",
             IMAGE_COLLECTION = "profileImages/",
             COLLECTION = "users",
@@ -49,7 +51,6 @@ public class User implements Parcelable {
             WEB = "website",
             CREATED = "created",
             PROFILE = "profileOpen";
-
 
     @NonNull
     @PrimaryKey

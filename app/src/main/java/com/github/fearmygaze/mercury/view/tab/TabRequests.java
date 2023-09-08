@@ -40,7 +40,7 @@ public class TabRequests extends Fragment {
     public static TabRequests newInstance(User user) {
         TabRequests fragment = new TabRequests();
         Bundle bundle = new Bundle();
-        bundle.putParcelable("user", user);
+        bundle.putParcelable(User.PARCEL, user);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -50,7 +50,7 @@ public class TabRequests extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            user = getArguments().getParcelable("user");
+            user = getArguments().getParcelable(User.PARCEL);
         }
     }
 

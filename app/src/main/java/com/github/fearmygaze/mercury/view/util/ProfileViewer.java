@@ -70,8 +70,8 @@ public class ProfileViewer extends AppCompatActivity {
         bundle = getIntent().getExtras();
         if (bundle == null) onBackPressed();
 
-        myUser = bundle.getParcelable("user");
-        otherUser = bundle.getParcelable("userData");
+        myUser = bundle.getParcelable(User.PARCEL);
+        otherUser = bundle.getParcelable(User.PARCEL_OTHER);
 
         typedValue = new TypedValue();
         getTheme().resolveAttribute(android.R.attr.colorPrimary, typedValue, true);

@@ -74,7 +74,7 @@ public class Settings extends AppCompatActivity {
 
         if (bundle == null) onBackPressed();
 
-        user = bundle.getParcelable("user");
+        user = bundle.getParcelable(User.PARCEL);
 
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
@@ -108,7 +108,7 @@ public class Settings extends AppCompatActivity {
 
         showBlocked.setOnClickListener(v -> {
             startActivity(new Intent(Settings.this, ShowBlockedUsers.class)
-                    .putExtra("user", user));
+                    .putExtra(User.PARCEL, user));
         });
 
         closeAccount.setOnClickListener(v -> {

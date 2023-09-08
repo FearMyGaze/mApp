@@ -175,7 +175,7 @@ public class Main extends AppCompatActivity {
 
         profile.setOnClickListener(v -> {
             startActivity(new Intent(Main.this, Profile.class)
-                    .putExtra("user", user));
+                    .putExtra(User.PARCEL, user));
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         });
 
@@ -186,12 +186,12 @@ public class Main extends AppCompatActivity {
 
         settings.setOnClickListener(v -> {
             startActivity(new Intent(Main.this, Settings.class)
-                    .putExtra("user", user));
+                    .putExtra(User.PARCEL, user));
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
         createRoom.setOnClickListener(v -> {
             startActivity(new Intent(Main.this, RoomCreator.class)
-                    .putExtra("user", user));
+                    .putExtra(User.PARCEL, user));
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
     }

@@ -105,13 +105,13 @@ public class Tools {
 
     public static void goToProfileViewer(User myUser, User user, Context context) {
         context.startActivity(new Intent(context, ProfileViewer.class)
-                .putExtra("user", myUser)
-                .putExtra("userData", user));
+                .putExtra(User.PARCEL, myUser)
+                .putExtra(User.PARCEL_OTHER, user));
     }
 
     public static void goToChat(User user, Room room, Context context, Activity activity) {
         context.startActivity(new Intent(context, Chat.class)
-                .putExtra("user", user)
+                .putExtra(User.PARCEL, user)
                 .putExtra("room", room));
         activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }

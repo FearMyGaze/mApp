@@ -47,7 +47,7 @@ public class ShowBlockedUsers extends AppCompatActivity {
 
         if (bundle == null) onBackPressed();
 
-        user = bundle.getParcelable("user");
+        user = bundle.getParcelable(User.PARCEL);
 
         goBack.setOnClickListener(v -> onBackPressed());
 

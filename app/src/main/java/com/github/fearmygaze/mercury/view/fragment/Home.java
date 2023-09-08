@@ -27,7 +27,7 @@ public class Home extends Fragment {
     public static Home newInstance(User user) {
         Home home = new Home();
         Bundle bundle = new Bundle();
-        bundle.putParcelable("user", user);
+        bundle.putParcelable(User.PARCEL, user);
         home.setArguments(bundle);
         return home;
     }
@@ -36,7 +36,7 @@ public class Home extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            user = getArguments().getParcelable("user");
+            user = getArguments().getParcelable(User.PARCEL);
         }
     }
 

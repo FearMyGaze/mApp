@@ -32,7 +32,7 @@ public class People extends Fragment {
     public static People newInstance(User user) {
         People people = new People();
         Bundle bundle = new Bundle();
-        bundle.putParcelable("user", user);
+        bundle.putParcelable(User.PARCEL, user);
         people.setArguments(bundle);
         return people;
     }
@@ -41,7 +41,7 @@ public class People extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            user = getArguments().getParcelable("user");
+            user = getArguments().getParcelable(User.PARCEL);
         }
     }
 

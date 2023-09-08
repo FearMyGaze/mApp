@@ -66,7 +66,7 @@ public class Chat extends AppCompatActivity {
         sendMessage = findViewById(R.id.chatRoomSendMessage);
 
         intent = getIntent();
-        user = intent.getExtras().getParcelable("user");
+        user = intent.getExtras().getParcelable(User.PARCEL);
         room = intent.getExtras().getParcelable("room");
 
         setupRoom(room);
@@ -75,7 +75,7 @@ public class Chat extends AppCompatActivity {
 
         cardImage.setOnClickListener(v -> {
             startActivity(new Intent(this, ChatRoomSettings.class)
-                    .putExtra("user", user)
+                    .putExtra(User.PARCEL, user)
                     .putExtra("room", room));
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
