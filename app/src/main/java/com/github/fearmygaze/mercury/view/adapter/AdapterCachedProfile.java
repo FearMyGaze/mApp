@@ -96,7 +96,7 @@ public class AdapterCachedProfile extends RecyclerView.Adapter<AdapterCachedProf
 
     public void clear() {
         notifyItemRangeRemoved(0, profiles.size());
-       database.deleteAll();
+        database.deleteAll();
         profiles.clear();
         listener.getCount(0);
     }

@@ -21,13 +21,13 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.ServerTimestamp;
 
-import java.text.DateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 @Entity(tableName = "users")
 public class User implements Parcelable {
@@ -346,12 +346,16 @@ public class User implements Parcelable {
     private static String setCorrectDateFormat(long time) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(time), ZoneId.systemDefault());
-            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy");
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
             return localDateTime.format(dateTimeFormatter);
         } else {
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(time);
-            return DateFormat.getDateInstance(DateFormat.LONG).format(calendar.getTime());
+            return String.format(Locale.getDefault(),
+                    "%02d-%02d-%d",
+                    calendar.get(Calendar.DAY_OF_MONTH),
+                    calendar.get(Calendar.MONTH) + 1,
+                    calendar.get(Calendar.YEAR));
         }
     }
 

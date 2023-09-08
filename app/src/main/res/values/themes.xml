@@ -16,6 +16,7 @@
         <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
         <!-- Customize your theme here. -->
         <item name="bottomSheetDialogTheme">@style/CustomBottomSheetDialog</item>
+        <item name="chipStyle">@style/Chip</item>
     </style>
 
     <style name="RectComponent">
@@ -60,6 +61,19 @@
 
     <style name="TabTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="textAllCaps">false</item>
+    </style>
+
+    <style name="Chip" parent="Widget.MaterialComponents.Chip.Action">
+        <item name="chipIconSize">19dp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="textStartPadding">4dp</item>
+        <item name="textEndPadding">1dp</item>
+        <item name="chipSpacing">1dp</item>
+        <item name="chipStartPadding">1dp</item>
+        <item name="chipEndPadding">1dp</item>
+        <item name="chipCornerRadius">60dp</item>
+        <item name="chipMinTouchTargetSize">0dp</item>
+        <item name="chipBackgroundColor">@color/basicBackground</item>
     </style>
 
 </resources>

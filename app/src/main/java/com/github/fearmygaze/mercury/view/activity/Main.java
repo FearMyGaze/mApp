@@ -116,6 +116,8 @@ public class Main extends AppCompatActivity {
         //Cached Query
         cachedSearchRecycler = findViewById(R.id.searchCachedQueryRecycler);
 
+        rememberMe(savedInstanceState);
+
         //Search Sheet
         searchBehaviour = BottomSheetBehavior.from(searchSheetParent);
         searchSheetClose.setOnClickListener(v -> onBackPressed());
@@ -169,7 +171,6 @@ public class Main extends AppCompatActivity {
             return false;
         });
 
-        rememberMe(savedInstanceState);
         searchSheet();
 
         profile.setOnClickListener(v -> {
@@ -199,7 +200,6 @@ public class Main extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         FirebaseUser oldFireUser = FirebaseAuth.getInstance().getCurrentUser();
-        handleCachedComps();
         Auth.rememberMe(oldFireUser, Main.this, new OnUserResponseListener() {
             @Override
             public void onSuccess(int code, User data) {
@@ -231,6 +231,7 @@ public class Main extends AppCompatActivity {
                 finish();
             }
         });
+        handleCachedComps();
     }
 
     @Override

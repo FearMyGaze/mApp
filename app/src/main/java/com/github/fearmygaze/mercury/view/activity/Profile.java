@@ -43,7 +43,7 @@ public class Profile extends AppCompatActivity {
     TextView title, counter;
     AdapterFriends adapterFriends;
     FirestoreRecyclerOptions<Request> options;
-    RecyclerView friendsView;
+    RecyclerView friendsRecycler;
 
     User user;
 
@@ -72,7 +72,7 @@ public class Profile extends AppCompatActivity {
 
         title = findViewById(R.id.profileFriendsTitle);
         counter = findViewById(R.id.profileFriendsCounter);
-        friendsView = findViewById(R.id.profileFriends);
+        friendsRecycler = findViewById(R.id.profileFriends);
 
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
@@ -102,9 +102,10 @@ public class Profile extends AppCompatActivity {
 
             }
         });
-        friendsView.setLayoutManager(new CustomLinearLayout(Profile.this, LinearLayoutManager.VERTICAL, false));
-        friendsView.setAdapter(adapterFriends);
-        friendsView.setItemAnimator(null);
+
+        friendsRecycler.setLayoutManager(new CustomLinearLayout(Profile.this, LinearLayoutManager.VERTICAL, false));
+        friendsRecycler.setAdapter(adapterFriends);
+        friendsRecycler.setItemAnimator(null);
 
         refreshList(swipe);
     }
