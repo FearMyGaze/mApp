@@ -35,7 +35,7 @@ public class Starting extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
 
         JobScheduler jobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
-        JobInfo jobInfo = new JobInfo.Builder(123, new ComponentName(Starting.this, AuthRefresh.class))
+        JobInfo jobInfo = new JobInfo.Builder(AuthRefresh.JOB_ID, new ComponentName(Starting.this, AuthRefresh.class))
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
                 .setPersisted(true)
                 .setPeriodic(interval())

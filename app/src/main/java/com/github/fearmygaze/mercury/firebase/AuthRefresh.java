@@ -8,6 +8,8 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class AuthRefresh extends JobService {
 
+    public static final int JOB_ID = 123;
+
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
         FirebaseAuth.getInstance().addAuthStateListener(firebaseAuth -> {
