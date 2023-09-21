@@ -116,9 +116,6 @@ public class Friends {
                 });
     }
 
-    //TODO: We need to delete the previous request and
-    //  create a new one (this is because if i block the user but the request belongs to toUser
-    //  then it is gonna show in his list and not mine
     public static void block(User fromUser, User toUser, Context context, OnResponseListener listener) {
         CollectionReference reference = FirebaseFirestore.getInstance().collection(Request.COLLECTION);
         reference
@@ -133,13 +130,23 @@ public class Friends {
                         Request request = document.toObject(Request.class);
                         if (request != null) {
                             if (!request.getStatus().equals(Request.S_BLOCKED)) {
-                                request.setStatus(Request.S_BLOCKED);
-                                reference
-                                        .document(request.getId())
-                                        .set(request)
+                                document.getReference()
+                                        .delete()
                                         .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
-                                        .addOnSuccessListener(unused -> listener.onSuccess(0));
-                            } else listener.onSuccess(1);
+                                        .addOnSuccessListener(unused -> {
+                                            DocumentReference docReference = reference.document();
+                                            docReference
+                                                    .set(new Request(docReference.getId(),
+                                                            Request.S_BLOCKED,
+                                                            fromUser.getId(),
+                                                            toUser.getId(),
+                                                            Request.createRefers(fromUser, toUser),
+                                                            Request.createProfile(fromUser),
+                                                            Request.createProfile(toUser)))
+                                                    .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                                                    .addOnSuccessListener(unused1 -> listener.onSuccess(0));
+                                        });
+                            }
                         }
                     } else {
                         DocumentReference docReference = reference.document();
