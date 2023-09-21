@@ -10,7 +10,6 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "cachedProfiles")
 public class Profile {
 
-
     @NonNull
     @PrimaryKey()
     @ColumnInfo(name = "id")

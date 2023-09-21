@@ -77,7 +77,6 @@ public class Main extends AppCompatActivity {
     AdapterCachedQuery adapterCachedQuery;
     RecyclerView cachedSearchRecycler;
 
-
     //Search
     EditText searchBox;
     RecyclerView searchRecycler;

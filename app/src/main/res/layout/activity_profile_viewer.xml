@@ -28,6 +28,7 @@
                 app:titleTextColor="@color/textBold"
                 app:subtitleTextColor="@color/textBold"
                 android:background="@color/basicBackground"
+                app:menu="@menu/profile_viewer_options"
                 style="@style/ToolBar"/>
 
         </com.google.android.material.appbar.AppBarLayout>

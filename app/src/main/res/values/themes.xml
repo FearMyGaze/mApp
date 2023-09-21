@@ -15,8 +15,7 @@
         <item name="android:navigationBarColor" tools:targetApi="27">@color/basicBackground</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
         <!-- Customize your theme here. -->
-        <item name="bottomSheetDialogTheme">@style/CustomBottomSheetDialog</item>
-        <item name="chipStyle">@style/Chip</item>
+        <item name="chipStyle">@style/ChipStyle</item>
     </style>
 
     <style name="RectComponent">
@@ -35,22 +34,6 @@
         <item name="android:textColorPrimary">@color/textBold</item>
     </style>
 
-    <style name="CustomBottomSheetDialog" parent="@style/ThemeOverlay.MaterialComponents.BottomSheetDialog">
-        <item name="bottomSheetStyle">@style/CustomBottomSheet</item>
-    </style>
-
-    <style name="CustomBottomSheet" parent="Widget.MaterialComponents.BottomSheet">
-        <item name="shapeAppearanceOverlay">@style/CustomShapeAppearanceBottomSheetDialog</item>
-    </style>
-
-    <style name="CustomShapeAppearanceBottomSheetDialog" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSizeTopRight">16dp</item>
-        <item name="cornerSizeTopLeft">16dp</item>
-        <item name="cornerSizeBottomRight">0dp</item>
-        <item name="cornerSizeBottomLeft">0dp</item>
-    </style>
-
     <style name="ToolBar" parent="Widget.MaterialComponents.Toolbar.Primary">
         <item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar</item>
     </style>
@@ -63,7 +46,7 @@
         <item name="textAllCaps">false</item>
     </style>
 
-    <style name="Chip" parent="Widget.MaterialComponents.Chip.Action">
+    <style name="ChipStyle" parent="Widget.MaterialComponents.Chip.Action">
         <item name="chipIconSize">19dp</item>
         <item name="android:textSize">15sp</item>
         <item name="textStartPadding">4dp</item>

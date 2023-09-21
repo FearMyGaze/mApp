@@ -34,8 +34,6 @@ import java.util.Locale;
 public class ProfileViewer extends AppCompatActivity {
 
     SwipeRefreshLayout swipeRefreshLayout;
-
-    //TopBar
     MaterialToolbar toolbar;
 
     ShapeableImageView userImage;
@@ -47,11 +45,10 @@ public class ProfileViewer extends AppCompatActivity {
     FirestoreRecyclerOptions<Request> options;
     RecyclerView friendsView;
 
-    TypedValue typedValue;
-
     //Extra
     Bundle bundle;
     User myUser, otherUser;
+    TypedValue typedValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,36 +97,48 @@ public class ProfileViewer extends AppCompatActivity {
 
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
         toolbar.setTitle(otherUser.getUsername());
+        toolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.profileViewerOptionBlock) {
+                if (request.getText().toString().equals(getString(R.string.requestBlocked))) {
+                    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
+                    builder.setBackground(AppCompatResources.getDrawable(this, R.color.basicBackground))
+                            .setTitle(String.format("%s %s", "Sorry but you cannot block", otherUser.getUsername()))
+                            .setMessage(String.format("%s %s %s", "Either you or", otherUser.getUsername(), "issued a block, so you can't block a block"))
+                            .setNegativeButton(R.string.generalOK, (dialog, i) -> dialog.dismiss())
+                            .show();
+                } else {
+                    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
+                    builder.setBackground(AppCompatResources.getDrawable(this, R.color.basicBackground))
+                            .setTitle(String.format("%s %s?", "Block", otherUser.getUsername()))
+                            .setMessage(String.format("%s %s", otherUser.getUsername(), "will not be able to sent message or be your friend."))
+                            .setNegativeButton(R.string.generalCancel, (dialog, i) -> dialog.dismiss())
+                            .setPositiveButton("Block", (dialog, i) -> {
+                                dialog.dismiss();
+                                Friends.block(myUser, otherUser, ProfileViewer.this, new OnResponseListener() {
+                                    @Override
+                                    public void onSuccess(int code) {
+                                        if (code == 0) {
+                                            request.setText(getString(R.string.requestBlocked));
+                                            request.setEnabled(false);
+                                        }
+                                    }
 
-//        block.setOnClickListener(v -> {
-//            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(ProfileViewer.this);
-//            builder.setBackground(AppCompatResources.getDrawable(ProfileViewer.this, R.color.basicBackground))
-//                    .setTitle("Block " + otherUser.getUsername() + "?")
-//                    .setMessage(otherUser.getUsername() + " will no longer be able to follow you or message you")
-//                    .setPositiveButton(getString(R.string.generalConfirm), (dialog, i) -> {
-//                        Friends.block(myUser, otherUser, ProfileViewer.this, new OnResponseListener() {
-//                            @Override
-//                            public void onSuccess(int code) {
-//                                if (code == 0) {
-//                                    Toast.makeText(ProfileViewer.this, "User Blocked", Toast.LENGTH_SHORT).show();
-//                                    block.setEnabled(false);
-//                                    request.setEnabled(false);
-//                                } else
-//                                    Toast.makeText(ProfileViewer.this, "Error", Toast.LENGTH_SHORT).show();
-//                            }
-//
-//                            @Override
-//                            public void onFailure(String message) {
-//                                Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_SHORT).show();
-//                            }
-//                        });
-//                    })
-//                    .setNegativeButton(getString(R.string.generalCancel), (dialog, i) -> dialog.dismiss())
-//                    .show();
-//        });
-//        report.setOnClickListener(v -> {
-//            Toast.makeText(ProfileViewer.this, "Not Implemented", Toast.LENGTH_SHORT).show();
-//        });
+                                    @Override
+                                    public void onFailure(String message) {
+                                        Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+                                Toast.makeText(ProfileViewer.this, "BLocked", Toast.LENGTH_SHORT).show();
+                            }).show();
+                }
+                return true;
+            } else if (item.getItemId() == R.id.profileViewerOptionReport) {
+
+                return true;
+            }
+            return false;
+        });
 
         request.setOnClickListener(v -> {
             String state = request.getText().toString().trim();
@@ -153,9 +162,7 @@ public class ProfileViewer extends AppCompatActivity {
                                     Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_LONG).show();
                                 }
                             });
-                        })
-                        .show();
-
+                        }).show();
             } else if (state.equals(getString(R.string.requestWaiting))) {
                 MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(v.getContext());
                 builder.setBackground(AppCompatResources.getDrawable(v.getContext(), R.color.basicBackground))
@@ -178,8 +185,7 @@ public class ProfileViewer extends AppCompatActivity {
 
                                 }
                             });
-                        })
-                        .show();
+                        }).show();
             } else if (state.equals(getString(R.string.requestNone))) {
                 Friends.sendRequest(myUser, otherUser, ProfileViewer.this, new OnResponseListener() {
                     @Override
@@ -217,13 +223,8 @@ public class ProfileViewer extends AppCompatActivity {
         });
 
         if (otherUser.isProfileOpen()) {
-            adapterFriends = new AdapterFriends(otherUser, options, count -> {
-                if (count > 0) {
-                    toolbar.setSubtitle(String.format(Locale.getDefault(), "%s: %d", getString(R.string.generalFriends), count));
-                } else {
-
-                }
-            });
+            adapterFriends = new AdapterFriends(otherUser, options, count ->
+                    toolbar.setSubtitle(String.format(Locale.getDefault(), "%s: %d", getString(R.string.generalFriends), count)));
             friendsView.setLayoutManager(new CustomLinearLayout(ProfileViewer.this, LinearLayoutManager.VERTICAL, false));
             friendsView.setAdapter(adapterFriends);
             friendsView.setItemAnimator(null);

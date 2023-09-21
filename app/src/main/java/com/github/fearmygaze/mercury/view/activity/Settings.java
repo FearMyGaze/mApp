@@ -95,7 +95,8 @@ public class Settings extends AppCompatActivity {
         });
 
         editProfile.setOnClickListener(v -> {
-            startActivity(new Intent(Settings.this, ProfileEdit.class));
+            startActivity(new Intent(Settings.this, ProfileEdit.class)
+                    .putExtra(User.PARCEL, user));
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
 
