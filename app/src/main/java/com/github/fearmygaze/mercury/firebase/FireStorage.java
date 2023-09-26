@@ -35,9 +35,9 @@ public class FireStorage {
         String fileName = dateFormat.format(Calendar.getInstance().getTime());
 
         if (ContentResolver.SCHEME_CONTENT.equals(uri.getScheme())) {
-            return String.format(Locale.ENGLISH, "%s_%d.%s", fileName, new Random().nextInt(), mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri)));
+            return String.format(Locale.ENGLISH, "%d_%s.%s", new Random().nextInt(), fileName, mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri)));
         } else {
-            return String.format(Locale.ENGLISH, "%s_%d.%s", fileName, new Random().nextInt(), MimeTypeMap.getFileExtensionFromUrl(uri.toString()));
+            return String.format(Locale.ENGLISH, "%d_%s.%s", new Random().nextInt(), fileName, MimeTypeMap.getFileExtensionFromUrl(uri.toString()));
         }
     }
 
