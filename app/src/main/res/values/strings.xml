@@ -24,6 +24,8 @@
     <string name="generalClear">Clear</string>
     <string name="generalJoined">Joined:</string>
     <string name="generalDelete">Delete</string>
+    <string name="generalSend">Send</string>
+    <string name="generalUpdate">Successfully updated</string>
 
     <!-- Welcome (Activity) -->
     <string name="welcomeTitle">Welcome to Mercury</string>
@@ -36,11 +38,15 @@
     <string name="signInCredential">Email</string>
     <string name="signInPassword">Password</string>
     <string name="signInSignIn">Sign In</string>
+    <string name="signInForgot">We have sent you an email about your request</string>
+    <string name="signInResend">Please activate your account or press \'send' to send a new verification email</string>
+    <string name="signInResendSuccess">New verification email has been sent</string>
 
     <!-- SignUp (Activity) -->
     <string name="signUpGoBack">Go Back</string>
     <string name="signUpCreateAcc">Create account</string>
     <string name="signUpCreate">Create</string>
+    <string name="signUpEmailVerification">We have sent you the verification link to activate your account to the email you have entered during registration</string>
     <string name="signUpDialogTitle">Warning</string>
     <string name="signUpDialogMessage">Please wait while we create your user</string>
 

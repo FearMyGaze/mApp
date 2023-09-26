@@ -23,6 +23,8 @@
     <string name="generalClear">Καθαρισμός</string>
     <string name="generalJoined">Έγινε μέλος:</string>
     <string name="generalDelete">Διαγραφή</string>
+    <string name="generalSend">Αποστολή</string>
+    <string name="generalUpdate">Επιτυχείς ενημέρωση</string>
 
     <!-- Welcome (Activity) -->
     <string name="welcomeTitle">Καλώς ήρθατε στο Mercury</string>
@@ -35,11 +37,15 @@
     <string name="signInCredential">Ηλ. Διεύθυνση</string>
     <string name="signInPassword">Κώδ. χρήστη</string>
     <string name="signInSignIn">Σύνδέση</string>
+    <string name="signInForgot">Σας έχουμε στείλει ένα email σχετικά με το αίτημά σας</string>
+    <string name="signInResend">Ενεργοποιήστε τον λογαριασμό σας ή πατήστε \'αποστολή' για να στείλετε ένα νέο email επαλήθευσης</string>
+    <string name="signInResendSuccess">To νεο email επαλήθευσης έχει αποσταλεί</string>
 
     <!-- SignUp (Activity) -->
     <string name="signUpGoBack">Πηγαίντε πίσω</string>
     <string name="signUpCreateAcc">Δημιουργία λογαριασμού</string>
     <string name="signUpCreate">Δημιουργία</string>
+    <string name="signUpEmailVerification">Σας έχουμε στείλει τον συνδεσμο ενεργοποιήσεις στην Ηλ.Διεύθυνση οπου δώσατε κατά την εγραφή</string>
     <string name="signUpDialogTitle">Προσοχή</string>
     <string name="signUpDialogMessage">Δημιουργία χρήστη παρακαλώ περιμένεται</string>
 

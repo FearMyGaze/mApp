@@ -102,7 +102,7 @@ public class SignUp extends AppCompatActivity {
             String sUsername = Objects.requireNonNull(username.getText()).toString().trim();
             String sPassword = Objects.requireNonNull(password.getText()).toString().trim();
             if (!emailError.isErrorEnabled() && !usernameError.isErrorEnabled() && !passwordError.isErrorEnabled()) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(SignUp.this, R.style.customAlertDialog);
+                AlertDialog.Builder builder = new AlertDialog.Builder(SignUp.this);
                 View dialogView = LayoutInflater.from(SignUp.this).inflate(R.layout.dialog_sign_up, null);
                 builder.setView(dialogView)
                         .setTitle(R.string.signUpDialogTitle)
@@ -115,7 +115,7 @@ public class SignUp extends AppCompatActivity {
                         dialog.dismiss();
                         switch (code) {
                             case 0:
-                                Toast.makeText(SignUp.this, "We sent at your email a verification link, To continue please activate your account", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SignUp.this, getString(R.string.signUpEmailVerification), Toast.LENGTH_LONG).show();
                                 startActivity(new Intent(SignUp.this, SignIn.class));
                                 finish();
                                 break;

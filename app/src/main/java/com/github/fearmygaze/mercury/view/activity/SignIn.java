@@ -85,7 +85,7 @@ public class SignIn extends AppCompatActivity {
                 @Override
                 public void onSuccess(int code) {
                     if (code == 0) {
-                        Toast.makeText(SignIn.this, "Email has been send", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SignIn.this, getString(R.string.signInForgot), Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -110,16 +110,14 @@ public class SignIn extends AppCompatActivity {
                                     startActivity(new Intent(SignIn.this, Main.class));
                                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                                 } else if (code == 1) {
-                                    Snackbar.make(signIn, "Please activate your account, or press 'send' to send a new verification email", 9000)
-                                            .setAction("Send", view ->
+                                    Snackbar.make(signIn, getString(R.string.signInResend), 9000)
+                                            .setAction(getString(R.string.generalSend), view ->
                                                     Auth.sendVerificationEmail(AuthDao.getUser(), SignIn.this,
                                                             new OnResponseListener() {
                                                                 @Override
                                                                 public void onSuccess(int code1) {
                                                                     if (code1 == 0)
-                                                                        Toast.makeText(SignIn.this, "New Verification email send", Toast.LENGTH_SHORT).show();
-                                                                    else
-                                                                        Toast.makeText(SignIn.this, "Error", Toast.LENGTH_SHORT).show();
+                                                                        Toast.makeText(SignIn.this, getString(R.string.signInResendSuccess), Toast.LENGTH_SHORT).show();
                                                                 }
 
                                                                 @Override
@@ -129,8 +127,6 @@ public class SignIn extends AppCompatActivity {
                                                             }
                                                     )
                                             ).show();
-                                } else {
-                                    Toast.makeText(SignIn.this, "Error", Toast.LENGTH_SHORT).show();
                                 }
                             }
 

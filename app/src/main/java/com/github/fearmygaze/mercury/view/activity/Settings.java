@@ -146,8 +146,8 @@ public class Settings extends AppCompatActivity {
                 @Override
                 public void onSuccess(int code) {
                     if (code == 0) {
-                        Toast.makeText(Settings.this, "Successfully updated", Toast.LENGTH_SHORT).show();
-                    } else Toast.makeText(Settings.this, "Error", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Settings.this, getString(R.string.generalUpdate), Toast.LENGTH_SHORT).show();
+                    }
                 }
 
                 @Override
