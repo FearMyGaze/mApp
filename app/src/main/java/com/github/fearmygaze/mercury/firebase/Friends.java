@@ -5,6 +5,7 @@ import android.content.Context;
 import androidx.annotation.IntRange;
 
 import com.github.fearmygaze.mercury.R;
+import com.github.fearmygaze.mercury.firebase.dao.RequestDao;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnDataResponseListener;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
 import com.github.fearmygaze.mercury.model.Request;
@@ -12,45 +13,26 @@ import com.github.fearmygaze.mercury.model.User;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-
-import java.util.Arrays;
 
 public class Friends {
 
     public static final int OPTION_ACCEPT = 0, OPTION_REMOVE = 1;
 
     public static Query friendsQuery(User user) {
-        return FirebaseFirestore.getInstance()
-                .collection(Request.COLLECTION)
-                .whereArrayContains(Request.BETWEEN, user.getId())
-                .whereEqualTo(Request.STATUS, Request.S_FRIEND)
-                .orderBy(Request.CREATED, Query.Direction.DESCENDING);
+        return RequestDao.friends(user);
     }
 
     public static Query waitingQuery(User user) {
-        return FirebaseFirestore.getInstance()
-                .collection(Request.COLLECTION)
-                .whereEqualTo(Request.RECEIVER, user.getId())
-                .whereEqualTo(Request.STATUS, Request.S_WAITING)
-                .orderBy(Request.CREATED, Query.Direction.DESCENDING);
+        return RequestDao.waiting(user);
     }
 
     public static Query blockedQuery(User user) {
-        return FirebaseFirestore.getInstance()
-                .collection(Request.COLLECTION)
-                .whereEqualTo(Request.SENDER, user.getId())
-                .whereEqualTo(Request.STATUS, Request.S_BLOCKED)
-                .orderBy(Request.CREATED, Query.Direction.DESCENDING);
+        return RequestDao.blocked(user);
     }
 
     public static void getStatus(User fromUser, User toUser, Context context, OnDataResponseListener listener) {
-        FirebaseFirestore.getInstance().collection(Request.COLLECTION)
-                .whereIn(Request.SENDER, Arrays.asList(fromUser.getId(), toUser.getId()))
-                .whereIn(Request.RECEIVER, Arrays.asList(fromUser.getId(), toUser.getId()))
-                .limit(1)
-                .get()
+        RequestDao.getStatus(fromUser, toUser)
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                 .addOnSuccessListener(querySnapshot -> {
                     if (querySnapshot != null && !querySnapshot.isEmpty()) {
@@ -80,9 +62,7 @@ public class Friends {
     }
 
     public static void sendRequest(User fromUser, User toUser, Context context, OnResponseListener listener) {
-        DocumentReference docReference = FirebaseFirestore.getInstance()
-                .collection(Request.COLLECTION)
-                .document();
+        DocumentReference docReference = RequestDao.createDocument();
         docReference
                 .set(new Request(docReference.getId(),
                         Request.S_WAITING,
@@ -96,11 +76,7 @@ public class Friends {
     }
 
     public static void cancelRequest(User fromUser, User toUser, Context context, OnResponseListener listener) {
-        FirebaseFirestore.getInstance().collection(Request.COLLECTION)
-                .whereArrayContains(Request.BETWEEN, Request.createRefers(fromUser, toUser))
-                .whereEqualTo(Request.STATUS, Request.S_WAITING)
-                .limit(1)
-                .get()
+        RequestDao.cancel(fromUser, toUser)
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                 .addOnSuccessListener(querySnapshot -> {
                     if (querySnapshot != null && !querySnapshot.isEmpty()) {
@@ -117,12 +93,8 @@ public class Friends {
     }
 
     public static void block(User fromUser, User toUser, Context context, OnResponseListener listener) {
-        CollectionReference reference = FirebaseFirestore.getInstance().collection(Request.COLLECTION);
-        reference
-                .whereIn(Request.SENDER, Arrays.asList(fromUser.getId(), toUser.getId()))
-                .whereIn(Request.RECEIVER, Arrays.asList(fromUser.getId(), toUser.getId()))
-                .limit(1)
-                .get()
+        CollectionReference reference = RequestDao.getReference();
+        RequestDao.block(fromUser, toUser)
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                 .addOnSuccessListener(querySnapshot -> {
                     if (querySnapshot != null && !querySnapshot.isEmpty()) {
@@ -165,10 +137,7 @@ public class Friends {
     }
 
     public static void removeBlock(Request request, Context context, OnResponseListener listener) {
-        CollectionReference reference = FirebaseFirestore.getInstance().collection(Request.COLLECTION);
-        reference
-                .document(request.getId())
-                .get()
+        RequestDao.getRequest(request)
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                 .addOnSuccessListener(snapshot -> {
                     if (snapshot.exists()) {
@@ -184,9 +153,7 @@ public class Friends {
     }
 
     public static void answerRequest(Request request, @IntRange(from = 0, to = 1) int option, Context context, OnResponseListener listener) {
-        FirebaseFirestore.getInstance().collection(Request.COLLECTION)
-                .document(request.getId())
-                .get()
+        RequestDao.getRequest(request)
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                 .addOnSuccessListener(documentSnapshot -> {
                     Request fetchedRequest = documentSnapshot.toObject(Request.class);
@@ -215,11 +182,7 @@ public class Friends {
     }
 
     public static void answerRequest(User user, User otherUser, @IntRange(from = 0, to = 1) int option, Context context, OnResponseListener listener) {
-        FirebaseFirestore.getInstance().collection(Request.COLLECTION)
-                .whereEqualTo(Request.SENDER, otherUser.getId())
-                .whereEqualTo(Request.RECEIVER, user.getId())
-                .limit(1)
-                .get()
+        RequestDao.answer(user, otherUser)
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                 .addOnSuccessListener(querySnapshot -> {
                     if (querySnapshot != null && !querySnapshot.isEmpty()) {
