@@ -76,10 +76,11 @@
     <string name="settingsAccountChangeEmail">Αλλαγή Ηλ.διεύθυνση</string>
     <string name="settingsAccountChangePassword">Αλλαγή Κωδικού</string>
     <string name="settingsAccountEditProfile">Τροποποίση Προφίλ</string>
+    <string name="settingsPrivacyTitle">Απόρρητο &amp; ασφάλεια</string>
     <string name="settingsPrivacyPublicProfile">Δημόσιο Προφίλ</string>
     <string name="settingsPrivacyShowImages">Προεπισκόπηση εικόνων</string>
     <string name="settingsPrivacyShowBlocked">Αποκλεισμένοι χρήστες</string>
-    <string name="settingsPreferencesChangeTheme">Αλλαγή θέματος</string>
+    <string name="settingsPreferencesChangeAccent">Αλλαγή χρώματος έμφασης</string>
     <string name="settingsDocumentsFAQ">Συχνές ερωτήσεις</string>
     <string name="settingsDocumentsPrivacy">Πολιτική απορρήτου</string>
     <string name="settingsDocumentsTerms">Όροι &amp; προϋποθέσεις</string>

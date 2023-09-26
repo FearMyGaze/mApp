@@ -77,10 +77,11 @@
     <string name="settingsAccountChangeEmail">Change email</string>
     <string name="settingsAccountChangePassword">Change password</string>
     <string name="settingsAccountEditProfile">Edit profile</string>
+    <string name="settingsPrivacyTitle">Privacy &amp; Safety</string>
     <string name="settingsPrivacyPublicProfile">Public Profile</string>
     <string name="settingsPrivacyShowImages">Preview images</string>
     <string name="settingsPrivacyShowBlocked">Blocked users</string>
-    <string name="settingsPreferencesChangeTheme">Change theme</string>
+    <string name="settingsPreferencesChangeAccent">Change accent color</string>
     <string name="settingsDocumentsFAQ">FAQ</string>
     <string name="settingsDocumentsPrivacy">Privacy policy</string>
     <string name="settingsDocumentsTerms">Terms &amp; Conditions</string>

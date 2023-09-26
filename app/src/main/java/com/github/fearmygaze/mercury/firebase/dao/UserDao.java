@@ -1,4 +1,4 @@
-package com.github.fearmygaze.mercury.firebase.repository;
+package com.github.fearmygaze.mercury.firebase.dao;
 
 import android.annotation.SuppressLint;
 

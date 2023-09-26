@@ -35,7 +35,7 @@ public class Settings extends AppCompatActivity {
     SwitchMaterial profileSwitch, contentSwitch;
 
     //Preferences
-    MaterialCardView theme;
+    MaterialCardView accent;
 
     //Documents
     MaterialCardView faq, privacy, terms;
@@ -64,7 +64,7 @@ public class Settings extends AppCompatActivity {
         contentSwitch = findViewById(R.id.settingsPreferencesContentSwitch);
         showBlocked = findViewById(R.id.settingsPrivacyBlocked);
 
-        theme = findViewById(R.id.settingsPreferencesAlternate);
+        accent = findViewById(R.id.settingsPreferencesAccent);
         faq = findViewById(R.id.settingsDocumentsFAQ);
         privacy = findViewById(R.id.settingsDocumentsPrivacy);
         terms = findViewById(R.id.settingsDocumentsTerms);
@@ -162,7 +162,7 @@ public class Settings extends AppCompatActivity {
             Tools.writePreference("showImages", contentSwitch.isChecked(), Settings.this);
         });
 
-        theme.setOnClickListener(v -> {
+        accent.setOnClickListener(v -> {
 
         });
 
