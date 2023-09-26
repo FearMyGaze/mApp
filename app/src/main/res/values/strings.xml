@@ -39,7 +39,7 @@
     <string name="signInPassword">Password</string>
     <string name="signInSignIn">Sign In</string>
     <string name="signInForgot">We have sent you an email about your request</string>
-    <string name="signInResend">Please activate your account or press \'send' to send a new verification email</string>
+    <string name="signInResend">Please activate your account or press "send" to send a new verification email</string>
     <string name="signInResendSuccess">New verification email has been sent</string>
 
     <!-- SignUp (Activity) -->

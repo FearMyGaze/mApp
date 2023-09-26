@@ -38,7 +38,7 @@
     <string name="signInPassword">Κώδ. χρήστη</string>
     <string name="signInSignIn">Σύνδέση</string>
     <string name="signInForgot">Σας έχουμε στείλει ένα email σχετικά με το αίτημά σας</string>
-    <string name="signInResend">Ενεργοποιήστε τον λογαριασμό σας ή πατήστε \'αποστολή' για να στείλετε ένα νέο email επαλήθευσης</string>
+    <string name="signInResend">Ενεργοποιήστε τον λογαριασμό σας ή πατήστε "αποστολή" για να στείλετε ένα νέο email επαλήθευσης</string>
     <string name="signInResendSuccess">To νεο email επαλήθευσης έχει αποσταλεί</string>
 
     <!-- SignUp (Activity) -->
