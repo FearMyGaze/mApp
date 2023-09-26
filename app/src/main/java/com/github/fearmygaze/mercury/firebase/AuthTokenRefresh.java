@@ -6,7 +6,7 @@ import android.app.job.JobService;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class AuthRefresh extends JobService {
+public class AuthTokenRefresh extends JobService {
 
     public static final int JOB_ID = 123;
 

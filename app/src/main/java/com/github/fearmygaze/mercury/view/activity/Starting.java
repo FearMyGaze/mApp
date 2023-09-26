@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.github.fearmygaze.mercury.BuildConfig;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.database.AppDatabase;
-import com.github.fearmygaze.mercury.firebase.AuthRefresh;
+import com.github.fearmygaze.mercury.firebase.AuthTokenRefresh;
 import com.github.fearmygaze.mercury.model.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -33,7 +33,7 @@ public class Starting extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
 
         JobScheduler jobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
-        JobInfo jobInfo = new JobInfo.Builder(AuthRefresh.JOB_ID, new ComponentName(Starting.this, AuthRefresh.class))
+        JobInfo jobInfo = new JobInfo.Builder(AuthTokenRefresh.JOB_ID, new ComponentName(Starting.this, AuthTokenRefresh.class))
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
                 .setPersisted(true)
                 .setPeriodic(interval())
