@@ -10,6 +10,7 @@ import androidx.appcompat.content.res.AppCompatResources;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.firebase.Auth;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
+import com.github.fearmygaze.mercury.firebase.dao.AuthDao;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.PrivatePreference;
 import com.github.fearmygaze.mercury.util.Tools;
@@ -20,7 +21,6 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.switchmaterial.SwitchMaterial;
-import com.google.firebase.auth.FirebaseAuth;
 
 public class Settings extends AppCompatActivity {
 
@@ -102,7 +102,7 @@ public class Settings extends AppCompatActivity {
         });
 
         signOut.setOnClickListener(v -> {
-            FirebaseAuth.getInstance().signOut();
+            AuthDao.signOut();
             PrivatePreference preference = new PrivatePreference(this);
             preference.clearValue("current");
             User.deleteRoomUser(user, Settings.this);

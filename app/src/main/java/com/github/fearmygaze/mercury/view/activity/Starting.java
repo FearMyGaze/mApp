@@ -16,6 +16,7 @@ import com.github.fearmygaze.mercury.BuildConfig;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.database.AppDatabase;
 import com.github.fearmygaze.mercury.firebase.AuthTokenRefresh;
+import com.github.fearmygaze.mercury.firebase.dao.AuthDao;
 import com.github.fearmygaze.mercury.model.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -63,14 +64,14 @@ public class Starting extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        FirebaseAuth.getInstance().addAuthStateListener(authStateListener);
+        AuthDao.getInstance().addAuthStateListener(authStateListener);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         if (authStateListener != null) {
-            FirebaseAuth.getInstance().removeAuthStateListener(authStateListener);
+            AuthDao.getInstance().removeAuthStateListener(authStateListener);
         }
     }
 

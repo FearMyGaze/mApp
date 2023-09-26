@@ -12,6 +12,7 @@ import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.firebase.Auth;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnDataResponseListener;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
+import com.github.fearmygaze.mercury.firebase.dao.AuthDao;
 import com.github.fearmygaze.mercury.util.RegEx;
 import com.github.fearmygaze.mercury.util.Tools;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -19,7 +20,6 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
 
@@ -112,7 +112,7 @@ public class SignIn extends AppCompatActivity {
                                 } else if (code == 1) {
                                     Snackbar.make(signIn, "Please activate your account, or press 'send' to send a new verification email", 9000)
                                             .setAction("Send", view ->
-                                                    Auth.sendVerificationEmail(FirebaseAuth.getInstance().getCurrentUser(), SignIn.this,
+                                                    Auth.sendVerificationEmail(AuthDao.getUser(), SignIn.this,
                                                             new OnResponseListener() {
                                                                 @Override
                                                                 public void onSuccess(int code1) {

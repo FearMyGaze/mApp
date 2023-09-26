@@ -18,6 +18,7 @@ import com.github.fearmygaze.mercury.custom.CustomLinearLayout;
 import com.github.fearmygaze.mercury.firebase.Friends;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnDataResponseListener;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
+import com.github.fearmygaze.mercury.firebase.dao.AuthDao;
 import com.github.fearmygaze.mercury.model.Request;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
@@ -27,7 +28,6 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.imageview.ShapeableImageView;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Locale;
 
@@ -255,7 +255,7 @@ public class ProfileViewer extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+        if (AuthDao.getUser() == null) {
             finish();
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         }

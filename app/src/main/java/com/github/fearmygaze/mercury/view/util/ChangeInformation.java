@@ -12,12 +12,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.firebase.Auth;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnDataResponseListener;
+import com.github.fearmygaze.mercury.firebase.dao.AuthDao;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.RegEx;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
 
@@ -47,7 +47,7 @@ public class ChangeInformation extends AppCompatActivity {
         changeType = bundle.getString("type");
         if (user == null || changeType == null) onBackPressed();
 
-        userEmail = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getEmail();
+        userEmail = Objects.requireNonNull(AuthDao.getUser()).getEmail();
 
         verifyPasswordError = findViewById(R.id.changeInformationVerifyPasswordError);
         verifyPassword = findViewById(R.id.changeInformationVerifyPassword);
@@ -75,7 +75,7 @@ public class ChangeInformation extends AppCompatActivity {
         });
 
         next.setOnClickListener(v -> {
-            FirebaseAuth.getInstance().signOut();
+            AuthDao.signOut();
             String password = Objects.requireNonNull(verifyPassword.getText()).toString().trim();
             Auth.signIn(userEmail, password, ChangeInformation.this, new OnDataResponseListener() {
                 @Override

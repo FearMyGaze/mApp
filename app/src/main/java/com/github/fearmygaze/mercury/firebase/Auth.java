@@ -9,12 +9,12 @@ import com.github.fearmygaze.mercury.database.AppDatabase;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnDataResponseListener;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnUserResponseListener;
+import com.github.fearmygaze.mercury.firebase.dao.AuthDao;
+import com.github.fearmygaze.mercury.firebase.dao.UserDao;
 import com.github.fearmygaze.mercury.model.User;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.messaging.FirebaseMessaging;
 
@@ -27,17 +27,16 @@ import kotlin.NotImplementedError;
 public class Auth {
 
     public static void validateDataAndCreateUser(String username, String email, String password, Context context, OnResponseListener listener) {
-        FirebaseAuth.getInstance()
-                .fetchSignInMethodsForEmail(email)
+        AuthDao.validate(email)
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                 .addOnSuccessListener(signInMethodQueryResult -> {
                     List<String> results = signInMethodQueryResult.getSignInMethods();
                     if (results != null && !results.isEmpty()) {
                         listener.onSuccess(1);
                     } else {
-                        grantUsername(username, context, new OnDataResponseListener() {
+                        grantUsername(username, context, new OnResponseListener() {
                             @Override
-                            public void onSuccess(int code, Object data) {
+                            public void onSuccess(int code) {
                                 if (code == 0) {
                                     signUp(username, email, password, context, new OnResponseListener() {
                                         @Override
@@ -64,50 +63,37 @@ public class Auth {
                 });
     }
 
-    private static void grantUsername(String username, Context context, OnDataResponseListener listener) {
-        FirebaseFirestore.getInstance().collection(User.PUBLIC_DATA)
+    private static void grantUsername(String username, Context context, OnResponseListener listener) {
+        CollectionReference reference = UserDao.pDataReference();
+        reference
                 .whereEqualTo(User.USERNAME, username)
                 .limit(1)
                 .get()
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (!queryDocumentSnapshots.isEmpty()) {
-                        listener.onSuccess(2, null);
+                        listener.onSuccess(2);
                     } else {
                         Map<String, Object> map = new HashMap<>();
                         map.put(User.USERNAME, username);
-                        DocumentReference docReference = FirebaseFirestore.getInstance()
-                                .collection(User.PUBLIC_DATA)
-                                .document();
+                        DocumentReference docReference = reference.document();
                         docReference
                                 .set(map)
                                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
-                                .addOnSuccessListener(unused -> listener.onSuccess(0, docReference.getId()));
+                                .addOnSuccessListener(unused -> listener.onSuccess(0));
                     }
                 });
     }
 
-    private static void deleteUsername(String reference, Context context, OnResponseListener listener) {
-        FirebaseFirestore.getInstance().collection(User.PUBLIC_DATA)
-                .document(reference)
-                .delete()
-                .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
-                .addOnSuccessListener(unused -> listener.onSuccess(0));
-    }
-
     private static void signUp(String username, String email, String password, Context context, OnResponseListener listener) {
-        FirebaseAuth.getInstance()
-                .createUserWithEmailAndPassword(email, password)
+        AuthDao.create(email, password)
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                 .addOnSuccessListener(authResult -> {
                     FirebaseUser user = authResult.getUser();
                     if (user != null) {
                         user.sendEmailVerification()
                                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
-                                .addOnSuccessListener(unused1 -> FirebaseFirestore.getInstance()
-                                        .collection(User.COLLECTION)
-                                        .document(user.getUid())
-                                        .set(new User(user.getUid(), username))
+                                .addOnSuccessListener(unused1 -> UserDao.createUser(user.getUid(), username)
                                         .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                                         .addOnSuccessListener(unused2 -> listener.onSuccess(0))
                                 );
@@ -116,16 +102,14 @@ public class Auth {
     }
 
     public static void signIn(String email, String password, Context context, OnDataResponseListener listener) {
-        FirebaseAuth.getInstance()
-                .signInWithEmailAndPassword(email, password)
+        AuthDao.signIn(email, password)
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                 .addOnSuccessListener(authResult -> {
                     FirebaseUser user = authResult.getUser();
                     if (user != null) {
                         if (user.isEmailVerified()) {
-                            FirebaseFirestore.getInstance().collection(User.COLLECTION)
-                                    .document(user.getUid())
-                                    .get()
+                            UserDao.getUserByID(user.getUid())
+                                    .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                                     .addOnSuccessListener(documentSnapshot -> {
                                         AppDatabase.getInstance(context).userDao().insert(documentSnapshot.toObject(User.class));
                                         listener.onSuccess(0, user.getUid());
@@ -146,8 +130,7 @@ public class Auth {
     }
 
     public static void sendPasswordResetEmail(String email, Context context, OnResponseListener listener) {
-        FirebaseAuth.getInstance()
-                .sendPasswordResetEmail(email)
+        AuthDao.passwordReset(email)
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                 .addOnSuccessListener(unused -> listener.onSuccess(0));
     }
@@ -163,16 +146,11 @@ public class Auth {
                     .addOnSuccessListener(unused -> FirebaseMessaging.getInstance()
                             .getToken()
                             .addOnFailureListener(e -> listener.onFailure("Failed to update your token"))
-                            .addOnSuccessListener(token -> FirebaseFirestore.getInstance()
-                                    .collection(User.COLLECTION)
-                                    .document(user.getUid())
-                                    .get()
+                            .addOnSuccessListener(token -> UserDao.getUserByID(user.getUid())
                                     .addOnFailureListener(e -> listener.onFailure("Error getting your user"))
                                     .addOnSuccessListener(documentSnapshot -> {
                                         if (documentSnapshot != null && documentSnapshot.exists()) {
-                                            FirebaseFirestore.getInstance().collection(User.COLLECTION)
-                                                    .document(user.getUid())
-                                                    .update(User.NOTIFICATION, token)
+                                            UserDao.update(user.getUid(), token)
                                                     .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                                                     .addOnSuccessListener(unused1 -> listener.onSuccess(0, User.rememberMe(documentSnapshot, token, context)));
                                         } else {
@@ -183,7 +161,7 @@ public class Auth {
     }
 
     public static void updatePassword(String password, Context context, OnResponseListener listener) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = AuthDao.getUser();
         if (user != null) {
             user.updatePassword(password)
                     .addOnFailureListener(e -> listener.onFailure("Error updating your password"))
@@ -192,7 +170,7 @@ public class Auth {
     }
 
     public static void updateEmail(String email, Context context, OnResponseListener listener) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = AuthDao.getUser();
         if (user != null) {
             user.updateEmail(email)
                     .addOnFailureListener(e -> listener.onFailure("Failed to update your email"))
@@ -204,9 +182,7 @@ public class Auth {
     }
 
     public static void updateNotificationToken(@NonNull FirebaseUser user, String token, Context context) {
-        FirebaseFirestore.getInstance().collection(User.COLLECTION)
-                .document(user.getUid())
-                .update(User.NOTIFICATION, token);
+        UserDao.update(user.getUid(), token);
     }
 
     public static void deleteAccount(Context context, OnResponseListener listener) {
@@ -226,16 +202,7 @@ public class Auth {
     }
 
     protected static void updateInformation(User user, Context context, OnResponseListener listener) {
-        FirebaseFirestore.getInstance().collection(User.COLLECTION)
-                .document(user.getId())
-                .update(User.IMAGE, user.getImage(),
-                        User.NOTIFICATION, user.getNotificationToken(),
-                        User.STATUS, user.getStatus(),
-                        User.LOCATION, user.getLocation(),
-                        User.LOCATION_LOWERED, user.getLocationL(),
-                        User.JOB, user.getJob(),
-                        User.JOB_LOWERED, user.getJobL(),
-                        User.WEB, user.getWebsite())
+        UserDao.update(user)
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                 .addOnSuccessListener(unused -> {
                     User.updateRoomUser(user, context);
@@ -244,38 +211,19 @@ public class Auth {
     }
 
     public static Query searchQuery(String search) {
-        CollectionReference reference = FirebaseFirestore.getInstance().collection(User.COLLECTION);
-        String pSearch;
         if (search.startsWith("loc:") && search.length() >= 7) {
-            pSearch = search.replace("loc:", "");
-            return reference
-                    .whereGreaterThanOrEqualTo(User.LOCATION_LOWERED, pSearch.toLowerCase())
-                    .whereLessThanOrEqualTo(User.LOCATION_LOWERED, pSearch.toLowerCase() + "\uf8ff")
-                    .limit(40);
+            return UserDao.searchByLocation(search, 40);
         } else if (search.startsWith("job:") && search.length() >= 7) {
-            pSearch = search.replace("job:", "");
-            return reference
-                    .whereGreaterThanOrEqualTo(User.JOB_LOWERED, pSearch.toLowerCase())
-                    .whereLessThanOrEqualTo(User.JOB_LOWERED, pSearch.toLowerCase() + "\uf8ff")
-                    .limit(40);
+            return UserDao.searchByJob(search, 40);
         } else if (search.startsWith("web:") && search.length() >= 7) {
-            pSearch = User.addHttp(search.replace("web:", ""));
-            return reference
-                    .whereGreaterThanOrEqualTo(User.WEB, pSearch)
-                    .whereLessThanOrEqualTo(User.WEB, pSearch + "\uf8ff")
-                    .limit(40);
+            return UserDao.searchByWeb(search, 40);
         } else {
-            return reference
-                    .whereGreaterThanOrEqualTo(User.USERNAME_LOWERED, search.toLowerCase())
-                    .whereLessThanOrEqualTo(User.USERNAME_LOWERED, search.toLowerCase() + "\uf8ff")
-                    .limit(40);
+            return UserDao.searchByUsername(search, 40);
         }
     }
 
     public static void getUserProfile(String id, Context context, OnUserResponseListener listener) {
-        FirebaseFirestore.getInstance().collection(User.COLLECTION)
-                .document(id)
-                .get()
+        UserDao.getUserByID(id)
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot != null && documentSnapshot.exists()) {

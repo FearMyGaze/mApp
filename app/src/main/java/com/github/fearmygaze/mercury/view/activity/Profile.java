@@ -15,6 +15,7 @@ import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.custom.CustomLinearLayout;
 import com.github.fearmygaze.mercury.database.AppDatabase;
 import com.github.fearmygaze.mercury.firebase.Friends;
+import com.github.fearmygaze.mercury.firebase.dao.AuthDao;
 import com.github.fearmygaze.mercury.model.Request;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
@@ -112,9 +113,9 @@ public class Profile extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
+    protected void onStart() {//TODO: We need to fix this we can get the user by the parcel and not handle it this way
         super.onStart();
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+        if (AuthDao.getUser() == null) {
             finish();
         } else {
             user = AppDatabase.getInstance(Profile.this).userDao().getByID(FirebaseAuth.getInstance().getUid());

@@ -31,6 +31,7 @@ import com.github.fearmygaze.mercury.custom.CustomLinearLayout;
 import com.github.fearmygaze.mercury.database.AppDatabase;
 import com.github.fearmygaze.mercury.firebase.Auth;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnUserResponseListener;
+import com.github.fearmygaze.mercury.firebase.dao.AuthDao;
 import com.github.fearmygaze.mercury.model.CachedQuery;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
@@ -45,7 +46,6 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.imageview.ShapeableImageView;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class Main extends AppCompatActivity {
@@ -198,7 +198,7 @@ public class Main extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        FirebaseUser oldFireUser = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser oldFireUser = AuthDao.getUser();
         Auth.rememberMe(oldFireUser, Main.this, new OnUserResponseListener() {
             @Override
             public void onSuccess(int code, User data) {
@@ -208,13 +208,13 @@ public class Main extends AppCompatActivity {
                         Tools.profileImage(user.getImage(), Main.this).into(profileImage);
                         break;
                     case 1:
-                        FirebaseAuth.getInstance().signOut();
+                        AuthDao.signOut();
                         Toast.makeText(Main.this, "An unexpected error occurred", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(Main.this, Starting.class));
                         finish();
                         break;
                     case 2:
-                        FirebaseAuth.getInstance().signOut();
+                        AuthDao.signOut();
                         Toast.makeText(Main.this, "You need to activate your account", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(Main.this, Starting.class));
                         finish();
@@ -224,7 +224,7 @@ public class Main extends AppCompatActivity {
 
             @Override
             public void onFailure(String message) {
-                FirebaseAuth.getInstance().signOut();
+                AuthDao.signOut();
                 Toast.makeText(Main.this, message, Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(Main.this, SignIn.class));
                 finish();
