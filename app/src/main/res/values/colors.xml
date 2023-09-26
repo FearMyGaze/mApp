@@ -8,17 +8,11 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFF</color>
 
-    <!-- Basic Theme/Pallet -->
+    <!-- Basic Theme/Pallet --> <!-- TODO: Add more variant colors -->
     <color name="basicBackground">#ffffff</color>
     <color name="basicBackgroundAlternate">#fafafa</color>
     <color name="variant">#ff7a00</color>
     <color name="textRegular">#8b98a5</color>
     <color name="textBold">#000000</color>
-
-    <!-- Alternate Theme/Pallet --> <!--TODO: Possible remove this and add the red images in the file instead -->
-    <color name="alternateBackground">#3e433e</color>
-    <color name="alternateVariant">#e9c7a5</color>
-    <color name="alternateTextBold">#e9c7a5</color>
-    <color name="alternateTextRegular">#bfba8e</color>
 
 </resources>

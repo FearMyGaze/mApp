@@ -10,10 +10,8 @@ import com.github.fearmygaze.mercury.firebase.interfaces.OnDataResponseListener;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnUserResponseListener;
 import com.github.fearmygaze.mercury.model.User;
-import com.github.fearmygaze.mercury.util.Tools;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -104,19 +102,14 @@ public class Auth {
                 .addOnSuccessListener(authResult -> {
                     FirebaseUser user = authResult.getUser();
                     if (user != null) {
-                        UserProfileChangeRequest changeRequest = new UserProfileChangeRequest.Builder()
-                                .setDisplayName(username)
-                                .build();
-                        user.updateProfile(changeRequest)
+                        user.sendEmailVerification()
                                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
-                                .addOnSuccessListener(unused -> user.sendEmailVerification()
+                                .addOnSuccessListener(unused1 -> FirebaseFirestore.getInstance()
+                                        .collection(User.COLLECTION)
+                                        .document(user.getUid())
+                                        .set(new User(user.getUid(), username))
                                         .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
-                                        .addOnSuccessListener(unused1 -> FirebaseFirestore.getInstance()
-                                                .collection(User.COLLECTION)
-                                                .document(user.getUid())
-                                                .set(new User(user.getUid(), username))
-                                                .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
-                                                .addOnSuccessListener(unused2 -> listener.onSuccess(0)))
+                                        .addOnSuccessListener(unused2 -> listener.onSuccess(0))
                                 );
                     } else listener.onFailure("Error contacting the server");
                 });
@@ -179,9 +172,9 @@ public class Auth {
                                         if (documentSnapshot != null && documentSnapshot.exists()) {
                                             FirebaseFirestore.getInstance().collection(User.COLLECTION)
                                                     .document(user.getUid())
-                                                    .set(User.updateRoomToken(User.convertFromDocumentAndSave(documentSnapshot, context).getId(), token, context))
+                                                    .update(User.NOTIFICATION, token)
                                                     .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
-                                                    .addOnSuccessListener(unused1 -> listener.onSuccess(0, User.getRoomUser(user.getUid(), context)));
+                                                    .addOnSuccessListener(unused1 -> listener.onSuccess(0, User.rememberMe(documentSnapshot, token, context)));
                                         } else {
                                             listener.onFailure("Error getting your user");
                                         }
@@ -213,7 +206,7 @@ public class Auth {
     public static void updateNotificationToken(@NonNull FirebaseUser user, String token, Context context) {
         FirebaseFirestore.getInstance().collection(User.COLLECTION)
                 .document(user.getUid())
-                .set(User.updateRoomToken(user.getUid(), token, context));
+                .update(User.NOTIFICATION, token);
     }
 
     public static void deleteAccount(Context context, OnResponseListener listener) {
@@ -235,7 +228,14 @@ public class Auth {
     protected static void updateInformation(User user, Context context, OnResponseListener listener) {
         FirebaseFirestore.getInstance().collection(User.COLLECTION)
                 .document(user.getId())
-                .set(User.updateRoomUser(user, context))
+                .update(User.IMAGE, user.getImage(),
+                        User.NOTIFICATION, user.getNotificationToken(),
+                        User.STATUS, user.getStatus(),
+                        User.LOCATION, user.getLocation(),
+                        User.LOCATION_LOWERED, user.getLocationL(),
+                        User.JOB, user.getJob(),
+                        User.JOB_LOWERED, user.getJobL(),
+                        User.WEB, user.getWebsite())
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                 .addOnSuccessListener(unused -> {
                     User.updateRoomUser(user, context);
@@ -259,7 +259,7 @@ public class Auth {
                     .whereLessThanOrEqualTo(User.JOB_LOWERED, pSearch.toLowerCase() + "\uf8ff")
                     .limit(40);
         } else if (search.startsWith("web:") && search.length() >= 7) {
-            pSearch = Tools.addHttp(search.replace("web:", ""));
+            pSearch = User.addHttp(search.replace("web:", ""));
             return reference
                     .whereGreaterThanOrEqualTo(User.WEB, pSearch)
                     .whereLessThanOrEqualTo(User.WEB, pSearch + "\uf8ff")

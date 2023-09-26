@@ -11,6 +11,7 @@ import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.firebase.Auth;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
 import com.github.fearmygaze.mercury.model.User;
+import com.github.fearmygaze.mercury.util.PrivatePreference;
 import com.github.fearmygaze.mercury.util.Tools;
 import com.github.fearmygaze.mercury.view.util.ChangeInformation;
 import com.github.fearmygaze.mercury.view.util.ProfileEdit;
@@ -37,7 +38,7 @@ public class Settings extends AppCompatActivity {
     MaterialCardView theme;
 
     //Documents
-    MaterialCardView privacy, terms;
+    MaterialCardView faq, privacy, terms;
 
     //Danger
     MaterialCardView closeAccount;
@@ -64,7 +65,7 @@ public class Settings extends AppCompatActivity {
         showBlocked = findViewById(R.id.settingsPrivacyBlocked);
 
         theme = findViewById(R.id.settingsPreferencesAlternate);
-
+        faq = findViewById(R.id.settingsDocumentsFAQ);
         privacy = findViewById(R.id.settingsDocumentsPrivacy);
         terms = findViewById(R.id.settingsDocumentsTerms);
 
@@ -102,6 +103,8 @@ public class Settings extends AppCompatActivity {
 
         signOut.setOnClickListener(v -> {
             FirebaseAuth.getInstance().signOut();
+            PrivatePreference preference = new PrivatePreference(this);
+            preference.clearValue("current");
             User.deleteRoomUser(user, Settings.this);
             onBackPressed();
         });
@@ -160,6 +163,10 @@ public class Settings extends AppCompatActivity {
         });
 
         theme.setOnClickListener(v -> {
+
+        });
+
+        faq.setOnClickListener(v -> {
 
         });
 

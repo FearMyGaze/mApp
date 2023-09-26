@@ -210,13 +210,13 @@ public class Main extends AppCompatActivity {
                     case 1:
                         FirebaseAuth.getInstance().signOut();
                         Toast.makeText(Main.this, "An unexpected error occurred", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(Main.this, SignIn.class));
+                        startActivity(new Intent(Main.this, Starting.class));
                         finish();
                         break;
                     case 2:
                         FirebaseAuth.getInstance().signOut();
                         Toast.makeText(Main.this, "You need to activate your account", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(Main.this, SignIn.class));
+                        startActivity(new Intent(Main.this, Starting.class));
                         finish();
                         break;
                 }
@@ -349,7 +349,7 @@ public class Main extends AppCompatActivity {
     private void rememberMe(Bundle bundle) {
         String id = Tools.getStrPreference("current", Main.this);
         if (id != null) {
-            User oldUser = AppDatabase.getInstance(Main.this).userDao().getByID(id);
+            User oldUser = User.getRoomUser(id, Main.this);
             if (oldUser != null) {
                 user = oldUser;
                 Tools.profileImage(user.getImage(), Main.this).into(profileImage);

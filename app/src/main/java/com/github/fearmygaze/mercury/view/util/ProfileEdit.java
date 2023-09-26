@@ -99,19 +99,13 @@ public class ProfileEdit extends AppCompatActivity {
 
     private void sendData() {
         if (!websiteLayout.isErrorEnabled()) {
-            User localUserData = new User(
-                    user.getId(),
-                    user.getUsername(),
-                    user.getImage(),
-                    user.getNotificationToken(),
-                    Objects.requireNonNull(statusCell.getText()).toString().trim(),
-                    Objects.requireNonNull(locationCell.getText()).toString().trim(),
-                    Objects.requireNonNull(jobCell.getText()).toString().trim(),
-                    Objects.requireNonNull(websiteCell.getText()).toString().trim(),
-                    user.isProfileOpen(),
-                    user.getCreated()
-            );
-            Auth.updateProfile(localUserData, imageChanged, imageData, ProfileEdit.this, new OnResponseListener() {
+            user.setStatus(Objects.requireNonNull(statusCell.getText()).toString().trim());
+            user.setLocation(Objects.requireNonNull(locationCell.getText()).toString().trim());
+            user.setLocationL(user.getLocation().toLowerCase());
+            user.setJob(Objects.requireNonNull(jobCell.getText()).toString().trim());
+            user.setJobL(user.getJob().toLowerCase());
+            user.setWebsite(Objects.requireNonNull(websiteCell.getText()).toString().trim());
+            Auth.updateProfile(user, imageChanged, imageData, ProfileEdit.this, new OnResponseListener() {
                 @Override
                 public void onSuccess(int code) {
                     if (code == 0) {

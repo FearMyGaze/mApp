@@ -16,8 +16,8 @@ import com.github.fearmygaze.mercury.firebase.Auth;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
 import com.github.fearmygaze.mercury.util.RegEx;
 import com.github.fearmygaze.mercury.util.Tools;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -25,7 +25,7 @@ import java.util.Objects;
 
 public class SignUp extends AppCompatActivity {
 
-    ShapeableImageView goBack;
+    MaterialToolbar toolbar;
     TextInputLayout usernameError, emailError, passwordError;
     TextInputEditText username, email, password;
     MaterialButton createAccount;
@@ -35,7 +35,7 @@ public class SignUp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        goBack = findViewById(R.id.signupGoBack);
+        toolbar = findViewById(R.id.signUpToolBar);
         usernameError = findViewById(R.id.signUpUsernameError);
         username = findViewById(R.id.signUpUsername);
         emailError = findViewById(R.id.signUpEmailError);
@@ -44,7 +44,7 @@ public class SignUp extends AppCompatActivity {
         password = findViewById(R.id.signUpPassword);
         createAccount = findViewById(R.id.signUpCreateAccount);
 
-        goBack.setOnClickListener(v -> onBackPressed());
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         email.addTextChangedListener(new TextWatcher() {
             @Override
@@ -143,7 +143,6 @@ public class SignUp extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        startActivity(new Intent(SignUp.this, SignIn.class));
         finish();
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }

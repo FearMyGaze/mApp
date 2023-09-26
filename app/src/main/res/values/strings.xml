@@ -25,18 +25,22 @@
     <string name="generalJoined">Joined:</string>
     <string name="generalDelete">Delete</string>
 
+    <!-- Welcome (Activity) -->
+    <string name="welcomeTitle">Welcome to Mercury</string>
+    <string name="welcomeBody">An app that emphasizes on simplicity, anonymity and of course better communication between your friends.</string>
+    <string name="welcomeHaveAccount">Have an account already?</string>
+    <string name="welcomeHaveAccountP2">Log in</string>
+
     <!-- SignIn (Activity) -->
-    <string name="signInWelcome">Welcome</string>
-    <string name="signInToContinue">To Continue Sign In or Create an account</string>
+    <string name="signInBody">To log in please type your email and your password</string>
     <string name="signInCredential">Email</string>
     <string name="signInPassword">Password</string>
     <string name="signInSignIn">Sign In</string>
-    <string name="signInSignUp">Sign Up</string>
 
     <!-- SignUp (Activity) -->
     <string name="signUpGoBack">Go Back</string>
-    <string name="signUpCreateAcc">Create Account</string>
-    <string name="signUpTerms">By tapping Create Account you Agree to Terms and Conditions</string>
+    <string name="signUpCreateAcc">Create account</string>
+    <string name="signUpCreate">Create</string>
     <string name="signUpDialogTitle">Warning</string>
     <string name="signUpDialogMessage">Please wait while we create your user</string>
 
@@ -77,6 +81,7 @@
     <string name="settingsPrivacyShowImages">Preview images</string>
     <string name="settingsPrivacyShowBlocked">Blocked users</string>
     <string name="settingsPreferencesChangeTheme">Change theme</string>
+    <string name="settingsDocumentsFAQ">FAQ</string>
     <string name="settingsDocumentsPrivacy">Privacy policy</string>
     <string name="settingsDocumentsTerms">Terms &amp; Conditions</string>
     <string name="settingsDangerCloseAccount">Close account</string>

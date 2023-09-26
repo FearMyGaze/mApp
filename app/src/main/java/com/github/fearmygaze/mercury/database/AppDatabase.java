@@ -12,7 +12,7 @@ import com.github.fearmygaze.mercury.model.CachedQuery;
 import com.github.fearmygaze.mercury.model.Profile;
 import com.github.fearmygaze.mercury.model.User;
 
-@Database(entities = {User.class, Profile.class, CachedQuery.class}, version = 8, exportSchema = false)
+@Database(entities = {User.class, Profile.class, CachedQuery.class}, version = 10, exportSchema = false)
 @TypeConverters({TimestampConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
 

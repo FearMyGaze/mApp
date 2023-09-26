@@ -15,7 +15,6 @@ import androidx.room.PrimaryKey;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.custom.TimestampConverter;
 import com.github.fearmygaze.mercury.database.AppDatabase;
-import com.github.fearmygaze.mercury.database.UserRoomDao;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -94,6 +93,9 @@ public class User implements Parcelable {
     @ColumnInfo(name = "isProfileOpen")
     boolean isProfileOpen;
 
+    @ColumnInfo(name = "accountType")
+    String accountType;
+
     public User() {
     }
 
@@ -103,23 +105,6 @@ public class User implements Parcelable {
         this.username = username;
         this.usernameL = username.toLowerCase();
         this.isProfileOpen = true;
-    }
-
-    @Ignore
-    public User(@NonNull String id, String username, String image, String notificationToken, String status, String location, String job, String website, boolean isProfileOpen, Date created) {
-        this.id = id;
-        this.username = username;
-        this.usernameL = username.toLowerCase();
-        this.image = image;
-        this.notificationToken = notificationToken;
-        this.status = status;
-        this.location = location;
-        this.locationL = location.toLowerCase();
-        this.job = job;
-        this.jobL = job.toLowerCase();
-        this.website = website;
-        this.isProfileOpen = isProfileOpen;
-        this.created = created;
     }
 
     @NonNull
@@ -159,8 +144,8 @@ public class User implements Parcelable {
         return notificationToken;
     }
 
-    public void setNotificationToken(String notificationToken) {
-        this.notificationToken = notificationToken;
+    public void setNotificationToken(String token) {
+        this.notificationToken = token;
     }
 
     public String getStatus() {
@@ -227,34 +212,36 @@ public class User implements Parcelable {
         isProfileOpen = profileOpen;
     }
 
+    public void setAccountType(String accType) {
+        this.accountType = accType;
+    }
+
+    public String getAccountType() {
+        return accountType;
+    }
+
     public static User convertFromDocumentAndSave(DocumentSnapshot document, Context context) {
-        UserRoomDao dao = AppDatabase.getInstance(context).userDao();
-        dao.update(document.toObject(User.class));
-        return dao.getByID(document.getId());
+        return AppDatabase.getInstance(context).userDao().transactionUpdateUser(document.toObject(User.class));
+    }
+
+    public static User rememberMe(DocumentSnapshot doc, String token, Context context) {
+        return AppDatabase.getInstance(context).userDao().transactionRememberMe(doc.toObject(User.class), token);
     }
 
     public static User updateRoomUser(User user, Context context) {
-        UserRoomDao dao = AppDatabase.getInstance(context).userDao();
-        dao.update(user);
-        return dao.getByID(user.getId());
+        return AppDatabase.getInstance(context).userDao().transactionUpdateUser(user);
     }
 
     public static User updateRoomToken(String id, String token, Context context) {
-        UserRoomDao dao = AppDatabase.getInstance(context).userDao();
-        dao.updateToken(token, id);
-        return dao.getByID(id);
+        return AppDatabase.getInstance(context).userDao().transactionUpdateToken(token, id);
     }
 
     public static User updateRoomImage(String id, Uri link, Context context) {
-        UserRoomDao dao = AppDatabase.getInstance(context).userDao();
-        dao.updateImage(String.valueOf(link), id);
-        return dao.getByID(id);
+        return AppDatabase.getInstance(context).userDao().transactionUpdateImage(String.valueOf(link), id);
     }
 
     public static User updateRoomState(String id, boolean state, Context context) {
-        UserRoomDao dao = AppDatabase.getInstance(context).userDao();
-        dao.updateProfileState(state, id);
-        return dao.getByID(id);
+        return AppDatabase.getInstance(context).userDao().transactionUpdateState(state, id);
     }
 
     public static User getRoomUser(String id, Context context) {
@@ -262,8 +249,7 @@ public class User implements Parcelable {
     }
 
     public static void deleteRoomUser(User user, Context context) {
-        UserRoomDao dao = AppDatabase.getInstance(context).userDao();
-        dao.delete(user);
+        AppDatabase.getInstance(context).userDao().delete(user);
     }
 
     public static void deleteAllRoomUsers(Context context) {
@@ -306,6 +292,17 @@ public class User implements Parcelable {
             chip.setChecked(false);
             chip.setClickable(false);
             chip.setChipIconResource(R.drawable.ic_location_24);
+            chip.setChipBackgroundColorResource(R.color.basicBackground);
+            chipGroup.addView(chip);
+        }
+
+        if (user.getAccountType() != null && !user.getAccountType().isEmpty()) {
+            Chip chip = new Chip(context); //TODO: Change it with an image beside the profile image
+            chip.setText(user.getAccountType());
+            chip.setCheckable(false);
+            chip.setChecked(false);
+            chip.setClickable(false);
+            chip.setChipIconResource(R.drawable.ic_person_24);
             chip.setChipBackgroundColorResource(R.color.basicBackground);
             chipGroup.addView(chip);
         }
@@ -416,8 +413,9 @@ public class User implements Parcelable {
                 ", location='" + location + '\'' +
                 ", job='" + job + '\'' +
                 ", website='" + website + '\'' +
-                ", created=" + created +
-                ", isProfileOpen=" + isProfileOpen +
+                ", created=" + created + '\'' +
+                ", isProfileOpen=" + isProfileOpen + '\'' +
+                ", accountType=" + accountType +
                 '}';
     }
 }

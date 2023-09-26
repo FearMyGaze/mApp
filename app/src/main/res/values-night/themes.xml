@@ -15,7 +15,7 @@
         <item name="android:navigationBarColor" tools:targetApi="27">@color/basicBackground</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
         <!-- Customize your theme here. -->
-        <item name="chipStyle">@style/ChipStyle</item>
+        <item name="chipStyle">@style/Chip.Style</item>
     </style>
 
     <style name="RectComponent" parent="">
@@ -35,18 +35,24 @@
     </style>
 
     <style name="ToolBar" parent="Widget.MaterialComponents.Toolbar.Primary">
-        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar</item>
+        <item name="materialThemeOverlay">@style/Toolbar.ThemeOverlay</item>
     </style>
 
-    <style name="ThemeOverlay.App.Toolbar" parent="">
+    <style name="Toolbar.ThemeOverlay" parent="">
         <item name="colorOnPrimary">?colorPrimary</item>
     </style>
 
-    <style name="TabTextAppearance" parent="TextAppearance.Design.Tab">
+    <style name="ToolBar.TextAppearance" parent="TextAppearance.MaterialComponents.Headline4">
+        <item name="android:textStyle">bold</item>
+        <item name="fontFamily">@font/bebas_neue</item>
+        <item name="android:fontFamily">@font/bebas_neue</item>
+    </style>
+
+    <style name="Tab.TextAppearance" parent="TextAppearance.Design.Tab">
         <item name="textAllCaps">false</item>
     </style>
 
-    <style name="ChipStyle" parent="Widget.MaterialComponents.Chip.Action">
+    <style name="Chip.Style" parent="Widget.MaterialComponents.Chip.Action">
         <item name="chipIconSize">19dp</item>
         <item name="android:textSize">15sp</item>
         <item name="textStartPadding">4dp</item>

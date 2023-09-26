@@ -24,18 +24,22 @@
     <string name="generalJoined">Έγινε μέλος:</string>
     <string name="generalDelete">Διαγραφή</string>
 
+    <!-- Welcome (Activity) -->
+    <string name="welcomeTitle">Καλώς ήρθατε στο Mercury</string>
+    <string name="welcomeBody">Μία εφαρμογή που δίνει έμφαση στην απλότητα, στην ανωνυμία και φυσικά στην καλύτερη επικοινωνία μεταξύ των φιλών σας.</string>
+    <string name="welcomeHaveAccount">Έχετε ήδη λογαριασμό?</string>
+    <string name="welcomeHaveAccountP2">Συνδεθείτε</string>
+
     <!-- SignIn (Activity) -->
-    <string name="signInWelcome">Καλώς Ήρθατε</string>
-    <string name="signInToContinue">Για να συνεχίσετε συνδεθείτε ή δημηουργήστε λογαριασμό</string>
+    <string name="signInBody">Για να συνδεθήται πληκτρολογίστε την Ηλ.διεύθυνση και τον κωδικό πρόσβασης</string>
     <string name="signInCredential">Ηλ. Διεύθυνση</string>
     <string name="signInPassword">Κώδ. χρήστη</string>
     <string name="signInSignIn">Σύνδέση</string>
-    <string name="signInSignUp">Δημιουργία</string>
 
     <!-- SignUp (Activity) -->
     <string name="signUpGoBack">Πηγαίντε πίσω</string>
-    <string name="signUpCreateAcc">Δημιουργία Λογαριασμού</string>
-    <string name="signUpTerms">Πατώντας Δημιουργία Λογαριασμού συμφωνείς με τους Όρους και Προϋποθέσεις</string>
+    <string name="signUpCreateAcc">Δημιουργία λογαριασμού</string>
+    <string name="signUpCreate">Δημιουργία</string>
     <string name="signUpDialogTitle">Προσοχή</string>
     <string name="signUpDialogMessage">Δημιουργία χρήστη παρακαλώ περιμένεται</string>
 
@@ -76,6 +80,7 @@
     <string name="settingsPrivacyShowImages">Προεπισκόπηση εικόνων</string>
     <string name="settingsPrivacyShowBlocked">Αποκλεισμένοι χρήστες</string>
     <string name="settingsPreferencesChangeTheme">Αλλαγή θέματος</string>
+    <string name="settingsDocumentsFAQ">Συχνές ερωτήσεις</string>
     <string name="settingsDocumentsPrivacy">Πολιτική απορρήτου</string>
     <string name="settingsDocumentsTerms">Όροι &amp; προϋποθέσεις</string>
     <string name="settingsDangerCloseAccount">Κλείσιμο λογαριασμού</string>

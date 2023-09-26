@@ -15,10 +15,4 @@
     <color name="textRegular">#f5f5f5</color>
     <color name="textBold">#ffffff</color>
 
-    <!-- Alternate Pallet -->
-    <color name="alternateBackground">#313537</color>
-    <color name="alternateVariant">#65421f</color>
-    <color name="alternateTextBold">#e6be97</color>
-    <color name="alternateTextRegular">#bfba8e</color>
-
 </resources>

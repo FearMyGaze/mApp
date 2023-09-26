@@ -25,13 +25,11 @@ import java.util.List;
 public class Starting extends AppCompatActivity {
 
     private FirebaseAuth.AuthStateListener authStateListener;
-    private List<User> users;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_starting);
-
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
 
         JobScheduler jobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
@@ -42,14 +40,13 @@ public class Starting extends AppCompatActivity {
                 .build();
         jobScheduler.schedule(jobInfo);
 
-        users = AppDatabase.getInstance(Starting.this).userDao().getAll();
+        List<User> users = AppDatabase.getInstance(Starting.this).userDao().getAll();
         authStateListener = firebaseAuth -> {
             FirebaseUser user = firebaseAuth.getCurrentUser();
-            if (user == null || !user.isEmailVerified()) {
+            if (users == null || users.size() == 0) {
                 finish();
-                startActivity(new Intent(Starting.this, SignIn.class));
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-            } else if (users == null || users.size() == 0) {
+                startActivity(new Intent(Starting.this, Welcome.class));
+            } else if (user == null || !user.isEmailVerified()) {
                 finish();
                 startActivity(new Intent(Starting.this, SignIn.class));
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
@@ -79,9 +76,9 @@ public class Starting extends AppCompatActivity {
 
     private static int interval() {
         if (BuildConfig.DEBUG) {
-            return 900_000; //15min
+            return 900_000; // 15min
         } else {
-            return 1_800_000; //30min
+            return 1_800_000; // 30min
         }
     }
 }

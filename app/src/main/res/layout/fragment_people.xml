@@ -10,7 +10,7 @@
         android:id="@+id/peopleTabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabTextAppearance="@style/TabTextAppearance"
+        app:tabTextAppearance="@style/Tab.TextAppearance"
         app:tabMode="fixed"
         android:background="@color/basicBackground"
         app:layout_constraintTop_toTopOf="parent"/>

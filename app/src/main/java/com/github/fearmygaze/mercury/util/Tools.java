@@ -7,7 +7,6 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
 
 import com.bumptech.glide.Glide;
@@ -54,11 +53,13 @@ public class Tools {
         }
     }
 
-    public static void createSettingsPreference(Context context) {
+    public static void createSettingsPreference(String id, Context context) {
         PrivatePreference preference = new PrivatePreference(context);
         if (!preference.contains("showImages")) {
             preference.putBoolean("showImages", true);
         }
+        preference.putString("current", id);
+
     }
 
     public static void writePreference(String key, boolean value, Context context) {
@@ -114,15 +115,7 @@ public class Tools {
                 .load(image)
                 .placeholder(AppCompatResources.getDrawable(context, R.drawable.ic_launcher_background))
                 .error(AppCompatResources.getDrawable(context, R.drawable.ic_launcher_background))
-                .skipMemoryCache(false)
                 .centerCrop();
     }
 
-    public static String addHttp(@NonNull String value) {
-        if (!value.startsWith("http://www.") && !value.startsWith("https://www.")) {
-            return "https://" + value;
-        } else if (!value.startsWith("http://") && !value.startsWith("https://")) {
-            return "https://www." + value;
-        } else return value;
-    }
 }

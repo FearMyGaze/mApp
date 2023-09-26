@@ -554,7 +554,7 @@
                     android:layout_height="match_parent">
 
                     <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/settingsDocumentsPrivacy"
+                        android:id="@+id/settingsDocumentsFAQ"
                         android:layout_width="match_parent"
                         android:layout_height="55dp"
                         app:cardBackgroundColor="@color/basicBackgroundAlternate"
@@ -565,6 +565,50 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <com.google.android.material.imageview.ShapeableImageView
+                                android:id="@+id/settingsDocumentsFAQImage"
+                                android:layout_width="30dp"
+                                android:layout_height="0dp"
+                                android:src="@drawable/ic_document_24"
+                                android:tint="?attr/colorPrimary"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:text="@string/settingsDocumentsFAQ"
+                                android:textSize="17sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/textBold"
+                                app:layout_constraintStart_toEndOf="@id/settingsDocumentsFAQImage"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/settingsDocumentsPrivacy"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        app:cardBackgroundColor="@color/basicBackgroundAlternate"
+                        app:cardCornerRadius="12.5dp"
+                        app:contentPadding="5dp"
+                        app:cardElevation="0dp"
+                        android:contentDescription="@string/settingsDocumentsPrivacy"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/settingsDocumentsFAQ">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="match_parent"

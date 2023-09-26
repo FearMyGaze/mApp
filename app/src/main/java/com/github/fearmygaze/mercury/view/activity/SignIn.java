@@ -14,6 +14,7 @@ import com.github.fearmygaze.mercury.firebase.interfaces.OnDataResponseListener;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
 import com.github.fearmygaze.mercury.util.RegEx;
 import com.github.fearmygaze.mercury.util.Tools;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
@@ -24,22 +25,25 @@ import java.util.Objects;
 
 public class SignIn extends AppCompatActivity {
 
+    MaterialToolbar toolbar;
     TextInputLayout emailError, passwordError;
     TextInputEditText email, password;
-    MaterialButton forgotPassword, signIn, signUp;
+    MaterialButton forgotPassword, signIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
+        toolbar = findViewById(R.id.signInToolBar);
         emailError = findViewById(R.id.signInEmailError);
         email = findViewById(R.id.signInEmail);
         passwordError = findViewById(R.id.signInPasswordError);
         password = findViewById(R.id.signInPassword);
         forgotPassword = findViewById(R.id.signInForgotPassword);
-        signIn = findViewById(R.id.signIn);
-        signUp = findViewById(R.id.signInCreateAccount);
+        signIn = findViewById(R.id.signInBtn);
+
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         email.addTextChangedListener(new TextWatcher() {
             @Override
@@ -101,8 +105,7 @@ public class SignIn extends AppCompatActivity {
                             @Override
                             public void onSuccess(int code, Object data) {
                                 if (code == 0) {
-                                    Tools.createSettingsPreference(SignIn.this);
-                                    Tools.writeStrPreference("current", data.toString(), SignIn.this);
+                                    Tools.createSettingsPreference(data.toString(), SignIn.this);
                                     finish();
                                     startActivity(new Intent(SignIn.this, Main.class));
                                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
@@ -139,16 +142,12 @@ public class SignIn extends AppCompatActivity {
             }
         });
 
-        signUp.setOnClickListener(v -> {
-            startActivity(new Intent(SignIn.this, SignUp.class));
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-            finish();
-        });
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 }

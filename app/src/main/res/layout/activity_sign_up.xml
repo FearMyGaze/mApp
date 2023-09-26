@@ -7,44 +7,40 @@
     android:background="@color/basicBackground"
     tools:context=".view.activity.SignUp">
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/signupGoBack"
-        android:layout_width="30dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="20dp"
-        android:src="@drawable/ic_arrow_back_24"
-        android:tint="?attr/colorPrimary"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        app:shapeAppearance="@style/RoundedComponent"
-        android:contentDescription="@string/signUpGoBack"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/signUpAppImage"
-        app:layout_constraintBottom_toBottomOf="@id/signUpAppImage"/>
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/signUpAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        app:elevation="0dp"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/signUpAppImage"
-        android:layout_width="40dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        android:src="@drawable/ic_launcher_background"
-        app:shapeAppearance="@style/RectComponent"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/signUpToolBar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:navigationIcon="@drawable/ic_arrow_back_24"
+            app:navigationContentDescription="@string/signUpGoBack"
+            app:title="@string/app_name"
+            app:titleCentered="true"
+            app:titleTextColor="@color/textBold"
+            app:titleTextAppearance="@style/ToolBar.TextAppearance"
+            android:background="@color/basicBackground"
+            style="@style/ToolBar"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <TextView
         android:id="@+id/signUpHelper"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
         android:text="@string/signUpCreateAcc"
         android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="@color/textBold"
-        app:layout_constraintStart_toStartOf="@id/signupGoBack"
-        app:layout_constraintTop_toBottomOf="@id/signUpAppImage"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/signUpAppBar"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -53,11 +49,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/signUpHelper"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toTopOf="@id/singUpCreateDivider">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/signUpEmailError"
@@ -152,38 +149,29 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:id="@+id/signUpTerms"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="5dp"
-                android:text="@string/signUpTerms"
-                android:textAlignment="center"
-                android:textSize="15sp"
-                android:textStyle="bold|italic"
-                android:textColor="@color/textBold"
-                app:layout_constraintStart_toStartOf="@id/signUpCreateAccount"
-                app:layout_constraintEnd_toEndOf="@id/signUpCreateAccount"
-                app:layout_constraintTop_toBottomOf="@id/signUpPasswordError"/>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/signUpCreateAccount"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_margin="20dp"
-                android:text="@string/signUpCreateAcc"
-                android:textAllCaps="false"
-                app:cornerRadius="12.5dp"
-                android:enabled="false"
-                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/signUpTerms"
-                app:layout_constraintBottom_toBottomOf="parent"/>
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/singUpCreateDivider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@id/signUpCreateAccount"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/signUpCreateAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/signUpCreate"
+        android:textAllCaps="false"
+        app:cornerRadius="12.5dp"
+        android:enabled="false"
+        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
