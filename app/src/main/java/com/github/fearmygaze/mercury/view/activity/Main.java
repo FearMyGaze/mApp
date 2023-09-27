@@ -30,8 +30,8 @@ import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.custom.CustomLinearLayout;
 import com.github.fearmygaze.mercury.database.AppDatabase;
 import com.github.fearmygaze.mercury.firebase.Auth;
-import com.github.fearmygaze.mercury.firebase.interfaces.OnUserResponseListener;
 import com.github.fearmygaze.mercury.firebase.dao.AuthDao;
+import com.github.fearmygaze.mercury.firebase.interfaces.OnUserResponseListener;
 import com.github.fearmygaze.mercury.model.CachedQuery;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
@@ -46,7 +46,6 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.imageview.ShapeableImageView;
-import com.google.firebase.auth.FirebaseUser;
 
 public class Main extends AppCompatActivity {
 
@@ -198,8 +197,7 @@ public class Main extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        FirebaseUser oldFireUser = AuthDao.getUser();
-        Auth.rememberMe(oldFireUser, Main.this, new OnUserResponseListener() {
+        Auth.rememberMe(AuthDao.getUser(), Main.this, new OnUserResponseListener() {
             @Override
             public void onSuccess(int code, User data) {
                 switch (code) {
