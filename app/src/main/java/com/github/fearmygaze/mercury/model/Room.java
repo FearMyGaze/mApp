@@ -42,7 +42,7 @@ public class Room implements Parcelable {
     @Exclude
     String lastMessageUserID;
 
-    List<Profile> metaData;
+    List<Profile> profiles;
 
     public Room() {
     }
@@ -54,7 +54,7 @@ public class Room implements Parcelable {
         this.creatorID = creatorID;
         this.isGroup = isGroup;
         this.members = members;
-        this.metaData = metaData;
+        this.profiles = metaData;
     }
 
     protected Room(Parcel in) {
@@ -66,7 +66,7 @@ public class Room implements Parcelable {
         lastMessage = in.readString();
         lastMessageTime = in.readString();
         lastMessageUserID = in.readString();
-        metaData = in.createTypedArrayList(Profile.CREATOR);
+        profiles = in.createTypedArrayList(Profile.CREATOR);
     }
 
     @Override
@@ -79,7 +79,7 @@ public class Room implements Parcelable {
         dest.writeString(lastMessage);
         dest.writeString(lastMessageTime);
         dest.writeString(lastMessageUserID);
-        dest.writeTypedList(metaData);
+        dest.writeTypedList(profiles);
     }
 
     @Override
@@ -139,8 +139,8 @@ public class Room implements Parcelable {
     }
 
     @Exclude
-    public void setLastMessageUserID(String lastMessageUserID) {
-        this.lastMessageUserID = lastMessageUserID;
+    public void setLastMessageUserID(String val) {
+        this.lastMessageUserID = val;
     }
 
     @Exclude
@@ -149,8 +149,8 @@ public class Room implements Parcelable {
     }
 
     @Exclude
-    public void setLastMessageTime(String lastMessageTime) {
-        this.lastMessageTime = lastMessageTime;
+    public void setLastMessageTime(String val) {
+        this.lastMessageTime = val;
     }
 
     public boolean getIsGroup() {
@@ -177,12 +177,12 @@ public class Room implements Parcelable {
         this.created = created;
     }
 
-    public List<Profile> getMetaData() {
-        return metaData;
+    public List<Profile> getProfiles() {
+        return profiles;
     }
 
-    public void setMetaData(List<Profile> metaData) {
-        this.metaData = metaData;
+    public void setProfiles(List<Profile> profiles) {
+        this.profiles = profiles;
     }
 
     public static String createName(User user, List<User> list) {
@@ -192,7 +192,7 @@ public class Room implements Parcelable {
             return user.getUsername() + " +" + list.size();
         }
     }
-
+    //More like Refers in Requests
     public static List<String> addMembers(User user, List<User> users) {
         List<String> list = new ArrayList<>();
         list.add(user.getId());
@@ -200,6 +200,20 @@ public class Room implements Parcelable {
             list.add(users.get(i).getId());
         }
         return list;
+    }
+
+    public static List<Profile> addProfiles(User user, List<User> users) {
+        users.add(0, user);
+        List<Profile> data = new ArrayList<>();
+        for (int i = 0; i < users.size(); i++) {
+            Profile metaData = new Profile(
+                    users.get(i).getId(),
+                    users.get(i).getUsername(),
+                    users.get(i).getImage()
+            );
+            data.add(metaData);
+        }
+        return data;
     }
 
     public static String getCorrectID(User user, Room room) {
@@ -246,7 +260,7 @@ public class Room implements Parcelable {
                 ", lastMessage='" + lastMessage + '\'' +
                 ", lastMessageTime='" + lastMessageTime + '\'' +
                 ", lastMessageUserID='" + lastMessageUserID + '\'' +
-                ", metaData=" + metaData +
+                ", metaData=" + profiles +
                 '}';
     }
 }

@@ -10,9 +10,6 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity(tableName = "cachedProfiles")
 public class Profile implements Parcelable {
 
@@ -60,20 +57,6 @@ public class Profile implements Parcelable {
 
     public void setImage(String image) {
         this.image = image;
-    }
-
-    public static List<Profile> create(User user, List<User> users) {
-        users.add(0, user);
-        List<Profile> data = new ArrayList<>();
-        for (int i = 0; i < users.size(); i++) {
-            Profile metaData = new Profile(
-                    users.get(i).getId(),
-                    users.get(i).getUsername(),
-                    users.get(i).getImage()
-            );
-            data.add(metaData);
-        }
-        return data;
     }
 
     protected Profile(Parcel in) {

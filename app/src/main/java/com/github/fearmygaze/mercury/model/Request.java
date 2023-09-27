@@ -89,16 +89,16 @@ public class Request {
         return senderProfile;
     }
 
-    public void setSenderProfile(Profile senderProfile) {
-        this.senderProfile = senderProfile;
+    public void setSenderProfile(Profile senProfile) {
+        this.senderProfile = senProfile;
     }
 
     public Profile getReceiverProfile() {
         return receiverProfile;
     }
 
-    public void setReceiverProfile(Profile receiverProfile) {
-        this.receiverProfile = receiverProfile;
+    public void setReceiverProfile(Profile recProfile) {
+        this.receiverProfile = recProfile;
     }
 
     public Date getCreated() {
@@ -123,7 +123,6 @@ public class Request {
     @NonNull
     @Override
     public String toString() {
-
         return "Requests{" +
                 "id='" + id + '\'' +
                 ", status='" + status + '\'' +
