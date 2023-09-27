@@ -8,7 +8,6 @@
     <string name="generalCancel">Cancel</string>
     <string name="generalNext">Next</string>
     <string name="generalUsername">Username</string>
-    <string name="generalName">Name</string>
     <string name="generalEmail">Email</string>
     <string name="generalPassword">Password</string>
     <string name="generalStatus">Status</string>
@@ -65,9 +64,6 @@
     <string name="dialogDeleteAllCachedMessage">This can\'t be undone and you will remove all your recent searches.</string>
     <string name="dialogDeleteCachedPart1">Remove</string>
     <string name="dialogDeleteCachedPart2">from your history?</string>
-
-    <!-- Search (Activity) -->
-    <string name="searchContainer">Search</string>
 
     <!-- People (Fragment) -->
     <string name="peopleTabFriends">Friends</string>
@@ -141,9 +137,6 @@
     <string name="roomCreatorTitle">Create room</string>
     <string name="roomCreatorSelected">Selected:</string>
 
-    <!-- AdapterFriendRequest (Adapter) -->
-    <string name="adapterFriendRequest">Error while answering the request.</string>
-
     <!-- RegEx (Errors)-->
     <string name="regExEmpty">Can\'t be empty</string>
     <string name="regExSmaller">Can\'t be smaller than </string>
@@ -167,8 +160,5 @@
     <string name="profileViewerPrivateProfile">Private Profile</string>
     <string name="profileViewerOptionBlock">Block</string>
     <string name="profileViewerOptionReport">Report</string>
-
-    <!--Programming (Errors)  -->
-    <string name="blameError" translatable="false">An Error has occurred</string>
 
 </resources>

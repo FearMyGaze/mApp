@@ -7,7 +7,6 @@
     <string name="generalCancel">Ακύρωση</string>
     <string name="generalNext">Επόμενο</string>
     <string name="generalUsername">Όνομα χρήστη</string>
-    <string name="generalName">Όνομα</string>
     <string name="generalEmail">Ηλ. Διεύθυνση</string>
     <string name="generalPassword">Κώδ. χρήστη</string>
     <string name="generalStatus">Κατάσταση</string>
@@ -64,9 +63,6 @@
     <string name="dialogDeleteAllCachedMessage">Αυτή η ενέργεια δεν μπορεί να αντισταφεί.\n  Σίγουρα θέλετε να καθαρίσεται την πρόσαφατες αναζητήσεις;</string>
     <string name="dialogDeleteCachedPart1">Αφαίρεση</string>
     <string name="dialogDeleteCachedPart2">απο το ιστορικό σου;</string>
-
-    <!-- Search (Activity) -->
-    <string name="searchContainer">Αναζήτηση</string>
 
     <!-- People (Fragment) -->
     <string name="peopleTabFriends">Φίλοι</string>
@@ -139,10 +135,6 @@
     <!-- Room Creator -->
     <string name="roomCreatorTitle">Δημιουργία δωματίου</string>
     <string name="roomCreatorSelected">Επιλεγμένοι:</string>
-
-
-    <!-- AdapterFriendRequest (Adapter) -->
-    <string name="adapterFriendRequest">Σφάλμα κατα την απάντηση στο αίτημα</string>
 
     <!-- RegEx -->
     <string name="regExEmpty">Δεν μπορεί να είναι κενό</string>
