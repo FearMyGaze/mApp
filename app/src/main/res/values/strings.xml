@@ -41,6 +41,8 @@
     <string name="signInForgot">We have sent you an email about your request</string>
     <string name="signInResend">Please activate your account or press "send" to send a new verification email</string>
     <string name="signInResendSuccess">New verification email has been sent</string>
+    <string name="signInDialogTitle">Logging you in………</string>
+    <string name="signInDialogMessage">Please wait while we logging you in</string>
 
     <!-- SignUp (Activity) -->
     <string name="signUpGoBack">Go Back</string>

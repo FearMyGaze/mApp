@@ -101,6 +101,7 @@ public class ProfileEdit extends AppCompatActivity {
                         .show();
             } else {
                 new MaterialAlertDialogBuilder(ProfileEdit.this)
+                        .setCancelable(false)
                         .setBackground(AppCompatResources.getDrawable(ProfileEdit.this, R.color.basicBackground))
                         .setTitle(getString(R.string.profileEditDialogTitle2))
                         .setMessage(getString(R.string.profileEditDialogMessage2))

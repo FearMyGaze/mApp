@@ -40,6 +40,8 @@
     <string name="signInForgot">Σας έχουμε στείλει ένα email σχετικά με το αίτημά σας</string>
     <string name="signInResend">Ενεργοποιήστε τον λογαριασμό σας ή πατήστε "αποστολή" για να στείλετε ένα νέο email επαλήθευσης</string>
     <string name="signInResendSuccess">To νεο email επαλήθευσης έχει αποσταλεί</string>
+    <string name="signInDialogTitle">Σας συνδέουμε………</string>
+    <string name="signInDialogMessage">Παρακαλώ περιμένεται ενώ μέχρι να σας συνδέσουμε</string>
 
     <!-- SignUp (Activity) -->
     <string name="signUpGoBack">Πηγαίντε πίσω</string>

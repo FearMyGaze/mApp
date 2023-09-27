@@ -4,19 +4,24 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.firebase.Auth;
+import com.github.fearmygaze.mercury.firebase.dao.AuthDao;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnDataResponseListener;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
-import com.github.fearmygaze.mercury.firebase.dao.AuthDao;
 import com.github.fearmygaze.mercury.util.RegEx;
 import com.github.fearmygaze.mercury.util.Tools;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -99,6 +104,14 @@ public class SignIn extends AppCompatActivity {
         signIn.setOnClickListener(v -> {
             if (!emailError.isErrorEnabled() && !passwordError.isErrorEnabled()) {
                 Tools.closeKeyboard(SignIn.this);
+                View dialogView = LayoutInflater.from(SignIn.this).inflate(R.layout.dialog_sign_up, null);
+                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(SignIn.this);
+                builder.setCancelable(true)
+                        .setView(dialogView)
+                        .setBackground(AppCompatResources.getDrawable(SignIn.this, R.color.basicBackground))
+                        .setTitle(getString(R.string.signInDialogTitle))
+                        .setMessage(getString(R.string.signInDialogMessage));
+                AlertDialog dialog = builder.show();
                 Auth.signIn(Objects.requireNonNull(email.getText()).toString().trim(),
                         Objects.requireNonNull(password.getText()).toString().trim(),
                         SignIn.this, new OnDataResponseListener() {
@@ -106,10 +119,12 @@ public class SignIn extends AppCompatActivity {
                             public void onSuccess(int code, Object data) {
                                 if (code == 0) {
                                     Tools.createSettingsPreference(data.toString(), SignIn.this);
+                                    dialog.dismiss();
                                     finish();
                                     startActivity(new Intent(SignIn.this, Main.class));
                                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                                 } else if (code == 1) {
+                                    dialog.dismiss();
                                     Snackbar.make(signIn, getString(R.string.signInResend), 9000)
                                             .setAction(getString(R.string.generalSend), view ->
                                                     Auth.sendVerificationEmail(AuthDao.getUser(), SignIn.this,

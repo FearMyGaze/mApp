@@ -18,6 +18,7 @@ import com.github.fearmygaze.mercury.util.RegEx;
 import com.github.fearmygaze.mercury.util.Tools;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -102,7 +103,7 @@ public class SignUp extends AppCompatActivity {
             String sUsername = Objects.requireNonNull(username.getText()).toString().trim();
             String sPassword = Objects.requireNonNull(password.getText()).toString().trim();
             if (!emailError.isErrorEnabled() && !usernameError.isErrorEnabled() && !passwordError.isErrorEnabled()) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(SignUp.this);
+                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(SignUp.this);
                 View dialogView = LayoutInflater.from(SignUp.this).inflate(R.layout.dialog_sign_up, null);
                 builder.setView(dialogView)
                         .setTitle(R.string.signUpDialogTitle)
