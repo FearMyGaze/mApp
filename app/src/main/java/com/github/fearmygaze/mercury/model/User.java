@@ -296,17 +296,6 @@ public class User implements Parcelable {
             chipGroup.addView(chip);
         }
 
-        if (user.getAccountType() != null && !user.getAccountType().isEmpty()) {
-            Chip chip = new Chip(context); //TODO: Change it with an image beside the profile image
-            chip.setText(user.getAccountType());
-            chip.setCheckable(false);
-            chip.setChecked(false);
-            chip.setClickable(false);
-            chip.setChipIconResource(R.drawable.ic_person_24);
-            chip.setChipBackgroundColorResource(R.color.basicBackground);
-            chipGroup.addView(chip);
-        }
-
         if (user.getCreated() != null) {
             Chip chip = new Chip(context);
             chip.setText(String.format("%s %s", context.getString(R.string.generalJoined), setCorrectDateFormat(TimestampConverter.dateToUnix(user.getCreated()))));
@@ -380,6 +369,7 @@ public class User implements Parcelable {
         website = in.readString();
         created = TimestampConverter.unixToDate(in.readLong());
         isProfileOpen = in.readByte() != 0;
+        accountType = in.readString();
     }
 
     @Override
@@ -399,6 +389,7 @@ public class User implements Parcelable {
         parcel.writeString(website);
         parcel.writeLong(TimestampConverter.dateToUnix(created));
         parcel.writeByte((byte) (isProfileOpen ? 1 : 0));
+        parcel.writeString(accountType);
     }
 
     @NonNull

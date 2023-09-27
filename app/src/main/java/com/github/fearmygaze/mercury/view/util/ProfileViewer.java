@@ -1,6 +1,7 @@
 package com.github.fearmygaze.mercury.view.util;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.widget.TextView;
@@ -8,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -16,9 +18,9 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.custom.CustomLinearLayout;
 import com.github.fearmygaze.mercury.firebase.Friends;
+import com.github.fearmygaze.mercury.firebase.dao.AuthDao;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnDataResponseListener;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
-import com.github.fearmygaze.mercury.firebase.dao.AuthDao;
 import com.github.fearmygaze.mercury.model.Request;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
@@ -36,7 +38,7 @@ public class ProfileViewer extends AppCompatActivity {
     SwipeRefreshLayout swipeRefreshLayout;
     MaterialToolbar toolbar;
 
-    ShapeableImageView userImage;
+    ShapeableImageView userImage, accountType;
     MaterialButton request;
     TextView status;
     ChipGroup chipGroup;
@@ -57,8 +59,8 @@ public class ProfileViewer extends AppCompatActivity {
 
         swipeRefreshLayout = findViewById(R.id.profileViewerSwipe);
         toolbar = findViewById(R.id.profileViewerToolBar);
-
         userImage = findViewById(R.id.profileViewerImage);
+        accountType = findViewById(R.id.profileViewerAccountType);
         request = findViewById(R.id.profileViewerButton);
         status = findViewById(R.id.profileViewerStatus);
         chipGroup = findViewById(R.id.profileViewerExtraInfo);
@@ -66,12 +68,9 @@ public class ProfileViewer extends AppCompatActivity {
 
         bundle = getIntent().getExtras();
         if (bundle == null) onBackPressed();
-
         myUser = bundle.getParcelable(User.PARCEL);
         otherUser = bundle.getParcelable(User.PARCEL_OTHER);
-
         if (myUser == null || otherUser == null) onBackPressed();
-
         typedValue = new TypedValue();
         getTheme().resolveAttribute(android.R.attr.colorPrimary, typedValue, true);
 
@@ -82,6 +81,10 @@ public class ProfileViewer extends AppCompatActivity {
 
         Tools.profileImage(otherUser.getImage(), ProfileViewer.this).into(userImage);
         status.setText(otherUser.getStatus());
+        if (otherUser.getAccountType() != null && !otherUser.getAccountType().equals("regular")) {
+            accountType.setImageDrawable(AppCompatResources.getDrawable(ProfileViewer.this, R.drawable.ic_dev_24));
+            accountType.setColorFilter(ContextCompat.getColor(this, typedValue.resourceId), PorterDuff.Mode.SRC_IN);
+        }
         updateStats();
         User.extraInfo(otherUser, typedValue.resourceId, chipGroup, ProfileViewer.this);
 

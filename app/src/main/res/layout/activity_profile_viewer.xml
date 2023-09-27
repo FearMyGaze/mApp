@@ -51,6 +51,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/profileViewerAppBarDivider"/>
 
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/profileViewerAccountType"
+            android:layout_width="25dp"
+            android:layout_height="0dp"
+            tools:src="@tools:sample/avatars"
+            app:shapeAppearance="@style/RoundedComponent"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toEndOf="@id/profileViewerImage"
+            app:layout_constraintTop_toTopOf="@id/profileViewerImage"/>
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/profileViewerButton"
             android:layout_width="wrap_content"

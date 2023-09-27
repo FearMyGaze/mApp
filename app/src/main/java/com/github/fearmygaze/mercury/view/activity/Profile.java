@@ -1,11 +1,14 @@
 package com.github.fearmygaze.mercury.view.activity;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -13,7 +16,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.custom.CustomLinearLayout;
-import com.github.fearmygaze.mercury.database.AppDatabase;
 import com.github.fearmygaze.mercury.firebase.Friends;
 import com.github.fearmygaze.mercury.firebase.dao.AuthDao;
 import com.github.fearmygaze.mercury.model.Request;
@@ -26,7 +28,6 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.imageview.ShapeableImageView;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Locale;
 
@@ -35,7 +36,7 @@ public class Profile extends AppCompatActivity {
     //User Components
     SwipeRefreshLayout swipe;
     MaterialToolbar toolbar;
-    ShapeableImageView userImage;
+    ShapeableImageView userImage, accountType;
     MaterialButton edit;
     TextView status;
     ChipGroup chipGroup;
@@ -68,6 +69,7 @@ public class Profile extends AppCompatActivity {
         swipe = findViewById(R.id.profileSwipe);
         toolbar = findViewById(R.id.profileToolBar);
         userImage = findViewById(R.id.profileImage);
+        accountType = findViewById(R.id.profileAccountType);
         edit = findViewById(R.id.profileEdit);
         status = findViewById(R.id.profileStatus);
         chipGroup = findViewById(R.id.profileExtraInfo);
@@ -113,13 +115,16 @@ public class Profile extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {//TODO: We need to fix this we can get the user by the parcel and not handle it this way
+    protected void onStart() {
         super.onStart();
         if (AuthDao.getUser() == null) {
-            finish();
+            onBackPressed();
         } else {
-            user = AppDatabase.getInstance(Profile.this).userDao().getByID(FirebaseAuth.getInstance().getUid());
             Tools.profileImage(user.getImage(), Profile.this).into(userImage);
+            if (user.getAccountType() != null && !user.getAccountType().equals("regular")) {
+                accountType.setImageDrawable(AppCompatResources.getDrawable(Profile.this, R.drawable.ic_dev_24));
+                accountType.setColorFilter(ContextCompat.getColor(this, typedValue.resourceId), PorterDuff.Mode.SRC_IN);
+            }
             toolbar.setTitle(user.getUsername());
             status.setText(user.getStatus());
             User.extraInfo(user, typedValue.resourceId, chipGroup, Profile.this);
