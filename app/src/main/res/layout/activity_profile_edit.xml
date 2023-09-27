@@ -54,7 +54,6 @@
         app:layout_constraintDimensionRatio="1:1"
         app:shapeAppearance="@style/RectComponent"
         tools:src="@tools:sample/avatars"
-        android:src="@drawable/ic_launcher_background"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/profileEditGoBack"/>
 
@@ -121,6 +120,8 @@
                 android:layout_marginTop="10dp"
                 android:hint="@string/generalLocation"
                 app:endIconMode="clear_text"
+                app:counterEnabled="true"
+                app:counterMaxLength="100"
                 app:boxCornerRadiusTopStart="12.5dp"
                 app:boxCornerRadiusTopEnd="12.5dp"
                 app:boxCornerRadiusBottomStart="12.5dp"
@@ -134,7 +135,7 @@
                     android:id="@+id/profileEditLocation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:maxLength="144"
+                    android:maxLength="100"
                     android:inputType="text|textAutoComplete"/>
 
             </com.google.android.material.textfield.TextInputLayout>

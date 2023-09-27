@@ -73,6 +73,10 @@
 
     <!-- ProfileEdit (Activity) -->
     <string name="profileEditHelper">Edit Profile</string>
+    <string name="profileEditDialogTitle1">Warning!</string>
+    <string name="profileEditDialogMessage1">No changes found!</string>
+    <string name="profileEditDialogTitle2">Confirm choices!</string>
+    <string name="profileEditDialogMessage2">Do you want to apply this changes?</string>
 
     <!-- Settings (Activity) -->
     <string name="settingsTitle">Settings</string>

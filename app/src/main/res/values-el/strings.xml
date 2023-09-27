@@ -72,6 +72,10 @@
 
     <!-- ProfileEdit (Activity) -->
     <string name="profileEditHelper">Τροποποίση Προφίλ</string>
+    <string name="profileEditDialogTitle1">Προσοχή!</string>
+    <string name="profileEditDialogMessage1">Δεν βρέθηκαν αλλαγές</string>
+    <string name="profileEditDialogTitle2">Επιβεβαίωση αλλαγών!</string>
+    <string name="profileEditDialogMessage2">Θέλετε να εφαρμόσετε αυτές τις αλλαγές;</string>
 
     <!-- Settings (Activity) -->
     <string name="settingsTitle">Ρυθμίσεις</string>

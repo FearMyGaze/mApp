@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 
 import com.bumptech.glide.Glide;
 import com.github.fearmygaze.mercury.R;
@@ -19,6 +20,7 @@ import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.RegEx;
 import com.github.fearmygaze.mercury.util.Tools;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -85,41 +87,50 @@ public class ProfileEdit extends AppCompatActivity {
         });
 
         back.setOnClickListener(v -> onBackPressed());
-        save.setOnClickListener(v -> sendData());
+        save.setOnClickListener(v -> {
+            if (Objects.requireNonNull(statusCell.getText()).toString().trim().equals(user.getStatus()) &&
+                    Objects.requireNonNull(locationCell.getText()).toString().trim().equals(user.getLocation()) &&
+                    Objects.requireNonNull(jobCell.getText()).toString().trim().equals(user.getJob()) &&
+                    Objects.requireNonNull(websiteCell.getText()).toString().trim().equals(user.getWebsite()) &&
+                    imageData == null) {
+                new MaterialAlertDialogBuilder(ProfileEdit.this)
+                        .setBackground(AppCompatResources.getDrawable(ProfileEdit.this, R.color.basicBackground))
+                        .setTitle(getString(R.string.profileEditDialogTitle1))
+                        .setMessage(getString(R.string.profileEditDialogMessage1))
+                        .setPositiveButton(R.string.generalOK, (dialog, i) -> dialog.dismiss())
+                        .show();
+            } else {
+                new MaterialAlertDialogBuilder(ProfileEdit.this)
+                        .setBackground(AppCompatResources.getDrawable(ProfileEdit.this, R.color.basicBackground))
+                        .setTitle(getString(R.string.profileEditDialogTitle2))
+                        .setMessage(getString(R.string.profileEditDialogMessage2))
+                        .setNegativeButton(R.string.generalCancel, (dialog, i) -> dialog.dismiss())
+                        .setPositiveButton(R.string.generalOK, (dialog, i) -> {
+                            user.setStatus(Objects.requireNonNull(statusCell.getText()).toString().trim());
+                            user.setLocation(Objects.requireNonNull(locationCell.getText()).toString().trim());
+                            user.setLocationL(user.getLocation().toLowerCase());
+                            user.setJob(Objects.requireNonNull(jobCell.getText()).toString().trim());
+                            user.setJobL(user.getJob().toLowerCase());
+                            user.setWebsite(Objects.requireNonNull(websiteCell.getText()).toString().trim());
+                            Auth.updateProfile(user, imageChanged, imageData, ProfileEdit.this, new OnResponseListener() {
+                                @Override
+                                public void onSuccess(int code) {
+                                    if (code == 0) {
+                                        dialog.dismiss();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(String message) {
+                                    dialog.dismiss();
+                                    Toast.makeText(ProfileEdit.this, message, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        })
+                        .show();
+            }
+        });
         choose.setOnClickListener(v -> pickImage.launch(Tools.imageSelector()));
-    }
-
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-        finish();
-    }
-
-    private void sendData() {
-        if (!websiteLayout.isErrorEnabled()) {
-            user.setStatus(Objects.requireNonNull(statusCell.getText()).toString().trim());
-            user.setLocation(Objects.requireNonNull(locationCell.getText()).toString().trim());
-            user.setLocationL(user.getLocation().toLowerCase());
-            user.setJob(Objects.requireNonNull(jobCell.getText()).toString().trim());
-            user.setJobL(user.getJob().toLowerCase());
-            user.setWebsite(Objects.requireNonNull(websiteCell.getText()).toString().trim());
-            Auth.updateProfile(user, imageChanged, imageData, ProfileEdit.this, new OnResponseListener() {
-                @Override
-                public void onSuccess(int code) {
-                    if (code == 0) {
-                        Toast.makeText(ProfileEdit.this, "Success", Toast.LENGTH_SHORT).show();
-                        onBackPressed();
-                    } else Toast.makeText(ProfileEdit.this, "Error", Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onFailure(String message) {
-                    Toast.makeText(ProfileEdit.this, message, Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
     }
 
     private final ActivityResultLauncher<Intent> pickImage = registerForActivityResult(
@@ -139,4 +150,11 @@ public class ProfileEdit extends AppCompatActivity {
                         Toast.makeText(ProfileEdit.this, "ERROR", Toast.LENGTH_SHORT).show();
                 }
             });
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        finish();
+    }
 }
