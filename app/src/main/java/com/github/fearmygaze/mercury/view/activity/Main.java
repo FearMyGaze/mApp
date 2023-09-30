@@ -64,7 +64,7 @@ public class Main extends AppCompatActivity {
     ConstraintLayout searchSheetParent;
     BottomSheetBehavior<ConstraintLayout> searchBehaviour;
     Group cachedComp;
-    MaterialCardView searchSheetClose;
+    ShapeableImageView searchSheetClose;
     MaterialCardView searchBoxClear;
     ShapeableImageView clearCache;
 

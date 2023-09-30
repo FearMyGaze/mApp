@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:behavior_hideable="true"
-        app:behavior_peekHeight="0dp"
+        app:behavior_peekHeight="800dp"
         android:nestedScrollingEnabled="true"
         android:background="@color/basicBackground"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
@@ -27,35 +27,26 @@
                 android:layout_height="match_parent"
                 android:padding="5dp">
 
-                <com.google.android.material.card.MaterialCardView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/searchGoBack"
                     android:layout_width="30dp"
                     android:layout_height="0dp"
-                    android:layout_marginEnd="8dp"
-                    app:cardElevation="0dp"
-                    app:cardBackgroundColor="@color/basicBackground"
-                    app:contentPadding="2dp"
+                    android:src="@drawable/ic_arrow_back_24"
+                    app:tint="?colorPrimary"
+                    android:scaleType="fitCenter"
+                    android:background="?selectableItemBackground"
+                    android:contentDescription="@string/signUpGoBack"
                     app:shapeAppearance="@style/RoundedComponent"
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent">
-
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/ic_arrow_back_24"
-                        android:scaleType="fitCenter"
-                        app:tint="?colorPrimary"
-                        app:shapeAppearance="@style/RectComponent"/>
-
-                </com.google.android.material.card.MaterialCardView>
+                    app:layout_constraintBottom_toBottomOf="parent" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/searchContainer"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:layout_marginStart="5dp"
+                    android:layout_marginStart="10dp"
                     android:paddingStart="8dp"
                     android:paddingEnd="8dp"
                     android:focusable="true"
