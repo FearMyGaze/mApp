@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:behavior_hideable="true"
-        app:behavior_peekHeight="800dp"
+        app:behavior_peekHeight="0dp"
         android:nestedScrollingEnabled="true"
         android:background="@color/basicBackground"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
