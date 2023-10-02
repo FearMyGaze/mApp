@@ -81,7 +81,7 @@
                         android:autofillHints="name"
                         android:textColorHint="#A0A0A0"
                         android:textSize="16sp"
-                        android:imeOptions="actionDone"
+                        android:imeOptions="actionSearch"
                         android:inputType="text|textPersonName"
                         app:layout_constraintStart_toEndOf="@id/searchIcon"
                         app:layout_constraintEnd_toStartOf="@id/searchClear"/>

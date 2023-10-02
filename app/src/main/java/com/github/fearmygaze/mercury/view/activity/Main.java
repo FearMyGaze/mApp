@@ -8,6 +8,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -249,7 +250,6 @@ public class Main extends AppCompatActivity {
     }
 
     private void searchSheet() {
-
         //Search
         PagingConfig config = new PagingConfig(3, 15, false);
         FirestorePagingOptions<User> searchOptions = new FirestorePagingOptions.Builder<User>()
@@ -290,10 +290,7 @@ public class Main extends AppCompatActivity {
                 } else {
                     searchBoxClear.setVisibility(View.GONE);
                     searchHandler.removeCallbacks(searchRunnable);
-                    cachedComp.setVisibility(View.VISIBLE);
-                    cachedProfileRecycler.setVisibility(View.VISIBLE);
-                    cachedSearchRecycler.setVisibility(View.VISIBLE);
-
+                    handleCachedComps();
                     adapterSearch.updateOptions(searchOptions);
                     searchRecycler.setVisibility(View.GONE);
                     errorLayout.setVisibility(View.GONE);
@@ -302,15 +299,19 @@ public class Main extends AppCompatActivity {
                 if (editable.toString().length() >= 3) {
                     searchRecycler.setVisibility(View.VISIBLE);
                     searchHandler.removeCallbacks(searchRunnable);
-                    searchRunnable = () -> {
-                        adapterSearch.updateOptions(new FirestorePagingOptions.Builder<User>()
-                                .setLifecycleOwner(Main.this)
-                                .setQuery(Auth.searchQuery(query), config, User.class)
-                                .build());
-                        adapterCachedQuery.set(new CachedQuery(query));
-                    };
+                    searchRunnable = () -> adapterSearch.updateOptions(new FirestorePagingOptions.Builder<User>()
+                            .setLifecycleOwner(Main.this)
+                            .setQuery(Auth.searchQuery(query), config, User.class)
+                            .build());
                     searchHandler.postDelayed(searchRunnable, 350);
                 }
+                searchBox.setOnEditorActionListener((textView, actionID, keyEvent) -> {
+                    if (actionID == EditorInfo.IME_ACTION_SEARCH && query.length() >= 3) {
+                        adapterCachedQuery.set(new CachedQuery(query));
+                        return true;
+                    }
+                    return false;
+                });
             }
         });
 
