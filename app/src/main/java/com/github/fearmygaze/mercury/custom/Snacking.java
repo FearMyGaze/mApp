@@ -1,6 +1,7 @@
 package com.github.fearmygaze.mercury.custom;
 
 import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
@@ -11,7 +12,7 @@ import androidx.annotation.NonNull;
 import com.github.fearmygaze.mercury.R;
 import com.google.android.material.snackbar.Snackbar;
 
-public class EventNotifier {
+public class Snacking {
 
     /*
      * This Class is a single file library (sort of) that is easier to handle the snackbars
@@ -58,11 +59,14 @@ public class EventNotifier {
 
     public static void errorEvent(@NonNull View view, @NonNull String message, @IntRange(from = -1) int duration) {
         hideUserKeyboard(view);
+        Context context = view.getContext();
         Snackbar snackbar = Snackbar.make(view, " " + message, duration);
         View snackView = snackbar.getView();
         TextView textView = (TextView) snackView.findViewById(com.google.android.material.R.id.snackbar_text);
         textView.setCompoundDrawablesWithIntrinsicBounds(ERROR_ICON, 0, 0, 0);
         textView.setCompoundDrawablePadding(10);
+        textView.setTextColor(context.getColor(R.color.textBold));
+        snackbar.setBackgroundTint(context.getColor(R.color.basicBackground));
         snackbar.show();
     }
 

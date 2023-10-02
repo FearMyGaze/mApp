@@ -13,6 +13,10 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "cachedProfiles")
 public class Profile implements Parcelable {
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Body
+    ///////////////////////////////////////////////////////////////////////////
+
     @NonNull
     @PrimaryKey()
     @ColumnInfo(name = "id")
@@ -24,6 +28,10 @@ public class Profile implements Parcelable {
     @ColumnInfo(name = "image")
     String image;
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Constructors
+    ///////////////////////////////////////////////////////////////////////////
+
     public Profile() {
     }
 
@@ -33,6 +41,10 @@ public class Profile implements Parcelable {
         this.username = username;
         this.image = image;
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Getters / Setters
+    ///////////////////////////////////////////////////////////////////////////
 
     @NonNull
     public String getId() {
@@ -59,11 +71,9 @@ public class Profile implements Parcelable {
         this.image = image;
     }
 
-    protected Profile(Parcel in) {
-        id = in.readString();
-        username = in.readString();
-        image = in.readString();
-    }
+    ///////////////////////////////////////////////////////////////////////////
+    // Parcelable
+    ///////////////////////////////////////////////////////////////////////////
 
     public static final Creator<Profile> CREATOR = new Creator<Profile>() {
         @Override
@@ -77,6 +87,12 @@ public class Profile implements Parcelable {
         }
     };
 
+    protected Profile(Parcel in) {
+        id = in.readString();
+        username = in.readString();
+        image = in.readString();
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -88,6 +104,10 @@ public class Profile implements Parcelable {
         parcel.writeString(username);
         parcel.writeString(image);
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Helper methods
+    ///////////////////////////////////////////////////////////////////////////
 
     @NonNull
     @Override

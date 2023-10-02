@@ -1,11 +1,10 @@
 package com.github.fearmygaze.mercury.model;
 
-import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.github.fearmygaze.mercury.R;
-import com.google.firebase.firestore.Exclude;
+import androidx.annotation.NonNull;
+
 import com.google.firebase.firestore.ServerTimestamp;
 
 import java.util.ArrayList;
@@ -14,78 +13,134 @@ import java.util.List;
 
 public class Room implements Parcelable {
 
-    public static final String
-            COLLECTION = "roomData",
-            ID = "id",
-            NAME = "name",
-            CREATOR_ID = "creatorID",
-            MEMBERS = "members",
-            CREATED = "created",
-            GROUP = "isGroup";
+    ///////////////////////////////////////////////////////////////////////////
+    // Body
+    ///////////////////////////////////////////////////////////////////////////
 
-    String id;
-    String name;
-    String creatorID;
-    List<String> members;
+    public enum RoomType {PRIVATE, GROUP, BROADCAST}
+
+    String id,
+            name,
+            creatorID;
+    RoomType type;
+    boolean encrypted;
 
     @ServerTimestamp
     Date created;
-
-    boolean isGroup;
-
-    @Exclude
-    String lastMessage;
-
-    @Exclude
-    String lastMessageTime;
-
-    @Exclude
-    String lastMessageUserID;
+    List<String> refers,
+            authorized;
+    //Authorized is for the people that are
+    // allowed to speak based on the type
 
     List<Profile> profiles;
+    Message lastMsg;
 
-    public Room() {
-    }
+    ///////////////////////////////////////////////////////////////////////////
+    // Constructors
+    ///////////////////////////////////////////////////////////////////////////
 
-    //Create
-    public Room(String id, String name, String creatorID, boolean isGroup, List<String> members, List<Profile> metaData) {
+    public Room(String id, String name, String creatorID, RoomType type,
+                boolean encrypted, Date created, List<String> refers,
+                List<String> authorized, List<Profile> profiles, Message lastMsg) {
         this.id = id;
         this.name = name;
         this.creatorID = creatorID;
-        this.isGroup = isGroup;
-        this.members = members;
-        this.profiles = metaData;
+        this.type = type;
+        this.encrypted = encrypted;
+        this.created = created;
+        this.refers = refers;
+        this.authorized = authorized;
+        this.profiles = profiles;
+        this.lastMsg = lastMsg;
     }
 
-    protected Room(Parcel in) {
-        id = in.readString();
-        name = in.readString();
-        creatorID = in.readString();
-        members = in.createStringArrayList();
-        isGroup = in.readByte() != 0;
-        lastMessage = in.readString();
-        lastMessageTime = in.readString();
-        lastMessageUserID = in.readString();
-        profiles = in.createTypedArrayList(Profile.CREATOR);
+    ///////////////////////////////////////////////////////////////////////////
+    // Getters / Setters
+    ///////////////////////////////////////////////////////////////////////////
+
+    public String getId() {
+        return id;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
-        dest.writeString(name);
-        dest.writeString(creatorID);
-        dest.writeStringList(members);
-        dest.writeByte((byte) (isGroup ? 1 : 0));
-        dest.writeString(lastMessage);
-        dest.writeString(lastMessageTime);
-        dest.writeString(lastMessageUserID);
-        dest.writeTypedList(profiles);
+    public void setId(String val) {
+        this.id = val;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public String getName() {
+        return name;
     }
+
+    public void setName(String val) {
+        this.name = val;
+    }
+
+    public String getCreatorID() {
+        return creatorID;
+    }
+
+    public void setCreatorID(String val) {
+        this.creatorID = val;
+    }
+
+    public RoomType getType() {
+        return type;
+    }
+
+    public void setType(RoomType val) {
+        this.type = val;
+    }
+
+    public boolean isEncrypted() {
+        return encrypted;
+    }
+
+    public void setEncrypted(boolean val) {
+        this.encrypted = val;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date val) {
+        this.created = val;
+    }
+
+    public List<String> getRefers() {
+        return refers;
+    }
+
+    public void setRefers(List<String> val) {
+        this.refers = val;
+    }
+
+    public List<String> getAuthorized() {
+        return authorized;
+    }
+
+    public void setAuthorized(List<String> val) {
+        this.authorized = val;
+    }
+
+    public List<Profile> getProfiles() {
+        return profiles;
+    }
+
+    public void setProfiles(List<Profile> val) {
+        this.profiles = val;
+    }
+
+    public Message getLastMsg() {
+        return lastMsg;
+    }
+
+    public void setLastMsg(Message val) {
+        this.lastMsg = val;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Parcelable
+    ///////////////////////////////////////////////////////////////////////////
 
     public static final Creator<Room> CREATOR = new Creator<Room>() {
         @Override
@@ -99,91 +154,39 @@ public class Room implements Parcelable {
         }
     };
 
-    public String getId() {
-        return id;
+    protected Room(Parcel in) {
+        id = in.readString();
+        name = in.readString();
+        creatorID = in.readString();
+        type = RoomType.values()[in.readInt()];
+        encrypted = in.readByte() != 0;
+        refers = in.createStringArrayList();
+        authorized = in.createStringArrayList();
+        profiles = in.createTypedArrayList(Profile.CREATOR);
+        lastMsg = in.readParcelable(Message.class.getClassLoader());
     }
 
-    public void setId(String id) {
-        this.id = id;
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public String getName() {
-        return name;
+    @Override
+    public void writeToParcel(Parcel parcel, int flags) {
+        parcel.writeString(id);
+        parcel.writeString(name);
+        parcel.writeString(creatorID);
+        parcel.writeInt(type.ordinal());
+        parcel.writeByte((byte) (encrypted ? 1 : 0));
+        parcel.writeStringList(refers);
+        parcel.writeStringList(authorized);
+        parcel.writeTypedList(profiles);
+        parcel.writeParcelable(lastMsg, flags);
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCreatorID() {
-        return creatorID;
-    }
-
-    public void setCreatorID(String creatorID) {
-        this.creatorID = creatorID;
-    }
-
-    @Exclude
-    public String getLastMessage() {
-        return lastMessage;
-    }
-
-    @Exclude
-    public void setLastMessage(String lastMessage) {
-        this.lastMessage = lastMessage;
-    }
-
-    @Exclude
-    public String getLastMessageUserID() {
-        return lastMessageUserID;
-    }
-
-    @Exclude
-    public void setLastMessageUserID(String val) {
-        this.lastMessageUserID = val;
-    }
-
-    @Exclude
-    public String getLastMessageTime() {
-        return lastMessageTime;
-    }
-
-    @Exclude
-    public void setLastMessageTime(String val) {
-        this.lastMessageTime = val;
-    }
-
-    public boolean getIsGroup() {
-        return isGroup;
-    }
-
-    public void setIsGroup(boolean isGroup) {
-        this.isGroup = isGroup;
-    }
-
-    public List<String> getMembers() {
-        return members;
-    }
-
-    public void setMembers(List<String> members) {
-        this.members = members;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date created) {
-        this.created = created;
-    }
-
-    public List<Profile> getProfiles() {
-        return profiles;
-    }
-
-    public void setProfiles(List<Profile> profiles) {
-        this.profiles = profiles;
-    }
+    ///////////////////////////////////////////////////////////////////////////
+    // Helper methods
+    ///////////////////////////////////////////////////////////////////////////
 
     public static String createName(User user, List<User> list) {
         if (list.size() == 1) {
@@ -192,8 +195,8 @@ public class Room implements Parcelable {
             return user.getUsername() + " +" + list.size();
         }
     }
-    //More like Refers in Requests
-    public static List<String> addMembers(User user, List<User> users) {
+
+    public static List<String> addRefers(User user, List<User> users) {
         List<String> list = new ArrayList<>();
         list.add(user.getId());
         for (int i = 0; i < users.size(); i++) {
@@ -216,51 +219,40 @@ public class Room implements Parcelable {
         return data;
     }
 
-    public static String getCorrectID(User user, Room room) {
-        List<String> members = room.getMembers();
-        for (int i = 0; i < members.size(); i++) {
-            if (!user.getId().equals(members.get(i))) {
-                return members.get(i);
-            }
-        }
-        return null;
-    }
-
     public static String modifyName(User user, Room room) {
-        return room.getName()
-                .replace(user.getUsername(), "")
-                .replace("_", "");
+        if (room.getType().equals(RoomType.GROUP)) {
+            return room.getName();
+        } else {
+            return room.getName()
+                    .replace(user.getUsername(), "")
+                    .replace("_", "");
+        }
     }
 
-    public static String modifyMessage(User user, Room room, Context context) {
-        if (room.getLastMessage() != null) {
-            if (user.getId().equals(room.getLastMessageUserID())) {
-                return context.getString(R.string.adapterRoomYou) + " " + room.getLastMessage();
-            } else {
-                return context.getString(R.string.adapterRoomOther) + " " + room.getLastMessage();
-            }
-        }
+    public static String transformMsg() {
+
         return "";
     }
 
-    public static String setDate(long time) {
-        return "12:34";
+    public static String transformDate() {
+        return "";
     }
 
 
+    @NonNull
     @Override
     public String toString() {
-        return "Room{" +
+        return "Room1{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", creatorID='" + creatorID + '\'' +
-                ", members=" + members +
+                ", type=" + type +
+                ", encrypted=" + encrypted +
                 ", created=" + created +
-                ", isGroup=" + isGroup +
-                ", lastMessage='" + lastMessage + '\'' +
-                ", lastMessageTime='" + lastMessageTime + '\'' +
-                ", lastMessageUserID='" + lastMessageUserID + '\'' +
-                ", metaData=" + profiles +
+                ", refers=" + refers +
+                ", authorized=" + authorized +
+                ", profiles=" + profiles +
+                ", lastMsg=" + lastMsg +
                 '}';
     }
 }

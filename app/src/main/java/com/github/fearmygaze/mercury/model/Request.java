@@ -21,6 +21,10 @@ public class Request {
             BETWEEN = "refers",
             CREATED = "created";
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Body
+    ///////////////////////////////////////////////////////////////////////////
+
     String id;
     String status;
     String sender;
@@ -30,6 +34,10 @@ public class Request {
     Profile receiverProfile;
     @ServerTimestamp
     Date created;
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Constructors
+    ///////////////////////////////////////////////////////////////////////////
 
     public Request() {
 
@@ -45,69 +53,77 @@ public class Request {
         this.receiverProfile = receiverProfile;
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Getters / Setters
+    ///////////////////////////////////////////////////////////////////////////
+
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setId(String val) {
+        this.id = val;
     }
 
     public String getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setStatus(String val) {
+        this.status = val;
     }
 
     public String getSender() {
         return sender;
     }
 
-    public void setSender(String sender) {
-        this.sender = sender;
+    public void setSender(String val) {
+        this.sender = val;
     }
 
     public String getReceiver() {
         return receiver;
     }
 
-    public void setReceiver(String receiver) {
-        this.receiver = receiver;
+    public void setReceiver(String val) {
+        this.receiver = val;
     }
 
     public List<String> getRefers() {
         return refers;
     }
 
-    public void setRefers(List<String> refers) {
-        this.refers = refers;
+    public void setRefers(List<String> val) {
+        this.refers = val;
     }
 
     public Profile getSenderProfile() {
         return senderProfile;
     }
 
-    public void setSenderProfile(Profile senProfile) {
-        this.senderProfile = senProfile;
+    public void setSenderProfile(Profile val) {
+        this.senderProfile = val;
     }
 
     public Profile getReceiverProfile() {
         return receiverProfile;
     }
 
-    public void setReceiverProfile(Profile recProfile) {
-        this.receiverProfile = recProfile;
+    public void setReceiverProfile(Profile val) {
+        this.receiverProfile = val;
     }
 
     public Date getCreated() {
         return created;
     }
 
-    public void setCreated(Date created) {
-        this.created = created;
+    public void setCreated(Date val) {
+        this.created = val;
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Helper methods
+    ///////////////////////////////////////////////////////////////////////////
 
     public static List<String> createRefers(User fromUser, User toUser) {
         List<String> list = new ArrayList<>();

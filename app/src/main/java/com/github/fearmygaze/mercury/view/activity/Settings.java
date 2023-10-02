@@ -9,8 +9,8 @@ import androidx.appcompat.content.res.AppCompatResources;
 
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.firebase.Auth;
-import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
 import com.github.fearmygaze.mercury.firebase.dao.AuthDao;
+import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.PrivatePreference;
 import com.github.fearmygaze.mercury.util.Tools;

@@ -51,6 +51,10 @@ public class User implements Parcelable {
             CREATED = "created",
             PROFILE = "profileOpen";
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Body
+    ///////////////////////////////////////////////////////////////////////////
+
     @NonNull
     @PrimaryKey
     @ColumnInfo(name = "id", index = true)
@@ -96,10 +100,14 @@ public class User implements Parcelable {
     @ColumnInfo(name = "accountType")
     String accountType;
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Constructors
+    ///////////////////////////////////////////////////////////////////////////
+
     public User() {
     }
 
-    @Ignore //Register
+    @Ignore
     public User(@NonNull String id, String username) {
         this.id = id;
         this.username = username;
@@ -107,118 +115,176 @@ public class User implements Parcelable {
         this.isProfileOpen = true;
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+    // Getters / Setters
+    ///////////////////////////////////////////////////////////////////////////
+
     @NonNull
     public String getId() {
         return id;
     }
 
-    public void setId(@NonNull String id) {
-        this.id = id;
+    public void setId(@NonNull String val) {
+        this.id = val;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUsername(String val) {
+        this.username = val;
     }
 
     public String getUsernameL() {
         return usernameL;
     }
 
-    public void setUsernameL(String usernameL) {
-        this.usernameL = usernameL;
+    public void setUsernameL(String val) {
+        this.usernameL = val;
     }
 
     public String getImage() {
         return image;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setImage(String val) {
+        this.image = val;
     }
 
     public String getNotificationToken() {
         return notificationToken;
     }
 
-    public void setNotificationToken(String token) {
-        this.notificationToken = token;
+    public void setNotificationToken(String val) {
+        this.notificationToken = val;
     }
 
     public String getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setStatus(String val) {
+        this.status = val;
     }
 
     public String getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setLocation(String val) {
+        this.location = val;
     }
 
     public String getLocationL() {
         return locationL;
     }
 
-    public void setLocationL(String locationL) {
-        this.locationL = locationL;
+    public void setLocationL(String val) {
+        this.locationL = val;
     }
 
     public String getJob() {
         return job;
     }
 
-    public void setJob(String job) {
-        this.job = job;
+    public void setJob(String val) {
+        this.job = val;
     }
 
     public String getJobL() {
         return jobL;
     }
 
-    public void setJobL(String jobL) {
-        this.jobL = jobL;
+    public void setJobL(String val) {
+        this.jobL = val;
     }
 
     public String getWebsite() {
         return website;
     }
 
-    public void setWebsite(String website) {
-        this.website = website;
+    public void setWebsite(String val) {
+        this.website = val;
     }
 
     public Date getCreated() {
         return created;
     }
 
-    public void setCreated(Date created) {
-        this.created = created;
+    public void setCreated(Date val) {
+        this.created = val;
     }
 
     public boolean isProfileOpen() {
         return isProfileOpen;
     }
 
-    public void setProfileOpen(boolean profileOpen) {
-        isProfileOpen = profileOpen;
+    public void setProfileOpen(boolean val) {
+        isProfileOpen = val;
     }
 
-    public void setAccountType(String accType) {
-        this.accountType = accType;
+    public void setAccountType(String val) {
+        this.accountType = val;
     }
 
     public String getAccountType() {
         return accountType;
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Parcelable
+    ///////////////////////////////////////////////////////////////////////////
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
+
+    protected User(Parcel in) {
+        id = in.readString();
+        username = in.readString();
+        image = in.readString();
+        notificationToken = in.readString();
+        status = in.readString();
+        location = in.readString();
+        job = in.readString();
+        website = in.readString();
+        created = TimestampConverter.unixToDate(in.readLong());
+        isProfileOpen = in.readByte() != 0;
+        accountType = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel parcel, int i) {
+        parcel.writeString(id);
+        parcel.writeString(username);
+        parcel.writeString(image);
+        parcel.writeString(notificationToken);
+        parcel.writeString(status);
+        parcel.writeString(location);
+        parcel.writeString(job);
+        parcel.writeString(website);
+        parcel.writeLong(TimestampConverter.dateToUnix(created));
+        parcel.writeByte((byte) (isProfileOpen ? 1 : 0));
+        parcel.writeString(accountType);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Helper methods
+    ///////////////////////////////////////////////////////////////////////////
 
     public static User convertFromDocumentAndSave(DocumentSnapshot document, Context context) {
         return AppDatabase.getInstance(context).userDao().transactionUpdateUser(document.toObject(User.class));
@@ -344,52 +410,6 @@ public class User implements Parcelable {
                     calendar.get(Calendar.MONTH) + 1,
                     calendar.get(Calendar.YEAR));
         }
-    }
-
-    public static final Creator<User> CREATOR = new Creator<User>() {
-        @Override
-        public User createFromParcel(Parcel in) {
-            return new User(in);
-        }
-
-        @Override
-        public User[] newArray(int size) {
-            return new User[size];
-        }
-    };
-
-    protected User(Parcel in) {
-        id = in.readString();
-        username = in.readString();
-        image = in.readString();
-        notificationToken = in.readString();
-        status = in.readString();
-        location = in.readString();
-        job = in.readString();
-        website = in.readString();
-        created = TimestampConverter.unixToDate(in.readLong());
-        isProfileOpen = in.readByte() != 0;
-        accountType = in.readString();
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(@NonNull Parcel parcel, int i) {
-        parcel.writeString(id);
-        parcel.writeString(username);
-        parcel.writeString(image);
-        parcel.writeString(notificationToken);
-        parcel.writeString(status);
-        parcel.writeString(location);
-        parcel.writeString(job);
-        parcel.writeString(website);
-        parcel.writeLong(TimestampConverter.dateToUnix(created));
-        parcel.writeByte((byte) (isProfileOpen ? 1 : 0));
-        parcel.writeString(accountType);
     }
 
     @NonNull
