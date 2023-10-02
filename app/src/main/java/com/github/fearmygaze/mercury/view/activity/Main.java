@@ -295,8 +295,7 @@ public class Main extends AppCompatActivity {
                     searchRecycler.setVisibility(View.GONE);
                     errorLayout.setVisibility(View.GONE);
                 }
-
-                if (editable.toString().length() >= 3) {
+                if (query.length() >= 3) {
                     searchRecycler.setVisibility(View.VISIBLE);
                     searchHandler.removeCallbacks(searchRunnable);
                     searchRunnable = () -> adapterSearch.updateOptions(new FirestorePagingOptions.Builder<User>()
@@ -308,6 +307,7 @@ public class Main extends AppCompatActivity {
                 searchBox.setOnEditorActionListener((textView, actionID, keyEvent) -> {
                     if (actionID == EditorInfo.IME_ACTION_SEARCH && query.length() >= 3) {
                         adapterCachedQuery.set(new CachedQuery(query));
+                        Tools.closeKeyboard(Main.this);
                         return true;
                     }
                     return false;
