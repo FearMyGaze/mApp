@@ -67,7 +67,7 @@ public class UserDao {
         return getReference()
                 .document(user.getId())
                 .update("image", user.getImage(),
-                        "notificationToken", user.getNotificationToken(), //TODO: Maybe remove this
+                        "notificationToken", user.getNotificationToken(),
                         "status", user.getStatus(),
                         "location", user.getLocation(),
                         "locationL", user.getLocationL(),
