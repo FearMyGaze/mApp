@@ -34,22 +34,7 @@ public class User implements Parcelable {
     public static final String
             PARCEL = "user",
             PARCEL_OTHER = "userData",
-            PUBLIC_DATA = "publicData",
-            IMAGE_COLLECTION = "profileImages/",
-            COLLECTION = "users",
-            ID = "id",
-            USERNAME = "username",
-            USERNAME_LOWERED = "usernameL",
-            IMAGE = "image",
-            NOTIFICATION = "notificationToken",
-            STATUS = "status",
-            LOCATION = "location",
-            LOCATION_LOWERED = "locationL",
-            JOB = "job",
-            JOB_LOWERED = "jobL",
-            WEB = "website",
-            CREATED = "created",
-            PROFILE = "profileOpen";
+            IMAGE_COLLECTION = "profileImages/";
 
     ///////////////////////////////////////////////////////////////////////////
     // Body

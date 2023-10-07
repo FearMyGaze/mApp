@@ -1,5 +1,6 @@
 package com.github.fearmygaze.mercury.firebase.dao;
 
+import com.github.fearmygaze.mercury.model.Profile;
 import com.github.fearmygaze.mercury.model.Request;
 import com.github.fearmygaze.mercury.model.User;
 import com.google.android.gms.tasks.Task;
@@ -21,7 +22,7 @@ public class RequestDao {
     }
 
     public static CollectionReference getReference() {
-        return getInstance().collection(Request.COLLECTION);
+        return getInstance().collection("requests");
     }
 
     public static DocumentReference createDocument() {
@@ -30,59 +31,83 @@ public class RequestDao {
 
     public static Query waiting(User user) {
         return getReference()
-                .whereEqualTo(Request.RECEIVER, user.getId())
-                .whereEqualTo(Request.STATUS, Request.S_WAITING)
-                .orderBy(Request.CREATED, Query.Direction.DESCENDING);
+                .whereEqualTo("receiver", user.getId())
+                .whereEqualTo("status", Request.RequestStatus.Waiting)
+                .orderBy("created", Query.Direction.DESCENDING);
     }
 
     public static Query friends(User user) {
         return getReference()
-                .whereArrayContains(Request.BETWEEN, user.getId())
-                .whereEqualTo(Request.STATUS, Request.S_FRIEND)
-                .orderBy(Request.CREATED, Query.Direction.DESCENDING);
+                .whereArrayContains("refers", user.getId())
+                .whereEqualTo("status", Request.RequestStatus.Friends)
+                .orderBy("created", Query.Direction.DESCENDING);
     }
 
     public static Query blocked(User user) {
         return getReference()
-                .whereEqualTo(Request.SENDER, user.getId())
-                .whereEqualTo(Request.STATUS, Request.S_BLOCKED)
-                .orderBy(Request.CREATED, Query.Direction.DESCENDING);
+                .whereEqualTo("sender", user.getId())
+                .whereEqualTo("status", Request.RequestStatus.Blocked)
+                .orderBy("created", Query.Direction.DESCENDING);
+    }
+
+    public static Task<Void> createRequest(User fromUser, User toUser, Request.RequestStatus status) {
+        DocumentReference reference = createDocument();
+        return reference.set(new Request(reference.getId(),
+                status,
+                fromUser.getId(),
+                toUser.getId(),
+                Request.createRefers(fromUser, toUser),
+                Profile.create(fromUser),
+                Profile.create(toUser)));
     }
 
     public static Task<QuerySnapshot> getStatus(User fromUser, User toUser) {
         return getReference()
-                .whereIn(Request.SENDER, Arrays.asList(fromUser.getId(), toUser.getId()))
-                .whereIn(Request.RECEIVER, Arrays.asList(fromUser.getId(), toUser.getId()))
+                .whereIn("sender", Arrays.asList(fromUser.getId(), toUser.getId()))
+                .whereIn("receiver", Arrays.asList(fromUser.getId(), toUser.getId()))
                 .limit(1)
                 .get();
     }
 
     public static Task<QuerySnapshot> cancel(User fromUser, User toUser) {
         return getReference()
-                .whereArrayContains(Request.BETWEEN, Request.createRefers(fromUser, toUser))
-                .whereEqualTo(Request.STATUS, Request.S_WAITING)
+                .whereArrayContains("refers", Request.createRefers(fromUser, toUser))
+                .whereEqualTo("status", Request.RequestStatus.Waiting)
                 .limit(1)
                 .get();
     }
 
-    public static Task<QuerySnapshot> answer(User user, User otherUser){
+    public static Task<QuerySnapshot> answer(User user, User otherUser) {
         return getReference()
-                .whereEqualTo(Request.SENDER, otherUser.getId())
-                .whereEqualTo(Request.RECEIVER, user.getId())
+                .whereEqualTo("sender", otherUser.getId())
+                .whereEqualTo("receiver", user.getId())
                 .limit(1)
                 .get();
+    }
+
+    public static Task<Void> updateRequest(DocumentSnapshot snapshot, Request.RequestStatus status) {
+        return snapshot
+                .getReference()
+                .update("status", status);
     }
 
     public static Task<QuerySnapshot> block(User fromUser, User toUser) {
         return getReference()
-                .whereIn(Request.SENDER, Arrays.asList(fromUser.getId(), toUser.getId()))
-                .whereIn(Request.RECEIVER, Arrays.asList(fromUser.getId(), toUser.getId()))
+                .whereIn("sender", Arrays.asList(fromUser.getId(), toUser.getId()))
+                .whereIn("receiver", Arrays.asList(fromUser.getId(), toUser.getId()))
                 .limit(1)
                 .get();
     }
-    public static Task<DocumentSnapshot> getRequest(Request request){
+
+    public static Task<DocumentSnapshot> getRequest(Request request) {
         return getReference()
                 .document(request.getId())
                 .get();
+    }
+
+    public static Task<Void> deleteRequest(DocumentSnapshot snapshot) {
+        return snapshot
+                .getReference()
+                .delete();
     }
 }

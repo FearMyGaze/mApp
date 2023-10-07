@@ -50,14 +50,17 @@ import com.google.android.material.imageview.ShapeableImageView;
 
 public class Main extends AppCompatActivity {
 
+    //Navigation
     FrameLayout frameLayout;
     BottomNavigationView navigation;
     FloatingActionButton createRoom;
 
+    //AppBar
     MaterialCardView profile, search, settings;
     ShapeableImageView profileImage;
     TextView appName;
 
+    //Utils
     User user;
     AppDatabase database;
 
@@ -115,6 +118,19 @@ public class Main extends AppCompatActivity {
         //Cached Query
         cachedSearchRecycler = findViewById(R.id.searchCachedQueryRecycler);
 
+        navigation.setOnItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.mainOptionChat) {
+                createRoom.setVisibility(View.VISIBLE);
+                replaceFragment(Home.newInstance(user), "home");
+                return true;
+            } else if (item.getItemId() == R.id.mainOptionFriends) {
+                createRoom.setVisibility(View.GONE);
+                replaceFragment(People.newInstance(user), "people");
+                return true;
+            }
+            return false;
+        });
+
         rememberMe(savedInstanceState);
 
         //Search Sheet
@@ -155,19 +171,6 @@ public class Main extends AppCompatActivity {
                         adapterCachedQuery.clear();
                         handleCachedComps();
                     }).show();
-        });
-
-        navigation.setOnItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.mainOptionChat) {
-                createRoom.setVisibility(View.VISIBLE);
-                replaceFragment(Home.newInstance(user), "home");
-                return true;
-            } else if (item.getItemId() == R.id.mainOptionFriends) {
-                createRoom.setVisibility(View.GONE);
-                replaceFragment(People.newInstance(user), "people");
-                return true;
-            }
-            return false;
         });
 
         searchSheet();

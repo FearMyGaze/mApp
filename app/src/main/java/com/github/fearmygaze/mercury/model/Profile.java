@@ -109,6 +109,10 @@ public class Profile implements Parcelable {
     // Helper methods
     ///////////////////////////////////////////////////////////////////////////
 
+    public static Profile create(User user) {
+        return new Profile(user.getId(), user.getUsername(), user.getImage());
+    }
+
     @NonNull
     @Override
     public String toString() {

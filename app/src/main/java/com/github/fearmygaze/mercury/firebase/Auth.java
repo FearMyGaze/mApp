@@ -6,21 +6,17 @@ import android.net.Uri;
 import androidx.annotation.NonNull;
 
 import com.github.fearmygaze.mercury.database.AppDatabase;
+import com.github.fearmygaze.mercury.firebase.dao.AuthDao;
+import com.github.fearmygaze.mercury.firebase.dao.UserDao;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnDataResponseListener;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnUserResponseListener;
-import com.github.fearmygaze.mercury.firebase.dao.AuthDao;
-import com.github.fearmygaze.mercury.firebase.dao.UserDao;
 import com.github.fearmygaze.mercury.model.User;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.messaging.FirebaseMessaging;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import kotlin.NotImplementedError;
 
@@ -64,21 +60,13 @@ public class Auth {
     }
 
     private static void grantUsername(String username, Context context, OnResponseListener listener) {
-        CollectionReference reference = UserDao.pDataReference();
-        reference
-                .whereEqualTo(User.USERNAME, username)
-                .limit(1)
-                .get()
+        UserDao.grantUsername(username)
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (!queryDocumentSnapshots.isEmpty()) {
                         listener.onSuccess(2);
                     } else {
-                        Map<String, Object> map = new HashMap<>();
-                        map.put(User.USERNAME, username);
-                        DocumentReference docReference = reference.document();
-                        docReference
-                                .set(map)
+                        UserDao.writeUsername(username)
                                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                                 .addOnSuccessListener(unused -> listener.onSuccess(0));
                     }

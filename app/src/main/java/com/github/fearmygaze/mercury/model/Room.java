@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Room implements Parcelable {
+public class ChatRoom implements Parcelable {
 
     ///////////////////////////////////////////////////////////////////////////
     // Body
@@ -19,19 +19,17 @@ public class Room implements Parcelable {
 
     public enum RoomType {PRIVATE, GROUP, BROADCAST}
 
-    String id,
-            name,
-            creatorID;
+    String id;
+    String name;
+    boolean nameModified;
+    String creatorID;
     RoomType type;
     boolean encrypted;
 
     @ServerTimestamp
     Date created;
-    List<String> refers,
-            authorized;
-    //Authorized is for the people that are
-    // allowed to speak based on the type
-
+    List<String> included;
+    List<String> allowedToTalk;
     List<Profile> profiles;
     Message lastMsg;
 
@@ -39,17 +37,21 @@ public class Room implements Parcelable {
     // Constructors
     ///////////////////////////////////////////////////////////////////////////
 
-    public Room(String id, String name, String creatorID, RoomType type,
-                boolean encrypted, Date created, List<String> refers,
-                List<String> authorized, List<Profile> profiles, Message lastMsg) {
+    public ChatRoom() {
+    }
+
+    public ChatRoom(String id, String name, boolean nameModified,
+                    String creatorID, RoomType type, boolean encrypted,
+                    List<String> included, List<String> allowedToTalk, List<Profile> profiles,
+                    Message lastMsg) {
         this.id = id;
         this.name = name;
+        this.nameModified = nameModified;
         this.creatorID = creatorID;
         this.type = type;
         this.encrypted = encrypted;
-        this.created = created;
-        this.refers = refers;
-        this.authorized = authorized;
+        this.included = included;
+        this.allowedToTalk = allowedToTalk;
         this.profiles = profiles;
         this.lastMsg = lastMsg;
     }
@@ -72,6 +74,14 @@ public class Room implements Parcelable {
 
     public void setName(String val) {
         this.name = val;
+    }
+
+    public boolean isNameModified() {
+        return nameModified;
+    }
+
+    public void setNameModified(boolean val) {
+        this.nameModified = val;
     }
 
     public String getCreatorID() {
@@ -106,20 +116,20 @@ public class Room implements Parcelable {
         this.created = val;
     }
 
-    public List<String> getRefers() {
-        return refers;
+    public List<String> getIncluded() {
+        return included;
     }
 
-    public void setRefers(List<String> val) {
-        this.refers = val;
+    public void setIncluded(List<String> val) {
+        this.included = val;
     }
 
-    public List<String> getAuthorized() {
-        return authorized;
+    public List<String> getAllowedToTalk() {
+        return allowedToTalk;
     }
 
-    public void setAuthorized(List<String> val) {
-        this.authorized = val;
+    public void setAllowedToTalk(List<String> val) {
+        this.allowedToTalk = val;
     }
 
     public List<Profile> getProfiles() {
@@ -142,26 +152,27 @@ public class Room implements Parcelable {
     // Parcelable
     ///////////////////////////////////////////////////////////////////////////
 
-    public static final Creator<Room> CREATOR = new Creator<Room>() {
+    public static final Creator<ChatRoom> CREATOR = new Creator<ChatRoom>() {
         @Override
-        public Room createFromParcel(Parcel in) {
-            return new Room(in);
+        public ChatRoom createFromParcel(Parcel in) {
+            return new ChatRoom(in);
         }
 
         @Override
-        public Room[] newArray(int size) {
-            return new Room[size];
+        public ChatRoom[] newArray(int size) {
+            return new ChatRoom[size];
         }
     };
 
-    protected Room(Parcel in) {
+    protected ChatRoom(Parcel in) {
         id = in.readString();
         name = in.readString();
+        nameModified = in.readByte() != 0;
         creatorID = in.readString();
         type = RoomType.values()[in.readInt()];
         encrypted = in.readByte() != 0;
-        refers = in.createStringArrayList();
-        authorized = in.createStringArrayList();
+        included = in.createStringArrayList();
+        allowedToTalk = in.createStringArrayList();
         profiles = in.createTypedArrayList(Profile.CREATOR);
         lastMsg = in.readParcelable(Message.class.getClassLoader());
     }
@@ -175,11 +186,12 @@ public class Room implements Parcelable {
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeString(id);
         parcel.writeString(name);
+        parcel.writeByte((byte) (nameModified ? 1 : 0));
         parcel.writeString(creatorID);
         parcel.writeInt(type.ordinal());
         parcel.writeByte((byte) (encrypted ? 1 : 0));
-        parcel.writeStringList(refers);
-        parcel.writeStringList(authorized);
+        parcel.writeStringList(included);
+        parcel.writeStringList(allowedToTalk);
         parcel.writeTypedList(profiles);
         parcel.writeParcelable(lastMsg, flags);
     }
@@ -191,12 +203,31 @@ public class Room implements Parcelable {
     public static String createName(User user, List<User> list) {
         if (list.size() == 1) {
             return user.getUsername() + "_" + list.get(0).getUsername();
-        } else {
-            return user.getUsername() + " +" + list.size();
         }
+
+        StringBuilder s = new StringBuilder(user.getUsername());
+        for (User u : list) {
+            s.append(",").append(u.getUsername());
+        }
+        return s.toString();
     }
 
-    public static List<String> addRefers(User user, List<User> users) {
+    public static String showName(User user, ChatRoom chatRoom) {
+        if (chatRoom.isNameModified()) {
+            return chatRoom.getName();
+        }
+
+        if (chatRoom.getType().equals(RoomType.GROUP)) {
+            return chatRoom.getName();
+        }
+
+        return chatRoom.getName()
+                .replace(user.getUsername(), "")
+                .replace("_", "");
+
+    }
+
+    public static List<String> addIncluded(User user, List<User> users) {
         List<String> list = new ArrayList<>();
         list.add(user.getId());
         for (int i = 0; i < users.size(); i++) {
@@ -219,25 +250,18 @@ public class Room implements Parcelable {
         return data;
     }
 
-    public static String modifyName(User user, Room room) {
-        if (room.getType().equals(RoomType.GROUP)) {
-            return room.getName();
-        } else {
-            return room.getName()
-                    .replace(user.getUsername(), "")
-                    .replace("_", "");
+    public static List<String> addAllowedToTalk(User user) {
+        List<String> list = new ArrayList<>();
+        list.add(user.getId());
+        return list;
+    }
+
+    public static List<String> addAllowedToTalk(List<String> oldList, List<User> updatedList) {
+        for (User user : updatedList) {
+            oldList.add(user.getId());
         }
+        return oldList;
     }
-
-    public static String transformMsg() {
-
-        return "";
-    }
-
-    public static String transformDate() {
-        return "";
-    }
-
 
     @NonNull
     @Override
@@ -249,8 +273,8 @@ public class Room implements Parcelable {
                 ", type=" + type +
                 ", encrypted=" + encrypted +
                 ", created=" + created +
-                ", refers=" + refers +
-                ", authorized=" + authorized +
+                ", refers=" + included +
+                ", authorized=" + allowedToTalk +
                 ", profiles=" + profiles +
                 ", lastMsg=" + lastMsg +
                 '}';

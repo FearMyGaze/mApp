@@ -10,8 +10,6 @@ import com.github.fearmygaze.mercury.firebase.interfaces.OnDataResponseListener;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
 import com.github.fearmygaze.mercury.model.Request;
 import com.github.fearmygaze.mercury.model.User;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
 
@@ -39,17 +37,17 @@ public class Friends {
                         Request request = querySnapshot.getDocuments().get(0).toObject(Request.class);
                         if (request != null) {
                             switch (request.getStatus()) {
-                                case Request.S_FRIEND:
+                                case Friends:
                                     listener.onSuccess(0, context.getString(R.string.requestAccepted));
                                     break;
-                                case Request.S_WAITING:
+                                case Waiting:
                                     if (request.getReceiver().equals(fromUser.getId())) {
                                         listener.onSuccess(0, context.getString(R.string.requestAnswer));
                                     } else {
                                         listener.onSuccess(0, context.getString(R.string.requestWaiting));
                                     }
                                     break;
-                                case Request.S_BLOCKED:
+                                case Blocked:
                                     listener.onSuccess(0, context.getString(R.string.requestBlocked));
                                     break;
                                 default:
@@ -62,15 +60,7 @@ public class Friends {
     }
 
     public static void sendRequest(User fromUser, User toUser, Context context, OnResponseListener listener) {
-        DocumentReference docReference = RequestDao.createDocument();
-        docReference
-                .set(new Request(docReference.getId(),
-                        Request.S_WAITING,
-                        fromUser.getId(),
-                        toUser.getId(),
-                        Request.createRefers(fromUser, toUser),
-                        Request.createProfile(fromUser),
-                        Request.createProfile(toUser)))
+        RequestDao.createRequest(fromUser, toUser, Request.RequestStatus.Waiting)
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                 .addOnSuccessListener(unused -> listener.onSuccess(0));
     }
@@ -93,7 +83,6 @@ public class Friends {
     }
 
     public static void block(User fromUser, User toUser, Context context, OnResponseListener listener) {
-        CollectionReference reference = RequestDao.getReference();
         RequestDao.block(fromUser, toUser)
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                 .addOnSuccessListener(querySnapshot -> {
@@ -101,35 +90,16 @@ public class Friends {
                         DocumentSnapshot document = querySnapshot.getDocuments().get(0);
                         Request request = document.toObject(Request.class);
                         if (request != null) {
-                            if (!request.getStatus().equals(Request.S_BLOCKED)) {
-                                document.getReference()
-                                        .delete()
+                            if (!request.getStatus().equals(Request.RequestStatus.Blocked)) {
+                                RequestDao.deleteRequest(document)
                                         .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
-                                        .addOnSuccessListener(unused -> {
-                                            DocumentReference docReference = reference.document();
-                                            docReference
-                                                    .set(new Request(docReference.getId(),
-                                                            Request.S_BLOCKED,
-                                                            fromUser.getId(),
-                                                            toUser.getId(),
-                                                            Request.createRefers(fromUser, toUser),
-                                                            Request.createProfile(fromUser),
-                                                            Request.createProfile(toUser)))
-                                                    .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
-                                                    .addOnSuccessListener(unused1 -> listener.onSuccess(0));
-                                        });
+                                        .addOnSuccessListener(unused -> RequestDao.createRequest(fromUser, toUser, Request.RequestStatus.Blocked)
+                                                .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                                                .addOnSuccessListener(unused1 -> listener.onSuccess(0)));
                             }
                         }
                     } else {
-                        DocumentReference docReference = reference.document();
-                        docReference
-                                .set(new Request(docReference.getId(),
-                                        Request.S_BLOCKED,
-                                        fromUser.getId(),
-                                        toUser.getId(),
-                                        Request.createRefers(fromUser, toUser),
-                                        Request.createProfile(fromUser),
-                                        Request.createProfile(toUser)))
+                        RequestDao.createRequest(fromUser, toUser, Request.RequestStatus.Blocked)
                                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                                 .addOnSuccessListener(unused -> listener.onSuccess(0));
                     }
@@ -142,9 +112,8 @@ public class Friends {
                 .addOnSuccessListener(snapshot -> {
                     if (snapshot.exists()) {
                         Request localRequest = snapshot.toObject(Request.class);
-                        if (localRequest != null && localRequest.getStatus().equals(Request.S_BLOCKED)) {
-                            snapshot.getReference()
-                                    .delete()
+                        if (localRequest != null && localRequest.getStatus().equals(Request.RequestStatus.Blocked)) {
+                            RequestDao.deleteRequest(snapshot)
                                     .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                                     .addOnSuccessListener(unused -> listener.onSuccess(0));
                         } else listener.onSuccess(-1);
@@ -160,18 +129,14 @@ public class Friends {
                     if (fetchedRequest != null) {
                         switch (option) {
                             case OPTION_ACCEPT:
-                                if (request.getStatus().equals(Request.S_WAITING)) {
-                                    documentSnapshot
-                                            .getReference()
-                                            .update(Request.STATUS, Request.S_FRIEND)
+                                if (request.getStatus().equals(Request.RequestStatus.Waiting)) {
+                                    RequestDao.updateRequest(documentSnapshot, Request.RequestStatus.Friends)
                                             .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                                             .addOnSuccessListener(unused -> listener.onSuccess(0));
                                 } else listener.onSuccess(1);
                                 break;
                             case OPTION_REMOVE:
-                                documentSnapshot
-                                        .getReference()
-                                        .delete()
+                                RequestDao.deleteRequest(documentSnapshot)
                                         .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                                         .addOnSuccessListener(unused -> listener.onSuccess(0));
                                 break;
@@ -191,16 +156,14 @@ public class Friends {
                         if (request != null) {
                             switch (option) {
                                 case OPTION_ACCEPT:
-                                    if (request.getStatus().equals(Request.S_WAITING)) {
-                                        snapshot.getReference()
-                                                .update(Request.STATUS, Request.S_FRIEND)
+                                    if (request.getStatus().equals(Request.RequestStatus.Waiting)) {
+                                        RequestDao.updateRequest(snapshot, Request.RequestStatus.Friends)
                                                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                                                 .addOnSuccessListener(unused -> listener.onSuccess(0));
                                     } else listener.onSuccess(1);
                                     break;
                                 case OPTION_REMOVE:
-                                    snapshot.getReference()
-                                            .delete()
+                                    RequestDao.deleteRequest(snapshot)
                                             .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                                             .addOnSuccessListener(unused -> listener.onSuccess(0));
                                     break;

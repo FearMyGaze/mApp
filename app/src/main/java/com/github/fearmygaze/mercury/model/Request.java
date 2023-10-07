@@ -10,23 +10,13 @@ import java.util.List;
 
 public class Request {
 
-    public static final String
-            COLLECTION = "requests",
-            SENDER = "sender",
-            RECEIVER = "receiver",
-            STATUS = "status",
-            S_FRIEND = "friends",
-            S_WAITING = "waiting",
-            S_BLOCKED = "blocked",
-            BETWEEN = "refers",
-            CREATED = "created";
-
+    public enum RequestStatus {Friends, Waiting, Blocked}
     ///////////////////////////////////////////////////////////////////////////
     // Body
     ///////////////////////////////////////////////////////////////////////////
 
     String id;
-    String status;
+    RequestStatus status;
     String sender;
     String receiver;
     List<String> refers;
@@ -40,10 +30,9 @@ public class Request {
     ///////////////////////////////////////////////////////////////////////////
 
     public Request() {
-
     }
 
-    public Request(String id, String status, String sender, String receiver, List<String> refers, Profile senderProfile, Profile receiverProfile) {
+    public Request(String id, RequestStatus status, String sender, String receiver, List<String> refers, Profile senderProfile, Profile receiverProfile) {
         this.id = id;
         this.status = status;
         this.sender = sender;
@@ -65,11 +54,11 @@ public class Request {
         this.id = val;
     }
 
-    public String getStatus() {
+    public RequestStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String val) {
+    public void setStatus(RequestStatus val) {
         this.status = val;
     }
 
@@ -132,16 +121,12 @@ public class Request {
         return list;
     }
 
-    public static Profile createProfile(User user) {
-        return new Profile(user.getId(), user.getUsername(), user.getImage());
-    }
-
     @NonNull
     @Override
     public String toString() {
-        return "Requests{" +
+        return "Request{" +
                 "id='" + id + '\'' +
-                ", status='" + status + '\'' +
+                ", status=" + status +
                 ", sender='" + sender + '\'' +
                 ", receiver='" + receiver + '\'' +
                 ", refers=" + refers +

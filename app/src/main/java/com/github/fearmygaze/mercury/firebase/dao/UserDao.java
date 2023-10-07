@@ -8,6 +8,10 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserDao {
 
@@ -19,11 +23,26 @@ public class UserDao {
     }
 
     public static CollectionReference getReference() {
-        return getInstance().collection(User.COLLECTION);
+        return getInstance().collection("users");
     }
 
     public static CollectionReference pDataReference() {
-        return getInstance().collection(User.PUBLIC_DATA);
+        return getInstance().collection("publicData");
+    }
+
+    public static Task<QuerySnapshot> grantUsername(String username) {
+        return pDataReference()
+                .whereEqualTo("username", username)
+                .limit(1)
+                .get();
+    }
+
+    public static Task<Void> writeUsername(String username) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("username", username);
+        return pDataReference()
+                .document()
+                .set(map);
     }
 
     public static Task<Void> createUser(String id, String username) {
@@ -41,50 +60,50 @@ public class UserDao {
     public static Task<Void> update(String id, String token) {
         return getReference()
                 .document(id)
-                .update(User.NOTIFICATION, token);
+                .update("notificationToken", token);
     }
 
     public static Task<Void> update(User user) {
         return getReference()
                 .document(user.getId())
-                .update(User.IMAGE, user.getImage(),
-                        User.NOTIFICATION, user.getNotificationToken(),
-                        User.STATUS, user.getStatus(),
-                        User.LOCATION, user.getLocation(),
-                        User.LOCATION_LOWERED, user.getLocationL(),
-                        User.JOB, user.getJob(),
-                        User.JOB_LOWERED, user.getJobL(),
-                        User.WEB, user.getWebsite());
+                .update("image", user.getImage(),
+                        "notificationToken", user.getNotificationToken(), //TODO: Maybe remove this
+                        "status", user.getStatus(),
+                        "location", user.getLocation(),
+                        "locationL", user.getLocationL(),
+                        "job", user.getJob(),
+                        "jobL", user.getJobL(),
+                        "website", user.getWebsite());
     }
 
     public static Query searchByUsername(String search, int limit) {
         return getReference()
-                .whereGreaterThanOrEqualTo(User.USERNAME_LOWERED, search.toLowerCase())
-                .whereLessThanOrEqualTo(User.USERNAME_LOWERED, search.toLowerCase() + "\uf8ff")
+                .whereGreaterThanOrEqualTo("usernameL", search.toLowerCase())
+                .whereLessThanOrEqualTo("usernameL", search.toLowerCase() + "\uf8ff")
                 .limit(limit);
     }
 
     public static Query searchByWeb(String search, int limit) {
         search = User.addHttp(search.replace("web:", ""));
         return getReference()
-                .whereGreaterThanOrEqualTo(User.WEB, search)
-                .whereLessThanOrEqualTo(User.WEB, search + "\uf8ff")
+                .whereGreaterThanOrEqualTo("website", search)
+                .whereLessThanOrEqualTo("website", search + "\uf8ff")
                 .limit(limit);
     }
 
     public static Query searchByJob(String search, int limit) {
         search = search.replace("job:", "");
         return getReference()
-                .whereGreaterThanOrEqualTo(User.JOB_LOWERED, search.toLowerCase())
-                .whereLessThanOrEqualTo(User.JOB_LOWERED, search.toLowerCase() + "\uf8ff")
+                .whereGreaterThanOrEqualTo("jobL", search.toLowerCase())
+                .whereLessThanOrEqualTo("jobL", search.toLowerCase() + "\uf8ff")
                 .limit(limit);
     }
 
     public static Query searchByLocation(String search, int limit) {
         search = search.replace("loc:", "");
         return getReference()
-                .whereGreaterThanOrEqualTo(User.LOCATION_LOWERED, search.toLowerCase())
-                .whereLessThanOrEqualTo(User.LOCATION_LOWERED, search.toLowerCase() + "\uf8ff")
+                .whereGreaterThanOrEqualTo("locationL", search.toLowerCase())
+                .whereLessThanOrEqualTo("locationL", search.toLowerCase() + "\uf8ff")
                 .limit(limit);
     }
 }
