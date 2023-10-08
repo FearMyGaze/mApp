@@ -201,7 +201,7 @@ public class Main extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Auth.rememberMe(AuthDao.getUser(), Main.this, new OnUserResponseListener() {
+        Auth.rememberMe(Main.this, new OnUserResponseListener() {
             @Override
             public void onSuccess(int code, User data) {
                 switch (code) {

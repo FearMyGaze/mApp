@@ -123,7 +123,8 @@ public class Auth {
                 .addOnSuccessListener(unused -> listener.onSuccess(0));
     }
 
-    public static void rememberMe(FirebaseUser user, Context context, OnUserResponseListener listener) {
+    public static void rememberMe(Context context, OnUserResponseListener listener) {
+        FirebaseUser user = AuthDao.getUser();
         if (user == null) {
             listener.onSuccess(1, null);
         } else if (!user.isEmailVerified()) {
