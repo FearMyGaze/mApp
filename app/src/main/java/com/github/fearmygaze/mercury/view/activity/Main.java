@@ -56,8 +56,8 @@ public class Main extends AppCompatActivity {
     FloatingActionButton createRoom;
 
     //AppBar
-    MaterialCardView profile, search, settings;
-    ShapeableImageView profileImage;
+    MaterialCardView profile;
+    ShapeableImageView profileImage, search, settings;
     TextView appName;
 
     //Utils

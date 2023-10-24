@@ -61,53 +61,37 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"/>
 
-                <com.google.android.material.card.MaterialCardView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/mainSearch"
-                    android:layout_width="30dp"
+                    android:layout_width="24dp"
                     android:layout_height="0dp"
                     android:layout_marginEnd="8dp"
-                    app:cardElevation="0dp"
-                    app:cardBackgroundColor="@color/basicBackground"
-                    app:contentPadding="2dp"
+                    android:src="@drawable/ic_search_24"
+                    app:tint="?colorPrimary"
+                    android:scaleType="fitCenter"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/signUpGoBack"
                     app:shapeAppearance="@style/RoundedComponent"
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintEnd_toStartOf="@id/mainSettings"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent">
+                    app:layout_constraintBottom_toBottomOf="parent" />
 
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/ic_search_24"
-                        android:scaleType="fitCenter"
-                        app:tint="?colorPrimary"
-                        app:shapeAppearance="@style/RectComponent"/>
-
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/mainSettings"
-                    android:layout_width="30dp"
+                    android:layout_width="24dp"
                     android:layout_height="0dp"
                     android:layout_marginEnd="8dp"
-                    app:cardElevation="0dp"
-                    app:cardBackgroundColor="@color/basicBackground"
-                    app:contentPadding="2dp"
+                    android:src="@drawable/ic_settings_24"
+                    app:tint="?colorPrimary"
+                    android:scaleType="fitCenter"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/signUpGoBack"
                     app:shapeAppearance="@style/RoundedComponent"
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent">
-
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/ic_settings_24"
-                        android:scaleType="fitCenter"
-                        app:tint="?colorPrimary"
-                        app:shapeAppearance="@style/RectComponent"/>
-
-                </com.google.android.material.card.MaterialCardView>
+                    app:layout_constraintBottom_toBottomOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
