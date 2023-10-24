@@ -8,17 +8,27 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.github.fearmygaze.mercury.R;
+import com.github.fearmygaze.mercury.custom.CustomLinearLayout;
+import com.github.fearmygaze.mercury.firebase.dao.ChatEventsDao;
+import com.github.fearmygaze.mercury.model.Room;
 import com.github.fearmygaze.mercury.model.User;
+import com.github.fearmygaze.mercury.view.adapter.AdapterRoom;
 
 public class Home extends Fragment {
 
     View view;
     User user;
-
+    SwipeRefreshLayout refreshLayout;
     RecyclerView recyclerView;
+
+    FirestoreRecyclerOptions<Room> options;
+    AdapterRoom adapterRoom;
 
     public Home() {
 
@@ -44,18 +54,22 @@ public class Home extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_home, container, false);
+        refreshLayout = view.findViewById(R.id.homeRefresh);
         recyclerView = view.findViewById(R.id.homeRecycler);
 
+        options = new FirestoreRecyclerOptions.Builder<Room>()
+                .setQuery(ChatEventsDao.getRooms(user), Room.class)
+                .setLifecycleOwner(this)
+                .build();
+
+        adapterRoom = new AdapterRoom(user, options, recyclerView, requireActivity());
+        recyclerView.setLayoutManager(new CustomLinearLayout(requireActivity(), LinearLayoutManager.VERTICAL, false));
+        recyclerView.setAdapter(adapterRoom);
+        refreshLayout.setOnRefreshListener(() -> {
+            adapterRoom.updateOptions(options);
+            refreshLayout.setRefreshing(false);
+        });
         return view;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
 }

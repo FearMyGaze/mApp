@@ -11,19 +11,59 @@
         android:id="@+id/roomCreatorAppBar"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
+        android:background="@color/basicBackground"
         app:elevation="0dp"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/roomCreatorToolBar"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:navigationIcon="@drawable/ic_arrow_back_24"
-            app:navigationContentDescription="@string/signUpGoBack"
-            app:title="@string/roomCreatorTitle"
-            app:titleTextColor="@color/textBold"
-            android:background="@color/basicBackground"
-            style="@style/ToolBar"/>
+            android:layout_height="match_parent">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/roomCreatorGoBack"
+                android:layout_width="24dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="10dp"
+                android:src="@drawable/ic_arrow_back_24"
+                app:tint="?colorPrimary"
+                android:scaleType="fitCenter"
+                android:background="?selectableItemBackgroundBorderless"
+                android:contentDescription="@string/signUpGoBack"
+                app:shapeAppearance="@style/RoundedComponent"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/roomCreatorTitle"
+                android:textSize="19sp"
+                android:textStyle="bold"
+                android:textColor="@color/textBold"
+                app:layout_constraintStart_toEndOf="@id/roomCreatorGoBack"
+                app:layout_constraintEnd_toStartOf="@id/roomCreatorCreateRoom"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/roomCreatorCreateRoom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:text="@string/generalCreate"
+                android:textAllCaps="false"
+                android:enabled="false"
+                app:cornerRadius="12.5dp"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -35,6 +75,50 @@
         app:dividerThickness="2dp"
         app:layout_constraintTop_toBottomOf="@id/roomCreatorAppBar"/>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/roomCreatorEncryptionBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintTop_toBottomOf="@id/roomCreatorDivider">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="@string/roomCreatorEndToEndEncryption"
+            android:textSize="16sp"
+            android:textColor="@color/textBold"
+            android:textStyle="normal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/roomCreatorEncryptionSwitch"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/roomCreatorEncryptionSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/friendsSeparator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/generalFriends"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:textColor="@color/textBold"
+        app:layout_constraintTop_toBottomOf="@id/roomCreatorEncryptionBox"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/roomCreatorUsers"
         android:layout_width="0dp"
@@ -44,58 +128,7 @@
         android:layout_marginTop="5dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/roomCreatorDivider"
-        app:layout_constraintBottom_toTopOf="@id/roomCreatorBottomDivider"/>
-
-    <com.google.android.material.divider.MaterialDivider
-        android:id="@+id/roomCreatorBottomDivider"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        app:dividerThickness="2dp"
-        app:layout_constraintBottom_toTopOf="@id/roomCreatorBottomLayer"/>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/roomCreatorBottomLayer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/roomCreatorBottomGuideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.5" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/roomCreatorCreate"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/generalCreate"
-            android:textAllCaps="false"
-            app:cornerRadius="12.5dp"
-            android:enabled="false"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/roomCreatorBottomGuideline"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-        <TextView
-            android:id="@+id/roomCreatorSelected"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textColor="@color/textBold"
-            android:textStyle="bold"
-            android:textSize="17sp"
-            android:textAlignment="center"
-            app:layout_constraintStart_toEndOf="@id/roomCreatorBottomGuideline"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintTop_toBottomOf="@id/friendsSeparator"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

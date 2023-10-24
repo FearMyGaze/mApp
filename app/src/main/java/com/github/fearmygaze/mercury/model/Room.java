@@ -1,35 +1,45 @@
 package com.github.fearmygaze.mercury.model;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.github.fearmygaze.mercury.custom.TimestampConverter;
 import com.google.firebase.firestore.ServerTimestamp;
 
+import java.text.DateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
-public class ChatRoom implements Parcelable {
+public class Room implements Parcelable {
 
     ///////////////////////////////////////////////////////////////////////////
     // Body
     ///////////////////////////////////////////////////////////////////////////
+    public static final String PARCEL = "room";
 
-    public enum RoomType {PRIVATE, GROUP, BROADCAST}
+    public enum RoomType {Private, Group}
 
     String id;
     String name;
     boolean nameModified;
-    String creatorID;
+    String owner;
     RoomType type;
     boolean encrypted;
 
     @ServerTimestamp
     Date created;
-    List<String> included;
-    List<String> allowedToTalk;
+    String roomCheck;
+    List<String> refers;
     List<Profile> profiles;
     Message lastMsg;
 
@@ -37,21 +47,21 @@ public class ChatRoom implements Parcelable {
     // Constructors
     ///////////////////////////////////////////////////////////////////////////
 
-    public ChatRoom() {
+    public Room() {
     }
 
-    public ChatRoom(String id, String name, boolean nameModified,
-                    String creatorID, RoomType type, boolean encrypted,
-                    List<String> included, List<String> allowedToTalk, List<Profile> profiles,
-                    Message lastMsg) {
+    public Room(String id, String name, boolean nameModified,
+                String owner, RoomType type, boolean encrypted,
+                List<String> refers, List<Profile> profiles,
+                Message lastMsg) {
         this.id = id;
         this.name = name;
         this.nameModified = nameModified;
-        this.creatorID = creatorID;
+        this.owner = owner;
         this.type = type;
         this.encrypted = encrypted;
-        this.included = included;
-        this.allowedToTalk = allowedToTalk;
+        this.roomCheck = name;
+        this.refers = refers;
         this.profiles = profiles;
         this.lastMsg = lastMsg;
     }
@@ -84,12 +94,12 @@ public class ChatRoom implements Parcelable {
         this.nameModified = val;
     }
 
-    public String getCreatorID() {
-        return creatorID;
+    public String getOwner() {
+        return owner;
     }
 
-    public void setCreatorID(String val) {
-        this.creatorID = val;
+    public void setOwner(String val) {
+        this.owner = val;
     }
 
     public RoomType getType() {
@@ -116,20 +126,20 @@ public class ChatRoom implements Parcelable {
         this.created = val;
     }
 
-    public List<String> getIncluded() {
-        return included;
+    public String getRoomCheck() {
+        return roomCheck;
     }
 
-    public void setIncluded(List<String> val) {
-        this.included = val;
+    public void setRoomCheck(String val) {
+        this.roomCheck = val;
     }
 
-    public List<String> getAllowedToTalk() {
-        return allowedToTalk;
+    public List<String> getRefers() {
+        return refers;
     }
 
-    public void setAllowedToTalk(List<String> val) {
-        this.allowedToTalk = val;
+    public void setRefers(List<String> val) {
+        this.refers = val;
     }
 
     public List<Profile> getProfiles() {
@@ -152,27 +162,27 @@ public class ChatRoom implements Parcelable {
     // Parcelable
     ///////////////////////////////////////////////////////////////////////////
 
-    public static final Creator<ChatRoom> CREATOR = new Creator<ChatRoom>() {
+    public static final Creator<Room> CREATOR = new Creator<Room>() {
         @Override
-        public ChatRoom createFromParcel(Parcel in) {
-            return new ChatRoom(in);
+        public Room createFromParcel(Parcel in) {
+            return new Room(in);
         }
 
         @Override
-        public ChatRoom[] newArray(int size) {
-            return new ChatRoom[size];
+        public Room[] newArray(int size) {
+            return new Room[size];
         }
     };
 
-    protected ChatRoom(Parcel in) {
+    protected Room(Parcel in) {
         id = in.readString();
         name = in.readString();
         nameModified = in.readByte() != 0;
-        creatorID = in.readString();
+        owner = in.readString();
         type = RoomType.values()[in.readInt()];
         encrypted = in.readByte() != 0;
-        included = in.createStringArrayList();
-        allowedToTalk = in.createStringArrayList();
+        created = TimestampConverter.unixToDate(in.readLong());
+        refers = in.createStringArrayList();
         profiles = in.createTypedArrayList(Profile.CREATOR);
         lastMsg = in.readParcelable(Message.class.getClassLoader());
     }
@@ -187,11 +197,11 @@ public class ChatRoom implements Parcelable {
         parcel.writeString(id);
         parcel.writeString(name);
         parcel.writeByte((byte) (nameModified ? 1 : 0));
-        parcel.writeString(creatorID);
+        parcel.writeString(owner);
         parcel.writeInt(type.ordinal());
         parcel.writeByte((byte) (encrypted ? 1 : 0));
-        parcel.writeStringList(included);
-        parcel.writeStringList(allowedToTalk);
+        parcel.writeLong(TimestampConverter.dateToUnix(created));
+        parcel.writeStringList(refers);
         parcel.writeTypedList(profiles);
         parcel.writeParcelable(lastMsg, flags);
     }
@@ -200,81 +210,83 @@ public class ChatRoom implements Parcelable {
     // Helper methods
     ///////////////////////////////////////////////////////////////////////////
 
-    public static String createName(User user, List<User> list) {
+    public static String createName(User user, RoomType type, List<Profile> list, Context context) {
         if (list.size() == 1) {
             return user.getUsername() + "_" + list.get(0).getUsername();
         }
 
-        StringBuilder s = new StringBuilder(user.getUsername());
-        for (User u : list) {
-            s.append(",").append(u.getUsername());
-        }
-        return s.toString();
+        return String.format(Locale.getDefault(), "%s, %s + %d",
+                user.getUsername(),
+                list.get(0).getUsername(),
+                (list.size() - 1));
     }
 
-    public static String showName(User user, ChatRoom chatRoom) {
-        if (chatRoom.isNameModified()) {
-            return chatRoom.getName();
+    public static String showName(User user, Room room) {
+        if (room.isNameModified() || !room.getType().equals(RoomType.Private)) {
+            return room.getName();
         }
 
-        if (chatRoom.getType().equals(RoomType.GROUP)) {
-            return chatRoom.getName();
-        }
-
-        return chatRoom.getName()
+        return room.getName()
                 .replace(user.getUsername(), "")
                 .replace("_", "");
-
     }
 
-    public static List<String> addIncluded(User user, List<User> users) {
+    public static List<String> addRefers(User user, List<Profile> profiles) {
         List<String> list = new ArrayList<>();
         list.add(user.getId());
-        for (int i = 0; i < users.size(); i++) {
-            list.add(users.get(i).getId());
+        for (int i = 0; i < profiles.size(); i++) {
+            list.add(profiles.get(i).getId());
         }
         return list;
     }
 
-    public static List<Profile> addProfiles(User user, List<User> users) {
-        users.add(0, user);
-        List<Profile> data = new ArrayList<>();
-        for (int i = 0; i < users.size(); i++) {
-            Profile metaData = new Profile(
-                    users.get(i).getId(),
-                    users.get(i).getUsername(),
-                    users.get(i).getImage()
-            );
-            data.add(metaData);
-        }
-        return data;
+    public static List<Profile> addProfiles(User user, List<Profile> profiles) {
+        profiles.add(0, new Profile(user.getId(), user.username, user.getImage()));
+        return profiles;
     }
 
-    public static List<String> addAllowedToTalk(User user) {
-        List<String> list = new ArrayList<>();
-        list.add(user.getId());
-        return list;
+    public static List<Profile> getProfileImages(User user, Room room) {
+        List<Profile> output = new ArrayList<>();
+        List<Profile> profiles = room.getProfiles();
+        if (room.getType().equals(RoomType.Private)) {
+            for (Profile p : profiles) {
+                if (!p.getId().equals(user.getId())) {
+                    output.add(p);
+                }
+            }
+        } else {
+            for (int i = 0; i < 2; i++) {
+                output.add(profiles.get(i));
+            }
+        }
+        return output;
     }
 
-    public static List<String> addAllowedToTalk(List<String> oldList, List<User> updatedList) {
-        for (User user : updatedList) {
-            oldList.add(user.getId());
+    public static String showDate(Room room) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(room.getCreated().getTime()), ZoneId.systemDefault());
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yy");
+            return localDateTime.format(dateTimeFormatter);
+        } else {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(room.getCreated().getTime());
+            return String.format("%s", DateFormat.getDateInstance(DateFormat.SHORT).format(calendar.getTime()));
         }
-        return oldList;
     }
 
     @NonNull
     @Override
     public String toString() {
-        return "Room1{" +
+        return "Room{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
-                ", creatorID='" + creatorID + '\'' +
+                ", nameModified=" + nameModified +
+                ", creatorID='" + owner + '\'' +
                 ", type=" + type +
                 ", encrypted=" + encrypted +
                 ", created=" + created +
-                ", refers=" + included +
-                ", authorized=" + allowedToTalk +
+                ", roomCheck='" + roomCheck + '\'' +
+                ", correlation=" + refers +
                 ", profiles=" + profiles +
                 ", lastMsg=" + lastMsg +
                 '}';

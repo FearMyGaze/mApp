@@ -1,7 +1,7 @@
 <resources>
     <!-- App name -->
     <string name="app_name" translatable="false">Mercury</string>
-    <string name="default_image" translatable="false">default.webp</string>
+
     <!-- General Purpose -->
     <string name="generalChoose">Choose</string>
     <string name="generalOK">OK</string>
@@ -123,19 +123,34 @@
 
     <!-- ChatRoomSettings (Activity) -->
     <string name="chatRoomSettingsMembers">Members</string>
-    <string name="chatRoomSettingsCreated">Date</string>
+    <string name="chatRoomSettingsCreated">Created</string>
     <string name="chatRoomSettingsUpdate">Update</string>
     <string name="chatRoomSettingsChangeName">Change name</string>
-    <string name="chatRoomSettingsChangeImage">Change image</string>
-    <string name="chatRoomSettingsAddMember">Add member</string>
-    <string name="chatRoomSettingsRemoveMember">Remove member</string>
     <string name="chatRoomSettingsDanger">Danger</string>
     <string name="chatRoomSettingsChangeOwner">Change owner</string>
     <string name="chatRoomSettingsDeleteRoom">Delete room</string>
+    <string name="chatRoomSettingsLeaveRoom">Leave room</string>
+    <string name="chatRoomSettingsRoomType">Type</string>
+    <string name="chatRoomSettingsRoomPrivate">Private</string>
+    <string name="chatRoomSettingsRoomGroup">Group</string>
+    <string name="chatRoomSettingsDialogTitle">Danger!!</string>
+    <string name="chatRoomSettingsDialogMsg1">You cannot leave your own room. Either change the owner or delete the room.</string>
+    <string name="chatRoomSettingsDialogMsg2">Do you really want to delete this room?</string>
+    <string name="chatRoomSettingsDialogMsg3">Do you really want to leave this room?</string>
+    <string name="chatRoomSettingsDialogMsg4">You cannot delete a room if you are not the owner</string>
+    <string name="chatRoomSettingsDialogMsg5">You cannot update the name of the room if you are not the owner</string>
+    <string name="chatRoomSettingsReport">Report room</string>
+    <string name="chatRoomSettingsRoomName">Room name</string>
+    <string name="chatRoomSettingsGoTo">Go to settings</string>
 
     <!-- Room Creator -->
     <string name="roomCreatorTitle">Create room</string>
     <string name="roomCreatorSelected">Selected:</string>
+    <string name="roomCreatorMessage">Room created!</string>
+    <string name="roomCreatorEndToEndEncryption">Use end-to-end encryption</string>
+    <string name="roomCreatorMax">Currently we only support maximum of 10 people (without you).</string>
+    <string name="roomCreatorEncryptionHelper">With this option every user in this room will have to use an encryption code. Every text message you send to us is encrypted</string>
+    <string name="roomCreatorBroadcastHelper">With the option only you or selected people can send messages but everyone can see the messages.</string>
 
     <!-- RegEx (Errors)-->
     <string name="regExEmpty">Can\'t be empty</string>

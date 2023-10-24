@@ -3,6 +3,7 @@ package com.github.fearmygaze.mercury.view.util;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -162,6 +163,7 @@ public class ProfileViewer extends AppCompatActivity {
 
                                 @Override
                                 public void onFailure(String message) {
+                                    Log.d("customLog", message);
                                     Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_LONG).show();
                                 }
                             });
@@ -178,14 +180,12 @@ public class ProfileViewer extends AppCompatActivity {
                                 public void onSuccess(int code) {
                                     if (code == 0) {
                                         request.setText(getString(R.string.requestNone));
-                                    } else {
-                                        Toast.makeText(ProfileViewer.this, "Request changed state", Toast.LENGTH_SHORT).show();
                                     }
                                 }
 
                                 @Override
                                 public void onFailure(String message) {
-
+                                    Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }).show();

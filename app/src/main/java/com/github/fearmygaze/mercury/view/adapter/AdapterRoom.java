@@ -14,8 +14,7 @@ import com.firebase.ui.common.ChangeEventType;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.firebase.Auth;
-import com.github.fearmygaze.mercury.firebase.interfaces.OnUserResponseListener;
+import com.github.fearmygaze.mercury.model.Message;
 import com.github.fearmygaze.mercury.model.Room;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
@@ -53,29 +52,18 @@ public class AdapterRoom extends FirestoreRecyclerAdapter<Room, RecyclerView.Vie
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position, @NonNull Room room) {
         if (getItemViewType(holder.getAbsoluteAdapterPosition()) == 0) {
             RoomRegularVH roomRegularVH = (RoomRegularVH) holder;
-            Auth.getUserProfile(Room.getCorrectID(user, room), recyclerView.getContext(), new OnUserResponseListener() {
-                @Override
-                public void onSuccess(int code, User user) {
-                    if (code == 0) {
-                        Tools.profileImage(user.getImage(), recyclerView.getContext()).into(roomRegularVH.image);
-                    }
-                }
-
-                @Override
-                public void onFailure(String message) {
-
-                }
-            });
-            roomRegularVH.name.setText(Room.modifyName(user, room));
-            roomRegularVH.message.setText(Room.modifyMessage(user, room, recyclerView.getContext()));
-            roomRegularVH.time.setText(Room.setDate(0L));
+            Tools.profileImage(Room.getProfileImages(user, room).get(0).getImage(), recyclerView.getContext()).into(roomRegularVH.image);
+            roomRegularVH.name.setText(Room.showName(user, room));
+            roomRegularVH.message.setText(Message.formatMsgForCard(user, room.getLastMsg(), recyclerView.getContext()));
+            roomRegularVH.time.setText(Message.formatDate(room.getLastMsg()));
             roomRegularVH.root.setOnClickListener(v -> Tools.goToChat(user, room, v.getContext(), activity));
         } else {
             RoomGroupVH roomGroupVH = (RoomGroupVH) holder;
-            Tools.profileImage("default", recyclerView.getContext()).into(roomGroupVH.image);
-            roomGroupVH.name.setText(room.getName());
-            roomGroupVH.message.setText(Room.modifyMessage(user, room, recyclerView.getContext()));
-            roomGroupVH.time.setText(Room.setDate(0));
+            Tools.profileImage(Room.getProfileImages(user, room).get(0).getImage(), recyclerView.getContext()).into(roomGroupVH.firstImage);
+            Tools.profileImage(Room.getProfileImages(user, room).get(1).getImage(), recyclerView.getContext()).into(roomGroupVH.secondImage);
+            roomGroupVH.name.setText(Room.showName(user, room));
+            roomGroupVH.message.setText(Message.formatMsgForCard(user, room.getLastMsg(), recyclerView.getContext()));
+            roomGroupVH.time.setText(Message.formatDate(room.getLastMsg()));
             roomGroupVH.root.setOnClickListener(v -> Tools.goToChat(user, room, v.getContext(), activity));
         }
     }
@@ -97,7 +85,7 @@ public class AdapterRoom extends FirestoreRecyclerAdapter<Room, RecyclerView.Vie
 
     @Override
     public int getItemViewType(int position) {
-        return Objects.equals(getItem(position).getIsGroup(), false) ? 0 : 1;
+        return Objects.equals(getItem(position).getType(), Room.RoomType.Group) ? 1 : 0;
     }
 
     public static class RoomRegularVH extends RecyclerView.ViewHolder {
@@ -117,13 +105,14 @@ public class AdapterRoom extends FirestoreRecyclerAdapter<Room, RecyclerView.Vie
 
     public static class RoomGroupVH extends RecyclerView.ViewHolder {
         MaterialCardView root;
-        ShapeableImageView image;
+        ShapeableImageView firstImage, secondImage;
         TextView name, message, time;
 
         protected RoomGroupVH(@NonNull View itemView) {
             super(itemView);
             root = itemView.findViewById(R.id.adapterRoomGroupRoot);
-            image = itemView.findViewById(R.id.adapterRoomGroupImage);
+            firstImage = itemView.findViewById(R.id.adapterRoomGroupFirstImage);
+            secondImage = itemView.findViewById(R.id.adapterRoomGroupSecondImage);
             name = itemView.findViewById(R.id.adapterRoomGroupName);
             message = itemView.findViewById(R.id.adapterRoomGroupMessage);
             time = itemView.findViewById(R.id.adapterRoomGroupTime);

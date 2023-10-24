@@ -9,22 +9,43 @@
     app:cardCornerRadius="12.5dp"
     app:cardBackgroundColor="@color/basicBackgroundAlternate"
     app:cardElevation="0dp"
-    app:contentPadding="10dp">
+    app:contentPadding="15dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/adapterRoomGroupImage"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/adapterRoomGroupImageBox"
             android:layout_width="60dp"
             android:layout_height="0dp"
-            tools:src="@tools:sample/avatars"
-            app:shapeAppearance="@style/RectComponent"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/adapterRoomGroupFirstImage"
+                android:layout_width="40dp"
+                android:layout_height="0dp"
+                tools:src="@tools:sample/avatars"
+                app:shapeAppearance="@style/RectComponent"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/adapterRoomGroupSecondImage"
+                android:layout_width="40dp"
+                android:layout_height="0dp"
+                android:elevation="1dp"
+                tools:src="@tools:sample/avatars"
+                app:shapeAppearance="@style/RectComponent"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/adapterRoomGroupName"
@@ -36,7 +57,7 @@
             android:textStyle="bold"
             android:textSize="17sp"
             android:maxLines="1"
-            app:layout_constraintStart_toEndOf="@id/adapterRoomGroupImage"
+            app:layout_constraintStart_toEndOf="@id/adapterRoomGroupImageBox"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
@@ -50,7 +71,7 @@
             android:textColor="@color/textBold"
             android:textSize="15sp"
             android:maxLines="1"
-            app:layout_constraintStart_toEndOf="@id/adapterRoomGroupImage"
+            app:layout_constraintStart_toEndOf="@id/adapterRoomGroupImageBox"
             app:layout_constraintEnd_toStartOf="@id/adapterRoomGroupTime"
             app:layout_constraintTop_toBottomOf="@id/adapterRoomGroupName"
             app:layout_constraintBottom_toBottomOf="parent"/>

@@ -66,7 +66,7 @@ public class AdapterMessage extends FirestoreRecyclerAdapter<Message, RecyclerVi
 
     @Override
     public int getItemViewType(int position) {
-        return Objects.equals(getItem(position).sendByID, userID) ? 0 : 1;
+        return Objects.equals(getItem(position).getSendBy(), userID) ? 0 : 1;
     }
 
     protected static class SelfTextVH extends RecyclerView.ViewHolder {
