@@ -1,6 +1,5 @@
 package com.github.fearmygaze.mercury.view.adapter;
 
-import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,10 +7,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.SimpleItemAnimator;
 
-import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
-import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.database.AppDatabase;
 import com.github.fearmygaze.mercury.model.Profile;
@@ -20,23 +16,18 @@ import com.github.fearmygaze.mercury.util.Tools;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.imageview.ShapeableImageView;
 
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
-public class AdapterSearch extends FirestorePagingAdapter<User, AdapterSearch.SearchVH> {
+public class AdapterSearch extends RecyclerView.Adapter<AdapterSearch.SearchVH> {
+    User user;
+    List<User> search;
+    SearchActions actions;
 
-    User myUser;
-    RecyclerView recyclerView;
-    Activity activity;
-
-    private final SearchAdapter listener;
-
-    public AdapterSearch(User user, @NonNull FirestorePagingOptions<User> options, RecyclerView recyclerView, Activity activity, SearchAdapter listener) {
-        super(options);
-        this.myUser = user;
-        this.recyclerView = recyclerView;
-        this.activity = activity;
-        this.listener = listener;
-        ((SimpleItemAnimator) Objects.requireNonNull(recyclerView.getItemAnimator())).setSupportsChangeAnimations(false);
+    public AdapterSearch(User user, SearchActions actions) {
+        this.user = user;
+        this.search = new ArrayList<>();
+        this.actions = actions;
     }
 
     @NonNull
@@ -46,15 +37,45 @@ public class AdapterSearch extends FirestorePagingAdapter<User, AdapterSearch.Se
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SearchVH holder, int position, @NonNull User model) {
+    public void onBindViewHolder(@NonNull SearchVH holder, int position) {
+        User model = search.get(holder.getAbsoluteAdapterPosition());
         Tools.profileImage(model.getImage(), holder.itemView.getContext()).into(holder.image);
         holder.username.setText(model.getUsername());
         holder.status.setText(model.getStatus());
         holder.root.setOnClickListener(v -> {
-            AppDatabase.getInstance(v.getContext()).cachedProfile().insert(new Profile(model.getId(), model.getUsername(), model.getImage()));
-            listener.onClick();
-            Tools.goToProfileViewer(myUser, model, v.getContext());
+            AppDatabase.getInstance(v.getContext()).cachedProfile().insert(Profile.create(model));
+            actions.onClick();
+            Tools.goToProfileViewer(user, model, v.getContext());
         });
+    }
+
+    @Override
+    public int getItemCount() {
+        return search.size();
+    }
+
+    public void set(List<User> list) {
+        if (list.size() >= 1) {
+            search.addAll(list);
+            notifyItemRangeChanged(0, list.size());
+        } else {
+            clear();
+        }
+    }
+
+    public void add(List<User> list) {
+        if (list.size() >= 1) {
+            search.clear();
+            search.addAll(list);
+            notifyItemRangeChanged(0, list.size());
+        } else {
+            clear();
+        }
+    }
+
+    public void clear() {
+        notifyItemRangeRemoved(0, search.size());
+        search.clear();
     }
 
     public static class SearchVH extends RecyclerView.ViewHolder {
@@ -71,7 +92,7 @@ public class AdapterSearch extends FirestorePagingAdapter<User, AdapterSearch.Se
         }
     }
 
-    public interface SearchAdapter {
+    public interface SearchActions {
         void onClick();
     }
 }

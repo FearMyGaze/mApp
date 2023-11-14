@@ -24,7 +24,7 @@ public class FireStorage {
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                 .addOnSuccessListener(taskSnapshot -> imageRef.getDownloadUrl()
                         .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
-                        .addOnSuccessListener(url -> Auth.updateInformation(User.updateRoomImage(user.getId(), url, context), context, listener)));
+                        .addOnSuccessListener(url -> AuthEvents.updateInformation(User.updateRoomImage(user.getId(), url, context), context, listener)));
     }
 
     public static String generateFileName(Uri uri, Context context) {

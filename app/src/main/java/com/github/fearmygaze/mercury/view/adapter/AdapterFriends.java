@@ -13,7 +13,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.database.AppDatabase;
-import com.github.fearmygaze.mercury.firebase.Auth;
+import com.github.fearmygaze.mercury.firebase.AuthEvents;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnUserResponseListener;
 import com.github.fearmygaze.mercury.model.Profile;
 import com.github.fearmygaze.mercury.model.Request;
@@ -26,12 +26,13 @@ import java.util.Objects;
 
 public class AdapterFriends extends FirestoreRecyclerAdapter<Request, AdapterFriends.FriendsVH> {
 
-    User user;
+    User ourUser, otherUser;
     private final SimpleInterface listener;
 
-    public AdapterFriends(User user, @NonNull FirestoreRecyclerOptions<Request> options, SimpleInterface listener) {
+    public AdapterFriends(User ourUser, User otherUser, @NonNull FirestoreRecyclerOptions<Request> options, SimpleInterface listener) {
         super(options);
-        this.user = user;
+        this.ourUser = ourUser;
+        this.otherUser = otherUser;
         this.listener = listener;
     }
 
@@ -48,14 +49,14 @@ public class AdapterFriends extends FirestoreRecyclerAdapter<Request, AdapterFri
             Tools.profileImage(model.getSenderProfile().getImage(), holder.itemView.getContext()).into(holder.image);
             holder.username.setText(model.getSenderProfile().getUsername());
             holder.root.setOnClickListener(v -> {
-                Auth.getUserProfile(model.getSenderProfile().getId(), holder.itemView.getContext(), new OnUserResponseListener() {
+                AuthEvents.getUserProfile(model.getSenderProfile().getId(), holder.itemView.getContext(), new OnUserResponseListener() {
                     @Override
                     public void onSuccess(int code, User requested) {
                         if (code == 0) {
                             AppDatabase.getInstance(holder.itemView.getContext())
                                     .cachedProfile()
                                     .insert(new Profile(requested.getId(), requested.getUsername(), requested.getImage()));
-                            Tools.goToProfileViewer(user, requested, holder.itemView.getContext());
+                            Tools.goToProfileViewer(ourUser, requested, holder.itemView.getContext());
                         }
                     }
 
@@ -64,23 +65,19 @@ public class AdapterFriends extends FirestoreRecyclerAdapter<Request, AdapterFri
                         Toast.makeText(v.getContext(), message, Toast.LENGTH_SHORT).show();
                     }
                 });
-            });
-            holder.root.setOnLongClickListener(v -> {
-                Toast.makeText(v.getContext(), "Add action", Toast.LENGTH_SHORT).show();
-                return true;
             });
         } else {
             Tools.profileImage(model.getReceiverProfile().getImage(), holder.itemView.getContext()).into(holder.image);
             holder.username.setText(model.getReceiverProfile().getUsername());
             holder.root.setOnClickListener(v -> {
-                Auth.getUserProfile(model.getReceiverProfile().getId(), holder.itemView.getContext(), new OnUserResponseListener() {
+                AuthEvents.getUserProfile(model.getReceiverProfile().getId(), holder.itemView.getContext(), new OnUserResponseListener() {
                     @Override
                     public void onSuccess(int code, User requested) {
                         if (code == 0) {
                             AppDatabase.getInstance(holder.itemView.getContext())
                                     .cachedProfile()
                                     .insert(new Profile(requested.getId(), requested.getUsername(), requested.getImage()));
-                            Tools.goToProfileViewer(user, requested, holder.itemView.getContext());
+                            Tools.goToProfileViewer(ourUser, requested, holder.itemView.getContext());
                         }
                     }
 
@@ -89,17 +86,13 @@ public class AdapterFriends extends FirestoreRecyclerAdapter<Request, AdapterFri
                         Toast.makeText(v.getContext(), message, Toast.LENGTH_SHORT).show();
                     }
                 });
-            });
-            holder.root.setOnLongClickListener(v -> {
-                Toast.makeText(v.getContext(), "Add action", Toast.LENGTH_SHORT).show();
-                return true;
             });
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        return Objects.equals(getItem(position).getReceiver(), user.getId()) ? 0 : 1;
+        return Objects.equals(getItem(position).getReceiver(), otherUser.getId()) ? 0 : 1;
     }
 
     public static class FriendsVH extends RecyclerView.ViewHolder {

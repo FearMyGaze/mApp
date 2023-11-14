@@ -6,7 +6,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.SignInMethodQueryResult;
 
-public class AuthDao {
+public class AuthEventsDao {
 
     private static FirebaseAuth INSTANCE = null;
 
