@@ -202,6 +202,7 @@ public class AuthEvents {
                 });
     }
 
+
     public static void search(String input, OnUsersResponseListener listener) {
         Query query;
         if (input.startsWith("loc:") && input.length() >= 7) {
@@ -213,7 +214,6 @@ public class AuthEvents {
         } else {
             query = UserDao.searchByUsername(input, 40);
         }
-
         query.get()
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                 .addOnSuccessListener(querySnapshot -> {
@@ -232,7 +232,8 @@ public class AuthEvents {
                 });
     }
 
-    public static void getUserProfile(String id, Context context, OnUserResponseListener listener) {
+    public static void getUserProfile(String id, Context context, OnUserResponseListener
+            listener) {
         UserDao.getUserByID(id)
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                 .addOnSuccessListener(documentSnapshot -> {
