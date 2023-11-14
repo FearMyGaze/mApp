@@ -13,8 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.firebase.Auth;
-import com.github.fearmygaze.mercury.firebase.dao.AuthDao;
+import com.github.fearmygaze.mercury.firebase.AuthEvents;
+import com.github.fearmygaze.mercury.firebase.dao.AuthEventsDao;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnDataResponseListener;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
 import com.github.fearmygaze.mercury.util.RegEx;
@@ -86,7 +86,7 @@ public class SignIn extends AppCompatActivity {
         });
 
         forgotPassword.setOnClickListener(v -> {
-            Auth.sendPasswordResetEmail(Objects.requireNonNull(email.getText()).toString().trim(), SignIn.this, new OnResponseListener() {
+            AuthEvents.sendPasswordResetEmail(Objects.requireNonNull(email.getText()).toString().trim(), SignIn.this, new OnResponseListener() {
                 @Override
                 public void onSuccess(int code) {
                     if (code == 0) {
@@ -112,7 +112,7 @@ public class SignIn extends AppCompatActivity {
                         .setTitle(getString(R.string.signInDialogTitle))
                         .setMessage(getString(R.string.signInDialogMessage));
                 AlertDialog dialog = builder.show();
-                Auth.signIn(Objects.requireNonNull(email.getText()).toString().trim(),
+                AuthEvents.signIn(Objects.requireNonNull(email.getText()).toString().trim(),
                         Objects.requireNonNull(password.getText()).toString().trim(),
                         SignIn.this, new OnDataResponseListener() {
                             @Override
@@ -127,7 +127,7 @@ public class SignIn extends AppCompatActivity {
                                     dialog.dismiss();
                                     Snackbar.make(signIn, getString(R.string.signInResend), 9000)
                                             .setAction(getString(R.string.generalSend), view ->
-                                                    Auth.sendVerificationEmail(AuthDao.getUser(), SignIn.this,
+                                                    AuthEvents.sendVerificationEmail(AuthEventsDao.getUser(), SignIn.this,
                                                             new OnResponseListener() {
                                                                 @Override
                                                                 public void onSuccess(int code1) {

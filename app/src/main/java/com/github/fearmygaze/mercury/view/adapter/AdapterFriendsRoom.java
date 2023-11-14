@@ -13,7 +13,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.database.AppDatabase;
-import com.github.fearmygaze.mercury.firebase.Auth;
+import com.github.fearmygaze.mercury.firebase.AuthEvents;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnUserResponseListener;
 import com.github.fearmygaze.mercury.model.Profile;
 import com.github.fearmygaze.mercury.model.Request;
@@ -61,7 +61,7 @@ public class AdapterFriendsRoom extends FirestoreRecyclerAdapter<Request, Adapte
                 }
             });
             holder.root.setOnLongClickListener(v -> {
-                Auth.getUserProfile(model.getSenderProfile().getId(), holder.itemView.getContext(), new OnUserResponseListener() {
+                AuthEvents.getUserProfile(model.getSenderProfile().getId(), holder.itemView.getContext(), new OnUserResponseListener() {
                     @Override
                     public void onSuccess(int code, User requested) {
                         if (code == 0) {
@@ -93,7 +93,7 @@ public class AdapterFriendsRoom extends FirestoreRecyclerAdapter<Request, Adapte
                 }
             });
             holder.root.setOnLongClickListener(v -> {
-                Auth.getUserProfile(model.getReceiverProfile().getId(), holder.itemView.getContext(), new OnUserResponseListener() {
+                AuthEvents.getUserProfile(model.getReceiverProfile().getId(), holder.itemView.getContext(), new OnUserResponseListener() {
                     @Override
                     public void onSuccess(int code, User requested) {
                         if (code == 0) {

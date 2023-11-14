@@ -61,11 +61,16 @@ public class RequestDao {
                 Profile.create(toUser)));
     }
 
-    public static Task<QuerySnapshot> getStatus(User fromUser, User toUser) {
+    public static Query getRequest(User fromUser, User toUser) {
         return getReference()
                 .whereIn("sender", Arrays.asList(fromUser.getId(), toUser.getId()))
                 .whereIn("receiver", Arrays.asList(fromUser.getId(), toUser.getId()))
-                .limit(1)
+                .limit(1);
+    }
+
+    public static Task<DocumentSnapshot> getRequest(Request request) {
+        return getReference()
+                .document(request.getId())
                 .get();
     }
 
@@ -99,13 +104,7 @@ public class RequestDao {
                 .get();
     }
 
-    public static Task<DocumentSnapshot> getRequest(Request request) {
-        return getReference()
-                .document(request.getId())
-                .get();
-    }
-
-    public static Task<Void> deleteRequest(DocumentSnapshot snapshot) {
+    public static Task<Void> delete(DocumentSnapshot snapshot) {
         return snapshot
                 .getReference()
                 .delete();

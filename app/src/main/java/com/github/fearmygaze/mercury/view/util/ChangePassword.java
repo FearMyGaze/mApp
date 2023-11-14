@@ -8,7 +8,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.firebase.Auth;
+import com.github.fearmygaze.mercury.firebase.AuthEvents;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
 import com.github.fearmygaze.mercury.util.RegEx;
 import com.google.android.material.button.MaterialButton;
@@ -55,7 +55,7 @@ public class ChangePassword extends AppCompatActivity {
 
         next.setOnClickListener(v -> {
             String updatedPassword = Objects.requireNonNull(password.getText()).toString().trim();
-            Auth.updatePassword(updatedPassword, ChangePassword.this, new OnResponseListener() {
+            AuthEvents.updatePassword(updatedPassword, ChangePassword.this, new OnResponseListener() {
                 @Override
                 public void onSuccess(int code) {
                     if (code == 0) {

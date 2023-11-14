@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.database.AppDatabase;
-import com.github.fearmygaze.mercury.firebase.Auth;
+import com.github.fearmygaze.mercury.firebase.AuthEvents;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.RegEx;
@@ -69,7 +69,7 @@ public class ChangeEmail extends AppCompatActivity {
 
         next.setOnClickListener(v -> {
             String updatedEmail = Objects.requireNonNull(email.getText()).toString().trim();
-            Auth.updateEmail(updatedEmail, ChangeEmail.this, new OnResponseListener() {
+            AuthEvents.updateEmail(updatedEmail, ChangeEmail.this, new OnResponseListener() {
                 @Override
                 public void onSuccess(int code) {
                     if (code == 0) {

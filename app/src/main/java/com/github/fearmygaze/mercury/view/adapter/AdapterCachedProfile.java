@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.database.AppDatabase;
 import com.github.fearmygaze.mercury.database.CProfileDao;
-import com.github.fearmygaze.mercury.firebase.Auth;
+import com.github.fearmygaze.mercury.firebase.AuthEvents;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnUserResponseListener;
 import com.github.fearmygaze.mercury.model.Profile;
 import com.github.fearmygaze.mercury.model.User;
@@ -51,7 +51,7 @@ public class AdapterCachedProfile extends RecyclerView.Adapter<AdapterCachedProf
     public void onBindViewHolder(@NonNull CachedProfilesVH holder, int position) {
         Tools.profileImage(profiles.get(holder.getAbsoluteAdapterPosition()).getImage(), holder.image.getContext()).into(holder.image);
         holder.username.setText(profiles.get(holder.getAbsoluteAdapterPosition()).getUsername());
-        holder.root.setOnClickListener(v -> Auth.getUserProfile(
+        holder.root.setOnClickListener(v -> AuthEvents.getUserProfile(
                 profiles.get(holder.getAbsoluteAdapterPosition()).getId(), v.getContext(), new OnUserResponseListener() {
                     @Override
                     public void onSuccess(int code, User otherUser) {

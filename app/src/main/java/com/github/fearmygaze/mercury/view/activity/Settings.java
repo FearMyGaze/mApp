@@ -8,8 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.firebase.Auth;
-import com.github.fearmygaze.mercury.firebase.dao.AuthDao;
+import com.github.fearmygaze.mercury.firebase.AuthEvents;
+import com.github.fearmygaze.mercury.firebase.dao.AuthEventsDao;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.PrivatePreference;
@@ -102,7 +102,7 @@ public class Settings extends AppCompatActivity {
         });
 
         signOut.setOnClickListener(v -> {
-            AuthDao.signOut();
+            AuthEventsDao.signOut();
             PrivatePreference preference = new PrivatePreference(this);
             preference.clearValue("current");
             User.deleteRoomUser(user, Settings.this);
@@ -142,7 +142,7 @@ public class Settings extends AppCompatActivity {
 
         profile.setOnClickListener(v -> {
             profileSwitch.setChecked(!profileSwitch.isChecked());
-            Auth.updateState(user.getId(), profileSwitch.isChecked(), Settings.this, new OnResponseListener() {
+            AuthEvents.updateState(user.getId(), profileSwitch.isChecked(), Settings.this, new OnResponseListener() {
                 @Override
                 public void onSuccess(int code) {
                     if (code == 0) {

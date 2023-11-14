@@ -14,7 +14,7 @@ import androidx.appcompat.content.res.AppCompatResources;
 
 import com.bumptech.glide.Glide;
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.firebase.Auth;
+import com.github.fearmygaze.mercury.firebase.AuthEvents;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.RegEx;
@@ -113,7 +113,7 @@ public class ProfileEdit extends AppCompatActivity {
                             user.setJob(Objects.requireNonNull(jobCell.getText()).toString().trim());
                             user.setJobL(user.getJob().toLowerCase());
                             user.setWebsite(Objects.requireNonNull(websiteCell.getText()).toString().trim());
-                            Auth.updateProfile(user, imageChanged, imageData, ProfileEdit.this, new OnResponseListener() {
+                            AuthEvents.updateProfile(user, imageChanged, imageData, ProfileEdit.this, new OnResponseListener() {
                                 @Override
                                 public void onSuccess(int code) {
                                     if (code == 0) {

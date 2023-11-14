@@ -6,16 +6,19 @@ import android.net.Uri;
 import androidx.annotation.NonNull;
 
 import com.github.fearmygaze.mercury.database.AppDatabase;
-import com.github.fearmygaze.mercury.firebase.dao.AuthDao;
+import com.github.fearmygaze.mercury.firebase.dao.AuthEventsDao;
 import com.github.fearmygaze.mercury.firebase.dao.UserDao;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnDataResponseListener;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnUserResponseListener;
+import com.github.fearmygaze.mercury.firebase.interfaces.OnUsersResponseListener;
 import com.github.fearmygaze.mercury.model.User;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import kotlin.NotImplementedError;
@@ -23,7 +26,7 @@ import kotlin.NotImplementedError;
 public class Auth {
 
     public static void validateDataAndCreateUser(String username, String email, String password, Context context, OnResponseListener listener) {
-        AuthDao.validate(email)
+        AuthEventsDao.validate(email)
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                 .addOnSuccessListener(signInMethodQueryResult -> {
                     List<String> results = signInMethodQueryResult.getSignInMethods();
@@ -74,7 +77,7 @@ public class Auth {
     }
 
     private static void signUp(String username, String email, String password, Context context, OnResponseListener listener) {
-        AuthDao.create(email, password)
+        AuthEventsDao.create(email, password)
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                 .addOnSuccessListener(authResult -> {
                     FirebaseUser user = authResult.getUser();
@@ -90,7 +93,7 @@ public class Auth {
     }
 
     public static void signIn(String email, String password, Context context, OnDataResponseListener listener) {
-        AuthDao.signIn(email, password)
+        AuthEventsDao.signIn(email, password)
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                 .addOnSuccessListener(authResult -> {
                     FirebaseUser user = authResult.getUser();
@@ -118,13 +121,13 @@ public class Auth {
     }
 
     public static void sendPasswordResetEmail(String email, Context context, OnResponseListener listener) {
-        AuthDao.passwordReset(email)
+        AuthEventsDao.passwordReset(email)
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
                 .addOnSuccessListener(unused -> listener.onSuccess(0));
     }
 
     public static void rememberMe(Context context, OnUserResponseListener listener) {
-        FirebaseUser user = AuthDao.getUser();
+        FirebaseUser user = AuthEventsDao.getUser();
         if (user == null) {
             listener.onSuccess(1, null);
         } else if (!user.isEmailVerified()) {
@@ -150,7 +153,7 @@ public class Auth {
     }
 
     public static void updatePassword(String password, Context context, OnResponseListener listener) {
-        FirebaseUser user = AuthDao.getUser();
+        FirebaseUser user = AuthEventsDao.getUser();
         if (user != null) {
             user.updatePassword(password)
                     .addOnFailureListener(e -> listener.onFailure("Error updating your password"))
@@ -159,7 +162,7 @@ public class Auth {
     }
 
     public static void updateEmail(String email, Context context, OnResponseListener listener) {
-        FirebaseUser user = AuthDao.getUser();
+        FirebaseUser user = AuthEventsDao.getUser();
         if (user != null) {
             user.updateEmail(email)
                     .addOnFailureListener(e -> listener.onFailure("Failed to update your email"))
@@ -199,7 +202,7 @@ public class Auth {
                 });
     }
 
-    public static Query searchQuery(String search) {
+    private static Query searchQuery(String search) {
         if (search.startsWith("loc:") && search.length() >= 7) {
             return UserDao.searchByLocation(search, 40);
         } else if (search.startsWith("job:") && search.length() >= 7) {
@@ -209,6 +212,26 @@ public class Auth {
         } else {
             return UserDao.searchByUsername(search, 40);
         }
+    }
+
+    public static void search(String input, OnUsersResponseListener listener) {
+        searchQuery(input)
+                .get()
+                .addOnFailureListener(e -> listener.onFailure(e.getMessage()))
+                .addOnSuccessListener(querySnapshot -> {
+                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                        List<User> fetchedList = new ArrayList<>();
+                        for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                            User user = document.toObject(User.class);
+                            if (user != null) {
+                                fetchedList.add(user);
+                            }
+                        }
+                        listener.onSuccess(0, fetchedList);
+                    } else {
+                        listener.onSuccess(1, null);
+                    }
+                });
     }
 
     public static void getUserProfile(String id, Context context, OnUserResponseListener listener) {

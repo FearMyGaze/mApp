@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
@@ -21,24 +20,22 @@ import androidx.constraintlayout.widget.Group;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.paging.LoadState;
-import androidx.paging.PagingConfig;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.custom.CustomLinearLayout;
 import com.github.fearmygaze.mercury.database.AppDatabase;
-import com.github.fearmygaze.mercury.firebase.Auth;
-import com.github.fearmygaze.mercury.firebase.dao.AuthDao;
+import com.github.fearmygaze.mercury.firebase.AuthEvents;
+import com.github.fearmygaze.mercury.firebase.dao.AuthEventsDao;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnUserResponseListener;
+import com.github.fearmygaze.mercury.firebase.interfaces.OnUsersResponseListener;
 import com.github.fearmygaze.mercury.model.CachedQuery;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
+import com.github.fearmygaze.mercury.view.adapter.AdapterSearch;
 import com.github.fearmygaze.mercury.view.adapter.AdapterCachedProfile;
 import com.github.fearmygaze.mercury.view.adapter.AdapterCachedQuery;
-import com.github.fearmygaze.mercury.view.adapter.AdapterSearch;
 import com.github.fearmygaze.mercury.view.fragment.Home;
 import com.github.fearmygaze.mercury.view.fragment.People;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -47,6 +44,9 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.imageview.ShapeableImageView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main extends AppCompatActivity {
 
@@ -71,6 +71,8 @@ public class Main extends AppCompatActivity {
     ShapeableImageView searchSheetClose;
     MaterialCardView searchBoxClear;
     ShapeableImageView clearCache;
+    AdapterSearch adapterSearch;
+
 
     //Cached Profiles
     AdapterCachedProfile adapterCachedProfile;
@@ -201,7 +203,7 @@ public class Main extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Auth.rememberMe(Main.this, new OnUserResponseListener() {
+        AuthEvents.rememberMe(Main.this, new OnUserResponseListener() {
             @Override
             public void onSuccess(int code, User data) {
                 switch (code) {
@@ -210,13 +212,13 @@ public class Main extends AppCompatActivity {
                         Tools.profileImage(user.getImage(), Main.this).into(profileImage);
                         break;
                     case 1:
-                        AuthDao.signOut();
+                        AuthEventsDao.signOut();
                         Toast.makeText(Main.this, "An unexpected error occurred", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(Main.this, Starting.class));
                         finish();
                         break;
                     case 2:
-                        AuthDao.signOut();
+                        AuthEventsDao.signOut();
                         Toast.makeText(Main.this, "You need to activate your account", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(Main.this, Starting.class));
                         finish();
@@ -226,7 +228,7 @@ public class Main extends AppCompatActivity {
 
             @Override
             public void onFailure(String message) {
-                AuthDao.signOut();
+                AuthEventsDao.signOut();
                 Toast.makeText(Main.this, message, Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(Main.this, SignIn.class));
                 finish();
@@ -253,16 +255,10 @@ public class Main extends AppCompatActivity {
     }
 
     private void searchSheet() {
-        //Search
-        PagingConfig config = new PagingConfig(3, 15, false);
-        FirestorePagingOptions<User> searchOptions = new FirestorePagingOptions.Builder<User>()
-                .setLifecycleOwner(this)
-                .setQuery(Auth.searchQuery("@"), config, User.class)
-                .build();
         ConstraintLayout errorLayout = findViewById(R.id.searchErrorLayout);
         TextView errorText = findViewById(R.id.searchErrorText);
 
-        AdapterSearch adapterSearch = new AdapterSearch(user, searchOptions, searchRecycler, Main.this, () -> {
+        adapterSearch = new AdapterSearch(user, new ArrayList<>(), () -> {
             searchBox.setText("");
             searchBox.clearFocus();
             handleCachedComps();
@@ -294,17 +290,30 @@ public class Main extends AppCompatActivity {
                     searchBoxClear.setVisibility(View.GONE);
                     searchHandler.removeCallbacks(searchRunnable);
                     handleCachedComps();
-                    adapterSearch.updateOptions(searchOptions);
+                    adapterSearch.clear();
                     searchRecycler.setVisibility(View.GONE);
                     errorLayout.setVisibility(View.GONE);
                 }
                 if (query.length() >= 3) {
                     searchRecycler.setVisibility(View.VISIBLE);
                     searchHandler.removeCallbacks(searchRunnable);
-                    searchRunnable = () -> adapterSearch.updateOptions(new FirestorePagingOptions.Builder<User>()
-                            .setLifecycleOwner(Main.this)
-                            .setQuery(Auth.searchQuery(query), config, User.class)
-                            .build());
+                    searchRunnable = () -> AuthEvents.search(query, new OnUsersResponseListener() {
+                        @Override
+                        public void onSuccess(int code, List<User> list) {
+                            if (code == 0) {
+                                adapterSearch.addNew(list);
+                                errorLayout.setVisibility(View.GONE);
+                            } else {
+                                adapterSearch.clear();
+                                errorLayout.setVisibility(View.VISIBLE);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(String message) {
+                            Toast.makeText(Main.this, message, Toast.LENGTH_SHORT).show();
+                        }
+                    });
                     searchHandler.postDelayed(searchRunnable, 350);
                 }
                 searchBox.setOnEditorActionListener((textView, actionID, keyEvent) -> {
@@ -316,28 +325,6 @@ public class Main extends AppCompatActivity {
                     return false;
                 });
             }
-        });
-
-        adapterSearch.addLoadStateListener(states -> {
-            LoadState append = states.getAppend();
-            if (append instanceof LoadState.NotLoading) {
-                LoadState.NotLoading notLoading = (LoadState.NotLoading) append;
-                if (notLoading.getEndOfPaginationReached()) {
-                    Log.d("customLog", "finished loading");
-                    Log.d("customLog", adapterSearch.getItemCount() + "");
-                    if (searchRecycler.getVisibility() == View.VISIBLE) {
-                        if (adapterSearch.getItemCount() > 0) {
-                            errorLayout.setVisibility(View.GONE);
-                            searchRecycler.setVisibility(View.VISIBLE);
-                        } else {
-                            errorLayout.setVisibility(View.VISIBLE);
-                            searchRecycler.setVisibility(View.GONE);
-                        }
-                    }
-                    return null;
-                }
-            }
-            return null;
         });
     }
 

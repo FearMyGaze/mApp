@@ -1,17 +1,17 @@
 plugins {
     id 'com.android.application'
     id 'com.google.gms.google-services'
-    id 'com.google.firebase.crashlytics'
+//    id 'com.google.firebase.crashlytics'
 }
 
 android {
     namespace 'com.github.fearmygaze.mercury'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.github.fearmygaze.mercury"
         minSdk 23
-        targetSdk 33
+        targetSdk 34
         versionCode 11
         versionName "0.2.13"
 
@@ -41,13 +41,13 @@ android {
 dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'com.google.android.material:material:1.10.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation "androidx.viewpager2:viewpager2:1.0.0"
 
     //DeSugaring
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
 
     implementation('androidx.lifecycle:lifecycle-viewmodel:2.6.2') {
         exclude group: 'androidx.lifecycle', module: 'lifecycle-viewmodel-ktx'
@@ -66,23 +66,23 @@ dependencies {
     implementation "com.github.MikeOrtiz:TouchImageView:1.4.1"
 
     //Room
-    annotationProcessor "androidx.room:room-compiler:2.5.2"
-    implementation "androidx.room:room-rxjava3:2.5.2"
-    implementation "androidx.room:room-runtime:2.5.2"
+    annotationProcessor "androidx.room:room-compiler:2.6.0"
+    implementation "androidx.room:room-rxjava3:2.6.0"
+    implementation "androidx.room:room-runtime:2.6.0"
 
     //Firebase
     implementation 'com.google.android.gms:play-services-gcm:17.0.0'
-    implementation 'com.google.firebase:firebase-messaging:23.2.1'
-    implementation 'com.google.firebase:firebase-auth:22.1.2'
-    implementation 'com.google.firebase:firebase-firestore:24.8.1'
-    implementation 'com.google.firebase:firebase-storage:20.2.1'
+    implementation 'com.google.firebase:firebase-messaging:23.3.1'
+    implementation 'com.google.firebase:firebase-auth:22.2.0'
+    implementation 'com.google.firebase:firebase-firestore:24.9.1'
+    implementation 'com.google.firebase:firebase-storage:20.3.0'
 
     implementation 'com.firebaseui:firebase-ui-firestore:8.0.2'
     implementation 'androidx.paging:paging-runtime:3.2.1'
 
     //Firebase Crashlytics
-    implementation 'com.google.firebase:firebase-crashlytics:18.4.3'
-    implementation 'com.google.firebase:firebase-analytics:21.3.0'
+//    implementation 'com.google.firebase:firebase-crashlytics:18.5.1'
+//    implementation 'com.google.firebase:firebase-analytics:21.5.0'
 
     //Test
     testImplementation 'junit:junit:4.13.2'

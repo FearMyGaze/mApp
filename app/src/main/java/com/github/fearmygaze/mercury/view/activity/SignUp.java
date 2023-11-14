@@ -12,7 +12,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.firebase.Auth;
+import com.github.fearmygaze.mercury.firebase.AuthEvents;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
 import com.github.fearmygaze.mercury.util.RegEx;
 import com.github.fearmygaze.mercury.util.Tools;
@@ -110,7 +110,7 @@ public class SignUp extends AppCompatActivity {
                         .setMessage(R.string.signUpDialogMessage)
                         .setCancelable(false);
                 AlertDialog dialog = builder.show();
-                Auth.validateDataAndCreateUser(sUsername, sEmail, sPassword, SignUp.this, new OnResponseListener() {
+                AuthEvents.validateDataAndCreateUser(sUsername, sEmail, sPassword, SignUp.this, new OnResponseListener() {
                     @Override
                     public void onSuccess(int code) {
                         dialog.dismiss();

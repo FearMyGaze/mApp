@@ -10,9 +10,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.firebase.Auth;
+import com.github.fearmygaze.mercury.firebase.AuthEvents;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnDataResponseListener;
-import com.github.fearmygaze.mercury.firebase.dao.AuthDao;
+import com.github.fearmygaze.mercury.firebase.dao.AuthEventsDao;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.RegEx;
 import com.google.android.material.button.MaterialButton;
@@ -47,7 +47,7 @@ public class ChangeInformation extends AppCompatActivity {
         changeType = bundle.getString("type");
         if (user == null || changeType == null) onBackPressed();
 
-        userEmail = Objects.requireNonNull(AuthDao.getUser()).getEmail();
+        userEmail = Objects.requireNonNull(AuthEventsDao.getUser()).getEmail();
 
         verifyPasswordError = findViewById(R.id.changeInformationVerifyPasswordError);
         verifyPassword = findViewById(R.id.changeInformationVerifyPassword);
@@ -75,9 +75,9 @@ public class ChangeInformation extends AppCompatActivity {
         });
 
         next.setOnClickListener(v -> {
-            AuthDao.signOut();
+            AuthEventsDao.signOut();
             String password = Objects.requireNonNull(verifyPassword.getText()).toString().trim();
-            Auth.signIn(userEmail, password, ChangeInformation.this, new OnDataResponseListener() {
+            AuthEvents.signIn(userEmail, password, ChangeInformation.this, new OnDataResponseListener() {
                 @Override
                 public void onSuccess(int code, Object data) {
                     if (code == 0) {
