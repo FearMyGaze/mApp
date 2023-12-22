@@ -8,7 +8,7 @@ import com.google.firebase.firestore.Query;
 
 import java.util.List;
 
-public interface ChatRoomDao {
+public interface RoomActionsDao {
 
     ///////////////////////////////////////////////////////////////////////////
     // Room

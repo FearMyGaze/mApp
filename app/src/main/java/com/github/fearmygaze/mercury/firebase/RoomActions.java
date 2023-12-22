@@ -4,7 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
-import com.github.fearmygaze.mercury.firebase.dao.ChatRoomDao;
+import com.github.fearmygaze.mercury.firebase.dao.RoomActionsDao;
 import com.github.fearmygaze.mercury.model.Message;
 import com.github.fearmygaze.mercury.model.Profile;
 import com.github.fearmygaze.mercury.model.Room;
@@ -17,7 +17,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
-public class RoomActions implements ChatRoomDao {
+public class RoomActions implements RoomActionsDao {
     private final FirebaseFirestore database;
     private final Context ctx;
 
