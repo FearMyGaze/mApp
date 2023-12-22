@@ -142,11 +142,14 @@ public class SignIn extends AppCompatActivity {
                                                             }
                                                     )
                                             ).show();
+                                } else {
+                                    dialog.dismiss();
                                 }
                             }
 
                             @Override
                             public void onFailure(String message) {
+                                dialog.dismiss();
                                 Toast.makeText(SignIn.this, message, Toast.LENGTH_SHORT).show();
                             }
                         });

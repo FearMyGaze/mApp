@@ -3,7 +3,6 @@ package com.github.fearmygaze.mercury.view.util;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.TypedValue;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,9 +17,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.custom.CustomLinearLayout;
-import com.github.fearmygaze.mercury.firebase.Friends;
-import com.github.fearmygaze.mercury.firebase.dao.AuthDao;
-import com.github.fearmygaze.mercury.firebase.interfaces.OnDataResponseListener;
+import com.github.fearmygaze.mercury.firebase.RequestEvents;
+import com.github.fearmygaze.mercury.firebase.dao.AuthEventsDao;
+import com.github.fearmygaze.mercury.firebase.interfaces.OnRequestResponseListener;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
 import com.github.fearmygaze.mercury.model.Request;
 import com.github.fearmygaze.mercury.model.User;
@@ -40,7 +39,7 @@ public class ProfileViewer extends AppCompatActivity {
     MaterialToolbar toolbar;
 
     ShapeableImageView userImage, accountType;
-    MaterialButton request;
+    MaterialButton requestStatus;
     TextView status;
     ChipGroup chipGroup;
 
@@ -50,7 +49,8 @@ public class ProfileViewer extends AppCompatActivity {
 
     //Extra
     Bundle bundle;
-    User myUser, otherUser;
+    User myUser, visibleUser;
+    Request request;
     TypedValue typedValue;
 
     @Override
@@ -62,68 +62,68 @@ public class ProfileViewer extends AppCompatActivity {
         toolbar = findViewById(R.id.profileViewerToolBar);
         userImage = findViewById(R.id.profileViewerImage);
         accountType = findViewById(R.id.profileViewerAccountType);
-        request = findViewById(R.id.profileViewerButton);
+        requestStatus = findViewById(R.id.profileViewerButton);
         status = findViewById(R.id.profileViewerStatus);
         chipGroup = findViewById(R.id.profileViewerExtraInfo);
         friendsView = findViewById(R.id.profileViewerRecycler);
 
         bundle = getIntent().getExtras();
-        if (bundle == null) onBackPressed();
+        if (bundle == null) getOnBackPressedDispatcher().onBackPressed();
         myUser = bundle.getParcelable(User.PARCEL);
-        otherUser = bundle.getParcelable(User.PARCEL_OTHER);
-        if (myUser == null || otherUser == null) onBackPressed();
+        visibleUser = bundle.getParcelable(User.PARCEL_OTHER);
+        if (myUser == null || visibleUser == null) getOnBackPressedDispatcher().onBackPressed();
         typedValue = new TypedValue();
         getTheme().resolveAttribute(android.R.attr.colorPrimary, typedValue, true);
 
         options = new FirestoreRecyclerOptions.Builder<Request>()
-                .setQuery(Friends.friendsQuery(otherUser), Request.class)
+                .setQuery(RequestEvents.friendsQuery(visibleUser), Request.class)
                 .setLifecycleOwner(this)
                 .build();
 
-        Tools.profileImage(otherUser.getImage(), ProfileViewer.this).into(userImage);
-        status.setText(otherUser.getStatus());
-        if (otherUser.getAccountType() != null && !otherUser.getAccountType().equals("regular")) {
+        Tools.profileImage(visibleUser.getImage(), ProfileViewer.this).into(userImage);
+        status.setText(visibleUser.getStatus());
+        User.extraInfo(visibleUser, typedValue.resourceId, chipGroup, ProfileViewer.this);
+        requestStatus.setEnabled(!myUser.getId().equals(visibleUser.getId()));
+
+        if (visibleUser.getAccountType() != null && !visibleUser.getAccountType().equals("regular")) {
             accountType.setImageDrawable(AppCompatResources.getDrawable(ProfileViewer.this, R.drawable.ic_dev_24));
             accountType.setColorFilter(ContextCompat.getColor(this, typedValue.resourceId), PorterDuff.Mode.SRC_IN);
         }
-        updateStats();
-        User.extraInfo(otherUser, typedValue.resourceId, chipGroup, ProfileViewer.this);
 
-        if (myUser.getId().equals(otherUser.getId())) {
-            request.setEnabled(false);
-        }
+        updateStats();
 
         userImage.setOnClickListener(v -> {
             startActivity(new Intent(ProfileViewer.this, ImageViewer.class)
-                    .putExtra("imageData", otherUser.getImage()));
+                    .putExtra("imageData", visibleUser.getImage()));
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
 
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
-        toolbar.setTitle(otherUser.getUsername());
+        toolbar.setTitle(visibleUser.getUsername());
         toolbar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.profileViewerOptionBlock) {
-                if (request.getText().toString().equals(getString(R.string.requestBlocked))) {
+                if (requestStatus.getText().toString().equals(getString(R.string.requestBlocked))) {
                     MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
                     builder.setBackground(AppCompatResources.getDrawable(this, R.color.basicBackground))
-                            .setTitle(String.format("%s %s", "Sorry but you cannot block", otherUser.getUsername()))
-                            .setMessage(String.format("%s %s %s", "Either you or", otherUser.getUsername(), "issued a block, so you can't block a block"))
+                            .setTitle(String.format("%s %s", "Sorry but you cannot block", visibleUser.getUsername()))
+                            .setMessage(String.format("%s %s %s", "Either you or", visibleUser.getUsername(), "issued a block, so you can't block a block"))
                             .setNegativeButton(R.string.generalOK, (dialog, i) -> dialog.dismiss())
                             .show();
                 } else {
                     MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
                     builder.setBackground(AppCompatResources.getDrawable(this, R.color.basicBackground))
-                            .setTitle(String.format("%s %s?", "Block", otherUser.getUsername()))
-                            .setMessage(String.format("%s %s", otherUser.getUsername(), "will not be able to sent message or be your friend."))
+                            .setTitle(String.format("%s %s?", "Block", visibleUser.getUsername()))
+                            .setMessage(String.format("%s %s", visibleUser.getUsername(), "will not be able to sent message or be your friend."))
                             .setNegativeButton(R.string.generalCancel, (dialog, i) -> dialog.dismiss())
                             .setPositiveButton("Block", (dialog, i) -> {
                                 dialog.dismiss();
-                                Friends.block(myUser, otherUser, ProfileViewer.this, new OnResponseListener() {
+                                RequestEvents.block(myUser, visibleUser, ProfileViewer.this, new OnResponseListener() {
                                     @Override
                                     public void onSuccess(int code) {
                                         if (code == 0) {
-                                            request.setText(getString(R.string.requestBlocked));
-                                            request.setEnabled(false);
+                                            requestStatus.setText(getString(R.string.requestBlocked));
+                                            requestStatus.setEnabled(false);
+                                            onBackPressed();
                                         }
                                     }
 
@@ -132,8 +132,6 @@ public class ProfileViewer extends AppCompatActivity {
                                         Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_SHORT).show();
                                     }
                                 });
-
-                                Toast.makeText(ProfileViewer.this, "BLocked", Toast.LENGTH_SHORT).show();
                             }).show();
                 }
                 return true;
@@ -144,26 +142,27 @@ public class ProfileViewer extends AppCompatActivity {
             return false;
         });
 
-        request.setOnClickListener(v -> {
-            String state = request.getText().toString().trim();
+        requestStatus.setOnClickListener(v -> {
+            String state = requestStatus.getText().toString().trim();
             if (state.equals(getString(R.string.requestAccepted))) {
                 MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(v.getContext());
                 builder.setBackground(AppCompatResources.getDrawable(v.getContext(), R.color.basicBackground))
-                        .setTitle(String.format("%s %s %s?", "Remove", otherUser.getUsername(), "from friends"))
+                        .setTitle(String.format("%s %s %s?", "Remove", visibleUser.getUsername(), "from friends"))
                         .setMessage("You will not be able to message them but you will still be able to view their profile")
                         .setNegativeButton(R.string.generalCancel, (dialog, i) -> dialog.dismiss())
                         .setPositiveButton("Unfollow", (dialog, i) -> {
-                            Friends.answerRequest(myUser, otherUser, Friends.OPTION_REMOVE, ProfileViewer.this, new OnResponseListener() {
+                            RequestEvents.delete(request, ProfileViewer.this, new OnResponseListener() {
                                 @Override
                                 public void onSuccess(int code) {
                                     if (code == 0) {
-                                        request.setText(getString(R.string.requestNone));
+                                        requestStatus.setText(getString(R.string.requestNone));
+                                        updateStats();
+                                        toolbar.setSubtitle(String.format(Locale.getDefault(), "%s: %d", getString(R.string.generalFriends), adapterFriends.getItemCount()));
                                     }
                                 }
 
                                 @Override
                                 public void onFailure(String message) {
-                                    Log.d("customLog", message);
                                     Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_LONG).show();
                                 }
                             });
@@ -171,15 +170,15 @@ public class ProfileViewer extends AppCompatActivity {
             } else if (state.equals(getString(R.string.requestWaiting))) {
                 MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(v.getContext());
                 builder.setBackground(AppCompatResources.getDrawable(v.getContext(), R.color.basicBackground))
-                        .setTitle(String.format("%s %s?", "Do you want to remove the request to", otherUser.getUsername()))
+                        .setTitle(String.format("%s %s?", "Do you want to remove the request to", visibleUser.getUsername()))
                         .setMessage("You will still be able to send again later if you changed your mind")
                         .setNegativeButton(R.string.generalCancel, (dialog, i) -> dialog.dismiss())
                         .setPositiveButton("Remove", (dialog, i) -> {
-                            Friends.cancelRequest(myUser, otherUser, ProfileViewer.this, new OnResponseListener() {
+                            RequestEvents.delete(request, ProfileViewer.this, new OnResponseListener() {
                                 @Override
                                 public void onSuccess(int code) {
                                     if (code == 0) {
-                                        request.setText(getString(R.string.requestNone));
+                                        requestStatus.setText(getString(R.string.requestNone));
                                     }
                                 }
 
@@ -190,11 +189,11 @@ public class ProfileViewer extends AppCompatActivity {
                             });
                         }).show();
             } else if (state.equals(getString(R.string.requestNone))) {
-                Friends.sendRequest(myUser, otherUser, ProfileViewer.this, new OnResponseListener() {
+                RequestEvents.sendRequest(myUser, visibleUser, ProfileViewer.this, new OnResponseListener() {
                     @Override
                     public void onSuccess(int code) {
                         if (code == 0) {
-                            request.setText(getString(R.string.requestWaiting));
+                            requestStatus.setText(getString(R.string.requestWaiting));
                         }
                     }
 
@@ -204,11 +203,11 @@ public class ProfileViewer extends AppCompatActivity {
                     }
                 });
             } else if (state.equals(getString(R.string.requestAnswer))) {
-                Friends.answerRequest(myUser, otherUser, Friends.OPTION_ACCEPT, ProfileViewer.this, new OnResponseListener() {
+                RequestEvents.accept(request, ProfileViewer.this, new OnResponseListener() {
                     @Override
                     public void onSuccess(int code) {
                         if (code == 0) {
-                            request.setText(getString(R.string.generalFriends));
+                            requestStatus.setText(getString(R.string.generalFriends));
                         }
                     }
 
@@ -225,9 +224,11 @@ public class ProfileViewer extends AppCompatActivity {
             swipeRefreshLayout.setRefreshing(false);
         });
 
-        if (otherUser.isProfileOpen()) {
-            adapterFriends = new AdapterFriends(otherUser, options, count ->
-                    toolbar.setSubtitle(String.format(Locale.getDefault(), "%s: %d", getString(R.string.generalFriends), count)));
+        if (visibleUser.isProfileOpen()) {
+            adapterFriends = new AdapterFriends(myUser, visibleUser, options, count ->
+                    toolbar.setSubtitle(String.format(Locale.getDefault(), "%s: %d", getString(R.string.generalFriends), count))
+            );
+            toolbar.setSubtitle(String.format(Locale.getDefault(), "%s: %d", getString(R.string.generalFriends), adapterFriends.getItemCount()));
             friendsView.setLayoutManager(new CustomLinearLayout(ProfileViewer.this, LinearLayoutManager.VERTICAL, false));
             friendsView.setAdapter(adapterFriends);
             friendsView.setItemAnimator(null);
@@ -237,28 +238,53 @@ public class ProfileViewer extends AppCompatActivity {
     }
 
     private void updateStats() {
-        Friends.getStatus(myUser, otherUser, ProfileViewer.this, new OnDataResponseListener() {
-            @Override
-            public void onSuccess(int code, Object data) {
-                if (code == 0) {
-                    request.setText(data.toString());
-                    if (request.getText().equals(getString(R.string.requestBlocked))) {
-                        request.setEnabled(false);
+        if (!myUser.getId().equals(visibleUser.getId())) {
+            RequestEvents.getRequestSnapshot(myUser, visibleUser, ProfileViewer.this, new OnRequestResponseListener() {
+                @Override
+                public void onSuccess(int code, Request requested) {
+                    if (code == 0) {
+                        request = requested;
+                        switch (requested.getStatus()) {
+                            case Friends:
+                                requestStatus.setText(getString(R.string.requestAccepted));
+                                break;
+                            case Blocked:
+                                requestStatus.setText(getString(R.string.requestBlocked));
+                                break;
+                            case Waiting:
+                                if (requested.getSender().equals(myUser.getId())) {
+                                    requestStatus.setText(getString(R.string.requestWaiting));
+                                } else {
+                                    requestStatus.setText(getString(R.string.requestAnswer));
+                                }
+                                break;
+                            default:
+                                requestStatus.setText(getString(R.string.requestNone));
+                        }
+
+                        if (requestStatus.getText().equals(getString(R.string.requestBlocked))) {
+                            requestStatus.setEnabled(false);
+                        }
+
+                    } else {
+                        requestStatus.setText(getString(R.string.requestNone));
+                        request = null;
                     }
                 }
-            }
 
-            @Override
-            public void onFailure(String message) {
-                Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onFailure(String message) {
+                    Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_SHORT).show();
+                    onBackPressed();
+                }
+            });
+        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        if (AuthDao.getUser() == null) {
+        if (AuthEventsDao.getUser() == null) {
             finish();
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         }

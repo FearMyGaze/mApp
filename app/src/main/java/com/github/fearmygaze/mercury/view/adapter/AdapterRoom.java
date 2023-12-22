@@ -14,7 +14,6 @@ import com.firebase.ui.common.ChangeEventType;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.model.Message;
 import com.github.fearmygaze.mercury.model.Room;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
@@ -54,16 +53,16 @@ public class AdapterRoom extends FirestoreRecyclerAdapter<Room, RecyclerView.Vie
             RoomRegularVH roomRegularVH = (RoomRegularVH) holder;
             Tools.profileImage(Room.getProfileImages(user, room).get(0).getImage(), recyclerView.getContext()).into(roomRegularVH.image);
             roomRegularVH.name.setText(Room.showName(user, room));
-            roomRegularVH.message.setText(Message.formatMsgForCard(user, room.getLastMsg(), recyclerView.getContext()));
-            roomRegularVH.time.setText(Message.formatDate(room.getLastMsg()));
+            roomRegularVH.message.setText("send the first message");
+            roomRegularVH.time.setText("11:10");
             roomRegularVH.root.setOnClickListener(v -> Tools.goToChat(user, room, v.getContext(), activity));
         } else {
             RoomGroupVH roomGroupVH = (RoomGroupVH) holder;
             Tools.profileImage(Room.getProfileImages(user, room).get(0).getImage(), recyclerView.getContext()).into(roomGroupVH.firstImage);
             Tools.profileImage(Room.getProfileImages(user, room).get(1).getImage(), recyclerView.getContext()).into(roomGroupVH.secondImage);
             roomGroupVH.name.setText(Room.showName(user, room));
-            roomGroupVH.message.setText(Message.formatMsgForCard(user, room.getLastMsg(), recyclerView.getContext()));
-            roomGroupVH.time.setText(Message.formatDate(room.getLastMsg()));
+            roomGroupVH.message.setText("send the first message");
+            roomGroupVH.time.setText("11:10"); //TODO: Fix
             roomGroupVH.root.setOnClickListener(v -> Tools.goToChat(user, room, v.getContext(), activity));
         }
     }
@@ -85,7 +84,7 @@ public class AdapterRoom extends FirestoreRecyclerAdapter<Room, RecyclerView.Vie
 
     @Override
     public int getItemViewType(int position) {
-        return Objects.equals(getItem(position).getType(), Room.RoomType.Group) ? 1 : 0;
+        return Objects.equals(getItem(position).getRoomType(), Room.RoomType.Group) ? 1 : 0;
     }
 
     public static class RoomRegularVH extends RecyclerView.ViewHolder {

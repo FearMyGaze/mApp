@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -17,17 +18,22 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.firebase.ChatEvents;
+import com.github.fearmygaze.mercury.firebase.RoomCallBackResponse;
+import com.github.fearmygaze.mercury.firebase.RoomActions;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnRoomResponseListener;
 import com.github.fearmygaze.mercury.model.Room;
 import com.github.fearmygaze.mercury.model.User;
+import com.github.fearmygaze.mercury.util.Tools;
 import com.github.fearmygaze.mercury.view.util.ChatSettings;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.imageview.ShapeableImageView;
 
+import java.util.Random;
+
 public class Chat extends AppCompatActivity {
 
     //Top Card
-    ShapeableImageView goBackBtn, settings;
+    ShapeableImageView goBackBtn, roomPicture, settings;
     TextView roomName;
 
     //Center
@@ -51,6 +57,7 @@ public class Chat extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
 
         goBackBtn = findViewById(R.id.chatRoomGoBack);
+        roomPicture = findViewById(R.id.chatRoomPicture);
         settings = findViewById(R.id.chatRoomSettings);
         roomName = findViewById(R.id.chatRoomName);
 
@@ -69,6 +76,8 @@ public class Chat extends AppCompatActivity {
         user = bundle.getParcelable(User.PARCEL);
         room = bundle.getParcelable(Room.PARCEL);
         if (user == null || room == null) onBackPressed();
+
+        RoomActions roomDao = new RoomActions(Chat.this);
 
         goBackBtn.setOnClickListener(v -> onBackPressed());
         roomName.setText(Room.showName(user, room));
@@ -109,7 +118,22 @@ public class Chat extends AppCompatActivity {
         });
 
         sendMessage.setOnClickListener(v -> {
+            roomDao.sendTextMessage(user.getId(), room.getRoomID(), String.valueOf(new Random().nextGaussian()), new RoomCallBackResponse<String>() {
+                @Override
+                public void onSuccess(String object) {
+                    Log.d("customLog", "Success");
+                }
 
+                @Override
+                public void onError(String message) {
+                    this.onFailure(message);
+                }
+
+                @Override
+                public void onFailure(String message) {
+                    Log.d("customLog", message);
+                }
+            });
         });
 
         refresh.setOnRefreshListener(() -> refresh.setRefreshing(false));
@@ -122,11 +146,13 @@ public class Chat extends AppCompatActivity {
             @Override
             public void onSuccess(int code, Room r) {
                 if (code == 0) {
-                    if (!r.getRefers().contains(user.getId())) {
+                    if (!r.getVisibleTo().contains(user.getId())) {
                         onBackPressed();
                     } else {
                         room = r;
+                        Log.d("customLog", r.toString());
                         roomName.setText(Room.showName(user, room));
+                        Tools.profileImage(Room.getProfileImages(user, r).get(0).getImage(), Chat.this).into(roomPicture);
                     }
                 } else {
                     onBackPressed();
@@ -135,7 +161,7 @@ public class Chat extends AppCompatActivity {
 
             @Override
             public void onFailure(String msg) {
-                Toast.makeText(Chat.this, "An error occured while", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Chat.this, "An error occurred while " + msg, Toast.LENGTH_SHORT).show();
                 onBackPressed();
             }
         });

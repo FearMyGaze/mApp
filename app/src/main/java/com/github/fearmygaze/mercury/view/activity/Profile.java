@@ -16,8 +16,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.custom.CustomLinearLayout;
-import com.github.fearmygaze.mercury.firebase.Friends;
-import com.github.fearmygaze.mercury.firebase.dao.AuthDao;
+import com.github.fearmygaze.mercury.firebase.RequestEvents;
+import com.github.fearmygaze.mercury.firebase.dao.AuthEventsDao;
 import com.github.fearmygaze.mercury.model.Request;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
@@ -83,23 +83,21 @@ public class Profile extends AppCompatActivity {
         userImage.setOnClickListener(v -> {
             startActivity(new Intent(Profile.this, ImageViewer.class)
                     .putExtra("imageData", user.getImage()));
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
 
         edit.setOnClickListener(v -> {
             startActivity(new Intent(Profile.this, ProfileEdit.class)
                     .putExtra(User.PARCEL, user));
-            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         });
 
         options = new FirestoreRecyclerOptions.Builder<Request>()
-                .setQuery(Friends.friendsQuery(user), Request.class)
+                .setQuery(RequestEvents.friendsQuery(user), Request.class)
                 .setLifecycleOwner(this)
                 .build();
 
         swipe.setOnRefreshListener(() -> refreshList(swipe));
 
-        adapterFriends = new AdapterFriends(user, options, count -> {
+        adapterFriends = new AdapterFriends(user, user, options, count -> {
             if (count > 0) {
                 toolbar.setSubtitle(String.format(Locale.getDefault(), "%s: %d", getString(R.string.generalFriends), count));
             } else {
@@ -117,7 +115,7 @@ public class Profile extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (AuthDao.getUser() == null) {
+        if (AuthEventsDao.getUser() == null) {
             onBackPressed();
         } else {
             Tools.profileImage(user.getImage(), Profile.this).into(userImage);

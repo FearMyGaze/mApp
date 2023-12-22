@@ -16,7 +16,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.custom.CustomLinearLayout;
-import com.github.fearmygaze.mercury.firebase.Friends;
+import com.github.fearmygaze.mercury.firebase.RequestEvents;
 import com.github.fearmygaze.mercury.model.Request;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.view.adapter.AdapterPending;
@@ -45,7 +45,6 @@ public class TabRequests extends Fragment {
         return fragment;
     }
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +67,16 @@ public class TabRequests extends Fragment {
         recyclerView.setAdapter(adapterPending);
         recyclerView.setLayoutManager(new CustomLinearLayout(requireActivity(), LinearLayoutManager.VERTICAL, false));
         recyclerView.setItemAnimator(null);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (layoutManager != null) {
+                    swipe.setEnabled(layoutManager.findFirstCompletelyVisibleItemPosition() == 0);
+                }
+            }
+        });
 
         swipe.setOnRefreshListener(() -> {
             fetch(user);
@@ -77,7 +86,7 @@ public class TabRequests extends Fragment {
     }
 
     public void fetch(User user) {
-        Friends.waitingQuery(user)
+        RequestEvents.waitingQuery(user)
                 .limit(50)
                 .get()
                 .addOnFailureListener(e -> Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show())

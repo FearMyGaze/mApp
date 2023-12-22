@@ -1,6 +1,7 @@
 package com.github.fearmygaze.mercury.view.fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,10 +66,23 @@ public class Home extends Fragment {
         adapterRoom = new AdapterRoom(user, options, recyclerView, requireActivity());
         recyclerView.setLayoutManager(new CustomLinearLayout(requireActivity(), LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(adapterRoom);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (layoutManager != null) {
+                    Log.d("customLog", String.valueOf(layoutManager.findFirstCompletelyVisibleItemPosition() == 0));
+                    refreshLayout.setEnabled(layoutManager.findFirstCompletelyVisibleItemPosition() == 0);
+                }
+            }
+        });
+
         refreshLayout.setOnRefreshListener(() -> {
             adapterRoom.updateOptions(options);
             refreshLayout.setRefreshing(false);
         });
+
         return view;
     }
 

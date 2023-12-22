@@ -13,8 +13,11 @@ import androidx.appcompat.content.res.AppCompatResources;
 
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.firebase.ChatEvents;
+import com.github.fearmygaze.mercury.firebase.RoomCallBackResponse;
+import com.github.fearmygaze.mercury.firebase.RoomActions;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnRoomResponseListener;
+import com.github.fearmygaze.mercury.model.Profile;
 import com.github.fearmygaze.mercury.model.Room;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
@@ -71,6 +74,7 @@ public class ChatSettings extends AppCompatActivity {
         room = bundle.getParcelable(Room.PARCEL);
         if (user == null || room == null) onBackPressed();
 
+        RoomActions roomDao = new RoomActions(ChatSettings.this);
         setupSettings(user, room);
 
         goBack.setOnClickListener(v -> onBackPressed());
@@ -83,10 +87,10 @@ public class ChatSettings extends AppCompatActivity {
         });
         changeName.setOnClickListener(v -> {
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(ChatSettings.this);
-            if (room.getOwner().equals(user.getId())) {
+            if (room.getOwnerID().equals(user.getId())) {
                 View dialogView = LayoutInflater.from(v.getContext()).inflate(R.layout.dialog_change_room_name, null);
                 EditText nameEditText = dialogView.findViewById(R.id.dialogChangeRoomNameEditText);
-                nameEditText.setText(room.getName());
+                nameEditText.setText(room.getRoomName());
                 builder.setBackground(AppCompatResources.getDrawable(v.getContext(), R.color.basicBackground))
                         .setCancelable(false)
                         .setTitle(getString(R.string.chatRoomSettingsDialogTitle))
@@ -95,7 +99,7 @@ public class ChatSettings extends AppCompatActivity {
                         .setNegativeButton(R.string.generalCancel, (dialog, i) -> dialog.dismiss())
                         .setPositiveButton(R.string.generalSave, ((dialog, i) -> {
                             String s = nameEditText.getText().toString().trim();
-                            if (s.equals(room.getName())) {
+                            if (s.equals(room.getRoomName())) {
                                 dialog.dismiss();
                             } else {
                                 ChatEvents.updateName(room, s, new OnResponseListener() {
@@ -132,7 +136,7 @@ public class ChatSettings extends AppCompatActivity {
 
         leaveRoom.setOnClickListener(v -> {
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(ChatSettings.this);
-            if (room.getOwner().equals(user.getId())) {
+            if (room.getOwnerID().equals(user.getId())) {
                 builder.setBackground(AppCompatResources.getDrawable(v.getContext(), R.color.basicBackground))
                         .setTitle(getString(R.string.chatRoomSettingsDialogTitle))
                         .setMessage(getString(R.string.chatRoomSettingsDialogMsg1))
@@ -144,40 +148,43 @@ public class ChatSettings extends AppCompatActivity {
                         .setTitle(getString(R.string.chatRoomSettingsDialogTitle))
                         .setMessage(getString(R.string.chatRoomSettingsDialogMsg3))
                         .setNegativeButton(R.string.generalCancel, (dialog, i) -> dialog.dismiss())
-                        .setPositiveButton(R.string.generalOK, (dialog, i) -> ChatEvents
-                                .leaveRoom(user, room, new OnResponseListener() {
-                                    @Override
-                                    public void onSuccess(int code) {
-                                        if (code == 0) {
-                                            dialog.dismiss();
-                                            onBackPressed();
-                                        }
-                                    }
+                        .setPositiveButton(R.string.generalOK, (dialog, i) -> roomDao.leave(room.getRoomID(), Profile.create(user), new RoomCallBackResponse<String>() {
+                            @Override
+                            public void onSuccess(String object) {
+                                getOnBackPressedDispatcher().onBackPressed();
+                            }
 
-                                    @Override
-                                    public void onFailure(String message) {
-                                        Toast.makeText(ChatSettings.this, message, Toast.LENGTH_SHORT).show();
-                                    }
-                                })
-                        ).show();
+                            @Override
+                            public void onError(String message) {
+                                Toast.makeText(ChatSettings.this, message, Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onFailure(String message) {
+                                Toast.makeText(ChatSettings.this, message, Toast.LENGTH_SHORT).show();
+                            }
+                        }))
+                        .show();
             }
         });
 
         deleteRoom.setOnClickListener(v -> {
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(ChatSettings.this);
-            if (room.getOwner().equals(user.getId())) {
+            if (room.getOwnerID().equals(user.getId())) {
                 builder.setBackground(AppCompatResources.getDrawable(v.getContext(), R.color.basicBackground))
                         .setTitle(getString(R.string.chatRoomSettingsDialogTitle))
                         .setMessage(getString(R.string.chatRoomSettingsDialogMsg2))
                         .setNegativeButton(R.string.generalCancel, (dialog, i) -> dialog.dismiss())
                         .setPositiveButton(R.string.generalOK, (dialog, i) -> {
-                            ChatEvents.deleteRoom(room, new OnResponseListener() {
+                            roomDao.delete(room.getRoomID(), new RoomCallBackResponse<String>() {
                                 @Override
-                                public void onSuccess(int code) {
-                                    if (code == 0) {
-                                        dialog.dismiss();
-                                        onBackPressed();
-                                    }
+                                public void onSuccess(String object) {
+                                    getOnBackPressedDispatcher().onBackPressed();
+                                }
+
+                                @Override
+                                public void onError(String message) {
+                                    this.onFailure(message);
                                 }
 
                                 @Override
@@ -211,7 +218,7 @@ public class ChatSettings extends AppCompatActivity {
             @Override
             public void onSuccess(int code, Room r) {
                 if (code == 0) {
-                    if (!r.getRefers().contains(user.getId())) {
+                    if (!r.getVisibleTo().contains(user.getId())) {
                         onBackPressed();
                     } else {
                         room = r;
@@ -235,7 +242,7 @@ public class ChatSettings extends AppCompatActivity {
         membersValue.setText(String.valueOf(room.getProfiles().size()));
         createdValue.setText(Room.showDate(room));
 
-        if (!room.getOwner().equals(user.getId())) {
+        if (!room.getOwnerID().equals(user.getId())) {
             changeName.setVisibility(View.GONE);
             deleteRoom.setVisibility(View.GONE);
         } else {

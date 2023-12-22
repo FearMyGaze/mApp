@@ -15,7 +15,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.custom.CustomLinearLayout;
-import com.github.fearmygaze.mercury.firebase.Friends;
+import com.github.fearmygaze.mercury.firebase.RequestEvents;
 import com.github.fearmygaze.mercury.model.Request;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.view.adapter.AdapterFriends;
@@ -54,16 +54,26 @@ public class TabFriends extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.fragmentFriendsRecycler);
 
         options = new FirestoreRecyclerOptions.Builder<Request>()
-                .setQuery(Friends.friendsQuery(user), Request.class)
+                .setQuery(RequestEvents.friendsQuery(user), Request.class)
                 .setLifecycleOwner(this)
                 .build();
 
-        adapterFriends = new AdapterFriends(user, options, count -> {
+        adapterFriends = new AdapterFriends(user, user, options, count -> {
             //TODO: If users are less than 1 then show error
         });
         recyclerView.setAdapter(adapterFriends);
         recyclerView.setLayoutManager(new CustomLinearLayout(requireActivity(), LinearLayoutManager.VERTICAL, false));
         recyclerView.setItemAnimator(null);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (layoutManager != null) {
+                    swipe.setEnabled(layoutManager.findFirstCompletelyVisibleItemPosition() == 0);
+                }
+            }
+        });
 
         swipe.setOnRefreshListener(() -> {
             fetch(user);
@@ -75,7 +85,7 @@ public class TabFriends extends Fragment {
 
     public void fetch(User user) {
         adapterFriends.updateOptions(new FirestoreRecyclerOptions.Builder<Request>()
-                .setQuery(Friends.friendsQuery(user), Request.class)
+                .setQuery(RequestEvents.friendsQuery(user), Request.class)
                 .setLifecycleOwner(this)
                 .build());
     }

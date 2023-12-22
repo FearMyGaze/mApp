@@ -9,11 +9,10 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Arrays;
 
-public class RequestDao {
+public class RequestEventsDao {
 
     private static FirebaseFirestore INSTANCE = null;
 
@@ -74,34 +73,10 @@ public class RequestDao {
                 .get();
     }
 
-    public static Task<QuerySnapshot> cancel(User fromUser, User toUser) {
-        return getReference()
-                .whereArrayContains("refers", Request.createRefers(fromUser, toUser))
-                .whereEqualTo("status", Request.RequestStatus.Waiting)
-                .limit(1)
-                .get();
-    }
-
-    public static Task<QuerySnapshot> answer(User user, User otherUser) {
-        return getReference()
-                .whereEqualTo("sender", otherUser.getId())
-                .whereEqualTo("receiver", user.getId())
-                .limit(1)
-                .get();
-    }
-
     public static Task<Void> updateRequest(DocumentSnapshot snapshot, Request.RequestStatus status) {
         return snapshot
                 .getReference()
                 .update("status", status);
-    }
-
-    public static Task<QuerySnapshot> block(User fromUser, User toUser) {
-        return getReference()
-                .whereIn("sender", Arrays.asList(fromUser.getId(), toUser.getId()))
-                .whereIn("receiver", Arrays.asList(fromUser.getId(), toUser.getId()))
-                .limit(1)
-                .get();
     }
 
     public static Task<Void> delete(DocumentSnapshot snapshot) {

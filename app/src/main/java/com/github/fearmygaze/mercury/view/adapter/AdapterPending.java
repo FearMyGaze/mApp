@@ -10,8 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.firebase.Auth;
-import com.github.fearmygaze.mercury.firebase.Friends;
+import com.github.fearmygaze.mercury.firebase.AuthEvents;
+import com.github.fearmygaze.mercury.firebase.RequestEvents;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnUserResponseListener;
 import com.github.fearmygaze.mercury.model.Profile;
@@ -47,7 +47,7 @@ public class AdapterPending extends RecyclerView.Adapter<AdapterPending.PendingV
         Tools.profileImage(profile.getImage(), holder.itemView.getContext()).into(holder.image);
         holder.username.setText(profile.getUsername());
         holder.root.setOnClickListener(v -> {
-            Auth.getUserProfile(profile.getId(), v.getContext(), new OnUserResponseListener() {
+            AuthEvents.getUserProfile(profile.getId(), v.getContext(), new OnUserResponseListener() {
                 @Override
                 public void onSuccess(int code, User requestedUser) {
                     if (code == 0) {
@@ -62,7 +62,7 @@ public class AdapterPending extends RecyclerView.Adapter<AdapterPending.PendingV
             });
         });
         holder.accept.setOnClickListener(v -> {
-            Friends.answerRequest(request, Friends.OPTION_ACCEPT, v.getContext(), new OnResponseListener() {
+            RequestEvents.accept(request, v.getContext(), new OnResponseListener() {
                 @Override
                 public void onSuccess(int code) {
                     if (code == 0) {
@@ -79,7 +79,7 @@ public class AdapterPending extends RecyclerView.Adapter<AdapterPending.PendingV
             });
         });
         holder.remove.setOnClickListener(v -> {
-            Friends.answerRequest(request, Friends.OPTION_REMOVE, v.getContext(), new OnResponseListener() {
+            RequestEvents.delete(request, v.getContext(), new OnResponseListener() {
                 @Override
                 public void onSuccess(int code) {
                     if (code == 0) {
@@ -110,11 +110,6 @@ public class AdapterPending extends RecyclerView.Adapter<AdapterPending.PendingV
     public void clear(int pos) {
         requests.remove(pos);
         notifyItemRemoved(pos);
-    }
-
-    public void clear() {
-        notifyItemRangeRemoved(0, requests.size());
-        requests.clear();
     }
 
     protected static class PendingVH extends RecyclerView.ViewHolder {

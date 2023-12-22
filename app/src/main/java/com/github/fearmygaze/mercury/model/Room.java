@@ -1,6 +1,5 @@
 package com.github.fearmygaze.mercury.model;
 
-import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -25,23 +24,25 @@ public class Room implements Parcelable {
     ///////////////////////////////////////////////////////////////////////////
     // Body
     ///////////////////////////////////////////////////////////////////////////
-    public static final String PARCEL = "room";
+    public static final String PARCEL = "room", IMAGE_COLLECTION = "chatRoomImages/";
 
     public enum RoomType {Private, Group}
 
-    String id;
-    String name;
-    boolean nameModified;
-    String owner;
-    RoomType type;
-    boolean encrypted;
-
+    String roomID;
+    String roomName;
+    boolean isNameModified;
+    String ownerID;
+    RoomType roomType;
+    boolean isEncrypted;
+    String roomValidation;
+    List<String> visibleTo;
+    List<Profile> profiles;
+    Message message;
     @ServerTimestamp
     Date created;
-    String roomCheck;
-    List<String> refers;
-    List<Profile> profiles;
-    Message lastMsg;
+
+    //TODO: in case we add broadcast channels
+    // List<String> allowedToTalk;
 
     ///////////////////////////////////////////////////////////////////////////
     // Constructors
@@ -50,117 +51,140 @@ public class Room implements Parcelable {
     public Room() {
     }
 
-    public Room(String id, String name, boolean nameModified,
-                String owner, RoomType type, boolean encrypted,
-                List<String> refers, List<Profile> profiles,
-                Message lastMsg) {
-        this.id = id;
-        this.name = name;
-        this.nameModified = nameModified;
-        this.owner = owner;
-        this.type = type;
-        this.encrypted = encrypted;
-        this.roomCheck = name;
-        this.refers = refers;
+    /**
+     * @param roomID      The unique id of the room
+     * @param roomName    The name of the room
+     * @param ownerID     The unique id of the owner
+     * @param roomType    Flag that states the type of the room
+     * @param isEncrypted Flag that states if the room is encrypted or not
+     * @param visibleTo   List with the id's that are included in the room
+     * @param profiles    List with the profiles that are included in the room
+     * @param message     The Message that will be displayed in the card
+     */
+    public Room(String roomID, String roomName,
+                String ownerID, RoomType roomType, boolean isEncrypted,
+                List<String> visibleTo, List<Profile> profiles, Message message) {
+        this.roomID = roomID;
+        this.roomName = roomName;
+        this.isNameModified = false;
+        this.roomValidation = roomName;
+        this.ownerID = ownerID;
+        this.roomType = roomType;
+        this.isEncrypted = isEncrypted;
+        this.visibleTo = visibleTo;
         this.profiles = profiles;
-        this.lastMsg = lastMsg;
+        this.message = message;
     }
 
     ///////////////////////////////////////////////////////////////////////////
     // Getters / Setters
     ///////////////////////////////////////////////////////////////////////////
 
-    public String getId() {
-        return id;
+    public String getRoomID() {
+        return roomID;
     }
 
-    public void setId(String val) {
-        this.id = val;
+    public void setRoomID(String roomID) {
+        this.roomID = roomID;
     }
 
-    public String getName() {
-        return name;
+    public String getRoomName() {
+        return roomName;
     }
 
-    public void setName(String val) {
-        this.name = val;
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
     }
 
     public boolean isNameModified() {
-        return nameModified;
+        return isNameModified;
     }
 
-    public void setNameModified(boolean val) {
-        this.nameModified = val;
+    public void setNameModified(boolean nameModified) {
+        isNameModified = nameModified;
     }
 
-    public String getOwner() {
-        return owner;
+    public String getOwnerID() {
+        return ownerID;
     }
 
-    public void setOwner(String val) {
-        this.owner = val;
+    public void setOwnerID(String ownerID) {
+        this.ownerID = ownerID;
     }
 
-    public RoomType getType() {
-        return type;
+    public RoomType getRoomType() {
+        return roomType;
     }
 
-    public void setType(RoomType val) {
-        this.type = val;
+    public void setRoomType(RoomType roomType) {
+        this.roomType = roomType;
     }
 
     public boolean isEncrypted() {
-        return encrypted;
+        return isEncrypted;
     }
 
-    public void setEncrypted(boolean val) {
-        this.encrypted = val;
+    public void setEncrypted(boolean encrypted) {
+        isEncrypted = encrypted;
     }
 
     public Date getCreated() {
         return created;
     }
 
-    public void setCreated(Date val) {
-        this.created = val;
+    public void setCreated(Date created) {
+        this.created = created;
     }
 
-    public String getRoomCheck() {
-        return roomCheck;
+    public String getRoomValidation() {
+        return roomValidation;
     }
 
-    public void setRoomCheck(String val) {
-        this.roomCheck = val;
+    public void setRoomValidation(String roomValidation) {
+        this.roomValidation = roomValidation;
     }
 
-    public List<String> getRefers() {
-        return refers;
+    public List<String> getVisibleTo() {
+        return visibleTo;
     }
 
-    public void setRefers(List<String> val) {
-        this.refers = val;
+    public void setVisibleTo(List<String> visibleTo) {
+        this.visibleTo = visibleTo;
     }
 
     public List<Profile> getProfiles() {
         return profiles;
     }
 
-    public void setProfiles(List<Profile> val) {
-        this.profiles = val;
+    public void setProfiles(List<Profile> profiles) {
+        this.profiles = profiles;
     }
 
-    public Message getLastMsg() {
-        return lastMsg;
+    public Message getMessage() {
+        return message;
     }
 
-    public void setLastMsg(Message val) {
-        this.lastMsg = val;
+    public void setMessage(Message message) {
+        this.message = message;
     }
 
     ///////////////////////////////////////////////////////////////////////////
     // Parcelable
     ///////////////////////////////////////////////////////////////////////////
+
+    protected Room(Parcel in) {
+        roomID = in.readString();
+        roomName = in.readString();
+        isNameModified = in.readByte() != 0;
+        ownerID = in.readString();
+        roomType = RoomType.values()[in.readInt()];
+        isEncrypted = in.readByte() != 0;
+        roomValidation = in.readString();
+        visibleTo = in.createStringArrayList();
+        profiles = in.createTypedArrayList(Profile.CREATOR);
+        message = in.readParcelable(Message.class.getClassLoader());
+        created = TimestampConverter.unixToDate(in.readLong());
+    }
 
     public static final Creator<Room> CREATOR = new Creator<Room>() {
         @Override
@@ -174,81 +198,69 @@ public class Room implements Parcelable {
         }
     };
 
-    protected Room(Parcel in) {
-        id = in.readString();
-        name = in.readString();
-        nameModified = in.readByte() != 0;
-        owner = in.readString();
-        type = RoomType.values()[in.readInt()];
-        encrypted = in.readByte() != 0;
-        created = TimestampConverter.unixToDate(in.readLong());
-        refers = in.createStringArrayList();
-        profiles = in.createTypedArrayList(Profile.CREATOR);
-        lastMsg = in.readParcelable(Message.class.getClassLoader());
-    }
-
     @Override
     public int describeContents() {
         return 0;
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeString(id);
-        parcel.writeString(name);
-        parcel.writeByte((byte) (nameModified ? 1 : 0));
-        parcel.writeString(owner);
-        parcel.writeInt(type.ordinal());
-        parcel.writeByte((byte) (encrypted ? 1 : 0));
-        parcel.writeLong(TimestampConverter.dateToUnix(created));
-        parcel.writeStringList(refers);
+    public void writeToParcel(@NonNull Parcel parcel, int i) {
+        parcel.writeString(roomID);
+        parcel.writeString(roomName);
+        parcel.writeByte((byte) (isNameModified ? 1 : 0));
+        parcel.writeString(ownerID);
+        parcel.writeInt(roomType.ordinal());
+        parcel.writeByte((byte) (isEncrypted ? 1 : 0));
+        parcel.writeString(roomValidation);
+        parcel.writeStringList(visibleTo);
         parcel.writeTypedList(profiles);
-        parcel.writeParcelable(lastMsg, flags);
+        parcel.writeParcelable(message, i);
+        parcel.writeLong(TimestampConverter.dateToUnix(created));
     }
 
     ///////////////////////////////////////////////////////////////////////////
     // Helper methods
     ///////////////////////////////////////////////////////////////////////////
 
-    public static String createName(User user, RoomType type, List<Profile> list, Context context) {
+    public static String createName(String username, List<Profile> list) {
         if (list.size() == 1) {
-            return user.getUsername() + "_" + list.get(0).getUsername();
+            return username + "_" + list.get(0).getUsername();
         }
 
         return String.format(Locale.getDefault(), "%s, %s + %d",
-                user.getUsername(),
+                username,
                 list.get(0).getUsername(),
                 (list.size() - 1));
     }
 
     public static String showName(User user, Room room) {
-        if (room.isNameModified() || !room.getType().equals(RoomType.Private)) {
-            return room.getName();
+        if (room.isNameModified() || !room.getRoomType().equals(RoomType.Private)) {
+            return room.getRoomName();
         }
 
-        return room.getName()
+        return room.getRoomName()
                 .replace(user.getUsername(), "")
                 .replace("_", "");
     }
 
-    public static List<String> addRefers(User user, List<Profile> profiles) {
+    public static List<String> addVisibleTo(String userID, List<Profile> profiles) {
         List<String> list = new ArrayList<>();
-        list.add(user.getId());
+        list.add(0, userID);
         for (int i = 0; i < profiles.size(); i++) {
             list.add(profiles.get(i).getId());
         }
         return list;
     }
 
-    public static List<Profile> addProfiles(User user, List<Profile> profiles) {
-        profiles.add(0, new Profile(user.getId(), user.username, user.getImage()));
+    public static List<Profile> addProfiles(Profile user, List<Profile> profiles) {
+        profiles.add(0, user);
         return profiles;
     }
 
     public static List<Profile> getProfileImages(User user, Room room) {
         List<Profile> output = new ArrayList<>();
         List<Profile> profiles = room.getProfiles();
-        if (room.getType().equals(RoomType.Private)) {
+        if (room.getRoomType().equals(RoomType.Private)) {
             for (Profile p : profiles) {
                 if (!p.getId().equals(user.getId())) {
                     output.add(p);
@@ -278,17 +290,17 @@ public class Room implements Parcelable {
     @Override
     public String toString() {
         return "Room{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", nameModified=" + nameModified +
-                ", creatorID='" + owner + '\'' +
-                ", type=" + type +
-                ", encrypted=" + encrypted +
-                ", created=" + created +
-                ", roomCheck='" + roomCheck + '\'' +
-                ", correlation=" + refers +
+                "roomID='" + roomID + '\'' +
+                ", roomName='" + roomName + '\'' +
+                ", isNameModified=" + isNameModified +
+                ", ownerID='" + ownerID + '\'' +
+                ", roomType=" + roomType +
+                ", isEncrypted=" + isEncrypted +
+                ", roomValidation='" + roomValidation + '\'' +
+                ", visibleTo=" + visibleTo +
                 ", profiles=" + profiles +
-                ", lastMsg=" + lastMsg +
+                ", message=" + message +
+                ", created=" + created +
                 '}';
     }
 }

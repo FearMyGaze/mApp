@@ -33,9 +33,9 @@ import com.github.fearmygaze.mercury.firebase.interfaces.OnUsersResponseListener
 import com.github.fearmygaze.mercury.model.CachedQuery;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
-import com.github.fearmygaze.mercury.view.adapter.AdapterSearch;
 import com.github.fearmygaze.mercury.view.adapter.AdapterCachedProfile;
 import com.github.fearmygaze.mercury.view.adapter.AdapterCachedQuery;
+import com.github.fearmygaze.mercury.view.adapter.AdapterSearch;
 import com.github.fearmygaze.mercury.view.fragment.Home;
 import com.github.fearmygaze.mercury.view.fragment.People;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -45,20 +45,21 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.imageview.ShapeableImageView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Main extends AppCompatActivity {
 
-    //Navigation
+    //MainContent
     FrameLayout frameLayout;
-    BottomNavigationView navigation;
-    FloatingActionButton createRoom;
 
     //AppBar
     MaterialCardView profile;
     ShapeableImageView profileImage, search, settings;
     TextView appName;
+
+    //BottomAppBar
+    BottomNavigationView navigation;
+    FloatingActionButton createRoom;
 
     //Utils
     User user;
@@ -72,7 +73,6 @@ public class Main extends AppCompatActivity {
     MaterialCardView searchBoxClear;
     ShapeableImageView clearCache;
     AdapterSearch adapterSearch;
-
 
     //Cached Profiles
     AdapterCachedProfile adapterCachedProfile;
@@ -92,19 +92,21 @@ public class Main extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+
         database = AppDatabase.getInstance(Main.this);
 
         frameLayout = findViewById(R.id.mainFrame);
-        navigation = findViewById(R.id.mainBottomNavigation);
-        createRoom = findViewById(R.id.mainChatCreate);
 
         profile = findViewById(R.id.mainProfileImageParent);
         profileImage = findViewById(R.id.mainProfileImage);
         appName = findViewById(R.id.mainAppName);
         search = findViewById(R.id.mainSearch);
         settings = findViewById(R.id.mainSettings);
+
+        //BottomNavigation
+        navigation = findViewById(R.id.mainBottomNavigation);
+        createRoom = findViewById(R.id.mainChatCreate);
 
         //Search sheet
         searchSheetParent = findViewById(R.id.searchSheetParent);
@@ -122,18 +124,18 @@ public class Main extends AppCompatActivity {
 
         navigation.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.mainOptionChat) {
-                createRoom.setVisibility(View.VISIBLE);
                 replaceFragment(Home.newInstance(user), "home");
                 return true;
             } else if (item.getItemId() == R.id.mainOptionFriends) {
-                createRoom.setVisibility(View.GONE);
                 replaceFragment(People.newInstance(user), "people");
                 return true;
             }
             return false;
         });
-
         rememberMe(savedInstanceState);
+        navigation.setOnItemReselectedListener(item -> {
+            //This stops the reloading the comps
+        });
 
         //Search Sheet
         searchBehaviour = BottomSheetBehavior.from(searchSheetParent);
@@ -258,7 +260,7 @@ public class Main extends AppCompatActivity {
         ConstraintLayout errorLayout = findViewById(R.id.searchErrorLayout);
         TextView errorText = findViewById(R.id.searchErrorText);
 
-        adapterSearch = new AdapterSearch(user, new ArrayList<>(), () -> {
+        adapterSearch = new AdapterSearch(user, () -> {
             searchBox.setText("");
             searchBox.clearFocus();
             handleCachedComps();
@@ -301,7 +303,7 @@ public class Main extends AppCompatActivity {
                         @Override
                         public void onSuccess(int code, List<User> list) {
                             if (code == 0) {
-                                adapterSearch.addNew(list);
+                                adapterSearch.add(list);
                                 errorLayout.setVisibility(View.GONE);
                             } else {
                                 adapterSearch.clear();
@@ -355,6 +357,8 @@ public class Main extends AppCompatActivity {
 
         if (adapterCachedProfile.getItemCount() > 0 || adapterCachedQuery.getItemCount() > 0) {
             cachedComp.setVisibility(View.VISIBLE);
+        } else if (adapterCachedProfile.getItemCount() == 0 && adapterCachedQuery.getItemCount() == 0) {
+            Toast.makeText(Main.this, "Add the errorLayout", Toast.LENGTH_SHORT).show();
         } else {
             cachedComp.setVisibility(View.GONE);
         }

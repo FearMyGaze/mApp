@@ -67,7 +67,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
-            android:text="@string/generalAdd"
+            android:text="@string/requestNone"
             android:textAllCaps="false"
             app:cornerRadius="12.5dp"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"

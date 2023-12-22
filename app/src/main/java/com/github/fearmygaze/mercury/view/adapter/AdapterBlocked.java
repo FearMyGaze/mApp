@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.SimpleItemAnimator;
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.firebase.Auth;
-import com.github.fearmygaze.mercury.firebase.Friends;
+import com.github.fearmygaze.mercury.firebase.AuthEvents;
+import com.github.fearmygaze.mercury.firebase.RequestEvents;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnUserResponseListener;
 import com.github.fearmygaze.mercury.model.Profile;
@@ -51,7 +51,7 @@ public class AdapterBlocked extends FirestorePagingAdapter<Request, AdapterBlock
         Tools.profileImage(profile.getImage(), holder.itemView.getContext()).into(holder.image);
         holder.username.setText(profile.getUsername());
         holder.root.setOnClickListener(v -> {
-            Auth.getUserProfile(profile.getId(), v.getContext(), new OnUserResponseListener() {
+            AuthEvents.getUserProfile(profile.getId(), v.getContext(), new OnUserResponseListener() {
                 @Override
                 public void onSuccess(int code, User requested) {
                     if (code == 0) {
@@ -67,7 +67,7 @@ public class AdapterBlocked extends FirestorePagingAdapter<Request, AdapterBlock
         });
 
         holder.unBlock.setOnClickListener(v -> {
-            Friends.removeBlock(request, v.getContext(), new OnResponseListener() {
+            RequestEvents.removeBlock(request, v.getContext(), new OnResponseListener() {
                 @Override
                 public void onSuccess(int code) {
                     if (code == 0) {

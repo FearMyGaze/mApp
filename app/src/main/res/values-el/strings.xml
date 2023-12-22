@@ -122,7 +122,7 @@
 
     <!-- ChatRoomSettings (Activity) -->
     <string name="chatRoomSettingsMembers">Μέλη</string>
-    <string name="chatRoomSettingsCreated">Ημ/νια Δημ.</string>
+    <string name="chatRoomSettingsCreated">Δημιουργήθηκε</string>
     <string name="chatRoomSettingsUpdate">Ενημέρωση</string>
     <string name="chatRoomSettingsChangeName">Αλλαγή Ονόματος</string>
     <string name="chatRoomSettingsDanger">Κίνδυνος</string>

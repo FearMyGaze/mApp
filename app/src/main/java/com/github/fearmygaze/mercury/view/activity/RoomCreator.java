@@ -12,9 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.custom.CustomLinearLayout;
-import com.github.fearmygaze.mercury.firebase.ChatEvents;
-import com.github.fearmygaze.mercury.firebase.Friends;
-import com.github.fearmygaze.mercury.firebase.interfaces.OnRoomResponseListener;
+import com.github.fearmygaze.mercury.firebase.RequestEvents;
+import com.github.fearmygaze.mercury.firebase.RoomCallBackResponse;
+import com.github.fearmygaze.mercury.firebase.RoomActions;
+import com.github.fearmygaze.mercury.model.Profile;
 import com.github.fearmygaze.mercury.model.Request;
 import com.github.fearmygaze.mercury.model.Room;
 import com.github.fearmygaze.mercury.model.User;
@@ -56,10 +57,11 @@ public class RoomCreator extends AppCompatActivity {
         user = bundle.getParcelable(User.PARCEL);
         if (user == null) onBackPressed();
 
+        RoomActions roomDao = new RoomActions(this);
         goBackBtn.setOnClickListener(v -> onBackPressed());
 
         options = new FirestoreRecyclerOptions.Builder<Request>()
-                .setQuery(Friends.friendsQuery(user), Request.class)
+                .setQuery(RequestEvents.friendsQuery(user), Request.class)
                 .setLifecycleOwner(this)
                 .build();
 
@@ -91,31 +93,25 @@ public class RoomCreator extends AppCompatActivity {
         });
 
         createBtn.setOnClickListener(v -> {
-            Room.RoomType type = Room.RoomType.Private;
-            if (adapterFriendsRoom.getSelectedProfiles().size() > 1) {
-                type = Room.RoomType.Group;
-            }
-            ChatEvents.existingRoom(type, encryptionSwitch.isChecked(), user, adapterFriendsRoom.getSelectedProfiles(),
-                    RoomCreator.this, new OnRoomResponseListener() {
-                        @Override
-                        public void onSuccess(int code, Room room) {
-                            if (code == 0) {
-                                Toast.makeText(RoomCreator.this, getString(R.string.roomCreatorMessage), Toast.LENGTH_SHORT).show();
-                                onBackPressed();
-                            } else if (code == 1) {
-                                finish();
-                                startActivity(new Intent(RoomCreator.this, Chat.class)
-                                        .putExtra(User.PARCEL, user)
-                                        .putExtra(Room.PARCEL, room));
-                                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                            }
-                        }
+            roomDao.exists(Profile.create(user), adapterFriendsRoom.getSelectedProfiles(), encryptionSwitch.isChecked(), new RoomCallBackResponse<Room>() {
+                @Override
+                public void onSuccess(Room room) {
+                    startActivity(new Intent(RoomCreator.this, Chat.class)
+                            .putExtra(User.PARCEL, user)
+                            .putExtra(Room.PARCEL, room));
+                    finish();
+                }
 
-                        @Override
-                        public void onFailure(String msg) {
-                            Toast.makeText(RoomCreator.this, msg, Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                @Override
+                public void onError(String message) {
+                    Toast.makeText(RoomCreator.this, message, Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onFailure(String message) {
+                    Toast.makeText(RoomCreator.this, message, Toast.LENGTH_SHORT).show();
+                }
+            });
         });
     }
 

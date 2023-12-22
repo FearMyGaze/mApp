@@ -26,8 +26,8 @@ public class Message implements Parcelable {
     String id;
     String roomID;
     String sendBy;
-    String content; //Either a link or the msg
-    List<MsgReaction> reactions;
+    String content;
+    List<Profile> likes;
     MsgType type;
 
     @ServerTimestamp
@@ -41,13 +41,13 @@ public class Message implements Parcelable {
     }
 
     public Message(String id, String roomID, String sendBy,
-                   String content, MsgType type, Date created) {
+                   String content, MsgType type, List<Profile> likes) {
         this.id = id;
         this.roomID = roomID;
         this.sendBy = sendBy;
         this.content = content;
         this.type = type;
-        this.created = created;
+        this.likes = likes;
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -86,12 +86,12 @@ public class Message implements Parcelable {
         this.content = val;
     }
 
-    public List<MsgReaction> getReactions() {
-        return reactions;
+    public List<Profile> getLikes() {
+        return likes;
     }
 
-    public void setReactions(List<MsgReaction> val) {
-        this.reactions = val;
+    public void setLikes(List<Profile> likes) {
+        this.likes = likes;
     }
 
     public MsgType getType() {
@@ -131,8 +131,7 @@ public class Message implements Parcelable {
         roomID = in.readString();
         sendBy = in.readString();
         content = in.readString();
-        reactions = in.createTypedArrayList(MsgReaction.CREATOR);
-        type = MsgType.values()[in.readInt()];
+        likes = in.createTypedArrayList(Profile.CREATOR);
         created = TimestampConverter.unixToDate(in.readLong());
     }
 
@@ -142,14 +141,13 @@ public class Message implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(@NonNull Parcel parcel, int i) {
-        parcel.writeString(id);
-        parcel.writeString(roomID);
-        parcel.writeString(sendBy);
-        parcel.writeString(content);
-        parcel.writeTypedList(reactions);
-        parcel.writeInt(type.ordinal());
-        parcel.writeLong(TimestampConverter.dateToUnix(created));
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(roomID);
+        dest.writeString(sendBy);
+        dest.writeString(content);
+        dest.writeTypedList(likes);
+        dest.writeLong(TimestampConverter.dateToUnix(created));
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -204,9 +202,10 @@ public class Message implements Parcelable {
     public String toString() {
         return "Message{" +
                 "id='" + id + '\'' +
+                ", roomID='" + roomID + '\'' +
                 ", sendBy='" + sendBy + '\'' +
                 ", content='" + content + '\'' +
-                ", reactions='" + reactions + '\'' +
+                ", likes=" + likes +
                 ", type=" + type +
                 ", created=" + created +
                 '}';
