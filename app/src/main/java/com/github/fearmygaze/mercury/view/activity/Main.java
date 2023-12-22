@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.custom.CustomLinearLayout;
+import com.github.fearmygaze.mercury.custom.UIAction;
 import com.github.fearmygaze.mercury.database.AppDatabase;
 import com.github.fearmygaze.mercury.firebase.AuthEvents;
 import com.github.fearmygaze.mercury.firebase.dao.AuthEventsDao;
@@ -241,7 +242,7 @@ public class Main extends AppCompatActivity {
         if (searchBehaviour.getState() == BottomSheetBehavior.STATE_EXPANDED) {
             searchBox.clearFocus();
             searchBox.setText("");
-            Tools.closeKeyboard(Main.this);
+            UIAction.closeKeyboard(Main.this);
             searchBehaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
         } else {
             if (navigation.getSelectedItemId() == R.id.mainOptionChat) {
@@ -318,7 +319,7 @@ public class Main extends AppCompatActivity {
                 searchBox.setOnEditorActionListener((textView, actionID, keyEvent) -> {
                     if (actionID == EditorInfo.IME_ACTION_SEARCH && query.length() >= 3) {
                         adapterCachedQuery.set(new CachedQuery(query));
-                        Tools.closeKeyboard(Main.this);
+                        UIAction.closeKeyboard(Main.this);
                         return true;
                     }
                     return false;

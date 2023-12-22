@@ -1,19 +1,15 @@
 package com.github.fearmygaze.mercury.model;
 
-import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.custom.TimestampConverter;
 import com.google.firebase.firestore.ServerTimestamp;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
 
 public class Message implements Parcelable {
 
@@ -153,36 +149,6 @@ public class Message implements Parcelable {
     ///////////////////////////////////////////////////////////////////////////
     // Helper methods
     ///////////////////////////////////////////////////////////////////////////
-
-    public static String formatMsgForCard(User user, Message msg, Context ctx) {
-        if (msg == null) {
-            return "Send the first message";
-        }
-        String t = Objects.equals(user.getId(), msg.sendBy) ?
-                ctx.getString(R.string.adapterRoomYou) :
-                ctx.getString(R.string.adapterRoomOther);
-        switch (msg.type) {
-            case IMG:
-                return String.format(
-                        Locale.getDefault(),
-                        "%s: %s",
-                        t, "send an image");
-            case SOUND:
-                return String.format(
-                        Locale.getDefault(),
-                        "%s: %s",
-                        t, "send a sound bite");
-            default:
-                return String.format(
-                        Locale.getDefault(),
-                        "%s: %s",
-                        t, msg.content);
-        }
-    }
-
-    public static String formatMsg(Message msg) {
-        return "";
-    }
 
     public static String formatDate(Message msg) {
         if (msg == null || msg.getCreated() == null) {

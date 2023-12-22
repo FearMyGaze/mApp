@@ -1,5 +1,6 @@
 package com.github.fearmygaze.mercury.view.adapter;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.model.Room;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
+import com.github.fearmygaze.mercury.view.activity.Chat;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -50,17 +52,23 @@ public class AdapterRoom extends FirestoreRecyclerAdapter<Room, RecyclerView.Vie
             RoomRegularVH roomRegularVH = (RoomRegularVH) holder;
             Tools.profileImage(Room.getProfileImages(user, room).get(0).getImage(), recyclerView.getContext()).into(roomRegularVH.image);
             roomRegularVH.name.setText(Room.showName(user, room));
-            roomRegularVH.message.setText("send the first message");
-            roomRegularVH.time.setText("11:10");
-            roomRegularVH.root.setOnClickListener(v -> Tools.goToChat(user, room, v.getContext()));
+            roomRegularVH.message.setText(Room.formatMessage(user.getId(), room.getMessage(), recyclerView.getContext()));
+            roomRegularVH.time.setText(Room.formatDate(room.getMessage()));
+            roomRegularVH.root.setOnClickListener(v -> v.getContext()
+                    .startActivity(new Intent(v.getContext(), Chat.class)
+                            .putExtra(User.PARCEL, user)
+                            .putExtra(Room.PARCEL, room)));
         } else {
             RoomGroupVH roomGroupVH = (RoomGroupVH) holder;
             Tools.profileImage(Room.getProfileImages(user, room).get(0).getImage(), recyclerView.getContext()).into(roomGroupVH.firstImage);
             Tools.profileImage(Room.getProfileImages(user, room).get(1).getImage(), recyclerView.getContext()).into(roomGroupVH.secondImage);
             roomGroupVH.name.setText(Room.showName(user, room));
-            roomGroupVH.message.setText("send the first message");
-            roomGroupVH.time.setText("11:10"); //TODO: Fix
-            roomGroupVH.root.setOnClickListener(v -> Tools.goToChat(user, room, v.getContext()));
+            roomGroupVH.message.setText(Room.formatMessage(user.getId(), room.getMessage(), recyclerView.getContext()));
+            roomGroupVH.time.setText(Room.formatDate(room.getMessage()));
+            roomGroupVH.root.setOnClickListener(v -> v.getContext()
+                    .startActivity(new Intent(v.getContext(), Chat.class)
+                            .putExtra(User.PARCEL, user)
+                            .putExtra(Room.PARCEL, room)));
         }
     }
 

@@ -1,56 +1,23 @@
 package com.github.fearmygaze.mercury.util;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 
 import androidx.appcompat.content.res.AppCompatResources;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.model.Room;
 import com.github.fearmygaze.mercury.model.User;
-import com.github.fearmygaze.mercury.view.activity.Chat;
 import com.github.fearmygaze.mercury.view.util.ProfileViewer;
 import com.google.android.material.textfield.TextInputLayout;
-
-import java.text.DateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 
 public class Tools {
 
     public static void setErrorToLayout(TextInputLayout layout, String message, boolean enabled) {
         layout.setErrorEnabled(enabled);
         layout.setError(message);
-    }
-
-    public static void closeKeyboard(Context context) {
-        View view = ((Activity) context).getWindow().getDecorView().findViewById(android.R.id.content);
-        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm.isAcceptingText()) {
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-    }
-
-    //Move this to the Room controller
-    public static String setDateTime(long time) {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(time), ZoneId.systemDefault());
-            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("EEEE, dd MMMM yyyy, hh:mm a");
-            return localDateTime.format(dateTimeFormatter);
-        } else {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(time);
-            return String.format("%s, %s", DateFormat.getDateInstance(DateFormat.FULL).format(calendar.getTime()), DateFormat.getTimeInstance(DateFormat.SHORT).format(calendar.getTime()));
-        }
     }
 
     public static void createSettingsPreference(String id, Context context) {
@@ -100,13 +67,7 @@ public class Tools {
     public static void goToProfileViewer(User myUser, User user, Context context) {
         context.startActivity(new Intent(context, ProfileViewer.class)
                 .putExtra(User.PARCEL, myUser)
-                .putExtra(User.PARCEL_OTHER, user));
-    }
-
-    public static void goToChat(User user, Room room, Context context) {
-        context.startActivity(new Intent(context, Chat.class)
-                .putExtra(User.PARCEL, user)
-                .putExtra(Room.PARCEL, room));
+                .putExtra(User.PARCEL_OTHER, user)); //TODO: If we simplify the adapter i am gonna remove this
     }
 
     public static RequestBuilder<Drawable> profileImage(String image, Context context) {

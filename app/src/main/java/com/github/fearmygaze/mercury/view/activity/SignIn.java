@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 
 import com.github.fearmygaze.mercury.R;
+import com.github.fearmygaze.mercury.custom.UIAction;
 import com.github.fearmygaze.mercury.firebase.AuthEvents;
 import com.github.fearmygaze.mercury.firebase.dao.AuthEventsDao;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnDataResponseListener;
@@ -103,7 +104,7 @@ public class SignIn extends AppCompatActivity {
 
         signIn.setOnClickListener(v -> {
             if (!emailError.isErrorEnabled() && !passwordError.isErrorEnabled()) {
-                Tools.closeKeyboard(SignIn.this);
+                UIAction.closeKeyboard(SignIn.this);
                 View dialogView = LayoutInflater.from(SignIn.this).inflate(R.layout.dialog_sign_up, null);
                 MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(SignIn.this);
                 builder.setCancelable(true)

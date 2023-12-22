@@ -1,10 +1,12 @@
 package com.github.fearmygaze.mercury.model;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.custom.TimestampConverter;
 import com.google.firebase.firestore.ServerTimestamp;
 
@@ -18,6 +20,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class Room implements Parcelable {
 
@@ -272,6 +275,38 @@ public class Room implements Parcelable {
             }
         }
         return output;
+    }
+
+    public static String formatMessage(String userID, Message msg, Context ctx) {
+        if (msg == null) {
+            return "Send the first message";
+        }
+        String senderCheck = Objects.equals(userID, msg.sendBy) ?
+                ctx.getString(R.string.adapterRoomYou) :
+                ctx.getString(R.string.adapterRoomOther);
+        switch (msg.type) {
+            case IMG:
+                return String.format(
+                        Locale.getDefault(),
+                        "%s: %s",
+                        senderCheck, "send an image");
+            case SOUND:
+                return String.format(
+                        Locale.getDefault(),
+                        "%s: %s",
+                        senderCheck, "send a sound bite");
+            default:
+                return String.format(
+                        Locale.getDefault(),
+                        "%s: %s",
+                        senderCheck, msg.content);
+        }
+    }
+
+    public static String formatDate(Message message) {
+        if (message == null)
+            return "";
+        return "99:99"; //TODO: we need to format the date to different types
     }
 
     public static String showDate(Room room) {

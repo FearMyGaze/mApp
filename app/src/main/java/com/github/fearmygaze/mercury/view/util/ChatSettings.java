@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 
 import com.github.fearmygaze.mercury.R;
+import com.github.fearmygaze.mercury.custom.UIAction;
 import com.github.fearmygaze.mercury.firebase.ChatEvents;
 import com.github.fearmygaze.mercury.firebase.RoomCallBackResponse;
 import com.github.fearmygaze.mercury.firebase.RoomActions;
@@ -106,7 +107,7 @@ public class ChatSettings extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(int code) {
                                         if (code == 0) {
-                                            Tools.closeKeyboard(v.getContext());
+                                            UIAction.closeKeyboard(v.getContext());
                                             dialog.dismiss();
                                             Toast.makeText(ChatSettings.this, "Room name updated", Toast.LENGTH_SHORT).show();
                                         }
