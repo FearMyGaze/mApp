@@ -122,7 +122,6 @@ public class SignIn extends AppCompatActivity {
                                     dialog.dismiss();
                                     finish();
                                     startActivity(new Intent(SignIn.this, Main.class));
-                                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                                 } else if (code == 1) {
                                     dialog.dismiss();
                                     Snackbar.make(signIn, getString(R.string.signInResend), 9000)
@@ -162,6 +161,5 @@ public class SignIn extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 }

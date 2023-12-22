@@ -93,6 +93,5 @@ public class ChangeEmail extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 }

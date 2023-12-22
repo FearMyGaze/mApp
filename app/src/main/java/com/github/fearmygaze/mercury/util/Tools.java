@@ -103,11 +103,10 @@ public class Tools {
                 .putExtra(User.PARCEL_OTHER, user));
     }
 
-    public static void goToChat(User user, Room room, Context context, Activity activity) {
+    public static void goToChat(User user, Room room, Context context) {
         context.startActivity(new Intent(context, Chat.class)
                 .putExtra(User.PARCEL, user)
                 .putExtra(Room.PARCEL, room));
-        activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     public static RequestBuilder<Drawable> profileImage(String image, Context context) {

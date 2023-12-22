@@ -40,12 +40,10 @@ public class Welcome extends AppCompatActivity {
 
         signUp.setOnClickListener(v -> {
             startActivity(new Intent(Welcome.this, SignUp.class));
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
 
         signIn.setOnClickListener(v -> {
             startActivity(new Intent(Welcome.this, SignIn.class));
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
 
     }

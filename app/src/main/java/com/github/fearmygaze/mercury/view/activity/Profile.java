@@ -133,7 +133,6 @@ public class Profile extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     private void refreshList(SwipeRefreshLayout swipe) {

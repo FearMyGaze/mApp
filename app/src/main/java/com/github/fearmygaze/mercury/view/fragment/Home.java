@@ -63,7 +63,7 @@ public class Home extends Fragment {
                 .setLifecycleOwner(this)
                 .build();
 
-        adapterRoom = new AdapterRoom(user, options, recyclerView, requireActivity());
+        adapterRoom = new AdapterRoom(user, options, recyclerView);
         recyclerView.setLayoutManager(new CustomLinearLayout(requireActivity(), LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(adapterRoom);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {

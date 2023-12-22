@@ -95,7 +95,6 @@ public class ProfileViewer extends AppCompatActivity {
         userImage.setOnClickListener(v -> {
             startActivity(new Intent(ProfileViewer.this, ImageViewer.class)
                     .putExtra("imageData", visibleUser.getImage()));
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
 
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
@@ -286,7 +285,6 @@ public class ProfileViewer extends AppCompatActivity {
         super.onStart();
         if (AuthEventsDao.getUser() == null) {
             finish();
-            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         }
     }
 

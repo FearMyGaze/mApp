@@ -85,7 +85,6 @@ public class Chat extends AppCompatActivity {
             startActivity(new Intent(this, ChatSettings.class)
                     .putExtra(User.PARCEL, user)
                     .putExtra(Room.PARCEL, room));
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
 
         chooseImage.setOnClickListener(v -> {
@@ -171,7 +170,6 @@ public class Chat extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
 }

@@ -50,12 +50,10 @@ public class Starting extends AppCompatActivity {
             } else if (user == null || !user.isEmailVerified()) {
                 finish();
                 startActivity(new Intent(Starting.this, SignIn.class));
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             } else {
                 new Handler().postDelayed(() -> {
                     finish();
                     startActivity(new Intent(Starting.this, Main.class));
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 }, 1234);
             }
         };

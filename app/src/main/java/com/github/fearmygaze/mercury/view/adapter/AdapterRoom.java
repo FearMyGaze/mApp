@@ -1,6 +1,5 @@
 package com.github.fearmygaze.mercury.view.adapter;
 
-import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,13 +26,11 @@ public class AdapterRoom extends FirestoreRecyclerAdapter<Room, RecyclerView.Vie
 
     User user;
     RecyclerView recyclerView;
-    Activity activity;
 
-    public AdapterRoom(User user, FirestoreRecyclerOptions<Room> options, RecyclerView recyclerView, Activity activity) {
+    public AdapterRoom(User user, FirestoreRecyclerOptions<Room> options, RecyclerView recyclerView) {
         super(options);
         this.user = user;
         this.recyclerView = recyclerView;
-        this.activity = activity;
         ((SimpleItemAnimator) Objects.requireNonNull(recyclerView.getItemAnimator())).setSupportsChangeAnimations(false);
     }
 
@@ -55,7 +52,7 @@ public class AdapterRoom extends FirestoreRecyclerAdapter<Room, RecyclerView.Vie
             roomRegularVH.name.setText(Room.showName(user, room));
             roomRegularVH.message.setText("send the first message");
             roomRegularVH.time.setText("11:10");
-            roomRegularVH.root.setOnClickListener(v -> Tools.goToChat(user, room, v.getContext(), activity));
+            roomRegularVH.root.setOnClickListener(v -> Tools.goToChat(user, room, v.getContext()));
         } else {
             RoomGroupVH roomGroupVH = (RoomGroupVH) holder;
             Tools.profileImage(Room.getProfileImages(user, room).get(0).getImage(), recyclerView.getContext()).into(roomGroupVH.firstImage);
@@ -63,7 +60,7 @@ public class AdapterRoom extends FirestoreRecyclerAdapter<Room, RecyclerView.Vie
             roomGroupVH.name.setText(Room.showName(user, room));
             roomGroupVH.message.setText("send the first message");
             roomGroupVH.time.setText("11:10"); //TODO: Fix
-            roomGroupVH.root.setOnClickListener(v -> Tools.goToChat(user, room, v.getContext(), activity));
+            roomGroupVH.root.setOnClickListener(v -> Tools.goToChat(user, room, v.getContext()));
         }
     }
 
