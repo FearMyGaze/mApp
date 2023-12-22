@@ -14,7 +14,7 @@ import androidx.appcompat.content.res.AppCompatResources;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.custom.UIAction;
 import com.github.fearmygaze.mercury.firebase.ChatEvents;
-import com.github.fearmygaze.mercury.firebase.RoomCallBackResponse;
+import com.github.fearmygaze.mercury.firebase.CallBackResponse;
 import com.github.fearmygaze.mercury.firebase.RoomActions;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnRoomResponseListener;
@@ -149,7 +149,7 @@ public class ChatSettings extends AppCompatActivity {
                         .setTitle(getString(R.string.chatRoomSettingsDialogTitle))
                         .setMessage(getString(R.string.chatRoomSettingsDialogMsg3))
                         .setNegativeButton(R.string.generalCancel, (dialog, i) -> dialog.dismiss())
-                        .setPositiveButton(R.string.generalOK, (dialog, i) -> roomDao.leave(room.getRoomID(), Profile.create(user), new RoomCallBackResponse<String>() {
+                        .setPositiveButton(R.string.generalOK, (dialog, i) -> roomDao.leave(room.getRoomID(), Profile.create(user), new CallBackResponse<String>() {
                             @Override
                             public void onSuccess(String object) {
                                 getOnBackPressedDispatcher().onBackPressed();
@@ -177,7 +177,7 @@ public class ChatSettings extends AppCompatActivity {
                         .setMessage(getString(R.string.chatRoomSettingsDialogMsg2))
                         .setNegativeButton(R.string.generalCancel, (dialog, i) -> dialog.dismiss())
                         .setPositiveButton(R.string.generalOK, (dialog, i) -> {
-                            roomDao.delete(room.getRoomID(), new RoomCallBackResponse<String>() {
+                            roomDao.delete(room.getRoomID(), new CallBackResponse<String>() {
                                 @Override
                                 public void onSuccess(String object) {
                                     getOnBackPressedDispatcher().onBackPressed();

@@ -41,7 +41,7 @@ public class RoomActions implements RoomActionsDao {
      * @param callBackResponse A callback that returns the Room object if the action is successful or a String if an error occurs
      */
     @Override
-    public void create(Profile user, List<Profile> participants, Room.RoomType type, boolean encrypted, RoomCallBackResponse<Room> callBackResponse) {
+    public void create(Profile user, List<Profile> participants, Room.RoomType type, boolean encrypted, CallBackResponse<Room> callBackResponse) {
         DocumentReference reference = database.collection("chatRooms").document();
         Room _room = new Room(reference.getId(),
                 Room.createName(user.getUsername(), participants),
@@ -64,7 +64,7 @@ public class RoomActions implements RoomActionsDao {
      * @param callBackResponse A callback that return the room object if the action is successful or a string if an error occurs
      */
     @Override
-    public void exists(Profile user, List<Profile> participants, boolean encrypted, RoomCallBackResponse<Room> callBackResponse) {
+    public void exists(Profile user, List<Profile> participants, boolean encrypted, CallBackResponse<Room> callBackResponse) {
         Room.RoomType type = participants.size() > 1 ? Room.RoomType.Group : Room.RoomType.Private;
         if (type == Room.RoomType.Private) {
             database.collection("chatRooms")
@@ -91,7 +91,7 @@ public class RoomActions implements RoomActionsDao {
     }
 
     @Override
-    public void roomEventListener(String roomID, RoomCallBackResponse<Room> callBackResponse) {
+    public void roomEventListener(String roomID, CallBackResponse<Room> callBackResponse) {
         database.collection("chatRooms")
                 .document(roomID)
                 .addSnapshotListener((doc, err) -> {
@@ -106,7 +106,7 @@ public class RoomActions implements RoomActionsDao {
     }
 
     @Override
-    public void updateParticipants(String roomID, List<Profile> participants, RoomCallBackResponse<Room> callBackResponse) {
+    public void updateParticipants(String roomID, List<Profile> participants, CallBackResponse<Room> callBackResponse) {
 
     }
 
@@ -116,7 +116,7 @@ public class RoomActions implements RoomActionsDao {
      * @param callBackResponse A callback that returns a message based on what happened
      */
     @Override
-    public void updateName(String roomID, String updatedName, RoomCallBackResponse<String> callBackResponse) {
+    public void updateName(String roomID, String updatedName, CallBackResponse<String> callBackResponse) {
         database.collection("chatRooms")
                 .document(roomID)
                 .update("roomName", updatedName, "nameModified", true)
@@ -131,7 +131,7 @@ public class RoomActions implements RoomActionsDao {
      * @param callBackResponse A callback that returns a message based on what happened
      */
     @Override
-    public void sendTextMessage(String userID, String roomID, String text, RoomCallBackResponse<String> callBackResponse) {
+    public void sendTextMessage(String userID, String roomID, String text, CallBackResponse<String> callBackResponse) {
         DocumentReference reference = database
                 .collection("chatRooms")
                 .document(roomID)
@@ -147,7 +147,7 @@ public class RoomActions implements RoomActionsDao {
     }
 
     @Override
-    public void sendImageMessage(String userID, String roomID, String imageUrl, RoomCallBackResponse<String> callBackResponse) {
+    public void sendImageMessage(String userID, String roomID, String imageUrl, CallBackResponse<String> callBackResponse) {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference().child(User.IMAGE_COLLECTION);
         StorageReference imageRef = storageRef.child(FireStorage.generateFileName(Uri.parse(imageUrl), ctx));
         imageRef.putFile(Uri.parse(imageUrl))
@@ -168,7 +168,7 @@ public class RoomActions implements RoomActionsDao {
     }
 
     @Override
-    public void sendSoundBite(String userID, String roomID, RoomCallBackResponse<String> callBackResponse) {
+    public void sendSoundBite(String userID, String roomID, CallBackResponse<String> callBackResponse) {
         /*
          * TODO:
          *   1st: we need to save the file to the device
@@ -179,7 +179,7 @@ public class RoomActions implements RoomActionsDao {
     }
 
     @Override
-    public void addReaction(String msgID, String roomID, User user, RoomCallBackResponse<String> callBackResponse) {
+    public void addReaction(String msgID, String roomID, User user, CallBackResponse<String> callBackResponse) {
         DocumentReference reference = database
                 .collection("chatRooms")
                 .document(roomID)
@@ -200,7 +200,7 @@ public class RoomActions implements RoomActionsDao {
     }
 
     @Override
-    public void removeReaction(String msgID, String roomID, User user, RoomCallBackResponse<String> callBackResponse) {
+    public void removeReaction(String msgID, String roomID, User user, CallBackResponse<String> callBackResponse) {
         DocumentReference reference = database
                 .collection("chatRooms")
                 .document(roomID)
@@ -226,7 +226,7 @@ public class RoomActions implements RoomActionsDao {
      * @param callBackResponse A callback that returns a string based on what happened
      */
     @Override
-    public void leave(String roomID, Profile userProfile, RoomCallBackResponse<String> callBackResponse) {
+    public void leave(String roomID, Profile userProfile, CallBackResponse<String> callBackResponse) {
         database.collection("chatRooms")
                 .document(roomID)
                 .get()
@@ -258,7 +258,7 @@ public class RoomActions implements RoomActionsDao {
      * @param callBackResponse A callback that returns a string based on what happened
      */
     @Override
-    public void delete(String roomID, RoomCallBackResponse<String> callBackResponse) {
+    public void delete(String roomID, CallBackResponse<String> callBackResponse) {
         database.collection("chatRooms")
                 .document(roomID)
                 .delete()

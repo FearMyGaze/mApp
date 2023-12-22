@@ -18,7 +18,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.firebase.ChatEvents;
-import com.github.fearmygaze.mercury.firebase.RoomCallBackResponse;
+import com.github.fearmygaze.mercury.firebase.CallBackResponse;
 import com.github.fearmygaze.mercury.firebase.RoomActions;
 import com.github.fearmygaze.mercury.firebase.interfaces.OnRoomResponseListener;
 import com.github.fearmygaze.mercury.model.Room;
@@ -117,7 +117,7 @@ public class Chat extends AppCompatActivity {
         });
 
         sendMessage.setOnClickListener(v -> {
-            roomDao.sendTextMessage(user.getId(), room.getRoomID(), String.valueOf(new Random().nextGaussian()), new RoomCallBackResponse<String>() {
+            roomDao.sendTextMessage(user.getId(), room.getRoomID(), String.valueOf(new Random().nextGaussian()), new CallBackResponse<String>() {
                 @Override
                 public void onSuccess(String object) {
                     Log.d("customLog", "Success");

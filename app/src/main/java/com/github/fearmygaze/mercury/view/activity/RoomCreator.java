@@ -13,7 +13,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.custom.CustomLinearLayout;
 import com.github.fearmygaze.mercury.firebase.RequestEvents;
-import com.github.fearmygaze.mercury.firebase.RoomCallBackResponse;
+import com.github.fearmygaze.mercury.firebase.CallBackResponse;
 import com.github.fearmygaze.mercury.firebase.RoomActions;
 import com.github.fearmygaze.mercury.model.Profile;
 import com.github.fearmygaze.mercury.model.Request;
@@ -93,7 +93,7 @@ public class RoomCreator extends AppCompatActivity {
         });
 
         createBtn.setOnClickListener(v -> {
-            roomDao.exists(Profile.create(user), adapterFriendsRoom.getSelectedProfiles(), encryptionSwitch.isChecked(), new RoomCallBackResponse<Room>() {
+            roomDao.exists(Profile.create(user), adapterFriendsRoom.getSelectedProfiles(), encryptionSwitch.isChecked(), new CallBackResponse<Room>() {
                 @Override
                 public void onSuccess(Room room) {
                     startActivity(new Intent(RoomCreator.this, Chat.class)
