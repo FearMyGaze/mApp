@@ -27,10 +27,8 @@ import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.custom.CustomLinearLayout;
 import com.github.fearmygaze.mercury.custom.UIAction;
 import com.github.fearmygaze.mercury.database.AppDatabase;
-import com.github.fearmygaze.mercury.firebase.AuthEvents;
-import com.github.fearmygaze.mercury.firebase.dao.AuthEventsDao;
-import com.github.fearmygaze.mercury.firebase.interfaces.OnUserResponseListener;
-import com.github.fearmygaze.mercury.firebase.interfaces.OnUsersResponseListener;
+import com.github.fearmygaze.mercury.firebase.UserActions;
+import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
 import com.github.fearmygaze.mercury.model.CachedQuery;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
@@ -65,6 +63,7 @@ public class Main extends AppCompatActivity {
     //Utils
     User user;
     AppDatabase database;
+    UserActions userActions;
 
     //Search Sheet
     ConstraintLayout searchSheetParent;
@@ -122,6 +121,8 @@ public class Main extends AppCompatActivity {
         cachedProfileRecycler = findViewById(R.id.searchCachedProfileRecycler);
         //Cached Query
         cachedSearchRecycler = findViewById(R.id.searchCachedQueryRecycler);
+
+        userActions = new UserActions(Main.this);
 
         navigation.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.mainOptionChat) {
@@ -203,32 +204,21 @@ public class Main extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        AuthEvents.rememberMe(Main.this, new OnUserResponseListener() {
+        userActions.rememberMe(new CallBackResponse<User>() {
             @Override
-            public void onSuccess(int code, User data) {
-                switch (code) {
-                    case 0:
-                        user = data;
-                        Tools.profileImage(user.getImage(), Main.this).into(profileImage);
-                        break;
-                    case 1:
-                        AuthEventsDao.signOut();
-                        Toast.makeText(Main.this, "An unexpected error occurred", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(Main.this, Starting.class));
-                        finish();
-                        break;
-                    case 2:
-                        AuthEventsDao.signOut();
-                        Toast.makeText(Main.this, "You need to activate your account", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(Main.this, Starting.class));
-                        finish();
-                        break;
-                }
+            public void onSuccess(User data) {
+                user = data;
+                Tools.profileImage(user.getImage(), Main.this).into(profileImage);
+            }
+
+            @Override
+            public void onError(String message) {
+                this.onFailure(message);
             }
 
             @Override
             public void onFailure(String message) {
-                AuthEventsDao.signOut();
+                userActions.signOut();
                 Toast.makeText(Main.this, message, Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(Main.this, SignIn.class));
                 finish();
@@ -297,16 +287,21 @@ public class Main extends AppCompatActivity {
                 if (query.length() >= 3) {
                     searchRecycler.setVisibility(View.VISIBLE);
                     searchHandler.removeCallbacks(searchRunnable);
-                    searchRunnable = () -> AuthEvents.search(query, new OnUsersResponseListener() {
+                    searchRunnable = () -> userActions.search(query, new CallBackResponse<List<User>>() {
                         @Override
-                        public void onSuccess(int code, List<User> list) {
-                            if (code == 0) {
-                                adapterSearch.add(list);
+                        public void onSuccess(List<User> object) {
+                            if (object.size() > 0) {
+                                adapterSearch.add(object);
                                 errorLayout.setVisibility(View.GONE);
                             } else {
                                 adapterSearch.clear();
                                 errorLayout.setVisibility(View.VISIBLE);
                             }
+                        }
+
+                        @Override
+                        public void onError(String message) {
+                            Toast.makeText(Main.this, message, Toast.LENGTH_SHORT).show();
                         }
 
                         @Override

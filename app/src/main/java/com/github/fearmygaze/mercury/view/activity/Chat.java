@@ -17,10 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.firebase.ChatEvents;
-import com.github.fearmygaze.mercury.firebase.CallBackResponse;
+import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
 import com.github.fearmygaze.mercury.firebase.RoomActions;
-import com.github.fearmygaze.mercury.firebase.interfaces.OnRoomResponseListener;
 import com.github.fearmygaze.mercury.model.Room;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
@@ -48,6 +46,7 @@ public class Chat extends AppCompatActivity {
     Bundle bundle;
     User user;
     Room room;
+    RoomActions roomActions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +76,7 @@ public class Chat extends AppCompatActivity {
         room = bundle.getParcelable(Room.PARCEL);
         if (user == null || room == null) onBackPressed();
 
-        RoomActions roomDao = new RoomActions(Chat.this);
+        roomActions = new RoomActions(Chat.this);
 
         goBackBtn.setOnClickListener(v -> onBackPressed());
         roomName.setText(Room.showName(user, room));
@@ -117,7 +116,7 @@ public class Chat extends AppCompatActivity {
         });
 
         sendMessage.setOnClickListener(v -> {
-            roomDao.sendTextMessage(user.getId(), room.getRoomID(), String.valueOf(new Random().nextGaussian()), new CallBackResponse<String>() {
+            roomActions.sendTextMessage(user.getId(), room.getRoomID(), String.valueOf(new Random().nextGaussian()), new CallBackResponse<String>() {
                 @Override
                 public void onSuccess(String object) {
                     Log.d("customLog", "Success");
@@ -141,26 +140,27 @@ public class Chat extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        ChatEvents.getRoomSnapshot(room, new OnRoomResponseListener() {
+        roomActions.roomEventListener(room.getRoomID(), new CallBackResponse<Room>() {
             @Override
-            public void onSuccess(int code, Room r) {
-                if (code == 0) {
-                    if (!r.getVisibleTo().contains(user.getId())) {
-                        onBackPressed();
-                    } else {
-                        room = r;
-                        Log.d("customLog", r.toString());
-                        roomName.setText(Room.showName(user, room));
-                        Tools.profileImage(Room.getProfileImages(user, r).get(0).getImage(), Chat.this).into(roomPicture);
-                    }
-                } else {
+            public void onSuccess(Room r) {
+                if (!r.getVisibleTo().contains(user.getId())) {
                     onBackPressed();
+                } else {
+                    room = r;
+                    Log.d("customLog", r.toString());
+                    roomName.setText(Room.showName(user, room));
+                    Tools.profileImage(Room.getProfileImages(user, r).get(0).getImage(), Chat.this).into(roomPicture);
                 }
             }
 
             @Override
-            public void onFailure(String msg) {
-                Toast.makeText(Chat.this, "An error occurred while " + msg, Toast.LENGTH_SHORT).show();
+            public void onError(String message) {
+                this.onFailure(message);
+            }
+
+            @Override
+            public void onFailure(String message) {
+                Toast.makeText(Chat.this, "An error occurred while " + message, Toast.LENGTH_SHORT).show();
                 onBackPressed();
             }
         });

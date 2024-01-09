@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.custom.CustomLinearLayout;
-import com.github.fearmygaze.mercury.firebase.RequestEvents;
-import com.github.fearmygaze.mercury.firebase.CallBackResponse;
+import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
+import com.github.fearmygaze.mercury.firebase.RequestActions;
 import com.github.fearmygaze.mercury.firebase.RoomActions;
 import com.github.fearmygaze.mercury.model.Profile;
 import com.github.fearmygaze.mercury.model.Request;
@@ -39,6 +39,8 @@ public class RoomCreator extends AppCompatActivity {
 
     Bundle bundle;
     User user;
+    RequestActions requestActions;
+    RoomActions roomActions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,30 +59,31 @@ public class RoomCreator extends AppCompatActivity {
         user = bundle.getParcelable(User.PARCEL);
         if (user == null) onBackPressed();
 
-        RoomActions roomDao = new RoomActions(this);
+        requestActions = new RequestActions(this);
+        roomActions = new RoomActions(this);
         goBackBtn.setOnClickListener(v -> onBackPressed());
 
-        options = new FirestoreRecyclerOptions.Builder<Request>()
-                .setQuery(RequestEvents.friendsQuery(user), Request.class)
-                .setLifecycleOwner(this)
-                .build();
+        adapterFriendsRoom = new AdapterFriendsRoom(user,
+                new FirestoreRecyclerOptions.Builder<Request>()
+                        .setQuery(requestActions.friends(user.getId()), Request.class)
+                        .setLifecycleOwner(this)
+                        .build(),
+                new AdapterFriendsRoom.SimpleInterface() {
+                    @Override
+                    public void itemCounter(int count) {
+                        if (count < 1) {//TODO: Show `no friends` with an image
+                            Toast.makeText(RoomCreator.this, "No friends", Toast.LENGTH_SHORT).show();
+                        }
+                    }
 
-        adapterFriendsRoom = new AdapterFriendsRoom(user, options, new AdapterFriendsRoom.SimpleInterface() {
-            @Override
-            public void itemCounter(int count) {
-                if (count < 1) {//TODO: Show `no friends` with an image
-                    Toast.makeText(RoomCreator.this, "No friends", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void selectedUsers(int count) {
-                createBtn.setEnabled(count > 0 && count <= 10);
-                if (count > 10) {
-                    Toast.makeText(RoomCreator.this, getString(R.string.roomCreatorMax), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+                    @Override
+                    public void selectedUsers(int count) {
+                        createBtn.setEnabled(count > 0 && count <= 10);
+                        if (count > 10) {
+                            Toast.makeText(RoomCreator.this, getString(R.string.roomCreatorMax), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
         friendList.setLayoutManager(new CustomLinearLayout(RoomCreator.this, LinearLayoutManager.VERTICAL, false));
         friendList.setAdapter(adapterFriendsRoom);
@@ -93,7 +96,7 @@ public class RoomCreator extends AppCompatActivity {
         });
 
         createBtn.setOnClickListener(v -> {
-            roomDao.exists(Profile.create(user), adapterFriendsRoom.getSelectedProfiles(), encryptionSwitch.isChecked(), new CallBackResponse<Room>() {
+            roomActions.exists(Profile.create(user), adapterFriendsRoom.getSelectedProfiles(), encryptionSwitch.isChecked(), new CallBackResponse<Room>() {
                 @Override
                 public void onSuccess(Room room) {
                     startActivity(new Intent(RoomCreator.this, Chat.class)

@@ -8,8 +8,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.firebase.AuthEvents;
-import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
+import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
+import com.github.fearmygaze.mercury.firebase.UserActions;
 import com.github.fearmygaze.mercury.util.RegEx;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -55,14 +55,16 @@ public class ChangePassword extends AppCompatActivity {
 
         next.setOnClickListener(v -> {
             String updatedPassword = Objects.requireNonNull(password.getText()).toString().trim();
-            AuthEvents.updatePassword(updatedPassword, ChangePassword.this, new OnResponseListener() {
+            new UserActions(v.getContext()).updatePassword(updatedPassword, new CallBackResponse<String>() {
                 @Override
-                public void onSuccess(int code) {
-                    if (code == 0) {
-                        Toast.makeText(ChangePassword.this, "Success", Toast.LENGTH_SHORT).show();
-                        onBackPressed();
-                    } else
-                        Toast.makeText(ChangePassword.this, "Error", Toast.LENGTH_SHORT).show();
+                public void onSuccess(String object) {
+                    Toast.makeText(ChangePassword.this, "Success", Toast.LENGTH_SHORT).show();
+                    onBackPressed();
+                }
+
+                @Override
+                public void onError(String message) {
+                    this.onFailure(message);
                 }
 
                 @Override

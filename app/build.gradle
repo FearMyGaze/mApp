@@ -30,6 +30,7 @@ android {
     }
     buildFeatures {
         viewBinding true
+        buildConfig true
     }
     gradle.projectsEvaluated {
         tasks.withType(JavaCompile).tap {

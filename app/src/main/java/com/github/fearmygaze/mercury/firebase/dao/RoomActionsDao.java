@@ -1,6 +1,6 @@
 package com.github.fearmygaze.mercury.firebase.dao;
 
-import com.github.fearmygaze.mercury.firebase.CallBackResponse;
+import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
 import com.github.fearmygaze.mercury.model.Profile;
 import com.github.fearmygaze.mercury.model.Room;
 import com.github.fearmygaze.mercury.model.User;
@@ -20,7 +20,7 @@ public interface RoomActionsDao {
 
     void exists(Profile user, List<Profile> participants, boolean encrypted, CallBackResponse<Room> callBackResponse);
 
-    void updateParticipants(String roomID, List<Profile> participants, CallBackResponse<Room> callBackResponse);
+    void updateParticipants(String roomID, Profile owner, List<Profile> participants, CallBackResponse<String> callBackResponse);
 
     void updateName(String roomID, String updatedName, CallBackResponse<String> callBackResponse);
 

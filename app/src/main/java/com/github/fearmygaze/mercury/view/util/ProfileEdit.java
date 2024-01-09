@@ -14,8 +14,8 @@ import androidx.appcompat.content.res.AppCompatResources;
 
 import com.bumptech.glide.Glide;
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.firebase.AuthEvents;
-import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
+import com.github.fearmygaze.mercury.firebase.UserActions;
+import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.RegEx;
 import com.github.fearmygaze.mercury.util.Tools;
@@ -113,12 +113,15 @@ public class ProfileEdit extends AppCompatActivity {
                             user.setJob(Objects.requireNonNull(jobCell.getText()).toString().trim());
                             user.setJobL(user.getJob().toLowerCase());
                             user.setWebsite(Objects.requireNonNull(websiteCell.getText()).toString().trim());
-                            AuthEvents.updateProfile(user, imageChanged, imageData, ProfileEdit.this, new OnResponseListener() {
+                            new UserActions(ProfileEdit.this).updateProfile(user, imageData, imageChanged, new CallBackResponse<String>() {
                                 @Override
-                                public void onSuccess(int code) {
-                                    if (code == 0) {
-                                        dialog.dismiss();
-                                    }
+                                public void onSuccess(String object) {
+                                    dialog.dismiss();
+                                }
+
+                                @Override
+                                public void onError(String message) {
+                                    this.onFailure(message);
                                 }
 
                                 @Override
@@ -131,7 +134,14 @@ public class ProfileEdit extends AppCompatActivity {
                         .show();
             }
         });
-        choose.setOnClickListener(v -> pickImage.launch(Tools.imageSelector()));
+        choose.setOnClickListener(v -> pickImage.launch(
+                new Intent(Intent.ACTION_PICK)
+                        .setType("image/*")
+                        .setAction(Intent.ACTION_GET_CONTENT)
+                        .addCategory(Intent.CATEGORY_OPENABLE)
+                        .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                        .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false))
+        );
     }
 
     private final ActivityResultLauncher<Intent> pickImage = registerForActivityResult(

@@ -55,15 +55,6 @@ public class Tools {
         return null;
     }
 
-    public static Intent imageSelector() {
-        return new Intent(Intent.ACTION_PICK)
-                .setType("image/*")
-                .setAction(Intent.ACTION_GET_CONTENT)
-                .addCategory(Intent.CATEGORY_OPENABLE)
-                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
-    }
-
     public static void goToProfileViewer(User myUser, User user, Context context) {
         context.startActivity(new Intent(context, ProfileViewer.class)
                 .putExtra(User.PARCEL, myUser)

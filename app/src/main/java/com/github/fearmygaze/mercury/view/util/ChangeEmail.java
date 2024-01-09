@@ -11,8 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.database.AppDatabase;
-import com.github.fearmygaze.mercury.firebase.AuthEvents;
-import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
+import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
+import com.github.fearmygaze.mercury.firebase.UserActions;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.RegEx;
 import com.github.fearmygaze.mercury.view.activity.Main;
@@ -69,16 +69,17 @@ public class ChangeEmail extends AppCompatActivity {
 
         next.setOnClickListener(v -> {
             String updatedEmail = Objects.requireNonNull(email.getText()).toString().trim();
-            AuthEvents.updateEmail(updatedEmail, ChangeEmail.this, new OnResponseListener() {
+            new UserActions(v.getContext()).updateEmail(updatedEmail, new CallBackResponse<String>() {
                 @Override
-                public void onSuccess(int code) {
-                    if (code == 0) {
-                        Toast.makeText(ChangeEmail.this, "Email Updated Successfully", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(ChangeEmail.this, Main.class));
-                        finish();
-                    } else {
-                        Toast.makeText(ChangeEmail.this, "Stuff happened", Toast.LENGTH_SHORT).show();
-                    }
+                public void onSuccess(String object) {
+                    Toast.makeText(ChangeEmail.this, "Email Updated Successfully", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(ChangeEmail.this, Main.class));
+                    finish();
+                }
+
+                @Override
+                public void onError(String message) {
+                    this.onFailure(message);
                 }
 
                 @Override

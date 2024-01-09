@@ -8,9 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.firebase.AuthEvents;
-import com.github.fearmygaze.mercury.firebase.dao.AuthEventsDao;
-import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
+import com.github.fearmygaze.mercury.firebase.UserActions;
+import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.PrivatePreference;
 import com.github.fearmygaze.mercury.util.Tools;
@@ -43,9 +42,9 @@ public class Settings extends AppCompatActivity {
     //Danger
     MaterialCardView closeAccount;
 
-    Bundle bundle;
-
     User user;
+    Bundle bundle;
+    UserActions userActions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +76,8 @@ public class Settings extends AppCompatActivity {
         user = bundle.getParcelable(User.PARCEL);
         if (user == null) onBackPressed();
 
+        userActions = new UserActions(Settings.this);
+
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
         contentSwitch.setChecked(Tools.getBoolPreference("showImages", Settings.this));
         profileSwitch.setChecked(user.isProfileOpen());
@@ -99,7 +100,7 @@ public class Settings extends AppCompatActivity {
         });
 
         signOut.setOnClickListener(v -> {
-            AuthEventsDao.signOut();
+            userActions.signOut();
             PrivatePreference preference = new PrivatePreference(this);
             preference.clearValue("current");
             User.deleteRoomUser(user, Settings.this);
@@ -114,37 +115,42 @@ public class Settings extends AppCompatActivity {
         closeAccount.setOnClickListener(v -> {
             new MaterialAlertDialogBuilder(Settings.this)
                     .setBackground(AppCompatResources.getDrawable(Settings.this, R.color.basicBackground))
-                    .setCancelable(true)
+                    .setCancelable(false)
                     .setTitle(getString(R.string.settingsDialogTitle))
                     .setMessage(String.format("%s, %s %s", getString(R.string.settingsDialogMessagePart1), user.getUsername(), getString(R.string.settingsDialogMessagePart2)))
                     .setNegativeButton(getString(R.string.generalCancel), (dialog, which) -> dialog.cancel())
                     .setPositiveButton(getString(R.string.generalDelete), (dialog, which) -> {
-                        Toast.makeText(Settings.this, "Not implemented", Toast.LENGTH_SHORT).show();
-//                            Auth.deleteAccount("", new Auth.OnResponseListener() {
-//                                @Override
-//                                public void onResult(int resultCode) {
-//                                    if (resultCode == 1) {
-////                                        AppDatabase.getInstance(Settings.this).userDao().deleteUser(user);
-//                                    }
-//                                }
-//
-//                                @Override
-//                                public void onFailure(String message) {
-//                                    Toast.makeText(Settings.this, message, Toast.LENGTH_SHORT).show();
-//                                }
-//                            })
+                        userActions.deleteAccount(new CallBackResponse<String>() {
+                            @Override
+                            public void onSuccess(String object) {
+                                onBackPressed();
+                            }
+
+                            @Override
+                            public void onError(String message) {
+                                this.onFailure(message);
+                            }
+
+                            @Override
+                            public void onFailure(String message) {
+                                Toast.makeText(Settings.this, message, Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     })
                     .show();
         });
 
         profile.setOnClickListener(v -> {
             profileSwitch.setChecked(!profileSwitch.isChecked());
-            AuthEvents.updateState(user.getId(), profileSwitch.isChecked(), Settings.this, new OnResponseListener() {
+            userActions.updateProfileVisibility(user.getId(), profile.isChecked(), new CallBackResponse<String>() {
                 @Override
-                public void onSuccess(int code) {
-                    if (code == 0) {
-                        Toast.makeText(Settings.this, getString(R.string.generalUpdate), Toast.LENGTH_SHORT).show();
-                    }
+                public void onSuccess(String object) {
+                    this.onFailure(object);
+                }
+
+                @Override
+                public void onError(String message) {
+                    this.onFailure(message);
                 }
 
                 @Override

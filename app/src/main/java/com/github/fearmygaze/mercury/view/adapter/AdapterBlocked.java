@@ -1,5 +1,6 @@
 package com.github.fearmygaze.mercury.view.adapter;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,14 +14,14 @@ import androidx.recyclerview.widget.SimpleItemAnimator;
 import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.firebase.AuthEvents;
-import com.github.fearmygaze.mercury.firebase.RequestEvents;
-import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
-import com.github.fearmygaze.mercury.firebase.interfaces.OnUserResponseListener;
+import com.github.fearmygaze.mercury.firebase.RequestActions;
+import com.github.fearmygaze.mercury.firebase.UserActions;
+import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
 import com.github.fearmygaze.mercury.model.Profile;
 import com.github.fearmygaze.mercury.model.Request;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
+import com.github.fearmygaze.mercury.view.util.ProfileViewer;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.imageview.ShapeableImageView;
 
@@ -51,12 +52,17 @@ public class AdapterBlocked extends FirestorePagingAdapter<Request, AdapterBlock
         Tools.profileImage(profile.getImage(), holder.itemView.getContext()).into(holder.image);
         holder.username.setText(profile.getUsername());
         holder.root.setOnClickListener(v -> {
-            AuthEvents.getUserProfile(profile.getId(), v.getContext(), new OnUserResponseListener() {
+            new UserActions(v.getContext()).getUserByID(profile.getId(), new CallBackResponse<User>() {
                 @Override
-                public void onSuccess(int code, User requested) {
-                    if (code == 0) {
-                        Tools.goToProfileViewer(user, requested, v.getContext());
-                    }
+                public void onSuccess(User object) {
+                    v.getContext().startActivity(new Intent(v.getContext(), ProfileViewer.class)
+                            .putExtra(User.PARCEL, user)
+                            .putExtra(User.PARCEL_OTHER, object));
+                }
+
+                @Override
+                public void onError(String message) {
+                    Toast.makeText(v.getContext(), message, Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -67,14 +73,16 @@ public class AdapterBlocked extends FirestorePagingAdapter<Request, AdapterBlock
         });
 
         holder.unBlock.setOnClickListener(v -> {
-            RequestEvents.removeBlock(request, v.getContext(), new OnResponseListener() {
+            RequestActions actions = new RequestActions(v.getContext());
+            actions.unBlock(request.getId(), new CallBackResponse<String>() {
                 @Override
-                public void onSuccess(int code) {
-                    if (code == 0) {
-                        notifyItemRemoved(holder.getAbsoluteAdapterPosition());
-                    } else {
-                        Toast.makeText(v.getContext(), "Unexpected error occurred", Toast.LENGTH_SHORT).show();
-                    }
+                public void onSuccess(String object) {
+                    notifyItemRemoved(holder.getAbsoluteAdapterPosition());
+                }
+
+                @Override
+                public void onError(String message) {
+                    this.onFailure(message);
                 }
 
                 @Override

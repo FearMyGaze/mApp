@@ -15,7 +15,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.custom.CustomLinearLayout;
-import com.github.fearmygaze.mercury.firebase.RequestEvents;
+import com.github.fearmygaze.mercury.firebase.RequestActions;
 import com.github.fearmygaze.mercury.model.Request;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.view.adapter.AdapterFriends;
@@ -23,7 +23,7 @@ import com.github.fearmygaze.mercury.view.adapter.AdapterFriends;
 public class TabFriends extends Fragment {
     View view;
     User user;
-
+    RequestActions actions;
     AdapterFriends adapterFriends;
     FirestoreRecyclerOptions<Request> options;
 
@@ -53,8 +53,10 @@ public class TabFriends extends Fragment {
         SwipeRefreshLayout swipe = view.findViewById(R.id.fragmentFriendsSwipe);
         RecyclerView recyclerView = view.findViewById(R.id.fragmentFriendsRecycler);
 
+        actions = new RequestActions(requireContext());
+
         options = new FirestoreRecyclerOptions.Builder<Request>()
-                .setQuery(RequestEvents.friendsQuery(user), Request.class)
+                .setQuery(actions.friends(user.getId()), Request.class)
                 .setLifecycleOwner(this)
                 .build();
 
@@ -85,7 +87,7 @@ public class TabFriends extends Fragment {
 
     public void fetch(User user) {
         adapterFriends.updateOptions(new FirestoreRecyclerOptions.Builder<Request>()
-                .setQuery(RequestEvents.friendsQuery(user), Request.class)
+                .setQuery(actions.friends(user.getId()), Request.class)
                 .setLifecycleOwner(this)
                 .build());
     }

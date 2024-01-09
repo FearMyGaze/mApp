@@ -17,10 +17,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.custom.CustomLinearLayout;
-import com.github.fearmygaze.mercury.firebase.RequestEvents;
-import com.github.fearmygaze.mercury.firebase.dao.AuthEventsDao;
-import com.github.fearmygaze.mercury.firebase.interfaces.OnRequestResponseListener;
-import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
+import com.github.fearmygaze.mercury.firebase.RequestActions;
+import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
+import com.github.fearmygaze.mercury.model.Profile;
 import com.github.fearmygaze.mercury.model.Request;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
@@ -30,6 +29,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.imageview.ShapeableImageView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Locale;
 
@@ -52,6 +52,7 @@ public class ProfileViewer extends AppCompatActivity {
     User myUser, visibleUser;
     Request request;
     TypedValue typedValue;
+    RequestActions actions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,8 +76,10 @@ public class ProfileViewer extends AppCompatActivity {
         typedValue = new TypedValue();
         getTheme().resolveAttribute(android.R.attr.colorPrimary, typedValue, true);
 
+        actions = new RequestActions(ProfileViewer.this);
+
         options = new FirestoreRecyclerOptions.Builder<Request>()
-                .setQuery(RequestEvents.friendsQuery(visibleUser), Request.class)
+                .setQuery(actions.friends(visibleUser.getId()), Request.class)
                 .setLifecycleOwner(this)
                 .build();
 
@@ -116,21 +119,26 @@ public class ProfileViewer extends AppCompatActivity {
                             .setNegativeButton(R.string.generalCancel, (dialog, i) -> dialog.dismiss())
                             .setPositiveButton("Block", (dialog, i) -> {
                                 dialog.dismiss();
-                                RequestEvents.block(myUser, visibleUser, ProfileViewer.this, new OnResponseListener() {
-                                    @Override
-                                    public void onSuccess(int code) {
-                                        if (code == 0) {
-                                            requestStatus.setText(getString(R.string.requestBlocked));
-                                            requestStatus.setEnabled(false);
-                                            onBackPressed();
-                                        }
-                                    }
+                                actions.block(new Profile(myUser.getId(), myUser.getUsername(), myUser.getImage()),
+                                        new Profile(visibleUser.getId(), visibleUser.getUsername(), visibleUser.getImage()),
+                                        new CallBackResponse<String>() {
+                                            @Override
+                                            public void onSuccess(String object) {
+                                                requestStatus.setText(getString(R.string.requestBlocked));
+                                                requestStatus.setEnabled(false);
+                                                onBackPressed();
+                                            }
 
-                                    @Override
-                                    public void onFailure(String message) {
-                                        Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_SHORT).show();
-                                    }
-                                });
+                                            @Override
+                                            public void onError(String message) {
+                                                this.onFailure(message);
+                                            }
+
+                                            @Override
+                                            public void onFailure(String message) {
+                                                Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
                             }).show();
                 }
                 return true;
@@ -150,19 +158,22 @@ public class ProfileViewer extends AppCompatActivity {
                         .setMessage("You will not be able to message them but you will still be able to view their profile")
                         .setNegativeButton(R.string.generalCancel, (dialog, i) -> dialog.dismiss())
                         .setPositiveButton("Unfollow", (dialog, i) -> {
-                            RequestEvents.delete(request, ProfileViewer.this, new OnResponseListener() {
+                            actions.delete(request.getId(), new CallBackResponse<String>() {
                                 @Override
-                                public void onSuccess(int code) {
-                                    if (code == 0) {
-                                        requestStatus.setText(getString(R.string.requestNone));
-                                        updateStats();
-                                        toolbar.setSubtitle(String.format(Locale.getDefault(), "%s: %d", getString(R.string.generalFriends), adapterFriends.getItemCount()));
-                                    }
+                                public void onSuccess(String object) {
+                                    requestStatus.setText(getString(R.string.requestNone));
+                                    updateStats();
+                                    toolbar.setSubtitle(String.format(Locale.getDefault(), "%s: %d", getString(R.string.generalFriends), adapterFriends.getItemCount()));
+                                }
+
+                                @Override
+                                public void onError(String message) {
+                                    this.onFailure(message);
                                 }
 
                                 @Override
                                 public void onFailure(String message) {
-                                    Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_LONG).show();
+                                    Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }).show();
@@ -173,12 +184,15 @@ public class ProfileViewer extends AppCompatActivity {
                         .setMessage("You will still be able to send again later if you changed your mind")
                         .setNegativeButton(R.string.generalCancel, (dialog, i) -> dialog.dismiss())
                         .setPositiveButton("Remove", (dialog, i) -> {
-                            RequestEvents.delete(request, ProfileViewer.this, new OnResponseListener() {
+                            actions.delete(request.getId(), new CallBackResponse<String>() {
                                 @Override
-                                public void onSuccess(int code) {
-                                    if (code == 0) {
-                                        requestStatus.setText(getString(R.string.requestNone));
-                                    }
+                                public void onSuccess(String object) {
+                                    requestStatus.setText(getString(R.string.requestNone));
+                                }
+
+                                @Override
+                                public void onError(String message) {
+                                    this.onFailure(message);
                                 }
 
                                 @Override
@@ -188,26 +202,34 @@ public class ProfileViewer extends AppCompatActivity {
                             });
                         }).show();
             } else if (state.equals(getString(R.string.requestNone))) {
-                RequestEvents.sendRequest(myUser, visibleUser, ProfileViewer.this, new OnResponseListener() {
+                actions.create(new Profile(myUser.getId(), myUser.getUsername(), myUser.getImage()),
+                        new Profile(visibleUser.getId(), visibleUser.getUsername(), visibleUser.getImage()),
+                        new CallBackResponse<String>() {
+                            @Override
+                            public void onSuccess(String object) {
+                                requestStatus.setText(getString(R.string.requestWaiting));
+                            }
+
+                            @Override
+                            public void onError(String message) {
+                                this.onFailure(message);
+                            }
+
+                            @Override
+                            public void onFailure(String message) {
+                                Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            } else if (state.equals(getString(R.string.requestAnswer))) {
+                actions.accept(request.getId(), new CallBackResponse<String>() {
                     @Override
-                    public void onSuccess(int code) {
-                        if (code == 0) {
-                            requestStatus.setText(getString(R.string.requestWaiting));
-                        }
+                    public void onSuccess(String object) {
+                        requestStatus.setText(getString(R.string.generalFriends));
                     }
 
                     @Override
-                    public void onFailure(String message) {
-                        Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_SHORT).show();
-                    }
-                });
-            } else if (state.equals(getString(R.string.requestAnswer))) {
-                RequestEvents.accept(request, ProfileViewer.this, new OnResponseListener() {
-                    @Override
-                    public void onSuccess(int code) {
-                        if (code == 0) {
-                            requestStatus.setText(getString(R.string.generalFriends));
-                        }
+                    public void onError(String message) {
+                        this.onFailure(message);
                     }
 
                     @Override
@@ -238,43 +260,37 @@ public class ProfileViewer extends AppCompatActivity {
 
     private void updateStats() {
         if (!myUser.getId().equals(visibleUser.getId())) {
-            RequestEvents.getRequestSnapshot(myUser, visibleUser, ProfileViewer.this, new OnRequestResponseListener() {
+            actions.eventListener(myUser.getId(), visibleUser.getId(), new CallBackResponse<Request>() {
                 @Override
-                public void onSuccess(int code, Request requested) {
-                    if (code == 0) {
-                        request = requested;
-                        switch (requested.getStatus()) {
-                            case Friends:
-                                requestStatus.setText(getString(R.string.requestAccepted));
-                                break;
-                            case Blocked:
-                                requestStatus.setText(getString(R.string.requestBlocked));
-                                break;
-                            case Waiting:
-                                if (requested.getSender().equals(myUser.getId())) {
-                                    requestStatus.setText(getString(R.string.requestWaiting));
-                                } else {
-                                    requestStatus.setText(getString(R.string.requestAnswer));
-                                }
-                                break;
-                            default:
-                                requestStatus.setText(getString(R.string.requestNone));
-                        }
-
-                        if (requestStatus.getText().equals(getString(R.string.requestBlocked))) {
-                            requestStatus.setEnabled(false);
-                        }
-
-                    } else {
-                        requestStatus.setText(getString(R.string.requestNone));
-                        request = null;
+                public void onSuccess(Request object) {
+                    request = object;
+                    switch (object.getStatus()) {
+                        case Friends:
+                            requestStatus.setText(getString(R.string.requestAccepted));
+                            break;
+                        case Blocked:
+                            requestStatus.setText(getString(R.string.requestBlocked));
+                            break;
+                        case Waiting:
+                            if (object.getSender().equals(myUser.getId())) {
+                                requestStatus.setText(getString(R.string.requestWaiting));
+                            } else {
+                                requestStatus.setText(getString(R.string.requestAnswer));
+                            }
+                            break;
+                        default:
+                            requestStatus.setText(getString(R.string.requestNone));
                     }
                 }
 
                 @Override
+                public void onError(String message) {
+                    this.onFailure(message);
+                }
+
+                @Override
                 public void onFailure(String message) {
-                    Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_SHORT).show();
-                    onBackPressed();
+
                 }
             });
         }
@@ -283,7 +299,7 @@ public class ProfileViewer extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (AuthEventsDao.getUser() == null) {
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             finish();
         }
     }

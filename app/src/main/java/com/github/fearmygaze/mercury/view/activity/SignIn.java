@@ -14,12 +14,10 @@ import androidx.appcompat.content.res.AppCompatResources;
 
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.custom.UIAction;
-import com.github.fearmygaze.mercury.firebase.AuthEvents;
-import com.github.fearmygaze.mercury.firebase.dao.AuthEventsDao;
-import com.github.fearmygaze.mercury.firebase.interfaces.OnDataResponseListener;
-import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
+import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
+import com.github.fearmygaze.mercury.firebase.interfaces.SignCallBackResponse;
+import com.github.fearmygaze.mercury.firebase.UserActions;
 import com.github.fearmygaze.mercury.util.RegEx;
-import com.github.fearmygaze.mercury.util.Tools;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -27,14 +25,14 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.util.Objects;
-
 public class SignIn extends AppCompatActivity {
 
     MaterialToolbar toolbar;
     TextInputLayout emailError, passwordError;
     TextInputEditText email, password;
     MaterialButton forgotPassword, signIn;
+
+    UserActions userActions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +47,7 @@ public class SignIn extends AppCompatActivity {
         forgotPassword = findViewById(R.id.signInForgotPassword);
         signIn = findViewById(R.id.signInBtn);
 
+        userActions = new UserActions(SignIn.this);
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         email.addTextChangedListener(new TextWatcher() {
@@ -87,12 +86,15 @@ public class SignIn extends AppCompatActivity {
         });
 
         forgotPassword.setOnClickListener(v -> {
-            AuthEvents.sendPasswordResetEmail(Objects.requireNonNull(email.getText()).toString().trim(), SignIn.this, new OnResponseListener() {
+            userActions.passwordReset(email.getText().toString().trim(), new CallBackResponse<String>() {
                 @Override
-                public void onSuccess(int code) {
-                    if (code == 0) {
-                        Toast.makeText(SignIn.this, getString(R.string.signInForgot), Toast.LENGTH_SHORT).show();
-                    }
+                public void onSuccess(String object) {
+                    Toast.makeText(SignIn.this, getString(R.string.signInForgot), Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onError(String message) {
+                    this.onFailure(message);
                 }
 
                 @Override
@@ -113,37 +115,42 @@ public class SignIn extends AppCompatActivity {
                         .setTitle(getString(R.string.signInDialogTitle))
                         .setMessage(getString(R.string.signInDialogMessage));
                 AlertDialog dialog = builder.show();
-                AuthEvents.signIn(Objects.requireNonNull(email.getText()).toString().trim(),
-                        Objects.requireNonNull(password.getText()).toString().trim(),
-                        SignIn.this, new OnDataResponseListener() {
+                userActions.signIn(email.getText().toString().trim(),
+                        password.getText().toString().trim(),
+                        new SignCallBackResponse<String>() {
                             @Override
-                            public void onSuccess(int code, Object data) {
-                                if (code == 0) {
-                                    Tools.createSettingsPreference(data.toString(), SignIn.this);
-                                    dialog.dismiss();
-                                    finish();
-                                    startActivity(new Intent(SignIn.this, Main.class));
-                                } else if (code == 1) {
-                                    dialog.dismiss();
+                            public void onSuccess(String message) {
+                                dialog.dismiss();
+                                Toast.makeText(SignIn.this, message, Toast.LENGTH_SHORT).show();
+                                finish();
+                                startActivity(new Intent(SignIn.this, Main.class));
+                            }
+
+                            @Override
+                            public void onError(int code, String message) {
+                                dialog.dismiss();
+                                if (code == 1) {
                                     Snackbar.make(signIn, getString(R.string.signInResend), 9000)
                                             .setAction(getString(R.string.generalSend), view ->
-                                                    AuthEvents.sendVerificationEmail(AuthEventsDao.getUser(), SignIn.this,
-                                                            new OnResponseListener() {
-                                                                @Override
-                                                                public void onSuccess(int code1) {
-                                                                    if (code1 == 0)
-                                                                        Toast.makeText(SignIn.this, getString(R.string.signInResendSuccess), Toast.LENGTH_SHORT).show();
-                                                                }
+                                                    userActions.verificationEmail(new CallBackResponse<String>() {
+                                                        @Override
+                                                        public void onSuccess(String message) {
+                                                            Toast.makeText(SignIn.this, message, Toast.LENGTH_SHORT).show();
+                                                        }
 
-                                                                @Override
-                                                                public void onFailure(String message) {
-                                                                    Toast.makeText(SignIn.this, message, Toast.LENGTH_SHORT).show();
-                                                                }
-                                                            }
-                                                    )
-                                            ).show();
+                                                        @Override
+                                                        public void onError(String message) {
+                                                            Toast.makeText(SignIn.this, message, Toast.LENGTH_SHORT).show();
+                                                        }
+
+                                                        @Override
+                                                        public void onFailure(String message) {
+                                                            Toast.makeText(SignIn.this, message, Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }))
+                                            .show();
                                 } else {
-                                    dialog.dismiss();
+                                    Toast.makeText(SignIn.this, message, Toast.LENGTH_SHORT).show();
                                 }
                             }
 
@@ -161,6 +168,7 @@ public class SignIn extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        startActivity(new Intent(SignIn.this, Welcome.class));
         finish();
     }
 }

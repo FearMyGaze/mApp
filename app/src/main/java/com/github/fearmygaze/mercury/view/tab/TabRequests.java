@@ -16,7 +16,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.custom.CustomLinearLayout;
-import com.github.fearmygaze.mercury.firebase.RequestEvents;
+import com.github.fearmygaze.mercury.firebase.RequestActions;
 import com.github.fearmygaze.mercury.model.Request;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.view.adapter.AdapterPending;
@@ -86,7 +86,7 @@ public class TabRequests extends Fragment {
     }
 
     public void fetch(User user) {
-        RequestEvents.waitingQuery(user)
+        new RequestActions(getContext()).waiting(user.getId())
                 .limit(50)
                 .get()
                 .addOnFailureListener(e -> Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show())

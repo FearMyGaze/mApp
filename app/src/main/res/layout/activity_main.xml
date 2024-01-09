@@ -136,7 +136,6 @@
             android:layout_height="wrap_content"
             app:menu="@menu/main_navigation"
             android:background="@color/basicBackground"
-            app:labelVisibilityMode="unlabeled"
             style="@style/Widget.MaterialComponents.BottomNavigationView"
             app:layout_constraintBottom_toBottomOf="parent"/>
 

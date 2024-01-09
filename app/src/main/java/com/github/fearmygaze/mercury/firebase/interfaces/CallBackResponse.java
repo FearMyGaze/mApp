@@ -1,4 +1,4 @@
-package com.github.fearmygaze.mercury.firebase;
+package com.github.fearmygaze.mercury.firebase.interfaces;
 
 public interface CallBackResponse<T> {
     void onSuccess(T object);

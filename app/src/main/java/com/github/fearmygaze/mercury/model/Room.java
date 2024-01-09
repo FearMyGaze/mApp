@@ -304,8 +304,16 @@ public class Room implements Parcelable {
     }
 
     public static String formatDate(Message message) {
-        if (message == null)
-            return "";
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+//            LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(message.getCreated().getTime()), ZoneId.systemDefault());
+//            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yy");
+////            return localDateTime.format(dateTimeFormatter);
+//        } else {
+//            Calendar calendar = Calendar.getInstance();
+//            calendar.setTimeInMillis(message.getCreated().getTime());
+////            return String.format("%s", DateFormat.getDateInstance(DateFormat.SHORT).format(calendar.getTime()));
+//        }
+
         return "99:99"; //TODO: we need to format the date to different types
     }
 

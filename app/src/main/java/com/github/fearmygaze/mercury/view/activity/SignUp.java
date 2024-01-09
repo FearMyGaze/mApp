@@ -12,8 +12,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.firebase.AuthEvents;
-import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
+import com.github.fearmygaze.mercury.firebase.interfaces.SignCallBackResponse;
+import com.github.fearmygaze.mercury.firebase.UserActions;
 import com.github.fearmygaze.mercury.util.RegEx;
 import com.github.fearmygaze.mercury.util.Tools;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -110,22 +110,25 @@ public class SignUp extends AppCompatActivity {
                         .setMessage(R.string.signUpDialogMessage)
                         .setCancelable(false);
                 AlertDialog dialog = builder.show();
-                AuthEvents.validateDataAndCreateUser(sUsername, sEmail, sPassword, SignUp.this, new OnResponseListener() {
+                new UserActions(SignUp.this).signUpValidation(sEmail, sUsername, sPassword, new SignCallBackResponse<String>() {
                     @Override
-                    public void onSuccess(int code) {
+                    public void onSuccess(String object) {
                         dialog.dismiss();
-                        switch (code) {
-                            case 0:
-                                Toast.makeText(SignUp.this, getString(R.string.signUpEmailVerification), Toast.LENGTH_LONG).show();
-                                startActivity(new Intent(SignUp.this, SignIn.class));
-                                finish();
-                                break;
+                        Toast.makeText(SignUp.this, getString(R.string.signUpEmailVerification), Toast.LENGTH_LONG).show();
+                        startActivity(new Intent(SignUp.this, SignIn.class));
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(int error, String message) {
+                        dialog.dismiss();
+                        switch (error) {
                             case 1:
-                                Tools.setErrorToLayout(emailError, getString(R.string.authEmail), true);
+                                Tools.setErrorToLayout(emailError, message, true);
                                 email.requestFocus();
                                 break;
                             case 2:
-                                Tools.setErrorToLayout(usernameError, getString(R.string.authUsername), true);
+                                Tools.setErrorToLayout(usernameError, message, true);
                                 username.requestFocus();
                                 break;
                         }

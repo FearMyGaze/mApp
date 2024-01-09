@@ -16,8 +16,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.custom.CustomLinearLayout;
-import com.github.fearmygaze.mercury.firebase.RequestEvents;
-import com.github.fearmygaze.mercury.firebase.dao.AuthEventsDao;
+import com.github.fearmygaze.mercury.firebase.RequestActions;
 import com.github.fearmygaze.mercury.model.Request;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
@@ -28,6 +27,7 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.imageview.ShapeableImageView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Locale;
 
@@ -51,6 +51,7 @@ public class Profile extends AppCompatActivity {
 
     Bundle bundle;
     TypedValue typedValue;
+    RequestActions actions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +79,8 @@ public class Profile extends AppCompatActivity {
         counter = findViewById(R.id.profileFriendsCounter);
         friendsRecycler = findViewById(R.id.profileFriends);
 
+        actions = new RequestActions(Profile.this);
+
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         userImage.setOnClickListener(v -> {
@@ -91,7 +94,7 @@ public class Profile extends AppCompatActivity {
         });
 
         options = new FirestoreRecyclerOptions.Builder<Request>()
-                .setQuery(RequestEvents.friendsQuery(user), Request.class)
+                .setQuery(actions.friends(user.getId()), Request.class)
                 .setLifecycleOwner(this)
                 .build();
 
@@ -115,7 +118,7 @@ public class Profile extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (AuthEventsDao.getUser() == null) {
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             onBackPressed();
         } else {
             Tools.profileImage(user.getImage(), Profile.this).into(userImage);

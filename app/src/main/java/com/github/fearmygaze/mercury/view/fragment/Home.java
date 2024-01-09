@@ -16,7 +16,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.custom.CustomLinearLayout;
-import com.github.fearmygaze.mercury.firebase.dao.ChatEventsDao;
+import com.github.fearmygaze.mercury.firebase.RoomActions;
 import com.github.fearmygaze.mercury.model.Room;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.view.adapter.AdapterRoom;
@@ -59,7 +59,7 @@ public class Home extends Fragment {
         recyclerView = view.findViewById(R.id.homeRecycler);
 
         options = new FirestoreRecyclerOptions.Builder<Room>()
-                .setQuery(ChatEventsDao.getRooms(user), Room.class)
+                .setQuery(new RoomActions(getContext()).getRooms(user.getId()), Room.class)
                 .setLifecycleOwner(this)
                 .build();
 

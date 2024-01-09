@@ -10,14 +10,15 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.firebase.AuthEvents;
-import com.github.fearmygaze.mercury.firebase.interfaces.OnDataResponseListener;
-import com.github.fearmygaze.mercury.firebase.dao.AuthEventsDao;
+import com.github.fearmygaze.mercury.firebase.UserActions;
+import com.github.fearmygaze.mercury.firebase.interfaces.SignCallBackResponse;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.RegEx;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Objects;
 
@@ -33,6 +34,8 @@ public class ChangeInformation extends AppCompatActivity {
     String userEmail;
     Bundle bundle;
     User user;
+    FirebaseUser fireUser;
+    UserActions userActions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +48,10 @@ public class ChangeInformation extends AppCompatActivity {
         if (bundle == null) onBackPressed();
         user = bundle.getParcelable(User.PARCEL);
         changeType = bundle.getString("type");
-        if (user == null || changeType == null) onBackPressed();
-
-        userEmail = Objects.requireNonNull(AuthEventsDao.getUser()).getEmail();
+        fireUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null || changeType == null || fireUser != null) onBackPressed();
+        userEmail = fireUser.getEmail();
+        userActions = new UserActions(ChangeInformation.this);
 
         verifyPasswordError = findViewById(R.id.changeInformationVerifyPasswordError);
         verifyPassword = findViewById(R.id.changeInformationVerifyPassword);
@@ -75,25 +79,27 @@ public class ChangeInformation extends AppCompatActivity {
         });
 
         next.setOnClickListener(v -> {
-            AuthEventsDao.signOut();
+            userActions.signOut();
             String password = Objects.requireNonNull(verifyPassword.getText()).toString().trim();
-            AuthEvents.signIn(userEmail, password, ChangeInformation.this, new OnDataResponseListener() {
+            userActions.signIn(userEmail, password, new SignCallBackResponse<String>() {
                 @Override
-                public void onSuccess(int code, Object data) {
-                    if (code == 0) {
-                        if (changeType.equals("email")) {
-                            startActivity(new Intent(ChangeInformation.this, ChangeEmail.class)
-                                    .putExtra("id", data.toString())
-                                    .putExtra("email", userEmail));
-                            finish();
-                        } else {
-                            startActivity(new Intent(ChangeInformation.this, ChangePassword.class)
-                                    .putExtra("id", user.getId())
-                                    .putExtra("email", userEmail));
-                            finish();
-                        }
-                    } else
-                        Toast.makeText(ChangeInformation.this, "Error", Toast.LENGTH_SHORT).show();
+                public void onSuccess(String object) {
+                    if (changeType.equals("email")) {
+                        startActivity(new Intent(ChangeInformation.this, ChangeEmail.class)
+                                .putExtra("id", user.getId())
+                                .putExtra("email", userEmail));
+                        finish();
+                    } else {
+                        startActivity(new Intent(ChangeInformation.this, ChangePassword.class)
+                                .putExtra("id", user.getId())
+                                .putExtra("email", userEmail));
+                        finish();
+                    }
+                }
+
+                @Override
+                public void onError(int error, String message) {
+                    this.onFailure(message);
                 }
 
                 @Override

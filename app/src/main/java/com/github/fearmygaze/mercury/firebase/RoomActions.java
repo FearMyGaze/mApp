@@ -1,10 +1,10 @@
 package com.github.fearmygaze.mercury.firebase;
 
 import android.content.Context;
-import android.net.Uri;
 import android.util.Log;
 
 import com.github.fearmygaze.mercury.firebase.dao.RoomActionsDao;
+import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
 import com.github.fearmygaze.mercury.model.Message;
 import com.github.fearmygaze.mercury.model.Profile;
 import com.github.fearmygaze.mercury.model.Room;
@@ -12,10 +12,9 @@ import com.github.fearmygaze.mercury.model.User;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RoomActions implements RoomActionsDao {
     private final FirebaseFirestore database;
@@ -106,8 +105,28 @@ public class RoomActions implements RoomActionsDao {
     }
 
     @Override
-    public void updateParticipants(String roomID, List<Profile> participants, CallBackResponse<Room> callBackResponse) {
-
+    public void updateParticipants(String roomID, Profile owner, List<Profile> participants, CallBackResponse<String> callBackResponse) {
+        database.collection("chatRooms")
+                .document(roomID)
+                .get()
+                .addOnFailureListener(e -> callBackResponse.onFailure("Failed to get the message"))
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot != null && documentSnapshot.exists()) {
+                        Room room = documentSnapshot.toObject(Room.class);
+                        if (room != null) {
+                            documentSnapshot.getReference()
+                                    .update("visibleTo", participants
+                                                    .stream()
+                                                    .map(Profile::getId)
+                                                    .collect(Collectors.toList()),
+                                            "profiles", participants)
+                                    .addOnFailureListener(e -> callBackResponse.onFailure("Failed to update"))
+                                    .addOnSuccessListener(unused -> callBackResponse.onSuccess("Updated the participants"));
+                        }
+                    } else {
+                        callBackResponse.onError("Failed to parse the document");
+                    }
+                });
     }
 
     /**
@@ -148,16 +167,6 @@ public class RoomActions implements RoomActionsDao {
 
     @Override
     public void sendImageMessage(String userID, String roomID, String imageUrl, CallBackResponse<String> callBackResponse) {
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child(User.IMAGE_COLLECTION);
-        StorageReference imageRef = storageRef.child(FireStorage.generateFileName(Uri.parse(imageUrl), ctx));
-        imageRef.putFile(Uri.parse(imageUrl))
-                .addOnFailureListener(e -> callBackResponse.onFailure(e.getMessage()))
-                .addOnSuccessListener(taskSnapshot -> imageRef.getDownloadUrl()
-                        .addOnFailureListener(e -> callBackResponse.onFailure(e.getMessage()))
-                        .addOnSuccessListener(url -> {
-
-                        }));
-
         /*
          * TODO:
          *   We need to find the correct naming for the file

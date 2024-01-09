@@ -1,6 +1,7 @@
 package com.github.fearmygaze.mercury.view.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +15,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.database.AppDatabase;
 import com.github.fearmygaze.mercury.database.CProfileDao;
-import com.github.fearmygaze.mercury.firebase.AuthEvents;
-import com.github.fearmygaze.mercury.firebase.interfaces.OnUserResponseListener;
+import com.github.fearmygaze.mercury.firebase.UserActions;
+import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
 import com.github.fearmygaze.mercury.model.Profile;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
+import com.github.fearmygaze.mercury.view.util.ProfileViewer;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -51,13 +53,18 @@ public class AdapterCachedProfile extends RecyclerView.Adapter<AdapterCachedProf
     public void onBindViewHolder(@NonNull CachedProfilesVH holder, int position) {
         Tools.profileImage(profiles.get(holder.getAbsoluteAdapterPosition()).getImage(), holder.image.getContext()).into(holder.image);
         holder.username.setText(profiles.get(holder.getAbsoluteAdapterPosition()).getUsername());
-        holder.root.setOnClickListener(v -> AuthEvents.getUserProfile(
-                profiles.get(holder.getAbsoluteAdapterPosition()).getId(), v.getContext(), new OnUserResponseListener() {
+        holder.root.setOnClickListener(v ->
+                new UserActions(v.getContext()).getUserByID(profiles.get(holder.getAbsoluteAdapterPosition()).getId(), new CallBackResponse<User>() {
                     @Override
-                    public void onSuccess(int code, User otherUser) {
-                        if (code == 0) {
-                            Tools.goToProfileViewer(user, otherUser, v.getContext());
-                        }
+                    public void onSuccess(User object) {
+                        v.getContext().startActivity(new Intent(context, ProfileViewer.class)
+                                .putExtra(User.PARCEL, user)
+                                .putExtra(User.PARCEL_OTHER, object));
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                        Toast.makeText(v.getContext(), message, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override

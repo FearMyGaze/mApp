@@ -1,5 +1,6 @@
 package com.github.fearmygaze.mercury.view.adapter;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +14,13 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.database.AppDatabase;
-import com.github.fearmygaze.mercury.firebase.AuthEvents;
-import com.github.fearmygaze.mercury.firebase.interfaces.OnUserResponseListener;
+import com.github.fearmygaze.mercury.firebase.UserActions;
+import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
 import com.github.fearmygaze.mercury.model.Profile;
 import com.github.fearmygaze.mercury.model.Request;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
+import com.github.fearmygaze.mercury.view.util.ProfileViewer;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.imageview.ShapeableImageView;
 
@@ -49,15 +51,20 @@ public class AdapterFriends extends FirestoreRecyclerAdapter<Request, AdapterFri
             Tools.profileImage(model.getSenderProfile().getImage(), holder.itemView.getContext()).into(holder.image);
             holder.username.setText(model.getSenderProfile().getUsername());
             holder.root.setOnClickListener(v -> {
-                AuthEvents.getUserProfile(model.getSenderProfile().getId(), holder.itemView.getContext(), new OnUserResponseListener() {
+                new UserActions(v.getContext()).getUserByID(model.getSenderProfile().getId(), new CallBackResponse<User>() {
                     @Override
-                    public void onSuccess(int code, User requested) {
-                        if (code == 0) {
-                            AppDatabase.getInstance(holder.itemView.getContext())
-                                    .cachedProfile()
-                                    .insert(new Profile(requested.getId(), requested.getUsername(), requested.getImage()));
-                            Tools.goToProfileViewer(ourUser, requested, holder.itemView.getContext());
-                        }
+                    public void onSuccess(User object) {
+                        AppDatabase.getInstance(holder.itemView.getContext())
+                                .cachedProfile()
+                                .insert(new Profile(object.getId(), object.getUsername(), object.getImage()));
+                        v.getContext().startActivity(new Intent(v.getContext(), ProfileViewer.class)
+                                .putExtra(User.PARCEL, ourUser)
+                                .putExtra(User.PARCEL_OTHER, object));
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                        Toast.makeText(v.getContext(), message, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -70,15 +77,20 @@ public class AdapterFriends extends FirestoreRecyclerAdapter<Request, AdapterFri
             Tools.profileImage(model.getReceiverProfile().getImage(), holder.itemView.getContext()).into(holder.image);
             holder.username.setText(model.getReceiverProfile().getUsername());
             holder.root.setOnClickListener(v -> {
-                AuthEvents.getUserProfile(model.getReceiverProfile().getId(), holder.itemView.getContext(), new OnUserResponseListener() {
+                new UserActions(v.getContext()).getUserByID(model.getReceiverProfile().getId(), new CallBackResponse<User>() {
                     @Override
-                    public void onSuccess(int code, User requested) {
-                        if (code == 0) {
-                            AppDatabase.getInstance(holder.itemView.getContext())
-                                    .cachedProfile()
-                                    .insert(new Profile(requested.getId(), requested.getUsername(), requested.getImage()));
-                            Tools.goToProfileViewer(ourUser, requested, holder.itemView.getContext());
-                        }
+                    public void onSuccess(User object) {
+                        AppDatabase.getInstance(holder.itemView.getContext())
+                                .cachedProfile()
+                                .insert(new Profile(object.getId(), object.getUsername(), object.getImage()));
+                        v.getContext().startActivity(new Intent(v.getContext(), ProfileViewer.class)
+                                .putExtra(User.PARCEL, ourUser)
+                                .putExtra(User.PARCEL_OTHER, object));
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                        Toast.makeText(v.getContext(), message, Toast.LENGTH_SHORT).show();
                     }
 
                     @Override

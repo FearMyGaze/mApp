@@ -13,11 +13,8 @@ import androidx.appcompat.content.res.AppCompatResources;
 
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.custom.UIAction;
-import com.github.fearmygaze.mercury.firebase.ChatEvents;
-import com.github.fearmygaze.mercury.firebase.CallBackResponse;
+import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
 import com.github.fearmygaze.mercury.firebase.RoomActions;
-import com.github.fearmygaze.mercury.firebase.interfaces.OnResponseListener;
-import com.github.fearmygaze.mercury.firebase.interfaces.OnRoomResponseListener;
 import com.github.fearmygaze.mercury.model.Profile;
 import com.github.fearmygaze.mercury.model.Room;
 import com.github.fearmygaze.mercury.model.User;
@@ -46,6 +43,7 @@ public class ChatSettings extends AppCompatActivity {
     Bundle bundle;
     User user;
     Room room;
+    RoomActions roomActions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +73,7 @@ public class ChatSettings extends AppCompatActivity {
         room = bundle.getParcelable(Room.PARCEL);
         if (user == null || room == null) onBackPressed();
 
-        RoomActions roomDao = new RoomActions(ChatSettings.this);
+        roomActions = new RoomActions(ChatSettings.this);
         setupSettings(user, room);
 
         goBack.setOnClickListener(v -> onBackPressed());
@@ -103,14 +101,17 @@ public class ChatSettings extends AppCompatActivity {
                             if (s.equals(room.getRoomName())) {
                                 dialog.dismiss();
                             } else {
-                                ChatEvents.updateName(room, s, new OnResponseListener() {
+                                roomActions.updateName(room.getRoomID(), s, new CallBackResponse<String>() {
                                     @Override
-                                    public void onSuccess(int code) {
-                                        if (code == 0) {
-                                            UIAction.closeKeyboard(v.getContext());
-                                            dialog.dismiss();
-                                            Toast.makeText(ChatSettings.this, "Room name updated", Toast.LENGTH_SHORT).show();
-                                        }
+                                    public void onSuccess(String object) {
+                                        UIAction.closeKeyboard(v.getContext());
+                                        dialog.dismiss();
+                                        Toast.makeText(ChatSettings.this, "Room name updated", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    @Override
+                                    public void onError(String message) {
+                                        Toast.makeText(ChatSettings.this, message, Toast.LENGTH_SHORT).show();
                                     }
 
                                     @Override
@@ -149,7 +150,7 @@ public class ChatSettings extends AppCompatActivity {
                         .setTitle(getString(R.string.chatRoomSettingsDialogTitle))
                         .setMessage(getString(R.string.chatRoomSettingsDialogMsg3))
                         .setNegativeButton(R.string.generalCancel, (dialog, i) -> dialog.dismiss())
-                        .setPositiveButton(R.string.generalOK, (dialog, i) -> roomDao.leave(room.getRoomID(), Profile.create(user), new CallBackResponse<String>() {
+                        .setPositiveButton(R.string.generalOK, (dialog, i) -> roomActions.leave(room.getRoomID(), Profile.create(user), new CallBackResponse<String>() {
                             @Override
                             public void onSuccess(String object) {
                                 getOnBackPressedDispatcher().onBackPressed();
@@ -177,7 +178,7 @@ public class ChatSettings extends AppCompatActivity {
                         .setMessage(getString(R.string.chatRoomSettingsDialogMsg2))
                         .setNegativeButton(R.string.generalCancel, (dialog, i) -> dialog.dismiss())
                         .setPositiveButton(R.string.generalOK, (dialog, i) -> {
-                            roomDao.delete(room.getRoomID(), new CallBackResponse<String>() {
+                            roomActions.delete(room.getRoomID(), new CallBackResponse<String>() {
                                 @Override
                                 public void onSuccess(String object) {
                                     getOnBackPressedDispatcher().onBackPressed();
@@ -214,23 +215,25 @@ public class ChatSettings extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        ChatEvents.getRoomSnapshot(room, new OnRoomResponseListener() {
+        roomActions.roomEventListener(room.getRoomID(), new CallBackResponse<Room>() {
             @Override
-            public void onSuccess(int code, Room r) {
-                if (code == 0) {
-                    if (!r.getVisibleTo().contains(user.getId())) {
-                        onBackPressed();
-                    } else {
-                        room = r;
-                        setupSettings(user, room);
-                    }
-                } else {
+            public void onSuccess(Room r) {
+                if (!r.getVisibleTo().contains(user.getId())) {
                     onBackPressed();
+                } else {
+                    room = r;
+                    setupSettings(user, room);
                 }
             }
 
             @Override
-            public void onFailure(String msg) {
+            public void onError(String message) {
+                this.onFailure(message);
+            }
+
+            @Override
+            public void onFailure(String message) {
+                Toast.makeText(ChatSettings.this, message, Toast.LENGTH_SHORT).show();
                 onBackPressed();
             }
         });

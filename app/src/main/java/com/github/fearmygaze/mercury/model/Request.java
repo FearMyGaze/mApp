@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 
 import com.google.firebase.firestore.ServerTimestamp;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -22,6 +21,7 @@ public class Request {
     List<String> refers;
     Profile senderProfile;
     Profile receiverProfile;
+
     @ServerTimestamp
     Date created;
 
@@ -113,13 +113,6 @@ public class Request {
     ///////////////////////////////////////////////////////////////////////////
     // Helper methods
     ///////////////////////////////////////////////////////////////////////////
-
-    public static List<String> createRefers(User fromUser, User toUser) {
-        List<String> list = new ArrayList<>();
-        list.add(fromUser.getId());
-        list.add(toUser.getId());
-        return list;
-    }
 
     @NonNull
     @Override

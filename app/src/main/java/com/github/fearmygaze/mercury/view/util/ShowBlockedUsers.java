@@ -13,7 +13,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.custom.CustomLinearLayout;
-import com.github.fearmygaze.mercury.firebase.RequestEvents;
+import com.github.fearmygaze.mercury.firebase.RequestActions;
 import com.github.fearmygaze.mercury.model.Request;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.view.adapter.AdapterBlocked;
@@ -54,7 +54,7 @@ public class ShowBlockedUsers extends AppCompatActivity {
         PagingConfig config = new PagingConfig(3, 15);
         options = new FirestorePagingOptions.Builder<Request>()
                 .setLifecycleOwner(this)
-                .setQuery(RequestEvents.blockedQuery(user), config, Request.class)
+                .setQuery(new RequestActions(this).blocked(user.getId()), config, Request.class)
                 .build();
 
         adapterBlocked = new AdapterBlocked(user, options, recyclerView);
