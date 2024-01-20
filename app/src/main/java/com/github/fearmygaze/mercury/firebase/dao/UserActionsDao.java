@@ -14,11 +14,7 @@ public interface UserActionsDao {
     // SignIn / SignUp / SignOut
     ///////////////////////////////////////////////////////////////////////////
 
-    void signUpValidation(String email, String username, String password, SignCallBackResponse<String> callBackResponse);
-
-    void grantUsername(String username, CallBackResponse<String> callBackResponse);
-
-    void signUp(String email, String username, String password, CallBackResponse<String> callBackResponse);
+    void signUp(String email, String username, String password, SignCallBackResponse<String> callBackResponse);
 
     void signIn(String email, String password, SignCallBackResponse<String> callBackResponse);
 

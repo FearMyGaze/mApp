@@ -9,7 +9,6 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.github.fearmygaze.mercury.R;
@@ -33,8 +32,7 @@ public class User implements Parcelable {
 
     public static final String
             PARCEL = "user",
-            PARCEL_OTHER = "userData",
-            IMAGE_COLLECTION = "profileImages/";
+            PARCEL_OTHER = "userData";
 
     ///////////////////////////////////////////////////////////////////////////
     // Body
@@ -90,14 +88,6 @@ public class User implements Parcelable {
     ///////////////////////////////////////////////////////////////////////////
 
     public User() {
-    }
-
-    @Ignore
-    public User(@NonNull String id, String username) {
-        this.id = id;
-        this.username = username;
-        this.usernameL = username.toLowerCase();
-        this.isProfileOpen = true;
     }
 
     ///////////////////////////////////////////////////////////////////////////

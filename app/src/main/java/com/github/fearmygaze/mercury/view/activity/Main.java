@@ -220,7 +220,7 @@ public class Main extends AppCompatActivity {
             public void onFailure(String message) {
                 userActions.signOut();
                 Toast.makeText(Main.this, message, Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(Main.this, SignIn.class));
+                startActivity(new Intent(Main.this, Starting.class));
                 finish();
             }
         });

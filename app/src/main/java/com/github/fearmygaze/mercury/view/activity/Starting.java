@@ -48,7 +48,7 @@ public class Starting extends AppCompatActivity {
                 startActivity(new Intent(Starting.this, Welcome.class));
             } else if (user == null || !user.isEmailVerified()) {
                 finish();
-                startActivity(new Intent(Starting.this, SignIn.class));
+                startActivity(new Intent(Starting.this, Welcome.class));
             } else {
                 new Handler().postDelayed(() -> {
                     finish();

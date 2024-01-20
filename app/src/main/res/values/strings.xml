@@ -157,7 +157,7 @@
     <string name="regExSmaller">Can\'t be smaller than </string>
     <string name="regExBigger">Can\'t be bigger than </string>
     <string name="regExEmail">Not a valid Email</string>
-    <string name="regExUsername">We only allow English and Greek characters or numbers.</string>
+    <string name="regExUsername">We only allow English characters or numbers.</string>
     <string name="regExName">We only allow English and Greek characters, a dot, a space in between</string>
     <string name="regExPassword">The minimum is: 1 Special character, 1 Number and 6 characters</string>
     <string name="regExURL">Not a valid link</string>

@@ -74,8 +74,8 @@ public class RegEx {
             return false;
         }
 
-        if (text.getText().length() < 8) {
-            Tools.setErrorToLayout(layout, context.getString(R.string.regExSmaller) + " " + 8, true);
+        if (text.getText().length() < 6) {
+            Tools.setErrorToLayout(layout, context.getString(R.string.regExSmaller) + " " + 6, true);
             return false;
         }
 
@@ -86,7 +86,7 @@ public class RegEx {
 
         Tools.setErrorToLayout(layout, null, false);
 
-        Pattern pattern = Pattern.compile("^[0-9a-zA-ZΑ-Ωα-ω]{6,}?$");
+        Pattern pattern = Pattern.compile("^[a-zA-Z0-9._]{6,}$");
         Matcher matcher = pattern.matcher(text.getText().toString().trim());
 
         if (matcher.matches()) return true;

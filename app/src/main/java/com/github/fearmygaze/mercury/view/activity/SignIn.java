@@ -48,7 +48,10 @@ public class SignIn extends AppCompatActivity {
         signIn = findViewById(R.id.signInBtn);
 
         userActions = new UserActions(SignIn.this);
-        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+        toolbar.setNavigationOnClickListener(v -> {
+            startActivity(new Intent(SignIn.this, Welcome.class));
+            finish();
+        });
 
         email.addTextChangedListener(new TextWatcher() {
             @Override
@@ -165,10 +168,4 @@ public class SignIn extends AppCompatActivity {
 
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        startActivity(new Intent(SignIn.this, Welcome.class));
-        finish();
-    }
 }

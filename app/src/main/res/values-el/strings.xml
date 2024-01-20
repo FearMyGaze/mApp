@@ -153,10 +153,10 @@
 
     <!-- RegEx -->
     <string name="regExEmpty">Δεν μπορεί να είναι κενό</string>
-    <string name="regExSmaller">Δεν μπορεί να είναι μεγαλύτερο από </string>
-    <string name="regExBigger">Δεν μπορεί να είναι μικρότερο από </string>
+    <string name="regExSmaller">Δεν μπορεί να είναι μικρότερο από </string>
+    <string name="regExBigger">Δεν μπορεί να είναι μεγαλύτερο από </string>
     <string name="regExEmail">Δεν μοίαζει με σωστή διέυθυνση</string>
-    <string name="regExUsername">Επιτρέπουμε μόνο Ελληνικούς και αγγλικούς χαρακτήρες ή αριθμούς.</string>
+    <string name="regExUsername">Επιτρέπουμε μόνο αγγλικούς χαρακτήρες ή αριθμούς.</string>
     <string name="regExName">Επιτρέπουμε μόνο Ελληνικούς και αγγλικούς χαρακτήρες, 1 τελία και 1 κενό ανάμεσα.</string>
     <string name="regExPassword">Το ελάχιστο είναι: 1 Ειδικός χαρακτήρας, 1 νούμερο και 6 χαρακτήρες.</string>
     <string name="regExURL">Δεν μοίζει με σωστό σύνδεσμο</string>

@@ -2,6 +2,7 @@ package com.github.fearmygaze.mercury.firebase;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
 import com.github.fearmygaze.mercury.database.AppDatabase;
 import com.github.fearmygaze.mercury.firebase.dao.UserActionsDao;
@@ -14,7 +15,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.functions.FirebaseFunctions;
 import com.google.firebase.messaging.FirebaseMessaging;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,110 +29,54 @@ import java.util.Map;
 public class UserActions implements UserActionsDao {
 
     private final FirebaseAuth auth;
+    private final FirebaseFunctions functions;
     private final FirebaseFirestore database;
     private final Context ctx;
 
     public UserActions(Context context) {
         this.auth = FirebaseAuth.getInstance();
+        this.functions = FirebaseFunctions.getInstance("europe-west1");
         this.database = FirebaseFirestore.getInstance();
         this.ctx = context;
     }
 
     @Override
-    public void signUpValidation(String email, String username, String password, SignCallBackResponse<String> callBackResponse) {
-        auth.fetchSignInMethodsForEmail(email)
-                .addOnFailureListener(e -> callBackResponse.onFailure("Failed to search for emails"))
-                .addOnSuccessListener(signInMethodQueryResult -> {
-                    List<String> results = signInMethodQueryResult.getSignInMethods();
-                    if (results != null && !results.isEmpty()) {
-                        callBackResponse.onError(1, "Email already exists");
-                    } else {
-                        grantUsername(username, new CallBackResponse<String>() {
-                            @Override
-                            public void onSuccess(String object) {
-                                signUp(email, username, password, new CallBackResponse<String>() {
-                                    @Override
-                                    public void onSuccess(String object) {
-                                        callBackResponse.onSuccess(object);
-                                    }
-
-                                    @Override
-                                    public void onError(String message) {
-                                        callBackResponse.onError(0, message);
-                                    }
-
-                                    @Override
-                                    public void onFailure(String message) {
-                                        callBackResponse.onFailure(message);
-                                    }
-                                });
+    public void signUp(String email, String username, String password, SignCallBackResponse<String> callBackResponse) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("username", username);
+        body.put("email", email);
+        body.put("password", password);
+        functions.getHttpsCallable("signUpFlow")
+                .call(body)
+                .addOnFailureListener(e -> callBackResponse.onFailure("Error: couldn't get a response from the server"))
+                .addOnFailureListener(e -> Log.d("customLog", "UserActions.java:signUp:Line:51" + e.getMessage()))
+                .addOnSuccessListener(result -> {
+                    if (result.getData() != null) {
+                        try {
+                            JSONObject jsonObject = new JSONObject((String) result.getData());
+                            switch (jsonObject.getString("code")) {
+                                case "100":
+                                    callBackResponse.onError(1, "Either your email is wrong formatted or there was a problem while creating your account");
+                                    break;
+                                case "101":
+                                    callBackResponse.onError(2, "Your username has the wrong format");
+                                    break;
+                                case "102":
+                                    callBackResponse.onError(3, "Your password has the wrong format");
+                                    break;
+                                case "103":
+                                    callBackResponse.onError(2, "The username already exists");
+                                    break;
+                                case "200":
+                                    callBackResponse.onSuccess("You have successfully created your account. The first time you sign in we are going to send you a verification email to activate your account");
+                                    break;
+                                default:
+                                    callBackResponse.onFailure("Failed to receive data from the server you are either running an older version of the app or something broke from our end!");
+                                    break;
                             }
-
-                            @Override
-                            public void onError(String message) {
-                                callBackResponse.onError(2, message);
-                            }
-
-                            @Override
-                            public void onFailure(String message) {
-                                callBackResponse.onFailure(message);
-                            }
-                        });
-                    }
-                });
-    }
-
-    @Override
-    public void grantUsername(String username, CallBackResponse<String> callBackResponse) {
-        database.collection("publicData")
-                .whereEqualTo("username", username)
-                .limit(1)
-                .get()
-                .addOnFailureListener(e -> callBackResponse.onFailure("Failed to search for the usernames"))
-                .addOnSuccessListener(querySnapshot -> {
-                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
-                        callBackResponse.onError("Username already exists");
-                    } else {
-                        Map<String, String> map = new HashMap<>();
-                        map.put("username", username);
-                        database.collection("publicData")
-                                .document()
-                                .set(map)
-                                .addOnFailureListener(e -> callBackResponse.onFailure("Failed to write the username"))
-                                .addOnSuccessListener(unused -> callBackResponse.onSuccess(""));
-                    }
-                });
-    }
-
-    @Override
-    public void signUp(String email, String username, String password, CallBackResponse<String> callBackResponse) {
-        auth.createUserWithEmailAndPassword(email, password)
-                .addOnFailureListener(e -> callBackResponse.onFailure("Failed to register the user"))
-                .addOnSuccessListener(authResult -> {
-                    FirebaseUser user = authResult.getUser();
-                    if (user != null) {
-                        verificationEmail(new CallBackResponse<String>() {
-                            @Override
-                            public void onSuccess(String object) {
-                                database.collection("users")
-                                        .document(user.getUid())
-                                        .set(new User(user.getUid(), username))
-                                        .addOnFailureListener(e -> callBackResponse.onFailure("Failed to create the user"))
-                                        .addOnSuccessListener(unused -> callBackResponse.onSuccess("Your user created, now pls go to your email and activate your account"));
-                            }
-
-                            @Override
-                            public void onError(String message) {
-                                callBackResponse.onError(message);
-                            }
-
-                            @Override
-                            public void onFailure(String message) {
-                                callBackResponse.onFailure(message);
-                            }
-                        });
-                    } else {
-                        callBackResponse.onError("Failed to contact the server");
+                        } catch (JSONException e) {
+                            callBackResponse.onFailure("Failed to receive data from the server you are either running an older version of the app or something broke from our end!");
+                        }
                     }
                 });
     }
@@ -238,7 +187,7 @@ public class UserActions implements UserActionsDao {
         if (user != null) {
             user.sendEmailVerification()
                     .addOnFailureListener(e -> callBackResponse.onFailure("Failed to send the email"))
-                    .addOnSuccessListener(unused -> callBackResponse.onSuccess(""));
+                    .addOnSuccessListener(unused -> callBackResponse.onSuccess("We have sent you an activation email in your given email"));
         } else {
             callBackResponse.onFailure("Failed to get the user");
         }
@@ -255,7 +204,7 @@ public class UserActions implements UserActionsDao {
     public void updateEmail(String email, CallBackResponse<String> callBackResponse) {
         FirebaseUser user = auth.getCurrentUser();
         if (user != null) {
-            user.updateEmail(email)
+            user.updateEmail(email) //TODO: Deprecated change it
                     .addOnFailureListener(e -> callBackResponse.onFailure("Failed to update your email"))
                     .addOnSuccessListener(unused -> callBackResponse.onSuccess("Email updated successfully"));
         } else {

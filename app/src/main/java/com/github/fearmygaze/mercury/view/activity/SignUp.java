@@ -12,8 +12,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.firebase.interfaces.SignCallBackResponse;
 import com.github.fearmygaze.mercury.firebase.UserActions;
+import com.github.fearmygaze.mercury.firebase.interfaces.SignCallBackResponse;
 import com.github.fearmygaze.mercury.util.RegEx;
 import com.github.fearmygaze.mercury.util.Tools;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -27,8 +27,8 @@ import java.util.Objects;
 public class SignUp extends AppCompatActivity {
 
     MaterialToolbar toolbar;
-    TextInputLayout usernameError, emailError, passwordError;
-    TextInputEditText username, email, password;
+    TextInputLayout emailError, usernameError, passwordError;
+    TextInputEditText email, username, password;
     MaterialButton createAccount;
 
     @Override
@@ -37,15 +37,15 @@ public class SignUp extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
 
         toolbar = findViewById(R.id.signUpToolBar);
-        usernameError = findViewById(R.id.signUpUsernameError);
-        username = findViewById(R.id.signUpUsername);
         emailError = findViewById(R.id.signUpEmailError);
         email = findViewById(R.id.signUpEmail);
         passwordError = findViewById(R.id.signUpPasswordError);
+        username = findViewById(R.id.signUpUsername);
+        usernameError = findViewById(R.id.signUpUsernameError);
         password = findViewById(R.id.signUpPassword);
         createAccount = findViewById(R.id.signUpCreateAccount);
 
-        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+        toolbar.setNavigationOnClickListener(v -> finish());
 
         email.addTextChangedListener(new TextWatcher() {
             @Override
@@ -102,7 +102,7 @@ public class SignUp extends AppCompatActivity {
             String sEmail = Objects.requireNonNull(email.getText()).toString().trim();
             String sUsername = Objects.requireNonNull(username.getText()).toString().trim();
             String sPassword = Objects.requireNonNull(password.getText()).toString().trim();
-            if (!emailError.isErrorEnabled() && !usernameError.isErrorEnabled() && !passwordError.isErrorEnabled()) {
+            if (!emailError.isErrorEnabled() && !passwordError.isErrorEnabled()) {
                 MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(SignUp.this);
                 View dialogView = LayoutInflater.from(SignUp.this).inflate(R.layout.dialog_sign_up, null);
                 builder.setView(dialogView)
@@ -110,12 +110,12 @@ public class SignUp extends AppCompatActivity {
                         .setMessage(R.string.signUpDialogMessage)
                         .setCancelable(false);
                 AlertDialog dialog = builder.show();
-                new UserActions(SignUp.this).signUpValidation(sEmail, sUsername, sPassword, new SignCallBackResponse<String>() {
+                new UserActions(v.getContext()).signUp(sEmail, sUsername, sPassword, new SignCallBackResponse<String>() {
                     @Override
                     public void onSuccess(String object) {
                         dialog.dismiss();
-                        Toast.makeText(SignUp.this, getString(R.string.signUpEmailVerification), Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(SignUp.this, SignIn.class));
+                        Toast.makeText(SignUp.this, object, Toast.LENGTH_LONG).show();
+                        startActivity(new Intent(SignUp.this, Main.class));
                         finish();
                     }
 
@@ -131,6 +131,10 @@ public class SignUp extends AppCompatActivity {
                                 Tools.setErrorToLayout(usernameError, message, true);
                                 username.requestFocus();
                                 break;
+                            case 3:
+                                Tools.setErrorToLayout(passwordError, message, true);
+                                password.requestFocus();
+                                break;
                         }
                     }
 
@@ -138,16 +142,12 @@ public class SignUp extends AppCompatActivity {
                     public void onFailure(String message) {
                         dialog.dismiss();
                         Toast.makeText(SignUp.this, message, Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(SignUp.this, Main.class));
+                        finish();
                     }
                 });
             }
         });
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
     }
 
 }
