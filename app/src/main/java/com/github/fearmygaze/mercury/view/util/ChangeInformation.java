@@ -49,7 +49,9 @@ public class ChangeInformation extends AppCompatActivity {
         user = bundle.getParcelable(User.PARCEL);
         changeType = bundle.getString("type");
         fireUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (user == null || changeType == null || fireUser != null) onBackPressed();
+        if (user == null || changeType == null || fireUser == null)
+            onBackPressed();
+
         userEmail = fireUser.getEmail();
         userActions = new UserActions(ChangeInformation.this);
 
