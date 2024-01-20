@@ -59,9 +59,9 @@ public class ProfileEdit extends AppCompatActivity {
         websiteCell = findViewById(R.id.profileEditWebsite);
 
         bundle = getIntent().getExtras();
-        if (bundle == null) onBackPressed();
+        if (bundle == null) finish();
         user = bundle.getParcelable(User.PARCEL);
-        if (user == null) onBackPressed();
+        if (user == null) finish();
 
         Tools.profileImage(user.getImage(), ProfileEdit.this).into(userImage);
         statusCell.setText(user.getStatus());
@@ -86,7 +86,7 @@ public class ProfileEdit extends AppCompatActivity {
             }
         });
 
-        back.setOnClickListener(v -> onBackPressed());
+        back.setOnClickListener(v -> finish());
         save.setOnClickListener(v -> {
             if (Objects.requireNonNull(statusCell.getText()).toString().trim().equals(user.getStatus()) &&
                     Objects.requireNonNull(locationCell.getText()).toString().trim().equals(user.getLocation()) &&
@@ -117,6 +117,7 @@ public class ProfileEdit extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(String object) {
                                     dialog.dismiss();
+                                    finish();
                                 }
 
                                 @Override
@@ -161,10 +162,4 @@ public class ProfileEdit extends AppCompatActivity {
                         Toast.makeText(ProfileEdit.this, "ERROR", Toast.LENGTH_SHORT).show();
                 }
             });
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
-    }
 }

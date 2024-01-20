@@ -16,7 +16,6 @@ import com.github.fearmygaze.mercury.custom.TimestampConverter;
 import com.github.fearmygaze.mercury.database.AppDatabase;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.ServerTimestamp;
 
 import java.time.Instant;
@@ -261,28 +260,12 @@ public class User implements Parcelable {
     // Helper methods
     ///////////////////////////////////////////////////////////////////////////
 
-    public static User convertFromDocumentAndSave(DocumentSnapshot document, Context context) {
-        return AppDatabase.getInstance(context).userDao().transactionUpdateUser(document.toObject(User.class));
-    }
-
-    public static User rememberMe(DocumentSnapshot doc, String token, Context context) {
-        return AppDatabase.getInstance(context).userDao().transactionRememberMe(doc.toObject(User.class), token);
-    }
-
     public static User updateRoomUser(User user, Context context) {
         return AppDatabase.getInstance(context).userDao().transactionUpdateUser(user);
     }
 
     public static User updateRoomToken(String id, String token, Context context) {
         return AppDatabase.getInstance(context).userDao().transactionUpdateToken(token, id);
-    }
-
-    public static User updateRoomImage(String id, Uri link, Context context) {
-        return AppDatabase.getInstance(context).userDao().transactionUpdateImage(String.valueOf(link), id);
-    }
-
-    public static User updateRoomState(String id, boolean state, Context context) {
-        return AppDatabase.getInstance(context).userDao().transactionUpdateState(state, id);
     }
 
     public static User getRoomUser(String id, Context context) {

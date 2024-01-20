@@ -121,6 +121,7 @@ public class Profile extends AppCompatActivity {
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             onBackPressed();
         } else {
+            user = User.getRoomUser(user.getId(), Profile.this);
             Tools.profileImage(user.getImage(), Profile.this).into(userImage);
             if (user.getAccountType() != null && !user.getAccountType().equals("regular")) {
                 accountType.setImageDrawable(AppCompatResources.getDrawable(Profile.this, R.drawable.ic_dev_24));

@@ -140,7 +140,7 @@ public class UserActions implements UserActionsDao {
                                             updateProfileInfo(user, new CallBackResponse<String>() {
                                                 @Override
                                                 public void onSuccess(String object) {
-                                                    callBackResponse.onSuccess(user);
+                                                    callBackResponse.onSuccess(User.updateRoomUser(user, ctx));
                                                 }
 
                                                 @Override
@@ -267,7 +267,10 @@ public class UserActions implements UserActionsDao {
                         "website", user.getWebsite(),
                         "notificationToken", user.getNotificationToken())
                 .addOnFailureListener(e -> callBackResponse.onFailure("Failed to update your information"))
-                .addOnSuccessListener(unused -> callBackResponse.onSuccess("Your info updated successfully"));
+                .addOnSuccessListener(unused -> {
+                    User.updateRoomUser(user, ctx);
+                    callBackResponse.onSuccess("Your info updated successfully");
+                });
     }
 
     @Override

@@ -28,12 +28,6 @@ public interface UserRoomDao {
     @Query("UPDATE users SET notificationToken = :token WHERE id = :id")
     void updateToken(String token, String id);
 
-    @Query("UPDATE users SET image = :image WHERE id = :id")
-    void updateImage(String image, String id);
-
-    @Query("UPDATE users SET isProfileOpen = :state WHERE id = :id")
-    void updateProfileState(boolean state, String id);
-
     @Insert(onConflict = REPLACE)
     void insert(User user);
 
@@ -44,27 +38,9 @@ public interface UserRoomDao {
     void delete(User user);
 
     @Transaction
-    default User transactionRememberMe(User user, String token) {
-        update(user);
-        return transactionUpdateToken(token, user.getId());
-    }
-
-    @Transaction
     default User transactionUpdateUser(User user) {
         update(user);
         return getByID(user.getId());
-    }
-
-    @Transaction
-    default User transactionUpdateState(boolean state, String id) {
-        updateProfileState(state, id);
-        return getByID(id);
-    }
-
-    @Transaction
-    default User transactionUpdateImage(String image, String id) {
-        updateImage(image, id);
-        return getByID(id);
     }
 
     @Transaction
@@ -72,5 +48,4 @@ public interface UserRoomDao {
         updateToken(token, id);
         return getByID(id);
     }
-
 }
