@@ -115,7 +115,7 @@ public class SignUp extends AppCompatActivity {
                     public void onSuccess(String object) {
                         dialog.dismiss();
                         Toast.makeText(SignUp.this, object, Toast.LENGTH_LONG).show();
-                        startActivity(new Intent(SignUp.this, Main.class));
+                        startActivity(new Intent(SignUp.this, Welcome.class));
                         finish();
                     }
 
