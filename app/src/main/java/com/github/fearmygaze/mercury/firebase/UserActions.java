@@ -49,7 +49,6 @@ public class UserActions implements UserActionsDao {
         functions.getHttpsCallable("signUpFlow")
                 .call(body)
                 .addOnFailureListener(e -> callBackResponse.onFailure("Error: couldn't get a response from the server"))
-                .addOnFailureListener(e -> Log.d("customLog", "UserActions.java:signUp:Line:51" + e.getMessage()))
                 .addOnSuccessListener(result -> {
                     if (result.getData() != null) {
                         try {
