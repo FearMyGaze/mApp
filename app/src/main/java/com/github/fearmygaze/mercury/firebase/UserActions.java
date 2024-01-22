@@ -2,7 +2,6 @@ package com.github.fearmygaze.mercury.firebase;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 
 import com.github.fearmygaze.mercury.database.AppDatabase;
 import com.github.fearmygaze.mercury.firebase.dao.UserActionsDao;
@@ -264,6 +263,7 @@ public class UserActions implements UserActionsDao {
                         "job", user.getJob(),
                         "jobL", user.getJobL(),
                         "website", user.getWebsite(),
+                        "profileOpen", user.isProfileOpen(),
                         "notificationToken", user.getNotificationToken())
                 .addOnFailureListener(e -> callBackResponse.onFailure("Failed to update your information"))
                 .addOnSuccessListener(unused -> {
