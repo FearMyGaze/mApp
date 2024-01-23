@@ -12,9 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.custom.CustomLinearLayout;
-import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
 import com.github.fearmygaze.mercury.firebase.RequestActions;
 import com.github.fearmygaze.mercury.firebase.RoomActions;
+import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
 import com.github.fearmygaze.mercury.model.Profile;
 import com.github.fearmygaze.mercury.model.Request;
 import com.github.fearmygaze.mercury.model.Room;
@@ -99,6 +99,7 @@ public class RoomCreator extends AppCompatActivity {
             roomActions.exists(Profile.create(user), adapterFriendsRoom.getSelectedProfiles(), encryptionSwitch.isChecked(), new CallBackResponse<Room>() {
                 @Override
                 public void onSuccess(Room room) {
+                    adapterFriendsRoom.clearSelectedProfiles();
                     startActivity(new Intent(RoomCreator.this, Chat.class)
                             .putExtra(User.PARCEL, user)
                             .putExtra(Room.PARCEL, room));
@@ -107,11 +108,13 @@ public class RoomCreator extends AppCompatActivity {
 
                 @Override
                 public void onError(String message) {
+                    adapterFriendsRoom.clearSelectedProfiles();
                     Toast.makeText(RoomCreator.this, message, Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onFailure(String message) {
+                    adapterFriendsRoom.clearSelectedProfiles();
                     Toast.makeText(RoomCreator.this, message, Toast.LENGTH_SHORT).show();
                 }
             });

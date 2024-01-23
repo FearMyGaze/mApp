@@ -143,6 +143,10 @@ public class AdapterFriendsRoom extends FirestoreRecyclerAdapter<Request, Adapte
         return profiles;
     }
 
+    public void clearSelectedProfiles() {
+        profiles.clear();
+    }
+
     public static class FriendsRoomVH extends RecyclerView.ViewHolder {
         MaterialCardView root;
         ShapeableImageView image;

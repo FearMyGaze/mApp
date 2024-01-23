@@ -15,7 +15,7 @@ public interface RequestActionsDao {
 
     void eventListener(String myUserID, String otherUserID, CallBackResponse<Request> callBackResponse);
 
-    void get(String requestID, CallBackResponse<Request> callBackResponse);
+    void getRequest(String requestID, CallBackResponse<Request> callBackResponse);
 
     void create(Profile myUser, Profile otherUser, CallBackResponse<String> callBackResponse);
 

@@ -11,9 +11,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class RequestActions implements RequestActionsDao {
     private final FirebaseFirestore database;
@@ -37,7 +35,7 @@ public class RequestActions implements RequestActionsDao {
     public Query friends(String myUserID) {
         return database
                 .collection("requests")
-                .whereArrayContains("refers", myUserID)
+                .whereArrayContains("visibleTo", myUserID)
                 .whereEqualTo("status", Request.RequestStatus.Friends)
                 .orderBy("created", Query.Direction.DESCENDING);
     }
@@ -83,7 +81,7 @@ public class RequestActions implements RequestActionsDao {
     }
 
     @Override
-    public void get(String requestID, CallBackResponse<Request> callBackResponse) {
+    public void getRequest(String requestID, CallBackResponse<Request> callBackResponse) {
         database.collection("requests")
                 .document(requestID)
                 .get()
@@ -102,7 +100,7 @@ public class RequestActions implements RequestActionsDao {
                 });
     }
 
-    private void get(String myUserID, String otherUserID, RequestCallBack callBack) {
+    private void getRequest(String myUserID, String otherUserID, RequestCallBack callBack) {
         database.collection("requests")
                 .whereIn("sender", Arrays.asList(myUserID, otherUserID))
                 .whereIn("receiver", Arrays.asList(myUserID, otherUserID))
@@ -123,18 +121,18 @@ public class RequestActions implements RequestActionsDao {
 
     @Override
     public void create(Profile myUser, Profile otherUser, CallBackResponse<String> callBackResponse) {
-        get(myUser.getId(), otherUser.getId(), request -> { // we get the request
+        getRequest(myUser.getId(), otherUser.getId(), request -> { // we get the request
             if (request != null) {
                 callBackResponse.onError("Something something the request exists now");
             } else {
                 DocumentReference reference = database.collection("requests").document();
-                List<String> list = new ArrayList<>(Arrays.asList(myUser.getId(), otherUser.getId()));
                 reference.set(new Request(reference.getId(),
                                 Request.RequestStatus.Waiting,
                                 myUser.getId(),
                                 otherUser.getId(),
-                                list,
-                                myUser, otherUser))
+                                Arrays.asList(myUser.getId(), otherUser.getId()),
+                                myUser,
+                                otherUser))
                         .addOnFailureListener(e -> callBackResponse.onFailure("Failed to send the request"))
                         .addOnSuccessListener(unused -> callBackResponse.onSuccess(""));
             }
@@ -143,7 +141,7 @@ public class RequestActions implements RequestActionsDao {
 
     @Override
     public void accept(String requestID, CallBackResponse<String> callBackResponse) {
-        get(requestID, new CallBackResponse<Request>() {
+        getRequest(requestID, new CallBackResponse<Request>() {
             @Override
             public void onSuccess(Request request) {
                 if (request.getStatus().equals(Request.RequestStatus.Waiting)) {
@@ -171,7 +169,7 @@ public class RequestActions implements RequestActionsDao {
 
     @Override
     public void deny(String requestID, CallBackResponse<String> callBackResponse) {
-        get(requestID, new CallBackResponse<Request>() {
+        getRequest(requestID, new CallBackResponse<Request>() {
             @Override
             public void onSuccess(Request request) {
 

@@ -18,9 +18,9 @@ public class Request {
     RequestStatus status;
     String sender;
     String receiver;
-    List<String> refers;
     Profile senderProfile;
     Profile receiverProfile;
+    List<String> visibleTo;
 
     @ServerTimestamp
     Date created;
@@ -32,12 +32,13 @@ public class Request {
     public Request() {
     }
 
-    public Request(String id, RequestStatus status, String sender, String receiver, List<String> refers, Profile senderProfile, Profile receiverProfile) {
+    public Request(String id, RequestStatus status, String sender, String receiver,
+                   List<String> visibleTo, Profile senderProfile, Profile receiverProfile) {
         this.id = id;
         this.status = status;
         this.sender = sender;
         this.receiver = receiver;
-        this.refers = refers;
+        this.visibleTo = visibleTo;
         this.senderProfile = senderProfile;
         this.receiverProfile = receiverProfile;
     }
@@ -78,12 +79,12 @@ public class Request {
         this.receiver = val;
     }
 
-    public List<String> getRefers() {
-        return refers;
+    public List<String> getVisibleTo() {
+        return visibleTo;
     }
 
-    public void setRefers(List<String> val) {
-        this.refers = val;
+    public void setVisibleTo(List<String> val) {
+        this.visibleTo = val;
     }
 
     public Profile getSenderProfile() {
@@ -122,7 +123,7 @@ public class Request {
                 ", status=" + status +
                 ", sender='" + sender + '\'' +
                 ", receiver='" + receiver + '\'' +
-                ", refers=" + refers +
+                ", visibleTo=" + visibleTo +
                 ", senderProfile=" + senderProfile +
                 ", receiverProfile=" + receiverProfile +
                 ", created=" + created +
