@@ -350,8 +350,6 @@ public class Main extends AppCompatActivity {
 
         if (adapterCachedProfile.getItemCount() > 0 || adapterCachedQuery.getItemCount() > 0) {
             cachedComp.setVisibility(View.VISIBLE);
-        } else if (adapterCachedProfile.getItemCount() == 0 && adapterCachedQuery.getItemCount() == 0) {
-            Toast.makeText(Main.this, "Add the errorLayout", Toast.LENGTH_SHORT).show();
         } else {
             cachedComp.setVisibility(View.GONE);
         }
