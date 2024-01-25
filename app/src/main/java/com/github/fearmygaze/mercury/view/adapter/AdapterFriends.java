@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.database.AppDatabase;
 import com.github.fearmygaze.mercury.firebase.UserActions;
 import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
 import com.github.fearmygaze.mercury.model.Profile;
@@ -54,9 +53,7 @@ public class AdapterFriends extends FirestoreRecyclerAdapter<Request, AdapterFri
                 new UserActions(v.getContext()).getUserByID(model.getSenderProfile().getId(), new CallBackResponse<User>() {
                     @Override
                     public void onSuccess(User object) {
-                        AppDatabase.getInstance(holder.itemView.getContext())
-                                .cachedProfile()
-                                .insert(new Profile(object.getId(), object.getUsername(), object.getImage()));
+                        Profile.insertToCache(v.getContext(), object);
                         v.getContext().startActivity(new Intent(v.getContext(), ProfileViewer.class)
                                 .putExtra(User.PARCEL, ourUser)
                                 .putExtra(User.PARCEL_OTHER, object));
@@ -80,9 +77,7 @@ public class AdapterFriends extends FirestoreRecyclerAdapter<Request, AdapterFri
                 new UserActions(v.getContext()).getUserByID(model.getReceiverProfile().getId(), new CallBackResponse<User>() {
                     @Override
                     public void onSuccess(User object) {
-                        AppDatabase.getInstance(holder.itemView.getContext())
-                                .cachedProfile()
-                                .insert(new Profile(object.getId(), object.getUsername(), object.getImage()));
+                        Profile.insertToCache(v.getContext(), object);
                         v.getContext().startActivity(new Intent(v.getContext(), ProfileViewer.class)
                                 .putExtra(User.PARCEL, ourUser)
                                 .putExtra(User.PARCEL_OTHER, object));

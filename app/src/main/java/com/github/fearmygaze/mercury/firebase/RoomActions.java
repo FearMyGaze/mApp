@@ -201,7 +201,7 @@ public class RoomActions implements RoomActionsDao {
                         Message message = documentSnapshot.toObject(Message.class);
                         if (message != null) {
                             List<Profile> fetchedLikes = message.getLikes();
-                            fetchedLikes.add(new Profile(user.getId(), user.getUsername(), user.getImage()));
+                            fetchedLikes.add(Profile.create(user));
                             reference.update("likes", fetchedLikes);
                         }
                     } else callBackResponse.onError("Error parsing the message");
@@ -222,7 +222,7 @@ public class RoomActions implements RoomActionsDao {
                         Message message = documentSnapshot.toObject(Message.class);
                         if (message != null) {
                             List<Profile> fetchedLikes = message.getLikes();
-                            fetchedLikes.remove(new Profile(user.getId(), user.getUsername(), user.getImage()));
+                            fetchedLikes.remove(Profile.create(user));
                             reference.update("likes", fetchedLikes);
                         }
                     } else callBackResponse.onError("Error parsing the message");

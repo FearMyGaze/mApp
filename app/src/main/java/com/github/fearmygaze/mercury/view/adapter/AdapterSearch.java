@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.database.AppDatabase;
 import com.github.fearmygaze.mercury.model.Profile;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
@@ -43,7 +42,7 @@ public class AdapterSearch extends RecyclerView.Adapter<AdapterSearch.SearchVH> 
         holder.username.setText(model.getUsername());
         holder.status.setText(model.getStatus());
         holder.root.setOnClickListener(v -> {
-            AppDatabase.getInstance(v.getContext()).cachedProfile().insert(Profile.create(model));
+            Profile.insertToCache(v.getContext(), model);
             actions.onClick();
             Tools.goToProfileViewer(user, model, v.getContext());
         });

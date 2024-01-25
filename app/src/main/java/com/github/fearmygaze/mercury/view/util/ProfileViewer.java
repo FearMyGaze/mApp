@@ -119,8 +119,7 @@ public class ProfileViewer extends AppCompatActivity {
                             .setNegativeButton(R.string.generalCancel, (dialog, i) -> dialog.dismiss())
                             .setPositiveButton("Block", (dialog, i) -> {
                                 dialog.dismiss();
-                                actions.block(new Profile(myUser.getId(), myUser.getUsername(), myUser.getImage()),
-                                        new Profile(visibleUser.getId(), visibleUser.getUsername(), visibleUser.getImage()),
+                                actions.block(Profile.create(myUser), Profile.create(visibleUser),
                                         new CallBackResponse<String>() {
                                             @Override
                                             public void onSuccess(String object) {
@@ -202,8 +201,7 @@ public class ProfileViewer extends AppCompatActivity {
                             });
                         }).show();
             } else if (state.equals(getString(R.string.requestNone))) {
-                actions.create(new Profile(myUser.getId(), myUser.getUsername(), myUser.getImage()),
-                        new Profile(visibleUser.getId(), visibleUser.getUsername(), visibleUser.getImage()),
+                actions.create(Profile.create(myUser), Profile.create(visibleUser),
                         new CallBackResponse<String>() {
                             @Override
                             public void onSuccess(String object) {
@@ -304,4 +302,9 @@ public class ProfileViewer extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }

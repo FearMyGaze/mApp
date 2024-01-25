@@ -1,6 +1,7 @@
 package com.github.fearmygaze.mercury.model;
 
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -9,6 +10,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+
+import com.github.fearmygaze.mercury.database.AppDatabase;
 
 @Entity(tableName = "cachedProfiles")
 public class Profile implements Parcelable {
@@ -28,6 +31,11 @@ public class Profile implements Parcelable {
     @ColumnInfo(name = "image")
     String image;
 
+    @ColumnInfo(name = "notificationToken")
+    String notificationToken;
+
+    //TODO: we need to add notificationToken and publicKey for the rooms or We need to find a way to store the encryptionKey
+
     ///////////////////////////////////////////////////////////////////////////
     // Constructors
     ///////////////////////////////////////////////////////////////////////////
@@ -36,10 +44,11 @@ public class Profile implements Parcelable {
     }
 
     @Ignore
-    public Profile(@NonNull String id, String username, String image) {
+    public Profile(@NonNull String id, String username, String image, String notificationToken) {
         this.id = id;
         this.username = username;
         this.image = image;
+        this.notificationToken = notificationToken;
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -71,6 +80,14 @@ public class Profile implements Parcelable {
         this.image = image;
     }
 
+    public String getNotificationToken() {
+        return notificationToken;
+    }
+
+    public void setNotificationToken(String notificationToken) {
+        this.notificationToken = notificationToken;
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     // Parcelable
     ///////////////////////////////////////////////////////////////////////////
@@ -91,6 +108,7 @@ public class Profile implements Parcelable {
         id = in.readString();
         username = in.readString();
         image = in.readString();
+        notificationToken = in.readString();
     }
 
     @Override
@@ -103,6 +121,7 @@ public class Profile implements Parcelable {
         parcel.writeString(id);
         parcel.writeString(username);
         parcel.writeString(image);
+        parcel.writeString(notificationToken);
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -110,7 +129,11 @@ public class Profile implements Parcelable {
     ///////////////////////////////////////////////////////////////////////////
 
     public static Profile create(User user) {
-        return new Profile(user.getId(), user.getUsername(), user.getImage());
+        return new Profile(user.getId(), user.getUsername(), user.getImage(), user.getNotificationToken());
+    }
+
+    public static void insertToCache(Context ctx, User user) {
+        AppDatabase.getInstance(ctx).cachedProfile().insert(create(user));
     }
 
     @NonNull
@@ -120,6 +143,7 @@ public class Profile implements Parcelable {
                 "id='" + id + '\'' +
                 ", username='" + username + '\'' +
                 ", image='" + image + '\'' +
+                ", notificationToken='" + notificationToken + '\'' +
                 '}';
     }
 }
