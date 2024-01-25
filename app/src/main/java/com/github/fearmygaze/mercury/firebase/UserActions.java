@@ -258,6 +258,7 @@ public class UserActions implements UserActionsDao {
         database.collection("users")
                 .document(user.getId())
                 .update("status", user.getStatus(),
+                        "image", user.getImage(),
                         "location", user.getLocation(),
                         "locationL", user.getLocationL(),
                         "job", user.getJob(),
