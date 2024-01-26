@@ -348,23 +348,9 @@ public class Main extends AppCompatActivity {
         adapterCachedProfile.set(database.cachedProfile().getAll());
         adapterCachedQuery.set(database.cachedQueries().getAll());
 
-        if (adapterCachedProfile.getItemCount() > 0 || adapterCachedQuery.getItemCount() > 0) {
-            cachedComp.setVisibility(View.VISIBLE);
-        } else {
-            cachedComp.setVisibility(View.GONE);
-        }
-
-        if (adapterCachedQuery.getItemCount() == 0) {
-            cachedSearchRecycler.setVisibility(View.GONE);
-        } else {
-            cachedSearchRecycler.setVisibility(View.VISIBLE);
-        }
-
-        if (adapterCachedProfile.getItemCount() == 0) {
-            cachedProfileRecycler.setVisibility(View.GONE);
-        } else {
-            cachedProfileRecycler.setVisibility(View.VISIBLE);
-        }
+        cachedComp.setVisibility(adapterCachedProfile.getItemCount() > 0 || adapterCachedQuery.getItemCount() > 0 ? View.VISIBLE : View.GONE);
+        cachedSearchRecycler.setVisibility(adapterCachedQuery.getItemCount() == 0 ? View.GONE : View.VISIBLE);
+        cachedProfileRecycler.setVisibility(adapterCachedProfile.getItemCount() == 0 ? View.GONE : View.VISIBLE);
     }
 
 }
