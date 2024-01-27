@@ -6,10 +6,10 @@
     android:layout_height="match_parent"
     android:padding="20dp"
     android:background="@color/basicBackground"
-    tools:context=".view.util.AccountInteractions.ChangeInformation">
+    tools:context=".view.util.AccountInteractions.DeleteAccount">
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/changeInformationAppImage"
+        android:id="@+id/deleteAccountAppImage"
         android:layout_width="40dp"
         android:layout_height="0dp"
         android:src="@drawable/ic_launcher_background"
@@ -17,62 +17,35 @@
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/changeInformationVerifyTitle"
+        android:id="@+id/deleteAccountTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="@string/changeVerifyTitle"
+        android:text="@string/deleteAccountTitle"
         android:textStyle="bold"
         android:textSize="22sp"
         android:textColor="@color/textBold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/changeInformationAppImage"/>
+        app:layout_constraintTop_toBottomOf="@id/deleteAccountAppImage" />
 
     <TextView
-        android:id="@+id/changeInformationVerifySubTitle"
+        android:id="@+id/deleteAccountParagraph"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:text="@string/changeVerifySubTitle"
+        android:text="@string/deleteAccountParagraph"
         android:textSize="17sp"
         android:textColor="@color/textBold"
-        app:layout_constraintStart_toStartOf="@id/changeInformationVerifyTitle"
-        app:layout_constraintEnd_toEndOf="@id/changeInformationVerifyTitle"
-        app:layout_constraintTop_toBottomOf="@id/changeInformationVerifyTitle"/>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/changeInformationVerifyPasswordError"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:hint="@string/generalPassword"
-        app:endIconMode="password_toggle"
-        app:counterEnabled="true"
-        app:counterMaxLength="255"
-        app:boxCornerRadiusTopStart="12.5dp"
-        app:boxCornerRadiusTopEnd="12.5dp"
-        app:boxCornerRadiusBottomStart="12.5dp"
-        app:boxCornerRadiusBottomEnd="12.5dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/changeInformationVerifySubTitle">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/changeInformationVerifyPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxLength="255"
-            android:inputType="textPassword"/>
-
-    </com.google.android.material.textfield.TextInputLayout>
+        app:layout_constraintStart_toStartOf="@id/deleteAccountTitle"
+        app:layout_constraintEnd_toEndOf="@id/deleteAccountTitle"
+        app:layout_constraintTop_toBottomOf="@id/deleteAccountTitle" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/changeInformationStepCancel"
+        android:id="@+id/deleteAccountCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/generalCancel"
@@ -83,10 +56,10 @@
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/changeInformationStepNext"
+        android:id="@+id/deleteAccountConfirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/generalNext"
+        android:text="Confirm"
         android:textAllCaps="false"
         app:cornerRadius="12.5dp"
         android:enabled="false"

@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="20dp"
     android:background="@color/basicBackground"
-    tools:context=".view.util.ChangeEmail">
+    tools:context=".view.util.AccountInteractions.ChangeEmail">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/changeEmailAppImage"
         android:layout_width="40dp"
         android:layout_height="0dp"
-        android:layout_marginTop="10dp"
         android:src="@drawable/ic_launcher_background"
         app:shapeAppearance="@style/RectComponent"
         app:layout_constraintDimensionRatio="1:1"
@@ -23,8 +23,6 @@
         android:id="@+id/changeEmailTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
         android:layout_marginTop="10dp"
         android:text="@string/changeEmailTitle"
         android:textStyle="bold"
@@ -61,9 +59,7 @@
         android:id="@+id/changeEmailError"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:hint="@string/generalEmail"
         app:endIconMode="clear_text"
         app:helperTextEnabled="true"
@@ -88,37 +84,27 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.divider.MaterialDivider
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        app:layout_constraintBottom_toTopOf="@id/changeEmailCancel"/>
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/changeEmailCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="20dp"
         android:text="@string/generalCancel"
         android:textAllCaps="false"
         app:cornerRadius="12.5dp"
         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/changeEmailNext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
         android:text="@string/generalConfirm"
         android:textAllCaps="false"
         app:cornerRadius="12.5dp"
         android:enabled="false"
         style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent" />
     
 </androidx.constraintlayout.widget.ConstraintLayout>

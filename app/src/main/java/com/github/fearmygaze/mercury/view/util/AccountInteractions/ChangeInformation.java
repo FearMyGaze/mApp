@@ -1,4 +1,4 @@
-package com.github.fearmygaze.mercury.view.util;
+package com.github.fearmygaze.mercury.view.util.AccountInteractions;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -86,16 +86,22 @@ public class ChangeInformation extends AppCompatActivity {
             userActions.signIn(userEmail, password, new SignCallBackResponse<String>() {
                 @Override
                 public void onSuccess(String object) {
-                    if (changeType.equals("email")) {
-                        startActivity(new Intent(ChangeInformation.this, ChangeEmail.class)
-                                .putExtra("id", user.getId())
-                                .putExtra("email", userEmail));
-                        finish();
-                    } else {
-                        startActivity(new Intent(ChangeInformation.this, ChangePassword.class)
-                                .putExtra("id", user.getId())
-                                .putExtra("email", userEmail));
-                        finish();
+                    switch (changeType) {
+                        case "email":
+                            startActivity(new Intent(ChangeInformation.this, ChangeEmail.class)
+                                    .putExtra(User.PARCEL, user)
+                                    .putExtra("email", userEmail));
+                            finish();
+                            break;
+                        case "password":
+                            startActivity(new Intent(ChangeInformation.this, ChangePassword.class));
+                            finish();
+                            break;
+                        case "delete":
+                            startActivity(new Intent(ChangeInformation.this, DeleteAccount.class)
+                                    .putExtra(User.PARCEL, user));
+                            finish();
+                            break;
                     }
                 }
 

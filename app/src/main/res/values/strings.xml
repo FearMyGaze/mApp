@@ -101,11 +101,19 @@
     <!-- ChangeInformation (Activity) -->
     <string name="changeVerifyTitle">Verify your password</string>
     <string name="changeVerifySubTitle">Re-enter your password to continue</string>
+
+    <!-- change email (Activity) -->
     <string name="changeEmailTitle">Change email</string>
     <string name="changeEmailSubTitle">Your current email is: </string>
+
+    <!-- Change Password (Activity) -->
     <string name="changePasswordTitle">Change password</string>
     <string name="changePasswordSubTitle">Type bellow the new password of your choice</string>
     <string name="changePasswordForgot">Forgot password?</string>
+
+    <!-- Delete Account (Activity) -->
+    <string name="deleteAccountTitle">Are you sure you want to continue?</string>
+    <string name="deleteAccountParagraph">By confirming this action, we delete all the data we have about you.</string>
 
     <!-- Requests -->
     <string name="requestAccepted">Friends</string>

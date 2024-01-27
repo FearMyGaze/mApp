@@ -1,4 +1,4 @@
-package com.github.fearmygaze.mercury.view.util;
+package com.github.fearmygaze.mercury.view.util.AccountInteractions;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -8,8 +8,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
 import com.github.fearmygaze.mercury.firebase.UserActions;
+import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
 import com.github.fearmygaze.mercury.util.RegEx;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -61,7 +61,7 @@ public class ChangePassword extends AppCompatActivity {
                     Toast.makeText(ChangePassword.this, "Success", Toast.LENGTH_SHORT).show();
                     onBackPressed();
                 }
-
+                //TODO: change the error message to be wrong password
                 @Override
                 public void onError(String message) {
                     this.onFailure(message);

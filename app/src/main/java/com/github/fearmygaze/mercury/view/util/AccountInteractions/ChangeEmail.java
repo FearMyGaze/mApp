@@ -1,4 +1,4 @@
-package com.github.fearmygaze.mercury.view.util;
+package com.github.fearmygaze.mercury.view.util.AccountInteractions;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,9 +10,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.database.AppDatabase;
-import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
 import com.github.fearmygaze.mercury.firebase.UserActions;
+import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.RegEx;
 import com.github.fearmygaze.mercury.view.activity.Main;
@@ -30,6 +29,7 @@ public class ChangeEmail extends AppCompatActivity {
 
     MaterialButton cancel, next;
 
+    Bundle bundle;
     User user;
     String userEmail;
 
@@ -44,10 +44,13 @@ public class ChangeEmail extends AppCompatActivity {
         cancel = findViewById(R.id.changeEmailCancel);
         next = findViewById(R.id.changeEmailNext);
 
-        user = AppDatabase.getInstance(ChangeEmail.this).userDao().getByID(getIntent().getStringExtra("id"));
+        bundle = getIntent().getExtras();
+        if (bundle == null) finish();
+        user = bundle.getParcelable(User.PARCEL);
         userEmail = getIntent().getStringExtra("email");
-        currentEmail.setText(userEmail);
+        if (user == null || userEmail == null) finish();
 
+        currentEmail.setText(userEmail);
         cancel.setOnClickListener(v -> onBackPressed());
 
         email.addTextChangedListener(new TextWatcher() {
@@ -71,8 +74,8 @@ public class ChangeEmail extends AppCompatActivity {
             String updatedEmail = Objects.requireNonNull(email.getText()).toString().trim();
             new UserActions(v.getContext()).updateEmail(updatedEmail, new CallBackResponse<String>() {
                 @Override
-                public void onSuccess(String object) {
-                    Toast.makeText(ChangeEmail.this, "Email Updated Successfully", Toast.LENGTH_SHORT).show();
+                public void onSuccess(String message) {
+                    Toast.makeText(ChangeEmail.this, message, Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(ChangeEmail.this, Main.class));
                     finish();
                 }

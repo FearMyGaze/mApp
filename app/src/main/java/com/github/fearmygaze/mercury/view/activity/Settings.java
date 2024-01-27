@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.content.res.AppCompatResources;
 
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.firebase.UserActions;
@@ -13,12 +12,11 @@ import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.PrivatePreference;
 import com.github.fearmygaze.mercury.util.Tools;
-import com.github.fearmygaze.mercury.view.util.ChangeInformation;
+import com.github.fearmygaze.mercury.view.util.AccountInteractions.ChangeInformation;
 import com.github.fearmygaze.mercury.view.util.ProfileEdit;
 import com.github.fearmygaze.mercury.view.util.ShowBlockedUsers;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 public class Settings extends AppCompatActivity {
@@ -113,34 +111,12 @@ public class Settings extends AppCompatActivity {
         });
 
         closeAccount.setOnClickListener(v -> {
-            new MaterialAlertDialogBuilder(Settings.this)
-                    .setBackground(AppCompatResources.getDrawable(Settings.this, R.color.basicBackground))
-                    .setCancelable(false)
-                    .setTitle(getString(R.string.settingsDialogTitle))
-                    .setMessage(String.format("%s, %s %s", getString(R.string.settingsDialogMessagePart1), user.getUsername(), getString(R.string.settingsDialogMessagePart2)))
-                    .setNegativeButton(getString(R.string.generalCancel), (dialog, which) -> dialog.cancel())
-                    .setPositiveButton(getString(R.string.generalDelete), (dialog, which) -> {
-                        userActions.deleteAccount(new CallBackResponse<String>() {
-                            @Override
-                            public void onSuccess(String object) {
-                                onBackPressed();
-                            }
-
-                            @Override
-                            public void onError(String message) {
-                                this.onFailure(message);
-                            }
-
-                            @Override
-                            public void onFailure(String message) {
-                                Toast.makeText(Settings.this, message, Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    })
-                    .show();
+            startActivity(new Intent(Settings.this, ChangeInformation.class)
+                    .putExtra(User.PARCEL, user)
+                    .putExtra("type", "delete"));
         });
 
-        profile.setOnClickListener(v -> {
+        profile.setOnClickListener(v -> {//TODO: maybe move the setChecked inside the onSuccess
             profileSwitch.setChecked(!profileSwitch.isChecked());
             userActions.updateProfileVisibility(user.getId(), profile.isChecked(), new CallBackResponse<String>() {
                 @Override

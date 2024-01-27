@@ -100,11 +100,19 @@
     <!-- ChangeInformation (Activity) -->
     <string name="changeVerifyTitle">Επαλύθευση του κωδικόυ</string>
     <string name="changeVerifySubTitle">Πληκτρολογήστε ξανά τον κωδικό πρόσβασής σας</string>
+
+    <!-- change email (Activity) -->
     <string name="changeEmailTitle">Αλλαγή Ηλ.διεύθυνσης</string>
     <string name="changeEmailSubTitle">Η Ηλ.διεύθυνση σε χρήση ειναι: </string>
+
+    <!-- Change Password (Activity) -->
     <string name="changePasswordTitle">Αλλαγή κωδικού</string>
     <string name="changePasswordSubTitle">Τοποθετήστε κάτω τον νέο κωδικό της επιλογής σας</string>
     <string name="changePasswordForgot">Ξέχασες τον κωδικό σου?</string>
+
+    <!-- Delete Account (Activity) -->
+    <string name="deleteAccountTitle">Είσαι σίγουρος οτι θέλεις να συνεχίσεις;</string>
+    <string name="deleteAccountParagraph">Με την επιβεβαίωση αυτης της ενεργειας διαγραφουμε ολα τα στοιχεια τα οποια εχουμε για εσας.</string>
 
     <!-- Requests -->
     <string name="requestAccepted">Φίλοι</string>
