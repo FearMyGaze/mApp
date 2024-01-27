@@ -18,7 +18,7 @@
         android:theme="@style/Theme.Mercury"
         tools:targetApi="33">
         <activity
-            android:name=".view.util.AccountInteractions.DeleteAccount"
+            android:name=".view.util.AccountActions.DeleteAccount"
             android:exported="false" />
         <activity
             android:name=".view.activity.Starting"
@@ -111,19 +111,19 @@
             android:windowSoftInputMode="adjustResize"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".view.util.AccountInteractions.ChangeInformation"
+            android:name=".view.util.AccountActions.ChangeInformation"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".view.util.AccountInteractions.ChangeEmail"
+            android:name=".view.util.AccountActions.ChangeEmail"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".view.util.AccountInteractions.ChangePassword"
+            android:name=".view.util.AccountActions.ChangePassword"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"

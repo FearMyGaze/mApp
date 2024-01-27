@@ -1,4 +1,4 @@
-package com.github.fearmygaze.mercury.view.util.AccountInteractions;
+package com.github.fearmygaze.mercury.view.util.AccountActions;
 
 import android.content.Intent;
 import android.os.Bundle;

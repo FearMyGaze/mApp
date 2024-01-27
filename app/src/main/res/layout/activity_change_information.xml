@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:padding="20dp"
     android:background="@color/basicBackground"
-    tools:context=".view.util.AccountInteractions.ChangeInformation">
+    tools:context=".view.util.AccountActions.ChangeInformation">
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/changeInformationAppImage"
