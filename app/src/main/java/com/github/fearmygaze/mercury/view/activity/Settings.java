@@ -13,7 +13,7 @@ import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.PrivatePreference;
 import com.github.fearmygaze.mercury.util.Tools;
 import com.github.fearmygaze.mercury.view.util.AccountActions.ChangeInformation;
-import com.github.fearmygaze.mercury.view.util.ProfileEdit;
+import com.github.fearmygaze.mercury.view.util.AccountActions.ProfileEdit;
 import com.github.fearmygaze.mercury.view.util.ShowBlockedUsers;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.card.MaterialCardView;

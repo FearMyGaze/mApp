@@ -22,7 +22,7 @@ import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.Tools;
 import com.github.fearmygaze.mercury.view.adapter.AdapterFriends;
 import com.github.fearmygaze.mercury.view.util.ImageViewer;
-import com.github.fearmygaze.mercury.view.util.ProfileEdit;
+import com.github.fearmygaze.mercury.view.util.AccountActions.ProfileEdit;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.ChipGroup;

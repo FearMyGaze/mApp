@@ -93,7 +93,7 @@
             android:windowSoftInputMode="adjustResize"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".view.util.ProfileEdit"
+            android:name=".view.util.AccountActions.ProfileEdit"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
