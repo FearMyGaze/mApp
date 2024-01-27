@@ -99,10 +99,11 @@ public class Settings extends AppCompatActivity {
 
         signOut.setOnClickListener(v -> {
             userActions.signOut();
-            PrivatePreference preference = new PrivatePreference(this);
-            preference.clearValue("current");
+            new PrivatePreference(this).clearAllValues();
             User.deleteRoomUser(user, Settings.this);
-            onBackPressed();
+            Intent intent = new Intent(Settings.this, Welcome.class); //This resets the activity stack
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         });
 
         showBlocked.setOnClickListener(v -> {
