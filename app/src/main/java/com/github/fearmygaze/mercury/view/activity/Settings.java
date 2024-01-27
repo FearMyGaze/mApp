@@ -117,12 +117,12 @@ public class Settings extends AppCompatActivity {
                     .putExtra("type", "delete"));
         });
 
-        profile.setOnClickListener(v -> {//TODO: maybe move the setChecked inside the onSuccess
-            profileSwitch.setChecked(!profileSwitch.isChecked());
-            userActions.updateProfileVisibility(user.getId(), profile.isChecked(), new CallBackResponse<String>() {
+        profile.setOnClickListener(v -> {
+            userActions.updateProfileVisibility(user.getId(), !profile.isChecked(), new CallBackResponse<String>() {
                 @Override
-                public void onSuccess(String object) {
-                    this.onFailure(object);
+                public void onSuccess(String message) {
+                    profileSwitch.setChecked(!profileSwitch.isChecked());
+                    this.onFailure(message);
                 }
 
                 @Override
