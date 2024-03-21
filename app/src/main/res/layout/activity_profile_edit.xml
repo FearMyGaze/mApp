@@ -7,62 +7,75 @@
     android:background="@color/basicBackground"
     tools:context=".view.util.AccountActions.ProfileEdit">
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/profileEditGoBack"
-        android:layout_width="30dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="20dp"
-        android:src="@drawable/ic_arrow_back_24"
-        android:tint="?attr/colorPrimary"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        app:shapeAppearance="@style/RoundedComponent"
-        android:contentDescription="@string/signUpGoBack"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/profileEditAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        app:elevation="0dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/profileEditGoBack"
+                android:layout_width="24dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/ic_arrow_back_24"
+                app:tint="?colorPrimary"
+                android:scaleType="fitCenter"
+                android:background="?selectableItemBackgroundBorderless"
+                android:contentDescription="@string/signUpGoBack"
+                app:shapeAppearance="@style/RoundedComponent"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/profileEditSave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="@string/generalSave"
+                android:textAllCaps="false"
+                app:cornerRadius="12.5dp"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/profileEditAppBarDivider"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/profileEditHelper"
-        android:textColor="@color/textBold"
-        android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@id/profileEditGoBack"
-        app:layout_constraintEnd_toStartOf="@id/profileEditSave"
-        app:layout_constraintTop_toTopOf="@id/profileEditGoBack"
-        app:layout_constraintBottom_toBottomOf="@id/profileEditGoBack"/>
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/profileEditSave"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:text="@string/generalSave"
-        android:textAllCaps="false"
-        app:cornerRadius="12.5dp"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/profileEditGoBack"
-        app:layout_constraintBottom_toBottomOf="@id/profileEditGoBack"/>
+        app:layout_constraintTop_toBottomOf="@id/profileEditAppBar" />
 
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="30dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/profileEditGoBack"
+        app:layout_constraintTop_toBottomOf="@id/profileEditAppBarDivider"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="20dp">
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/profileEditUserImage"
                 android:layout_width="90dp"
                 android:layout_height="0dp"
-                android:layout_marginStart="20dp"
                 app:layout_constraintDimensionRatio="1:1"
                 app:shapeAppearance="@style/RectComponent"
                 tools:src="@tools:sample/avatars"
@@ -73,7 +86,6 @@
                 android:id="@+id/profileEditChoose"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
                 android:text="@string/generalChoose"
                 android:textAllCaps="false"
                 app:cornerRadius="12.5dp"
@@ -83,16 +95,14 @@
                 app:layout_constraintBottom_toBottomOf="@id/profileEditUserImage"/>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/profileEditStatusError"
+                android:id="@+id/profileEditFullNameError"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
                 android:layout_marginTop="20dp"
-                android:hint="@string/generalStatus"
+                android:hint="Full name"
                 app:endIconMode="clear_text"
                 app:counterEnabled="true"
-                app:counterMaxLength="144"
+                app:counterMaxLength="160"
                 app:boxCornerRadiusTopStart="12.5dp"
                 app:boxCornerRadiusTopEnd="12.5dp"
                 app:boxCornerRadiusBottomStart="12.5dp"
@@ -103,11 +113,38 @@
                 app:layout_constraintTop_toBottomOf="@id/profileEditUserImage">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/profileEditFullName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLength="160"
+                    android:inputType="text|textPersonName|textAutoComplete"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/profileEditStatusError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:hint="Bio"
+                app:endIconMode="clear_text"
+                app:counterEnabled="true"
+                app:counterMaxLength="160"
+                app:boxCornerRadiusTopStart="12.5dp"
+                app:boxCornerRadiusTopEnd="12.5dp"
+                app:boxCornerRadiusBottomStart="12.5dp"
+                app:boxCornerRadiusBottomEnd="12.5dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/profileEditFullNameError">
+
+                <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/profileEditStatus"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:maxLength="144"
-                    android:inputType="text|textAutoComplete|textMultiLine"/>
+                    android:maxLength="160"
+                    android:inputType="text|textPersonName|textAutoComplete"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -115,8 +152,6 @@
                 android:id="@+id/profileEditLocationError"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
                 android:layout_marginTop="10dp"
                 android:hint="@string/generalLocation"
                 app:endIconMode="clear_text"
@@ -144,8 +179,6 @@
                 android:id="@+id/profileEditJobError"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
                 android:layout_marginTop="20dp"
                 android:hint="@string/generalJob"
                 app:endIconMode="clear_text"
@@ -173,13 +206,11 @@
                 android:id="@+id/profileEditWebsiteError"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
                 android:layout_marginTop="20dp"
                 android:hint="@string/generalWebsite"
                 app:endIconMode="clear_text"
                 app:counterEnabled="true"
-                app:counterMaxLength="999"
+                app:counterMaxLength="100"
                 app:boxCornerRadiusTopStart="12.5dp"
                 app:boxCornerRadiusTopEnd="12.5dp"
                 app:boxCornerRadiusBottomStart="12.5dp"
@@ -193,7 +224,7 @@
                     android:id="@+id/profileEditWebsite"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:maxLength="999"
+                    android:maxLength="100"
                     android:inputType="text|textAutoComplete"/>
 
             </com.google.android.material.textfield.TextInputLayout>

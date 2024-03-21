@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
@@ -13,6 +14,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -41,7 +43,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.List;
@@ -53,12 +54,10 @@ public class Main extends AppCompatActivity {
 
     //AppBar
     MaterialCardView profile;
-    ShapeableImageView profileImage, search, settings;
-    TextView appName;
+    ShapeableImageView profileImage, createRoomBtn, searchBtn, settingsBtn;
 
     //BottomAppBar
     BottomNavigationView navigation;
-    FloatingActionButton createRoom;
 
     //Utils
     User user;
@@ -88,11 +87,16 @@ public class Main extends AppCompatActivity {
     private final Handler searchHandler = new Handler();
     private Runnable searchRunnable;
 
+    TypedValue typedValue;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+
+        typedValue = new TypedValue();
+        getTheme().resolveAttribute(android.R.attr.colorPrimary, typedValue, true);
 
         database = AppDatabase.getInstance(Main.this);
 
@@ -100,13 +104,12 @@ public class Main extends AppCompatActivity {
 
         profile = findViewById(R.id.mainProfileImageParent);
         profileImage = findViewById(R.id.mainProfileImage);
-        appName = findViewById(R.id.mainAppName);
-        search = findViewById(R.id.mainSearch);
-        settings = findViewById(R.id.mainSettings);
+        createRoomBtn = findViewById(R.id.mainCreate);
+        searchBtn = findViewById(R.id.mainSearch);
+        settingsBtn = findViewById(R.id.mainSettings);
 
         //BottomNavigation
         navigation = findViewById(R.id.mainBottomNavigation);
-        createRoom = findViewById(R.id.mainChatCreate);
 
         //Search sheet
         searchSheetParent = findViewById(R.id.searchSheetParent);
@@ -182,22 +185,38 @@ public class Main extends AppCompatActivity {
         searchSheet();
 
         profile.setOnClickListener(v -> {
-            startActivity(new Intent(Main.this, Profile.class)
+            startActivity(new Intent(Main.this, MyProfile.class)
                     .putExtra(User.PARCEL, user));
         });
 
-        search.setOnClickListener(v -> {
+        profile.setOnLongClickListener(v -> true);
+
+        createRoomBtn.setOnClickListener(v -> {
+            startActivity(new Intent(Main.this, RoomCreator.class)
+                    .putExtra(User.PARCEL, user));
+        });
+
+        searchBtn.setOnClickListener(v -> {
             handleCachedComps();
             searchBehaviour.setState(BottomSheetBehavior.STATE_EXPANDED);
         });
 
-        settings.setOnClickListener(v -> {
+        settingsBtn.setOnClickListener(v -> {
             startActivity(new Intent(Main.this, Settings.class)
                     .putExtra(User.PARCEL, user));
         });
-        createRoom.setOnClickListener(v -> {
-            startActivity(new Intent(Main.this, RoomCreator.class)
-                    .putExtra(User.PARCEL, user));
+
+        searchBehaviour.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View view, int state) {
+                //TODO: we want to handle the components based on the state
+                // eq cached comps, close the listeners (if we have any)
+            }
+
+            @Override
+            public void onSlide(@NonNull View view, float v) {
+
+            }
         });
     }
 
@@ -248,11 +267,7 @@ public class Main extends AppCompatActivity {
         ConstraintLayout errorLayout = findViewById(R.id.searchErrorLayout);
         TextView errorText = findViewById(R.id.searchErrorText);
 
-        adapterSearch = new AdapterSearch(user, () -> {
-            searchBox.setText("");
-            searchBox.clearFocus();
-            handleCachedComps();
-        });
+        adapterSearch = new AdapterSearch(user, () -> searchBox.clearFocus());
 
         searchRecycler.setLayoutManager(new CustomLinearLayout(Main.this, LinearLayoutManager.VERTICAL, false));
         searchRecycler.setAdapter(adapterSearch);
@@ -348,9 +363,11 @@ public class Main extends AppCompatActivity {
         adapterCachedProfile.set(database.cachedProfile().getAll());
         adapterCachedQuery.set(database.cachedQueries().getAll());
 
-        cachedComp.setVisibility(adapterCachedProfile.getItemCount() > 0 || adapterCachedQuery.getItemCount() > 0 ? View.VISIBLE : View.GONE);
-        cachedSearchRecycler.setVisibility(adapterCachedQuery.getItemCount() == 0 ? View.GONE : View.VISIBLE);
-        cachedProfileRecycler.setVisibility(adapterCachedProfile.getItemCount() == 0 ? View.GONE : View.VISIBLE);
+        if (adapterSearch.getItemCount() == 0) {
+            cachedComp.setVisibility(adapterCachedProfile.getItemCount() > 0 || adapterCachedQuery.getItemCount() > 0 ? View.VISIBLE : View.GONE);
+            cachedSearchRecycler.setVisibility(adapterCachedQuery.getItemCount() == 0 ? View.GONE : View.VISIBLE);
+            cachedProfileRecycler.setVisibility(adapterCachedProfile.getItemCount() == 0 ? View.GONE : View.VISIBLE);
+        }
     }
 
 }

@@ -4,7 +4,7 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
 
-    <!-- Basic Pallet --> <!-- TODO: Add more variant colors -->
+    <!-- Basic Pallet -->
     <color name="basicBackground">#ffffff</color>
     <color name="basicBackgroundAlternate">#fafafa</color>
     <color name="variant">#ff7a00</color>

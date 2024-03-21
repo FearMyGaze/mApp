@@ -62,6 +62,22 @@
                     app:layout_constraintBottom_toBottomOf="parent"/>
 
                 <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/mainCreate"
+                    android:layout_width="24dp"
+                    android:layout_height="0dp"
+                    android:layout_marginEnd="8dp"
+                    android:src="@drawable/ic_circled_add_24"
+                    app:tint="?colorPrimary"
+                    android:scaleType="fitCenter"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:contentDescription="createChat"
+                    app:shapeAppearance="@style/RoundedComponent"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toStartOf="@id/mainSearch"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/mainSearch"
                     android:layout_width="24dp"
                     android:layout_height="0dp"
@@ -86,7 +102,7 @@
                     app:tint="?colorPrimary"
                     android:scaleType="fitCenter"
                     android:background="?selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/signUpGoBack"
+                    android:contentDescription="goToSettings"
                     app:shapeAppearance="@style/RoundedComponent"
                     app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -107,21 +123,7 @@
             android:id="@+id/mainFrame"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:configChanges="uiMode"
             app:layout_constraintTop_toBottomOf="@id/mainAppBarDivider"
-            app:layout_constraintBottom_toTopOf="@id/mainBottomNavigationDivider"/>
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/mainChatCreate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="15dp"
-            android:layout_marginBottom="15dp"
-            app:fabSize="mini"
-            android:src="@drawable/ic_add_24"
-            app:shapeAppearanceOverlay="@style/RectComponent"
-            android:contentDescription="@string/generalAdd"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/mainBottomNavigationDivider"/>
 
         <com.google.android.material.divider.MaterialDivider
@@ -136,6 +138,7 @@
             android:layout_height="wrap_content"
             app:menu="@menu/main_navigation"
             android:background="@color/basicBackground"
+            app:labelVisibilityMode="labeled"
             style="@style/Widget.MaterialComponents.BottomNavigationView"
             app:layout_constraintBottom_toBottomOf="parent"/>
 

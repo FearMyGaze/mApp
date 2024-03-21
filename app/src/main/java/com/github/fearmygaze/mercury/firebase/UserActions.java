@@ -2,6 +2,7 @@ package com.github.fearmygaze.mercury.firebase;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
 import com.github.fearmygaze.mercury.database.AppDatabase;
 import com.github.fearmygaze.mercury.firebase.dao.UserActionsDao;
@@ -23,6 +24,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class UserActions implements UserActionsDao {
@@ -296,6 +298,7 @@ public class UserActions implements UserActionsDao {
                 .document(userID)
                 .get()
                 .addOnFailureListener(e -> callBackResponse.onFailure("Failed to get the user"))
+                .addOnFailureListener(e -> Log.d("customLog", "UserActions.java:getUserByID:Line:299" + e.getMessage()))
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot != null && documentSnapshot.exists()) {
                         User user = documentSnapshot.toObject(User.class);
@@ -305,9 +308,38 @@ public class UserActions implements UserActionsDao {
                             callBackResponse.onError("Something unexpected happened");
                         }
                     } else {
-                        callBackResponse.onError("Failed to get the user.");
+                        callBackResponse.onError("We couldn't find the user");
                     }
                 });
+    }
+
+    @Override
+    public void getUserByUsername(String username, CallBackResponse<User> callBackResponse) {
+        if (username.startsWith("@"))
+            username = username.substring(1);
+        database.collection("users")
+                .whereEqualTo("usernameL", username.toLowerCase(Locale.ROOT))
+                .limit(1)
+                .get()
+                .addOnFailureListener(e -> callBackResponse.onFailure("Failed to get the user"))
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots != null && !queryDocumentSnapshots.isEmpty()) {
+                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+                        if (document != null) {
+                            User user = document.toObject(User.class);
+                            if (user != null) {
+                                callBackResponse.onSuccess(user);
+                            } else {
+                                callBackResponse.onError("Failed to get user!");
+                            }
+                        } else {
+                            callBackResponse.onError("Failed to get user.");
+                        }
+                    } else {
+                        callBackResponse.onError("We couldn't find a user with this username");
+                    }
+                });
+
     }
 
     @Override

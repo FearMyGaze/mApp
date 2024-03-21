@@ -25,6 +25,8 @@
     <string name="generalDelete">Delete</string>
     <string name="generalSend">Send</string>
     <string name="generalUpdate">Successfully updated</string>
+    <string name="generalName">Name</string>
+    <string name="generalEdit">Edit</string>
 
     <!-- Welcome (Activity) -->
     <string name="welcomeTitle">Welcome to Mercury</string>

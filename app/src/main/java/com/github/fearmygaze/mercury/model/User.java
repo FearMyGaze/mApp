@@ -5,6 +5,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
+import android.util.Patterns;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
@@ -25,6 +31,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Entity(tableName = "users")
 public class User implements Parcelable {
@@ -290,7 +298,7 @@ public class User implements Parcelable {
             chip.setChecked(false);
             chip.setClickable(false);
             chip.setChipIconResource(R.drawable.ic_repair_service_24);
-            chip.setChipBackgroundColorResource(R.color.basicBackground);
+            chip.setChipBackgroundColorResource(R.color.basicBackgroundAlternate);
             chipGroup.addView(chip);
         }
 
@@ -302,7 +310,7 @@ public class User implements Parcelable {
             chip.setChecked(false);
             chip.setClickable(false);
             chip.setChipIconResource(R.drawable.ic_link_24);
-            chip.setChipBackgroundColorResource(R.color.basicBackground);
+            chip.setChipBackgroundColorResource(R.color.basicBackgroundAlternate);
             chip.setOnClickListener(v -> context.startActivity(new Intent(Intent.ACTION_VIEW,
                     Uri.parse(addHttp(user.getWebsite())))
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)));
@@ -316,7 +324,7 @@ public class User implements Parcelable {
             chip.setChecked(false);
             chip.setClickable(false);
             chip.setChipIconResource(R.drawable.ic_location_24);
-            chip.setChipBackgroundColorResource(R.color.basicBackground);
+            chip.setChipBackgroundColorResource(R.color.basicBackgroundAlternate);
             chipGroup.addView(chip);
         }
 
@@ -327,7 +335,7 @@ public class User implements Parcelable {
             chip.setChecked(false);
             chip.setClickable(false);
             chip.setChipIconResource(R.drawable.ic_calendar_24);
-            chip.setChipBackgroundColorResource(R.color.basicBackground);
+            chip.setChipBackgroundColorResource(R.color.basicBackgroundAlternate);
             chipGroup.addView(chip);
         }
     }
@@ -370,6 +378,33 @@ public class User implements Parcelable {
         }
     }
 
+    public static SpannableString formatBio(String inputText, int color, OnTextListener onClickListener) {
+        SpannableString spannableString = new SpannableString(inputText);
+        String[] regexPatterns = {"(?<!\\S)@[a-zA-Z0-9._]{6,}(?!\\S)", String.valueOf(Patterns.WEB_URL)};
+        for (String regex : regexPatterns) {
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(inputText.trim());
+
+            while (matcher.find()) {
+                String matchedText = matcher.group();
+                int start = matcher.start();
+                int end = matcher.end();
+
+                ClickableSpan clickableSpan = new ClickableSpan() {
+                    @Override
+                    public void onClick(@NonNull View view) {
+                        if (onClickListener != null) {
+                            onClickListener.onClick(matchedText);
+                        }
+                    }
+                };
+                spannableString.setSpan(clickableSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannableString.setSpan(new ForegroundColorSpan(color), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
+        return spannableString;
+    }
+
     @NonNull
     @Override
     public String toString() {
@@ -386,5 +421,9 @@ public class User implements Parcelable {
                 ", isProfileOpen=" + isProfileOpen + '\'' +
                 ", accountType=" + accountType +
                 '}';
+    }
+
+    public interface OnTextListener {
+        void onClick(String text);
     }
 }

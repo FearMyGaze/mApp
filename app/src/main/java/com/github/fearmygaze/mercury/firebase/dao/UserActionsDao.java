@@ -54,5 +54,7 @@ public interface UserActionsDao {
 
     void getUserByID(String userID, CallBackResponse<User> callBackResponse);
 
+    void getUserByUsername(String username, CallBackResponse<User> callBackResponse);
+
     void search(String query, CallBackResponse<List<User>> callBackResponse);
 }

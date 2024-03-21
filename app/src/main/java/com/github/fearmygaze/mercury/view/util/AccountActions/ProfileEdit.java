@@ -29,11 +29,11 @@ import java.util.Objects;
 
 public class ProfileEdit extends AppCompatActivity {
 
-    MaterialButton choose, save;
-    ShapeableImageView back, userImage;
+    MaterialButton chooseBtn, saveBtn;
+    ShapeableImageView goBackBtn, userImage;
 
-    TextInputLayout statusLayout, locationLayout, jobLayout, websiteLayout;
-    TextInputEditText statusCell, locationCell, jobCell, websiteCell;
+    TextInputLayout fullNameLayout, bioLayout, locationLayout, jobLayout, websiteLayout;
+    TextInputEditText fullNameCell, bioCell, locationCell, jobCell, websiteCell;
 
     Bundle bundle;
     User user;
@@ -45,12 +45,14 @@ public class ProfileEdit extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_edit);
 
-        back = findViewById(R.id.profileEditGoBack);
-        save = findViewById(R.id.profileEditSave);
-        choose = findViewById(R.id.profileEditChoose);
+        goBackBtn = findViewById(R.id.profileEditGoBack);
+        saveBtn = findViewById(R.id.profileEditSave);
+        chooseBtn = findViewById(R.id.profileEditChoose);
         userImage = findViewById(R.id.profileEditUserImage);
-        statusLayout = findViewById(R.id.profileEditStatusError);
-        statusCell = findViewById(R.id.profileEditStatus);
+        fullNameLayout = findViewById(R.id.profileEditFullNameError);
+        fullNameCell = findViewById(R.id.profileEditFullName);
+        bioLayout = findViewById(R.id.profileEditStatusError);
+        bioCell = findViewById(R.id.profileEditStatus);
         locationLayout = findViewById(R.id.profileEditLocationError);
         locationCell = findViewById(R.id.profileEditLocation);
         jobLayout = findViewById(R.id.profileEditJobError);
@@ -63,11 +65,24 @@ public class ProfileEdit extends AppCompatActivity {
         user = bundle.getParcelable(User.PARCEL);
         if (user == null) finish();
 
-        Tools.profileImage(user.getImage(), ProfileEdit.this).into(userImage);
-        statusCell.setText(user.getStatus());
-        locationCell.setText(user.getLocation());
-        jobCell.setText(user.getJob());
-        websiteCell.setText(user.getWebsite());
+        goBackBtn.setOnClickListener(v -> onBackPressed());
+
+        fullNameCell.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         websiteCell.addTextChangedListener(new TextWatcher() {
             @Override
@@ -82,17 +97,39 @@ public class ProfileEdit extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                save.setEnabled(RegEx.isUrlValid(websiteCell, websiteLayout, ProfileEdit.this));
+
+                RegEx.isUrlValid(websiteCell, websiteLayout, ProfileEdit.this);
             }
         });
 
-        back.setOnClickListener(v -> finish());
-        save.setOnClickListener(v -> {
-            if (Objects.requireNonNull(statusCell.getText()).toString().trim().equals(user.getStatus()) &&
-                    Objects.requireNonNull(locationCell.getText()).toString().trim().equals(user.getLocation()) &&
-                    Objects.requireNonNull(jobCell.getText()).toString().trim().equals(user.getJob()) &&
-                    Objects.requireNonNull(websiteCell.getText()).toString().trim().equals(user.getWebsite()) &&
-                    imageData == null) {
+        chooseBtn.setOnClickListener(v -> pickImage.launch(new Intent(Intent.ACTION_PICK)
+                .setType("image/*")
+                .setAction(Intent.ACTION_GET_CONTENT)
+                .addCategory(Intent.CATEGORY_OPENABLE)
+                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false))
+        );
+
+        saveBtn.setOnClickListener(v -> {
+            String fullName = Objects.requireNonNull(fullNameCell.getText()).toString().trim();
+            String bio = Objects.requireNonNull(bioCell.getText()).toString().trim();
+            String location = Objects.requireNonNull(locationCell.getText()).toString().trim();
+            String job = Objects.requireNonNull(jobCell.getText()).toString().trim();
+            String website = Objects.requireNonNull(websiteCell.getText()).toString().trim();
+
+            //TODO: add fullName support
+            if (fullNameLayout.isErrorEnabled() || bioLayout.isErrorEnabled() ||
+                    locationLayout.isErrorEnabled() || jobLayout.isErrorEnabled() ||
+                    websiteLayout.isErrorEnabled()) {
+                new MaterialAlertDialogBuilder(ProfileEdit.this)
+                        .setBackground(AppCompatResources.getDrawable(ProfileEdit.this, R.color.basicBackground))
+                        .setTitle(getString(R.string.profileEditDialogTitle1))
+                        .setMessage("You need to fix the errors before updating your profile")
+                        .setPositiveButton(R.string.generalOK, (dialog, i) -> dialog.dismiss())
+                        .show();
+            } else if (bio.equals(user.getStatus()) &&
+                    location.equals(user.getLocation()) && job.equals(user.getJob()) &&
+                    website.equals(user.getWebsite()) && imageData == null) {
                 new MaterialAlertDialogBuilder(ProfileEdit.this)
                         .setBackground(AppCompatResources.getDrawable(ProfileEdit.this, R.color.basicBackground))
                         .setTitle(getString(R.string.profileEditDialogTitle1))
@@ -107,12 +144,13 @@ public class ProfileEdit extends AppCompatActivity {
                         .setMessage(getString(R.string.profileEditDialogMessage2))
                         .setNegativeButton(R.string.generalCancel, (dialog, i) -> dialog.dismiss())
                         .setPositiveButton(R.string.generalOK, (dialog, i) -> {
-                            user.setStatus(Objects.requireNonNull(statusCell.getText()).toString().trim());
-                            user.setLocation(Objects.requireNonNull(locationCell.getText()).toString().trim());
-                            user.setLocationL(user.getLocation().toLowerCase());
-                            user.setJob(Objects.requireNonNull(jobCell.getText()).toString().trim());
-                            user.setJobL(user.getJob().toLowerCase());
-                            user.setWebsite(Objects.requireNonNull(websiteCell.getText()).toString().trim());
+                            //TODO: add fullName and fullNameL
+                            user.setStatus(bio);
+                            user.setLocation(location);
+                            user.setLocationL(location.toLowerCase());
+                            user.setJob(job);
+                            user.setJobL(job.toLowerCase());
+                            user.setWebsite(website);
                             new UserActions(ProfileEdit.this).updateProfile(user, imageData, imageChanged, new CallBackResponse<String>() {
                                 @Override
                                 public void onSuccess(String object) {
@@ -135,14 +173,16 @@ public class ProfileEdit extends AppCompatActivity {
                         .show();
             }
         });
-        choose.setOnClickListener(v -> pickImage.launch(
-                new Intent(Intent.ACTION_PICK)
-                        .setType("image/*")
-                        .setAction(Intent.ACTION_GET_CONTENT)
-                        .addCategory(Intent.CATEGORY_OPENABLE)
-                        .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                        .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false))
-        );
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Tools.profileImage(user.getImage(), ProfileEdit.this).into(userImage);
+        bioCell.setText(user.getStatus());
+        locationCell.setText(user.getLocation());
+        jobCell.setText(user.getJob());
+        websiteCell.setText(user.getWebsite());
     }
 
     private final ActivityResultLauncher<Intent> pickImage = registerForActivityResult(

@@ -172,7 +172,7 @@ public class RequestActions implements RequestActionsDao {
         getRequest(requestID, new CallBackResponse<Request>() {
             @Override
             public void onSuccess(Request request) {
-
+                delete(requestID, callBackResponse);
             }
 
             @Override
@@ -185,11 +185,10 @@ public class RequestActions implements RequestActionsDao {
 
             }
         });
-        delete(requestID, callBackResponse);
     }
 
     @Override
-    public void block(Profile myUser, Profile otherUser, CallBackResponse<String> callBackResponse) {
+    public void block(Profile myUser, Profile otherUser, CallBackResponse<String> callBackResponse) { //TODO: maybe use the getRequest
         database.collection("requests")
                 .whereIn("sender", Arrays.asList(myUser.getId(), otherUser.getId()))
                 .whereIn("receiver", Arrays.asList(myUser.getId(), otherUser.getId()))

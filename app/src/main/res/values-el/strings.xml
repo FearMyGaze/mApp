@@ -24,6 +24,8 @@
     <string name="generalDelete">Διαγραφή</string>
     <string name="generalSend">Αποστολή</string>
     <string name="generalUpdate">Επιτυχείς ενημέρωση</string>
+    <string name="generalName">Όνομα</string>
+    <string name="generalEdit">Επεξεργασία</string>
 
     <!-- Welcome (Activity) -->
     <string name="welcomeTitle">Καλώς ήρθατε στο Mercury</string>
