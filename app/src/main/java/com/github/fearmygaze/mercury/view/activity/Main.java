@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
@@ -87,16 +86,11 @@ public class Main extends AppCompatActivity {
     private final Handler searchHandler = new Handler();
     private Runnable searchRunnable;
 
-    TypedValue typedValue;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
-
-        typedValue = new TypedValue();
-        getTheme().resolveAttribute(android.R.attr.colorPrimary, typedValue, true);
 
         database = AppDatabase.getInstance(Main.this);
 
