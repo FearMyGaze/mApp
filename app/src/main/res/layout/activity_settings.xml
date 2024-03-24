@@ -493,6 +493,60 @@
 
                 </com.google.android.material.card.MaterialCardView>
 
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/settingsPreferencesCache"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    app:cardBackgroundColor="@android:color/transparent"
+                    app:cardCornerRadius="12.5dp"
+                    app:contentPadding="5dp"
+                    app:cardElevation="0dp"
+                    android:visibility="gone"
+                    android:contentDescription="@string/settingsPreferencesChangeAccent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/settingsPreferencesAccent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/settingsPreferencesCacheImage"
+                            android:layout_width="30dp"
+                            android:layout_height="0dp"
+                            android:src="@drawable/ic_save_24"
+                            android:tint="?attr/colorPrimary"
+                            app:layout_constraintDimensionRatio="1:1"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="30dp"
+                            android:text="Show all saved stuff"
+                            android:textSize="17sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/textBold"
+                            app:layout_constraintStart_toEndOf="@id/settingsPreferencesCacheImage"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/settingsPreferencesCacheSwitch"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:clickable="false"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView

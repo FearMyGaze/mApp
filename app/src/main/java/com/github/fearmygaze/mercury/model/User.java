@@ -9,20 +9,20 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
-import android.util.Patterns;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.custom.TimestampConverter;
 import com.github.fearmygaze.mercury.database.AppDatabase;
+import com.github.fearmygaze.mercury.util.RegEx;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
-import com.google.firebase.firestore.ServerTimestamp;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -34,7 +34,7 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Entity(tableName = "users")
+@Entity(tableName = "users", indices = {@Index(value = {"id", "username"}, unique = true)})
 public class User implements Parcelable {
 
     public static final String
@@ -47,48 +47,50 @@ public class User implements Parcelable {
 
     @NonNull
     @PrimaryKey
-    @ColumnInfo(name = "id", index = true)
+    @ColumnInfo(name = "id")
     String id;
+
+    @ColumnInfo(name = "fullName")
+    String fullName;
+
+    @ColumnInfo(name = "fullNameL")
+    String fullNameL;
 
     @ColumnInfo(name = "username")
     String username;
 
-    @ColumnInfo(name = "usernameLowered")
+    @ColumnInfo(name = "usernameL")
     String usernameL;
 
     @ColumnInfo(name = "image")
     String image;
 
-    @ColumnInfo(name = "notificationToken")
-    String notificationToken;
-
-    @ColumnInfo(name = "status")
-    String status;
+    @ColumnInfo(name = "bio")
+    String bio;
 
     @ColumnInfo(name = "location")
     String location;
 
-    @ColumnInfo(name = "locationLowered")
+    @ColumnInfo(name = "locationL")
     String locationL;
 
     @ColumnInfo(name = "job")
     String job;
 
-    @ColumnInfo(name = "jobLowered")
+    @ColumnInfo(name = "jobL")
     String jobL;
 
     @ColumnInfo(name = "website")
     String website;
 
-    @ServerTimestamp
-    @ColumnInfo(name = "created")
-    Date created;
-
     @ColumnInfo(name = "isProfileOpen")
     boolean isProfileOpen;
 
-    @ColumnInfo(name = "accountType")
-    String accountType;
+    @ColumnInfo(name = "notificationToken")
+    String notificationToken;
+
+    @ColumnInfo(name = "created")
+    Date created;
 
     ///////////////////////////////////////////////////////////////////////////
     // Constructors
@@ -106,112 +108,120 @@ public class User implements Parcelable {
         return id;
     }
 
-    public void setId(@NonNull String val) {
-        this.id = val;
+    public void setId(@NonNull String id) {
+        this.id = id;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getFullNameL() {
+        return fullNameL;
+    }
+
+    public void setFullNameL(String fullNameL) {
+        this.fullNameL = fullNameL;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String val) {
-        this.username = val;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getUsernameL() {
         return usernameL;
     }
 
-    public void setUsernameL(String val) {
-        this.usernameL = val;
+    public void setUsernameL(String usernameL) {
+        this.usernameL = usernameL;
     }
 
     public String getImage() {
         return image;
     }
 
-    public void setImage(String val) {
-        this.image = val;
+    public void setImage(String image) {
+        this.image = image;
     }
 
-    public String getNotificationToken() {
-        return notificationToken;
+    public String getBio() {
+        return bio;
     }
 
-    public void setNotificationToken(String val) {
-        this.notificationToken = val;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String val) {
-        this.status = val;
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 
     public String getLocation() {
         return location;
     }
 
-    public void setLocation(String val) {
-        this.location = val;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public String getLocationL() {
         return locationL;
     }
 
-    public void setLocationL(String val) {
-        this.locationL = val;
+    public void setLocationL(String locationL) {
+        this.locationL = locationL;
     }
 
     public String getJob() {
         return job;
     }
 
-    public void setJob(String val) {
-        this.job = val;
+    public void setJob(String job) {
+        this.job = job;
     }
 
     public String getJobL() {
         return jobL;
     }
 
-    public void setJobL(String val) {
-        this.jobL = val;
+    public void setJobL(String jobL) {
+        this.jobL = jobL;
     }
 
     public String getWebsite() {
         return website;
     }
 
-    public void setWebsite(String val) {
-        this.website = val;
-    }
-
-    public Date getCreated() {
-        return created;
-    }
-
-    public void setCreated(Date val) {
-        this.created = val;
+    public void setWebsite(String website) {
+        this.website = website;
     }
 
     public boolean isProfileOpen() {
         return isProfileOpen;
     }
 
-    public void setProfileOpen(boolean val) {
-        isProfileOpen = val;
+    public void setProfileOpen(boolean profileOpen) {
+        isProfileOpen = profileOpen;
     }
 
-    public void setAccountType(String val) {
-        this.accountType = val;
+    public String getNotificationToken() {
+        return notificationToken;
     }
 
-    public String getAccountType() {
-        return accountType;
+    public void setNotificationToken(String notificationToken) {
+        this.notificationToken = notificationToken;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -232,16 +242,20 @@ public class User implements Parcelable {
 
     protected User(Parcel in) {
         id = in.readString();
+        fullName = in.readString();
+        fullNameL = in.readString();
         username = in.readString();
+        usernameL = in.readString();
         image = in.readString();
         notificationToken = in.readString();
-        status = in.readString();
+        bio = in.readString();
         location = in.readString();
+        locationL = in.readString();
         job = in.readString();
+        jobL = in.readString();
         website = in.readString();
         created = TimestampConverter.unixToDate(in.readLong());
         isProfileOpen = in.readByte() != 0;
-        accountType = in.readString();
     }
 
     @Override
@@ -252,16 +266,20 @@ public class User implements Parcelable {
     @Override
     public void writeToParcel(@NonNull Parcel parcel, int i) {
         parcel.writeString(id);
+        parcel.writeString(fullName);
+        parcel.writeString(fullNameL);
         parcel.writeString(username);
+        parcel.writeString(usernameL);
         parcel.writeString(image);
         parcel.writeString(notificationToken);
-        parcel.writeString(status);
+        parcel.writeString(bio);
         parcel.writeString(location);
+        parcel.writeString(locationL);
         parcel.writeString(job);
+        parcel.writeString(jobL);
         parcel.writeString(website);
         parcel.writeLong(TimestampConverter.dateToUnix(created));
         parcel.writeByte((byte) (isProfileOpen ? 1 : 0));
-        parcel.writeString(accountType);
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -380,8 +398,7 @@ public class User implements Parcelable {
 
     public static SpannableString formatBio(String inputText, int color, OnTextListener onClickListener) {
         SpannableString spannableString = new SpannableString(inputText);
-        String[] regexPatterns = {"(?<!\\S)@[a-zA-Z0-9._]{6,}(?!\\S)", String.valueOf(Patterns.WEB_URL)};
-        for (String regex : regexPatterns) {
+        for (String regex : RegEx.bio()) {
             Pattern pattern = Pattern.compile(regex);
             Matcher matcher = pattern.matcher(inputText.trim());
 
@@ -410,16 +427,20 @@ public class User implements Parcelable {
     public String toString() {
         return "User{" +
                 "id='" + id + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", fullNameL='" + fullNameL + '\'' +
                 ", username='" + username + '\'' +
+                ", usernameL='" + usernameL + '\'' +
                 ", image='" + image + '\'' +
-                ", notificationToken='" + notificationToken + '\'' +
-                ", status='" + status + '\'' +
+                ", bio='" + bio + '\'' +
                 ", location='" + location + '\'' +
+                ", locationL='" + locationL + '\'' +
                 ", job='" + job + '\'' +
+                ", jobL='" + jobL + '\'' +
                 ", website='" + website + '\'' +
-                ", created=" + created + '\'' +
-                ", isProfileOpen=" + isProfileOpen + '\'' +
-                ", accountType=" + accountType +
+                ", isProfileOpen=" + isProfileOpen +
+                ", notificationToken='" + notificationToken + '\'' +
+                ", created=" + created +
                 '}';
     }
 

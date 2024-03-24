@@ -298,9 +298,9 @@ public class Main extends AppCompatActivity {
                     searchHandler.removeCallbacks(searchRunnable);
                     searchRunnable = () -> userActions.search(query, new CallBackResponse<List<User>>() {
                         @Override
-                        public void onSuccess(List<User> object) {
-                            if (object.size() > 0) {
-                                adapterSearch.add(object);
+                        public void onSuccess(List<User> list) {
+                            if (!list.isEmpty()) {
+                                adapterSearch.add(list);
                                 errorLayout.setVisibility(View.GONE);
                             } else {
                                 adapterSearch.clear();

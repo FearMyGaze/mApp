@@ -96,7 +96,35 @@ public class RegEx {
         }
     }
 
-    public static boolean isUrlValid(TextInputEditText text, TextInputLayout layout, Context context) {
+    public static boolean isNameValid(@NonNull TextInputEditText text, TextInputLayout layout, Context context) {
+        if (Objects.requireNonNull(text.getText()).toString().isEmpty()) {
+            Tools.setErrorToLayout(layout, context.getString(R.string.regExEmpty), true);
+            return false;
+        }
+
+        if (text.getText().length() < 8) {
+            Tools.setErrorToLayout(layout, context.getString(R.string.regExSmaller) + 8, true);
+            return false;
+        }
+
+        if (text.getText().length() > layout.getCounterMaxLength()) {
+            Tools.setErrorToLayout(layout, context.getString(R.string.regExBigger) + layout.getCounterMaxLength(), true);
+            return false;
+        }
+
+        Tools.setErrorToLayout(layout, null, false);
+
+        Pattern pattern = Pattern.compile("^[a-zA-Z.\\p{InGreek}]{6,}(?:\\s[a-zA-Z\\p{InGreek}]{2,})?$");
+        Matcher matcher = pattern.matcher(text.getText().toString().trim());
+
+        if (matcher.matches()) return true;
+        else {
+            Tools.setErrorToLayout(layout, context.getString(R.string.regExName), true);
+            return false;
+        }
+    }
+
+    public static boolean isUrlValid(@NonNull TextInputEditText text, TextInputLayout layout, Context context) {
         if (Objects.requireNonNull(text.getText()).toString().isEmpty()) {
             Tools.setErrorToLayout(layout, context.getString(R.string.regExEmpty), true);
             return false;
@@ -121,4 +149,7 @@ public class RegEx {
         }
     }
 
+    public static String[] bio() {
+        return new String[]{"(?<!\\S)@[a-zA-Z0-9._]{6,}(?!\\S)", String.valueOf(Patterns.WEB_URL)};
+    }
 }

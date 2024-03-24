@@ -40,7 +40,7 @@ public class AdapterSearch extends RecyclerView.Adapter<AdapterSearch.SearchVH> 
         User model = search.get(holder.getAbsoluteAdapterPosition());
         Tools.profileImage(model.getImage(), holder.itemView.getContext()).into(holder.image);
         holder.username.setText(model.getUsername());
-        holder.status.setText(model.getStatus());
+        holder.status.setText(model.getBio());
         holder.root.setOnClickListener(v -> {
             Profile.insertToCache(v.getContext(), model);
             actions.onClick();

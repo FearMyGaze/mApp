@@ -120,32 +120,35 @@ public class MyProfile extends AppCompatActivity {
         } else {
             user = User.getRoomUser(user.getId(), MyProfile.this);
             Tools.profileImage(user.getImage(), MyProfile.this).into(userProfileImage);
+            fullName.setText(user.getFullName());
             username.setText(user.getUsername());
-            userBio.setText(User.formatBio(user.getStatus(), getColor(typedValue.resourceId), text -> {
-                if (Patterns.WEB_URL.matcher(text).matches()) {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(User.addHttp(user.getWebsite())))
-                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-                } else {
-                    new UserActions(MyProfile.this).getUserByUsername(text, new CallBackResponse<User>() {
-                        @Override
-                        public void onSuccess(User otherUser) {
-                            startActivity(new Intent(MyProfile.this, ProfileViewer.class)
-                                    .putExtra(User.PARCEL, user)
-                                    .putExtra(User.PARCEL_OTHER, otherUser));
-                        }
+            if (user.getBio() != null) {
+                userBio.setText(User.formatBio(user.getBio(), getColor(typedValue.resourceId), text -> {
+                    if (Patterns.WEB_URL.matcher(text).matches()) {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(User.addHttp(user.getWebsite())))
+                                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+                    } else {
+                        new UserActions(MyProfile.this).getUserByUsername(text, new CallBackResponse<User>() {
+                            @Override
+                            public void onSuccess(User otherUser) {
+                                startActivity(new Intent(MyProfile.this, ProfileViewer.class)
+                                        .putExtra(User.PARCEL, user)
+                                        .putExtra(User.PARCEL_OTHER, otherUser));
+                            }
 
-                        @Override
-                        public void onError(String message) {
-                            Toast.makeText(MyProfile.this, message, Toast.LENGTH_SHORT).show();
-                        }
+                            @Override
+                            public void onError(String message) {
+                                Toast.makeText(MyProfile.this, message, Toast.LENGTH_SHORT).show();
+                            }
 
-                        @Override
-                        public void onFailure(String message) {
-                            Toast.makeText(MyProfile.this, message, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            }));
+                            @Override
+                            public void onFailure(String message) {
+                                Toast.makeText(MyProfile.this, message, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }));
+            }
             User.extraInfo(user, typedValue.resourceId, moreUserInfo, MyProfile.this);
         }
     }

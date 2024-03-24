@@ -80,7 +80,10 @@ public class ProfileEdit extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                if (!s.toString().trim().isEmpty())
+                    RegEx.isNameValid(fullNameCell, fullNameLayout, ProfileEdit.this);
+                else
+                    Tools.setErrorToLayout(fullNameLayout, "", false);
             }
         });
 
@@ -97,7 +100,6 @@ public class ProfileEdit extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-
                 RegEx.isUrlValid(websiteCell, websiteLayout, ProfileEdit.this);
             }
         });
@@ -117,7 +119,6 @@ public class ProfileEdit extends AppCompatActivity {
             String job = Objects.requireNonNull(jobCell.getText()).toString().trim();
             String website = Objects.requireNonNull(websiteCell.getText()).toString().trim();
 
-            //TODO: add fullName support
             if (fullNameLayout.isErrorEnabled() || bioLayout.isErrorEnabled() ||
                     locationLayout.isErrorEnabled() || jobLayout.isErrorEnabled() ||
                     websiteLayout.isErrorEnabled()) {
@@ -127,7 +128,7 @@ public class ProfileEdit extends AppCompatActivity {
                         .setMessage("You need to fix the errors before updating your profile")
                         .setPositiveButton(R.string.generalOK, (dialog, i) -> dialog.dismiss())
                         .show();
-            } else if (bio.equals(user.getStatus()) &&
+            } else if (fullName.equals(user.getFullName()) && bio.equals(user.getBio()) &&
                     location.equals(user.getLocation()) && job.equals(user.getJob()) &&
                     website.equals(user.getWebsite()) && imageData == null) {
                 new MaterialAlertDialogBuilder(ProfileEdit.this)
@@ -144,8 +145,9 @@ public class ProfileEdit extends AppCompatActivity {
                         .setMessage(getString(R.string.profileEditDialogMessage2))
                         .setNegativeButton(R.string.generalCancel, (dialog, i) -> dialog.dismiss())
                         .setPositiveButton(R.string.generalOK, (dialog, i) -> {
-                            //TODO: add fullName and fullNameL
-                            user.setStatus(bio);
+                            user.setFullName(fullName);
+                            user.setFullNameL(fullName.toLowerCase());
+                            user.setBio(bio);
                             user.setLocation(location);
                             user.setLocationL(location.toLowerCase());
                             user.setJob(job);
@@ -179,7 +181,8 @@ public class ProfileEdit extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Tools.profileImage(user.getImage(), ProfileEdit.this).into(userImage);
-        bioCell.setText(user.getStatus());
+        fullNameCell.setText(user.getFullName());
+        bioCell.setText(user.getBio());
         locationCell.setText(user.getLocation());
         jobCell.setText(user.getJob());
         websiteCell.setText(user.getWebsite());

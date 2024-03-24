@@ -208,7 +208,6 @@ public class ProfileViewer extends AppCompatActivity {
 
     private void requestAction(Context context) {
         if (request == null) {
-            Log.d("customLog", "ProfileViewer.java:requestStateAction:Line:300" + "Request empty");
             actions.create(Profile.create(myUser), Profile.create(visibleUser), new CallBackResponse<String>() {
                 @Override
                 public void onSuccess(String object) {
@@ -229,7 +228,6 @@ public class ProfileViewer extends AppCompatActivity {
             switch (request.getStatus()) {
                 case Waiting:
                     if (request.getSender().equals(myUser.getId())) {
-                        Log.d("customLog", "ProfileViewer.java:requestStateAction:Line:322" + "Wait Sender equals to me");
                         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
                         builder.setBackground(AppCompatResources.getDrawable(context, R.color.basicBackground))
                                 .setTitle(String.format("%s %s?", "Do you want to remove the request to", visibleUser.getUsername()))
@@ -255,7 +253,6 @@ public class ProfileViewer extends AppCompatActivity {
                                 })
                                 .show();
                     } else {
-                        Log.d("customLog", "ProfileViewer.java:requestStateAction:Line:325" + "Wait sender is not me");
                         actions.accept(request.getId(), new CallBackResponse<String>() {
                             @Override
                             public void onSuccess(String object) {
@@ -275,7 +272,6 @@ public class ProfileViewer extends AppCompatActivity {
                     }
                     break;
                 case Friends:
-                    Log.d("customLog", "ProfileViewer.java:requestStateAction:Line:345" + "Friends");
                     MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
                     builder.setBackground(AppCompatResources.getDrawable(context, R.color.basicBackground))
                             .setTitle(String.format("%s %s %s?", "Remove", visibleUser.getUsername(), "from friends"))
@@ -315,31 +311,33 @@ public class ProfileViewer extends AppCompatActivity {
 
         Tools.profileImage(visibleUser.getImage(), ProfileViewer.this).into(userImage);
         userHandle.setText(visibleUser.getUsername());
-        userBio.setText(User.formatBio(visibleUser.getStatus(), getColor(typedValue.resourceId), text -> {
-            if (Patterns.WEB_URL.matcher(text).matches()) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(User.addHttp(visibleUser.getWebsite())))
-                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-            } else {
-                new UserActions(ProfileViewer.this).getUserByUsername(text, new CallBackResponse<User>() {
-                    @Override
-                    public void onSuccess(User fetchedUser) {
-                        startActivity(new Intent(ProfileViewer.this, ProfileViewer.class)
-                                .putExtra(User.PARCEL, visibleUser)
-                                .putExtra(User.PARCEL_OTHER, fetchedUser));
-                    }
+        if (visibleUser.getBio() != null) {
+            userBio.setText(User.formatBio(visibleUser.getBio(), getColor(typedValue.resourceId), text -> {
+                if (Patterns.WEB_URL.matcher(text).matches()) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(User.addHttp(visibleUser.getWebsite())))
+                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+                } else {
+                    new UserActions(ProfileViewer.this).getUserByUsername(text, new CallBackResponse<User>() {
+                        @Override
+                        public void onSuccess(User fetchedUser) {
+                            startActivity(new Intent(ProfileViewer.this, ProfileViewer.class)
+                                    .putExtra(User.PARCEL, visibleUser)
+                                    .putExtra(User.PARCEL_OTHER, fetchedUser));
+                        }
 
-                    @Override
-                    public void onError(String message) {
-                        Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_SHORT).show();
-                    }
+                        @Override
+                        public void onError(String message) {
+                            Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_SHORT).show();
+                        }
 
-                    @Override
-                    public void onFailure(String message) {
-                        Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        }));
+                        @Override
+                        public void onFailure(String message) {
+                            Toast.makeText(ProfileViewer.this, message, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }));
+        }
         User.extraInfo(visibleUser, typedValue.resourceId, moreUserInfo, ProfileViewer.this);
         requestStateBtn.setEnabled(!myUser.getId().equals(visibleUser.getId()));
     }

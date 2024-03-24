@@ -2,7 +2,6 @@ package com.github.fearmygaze.mercury.firebase;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 
 import com.github.fearmygaze.mercury.database.AppDatabase;
 import com.github.fearmygaze.mercury.firebase.dao.UserActionsDao;
@@ -259,8 +258,10 @@ public class UserActions implements UserActionsDao {
     public void updateProfileInfo(User user, CallBackResponse<String> callBackResponse) {
         database.collection("users")
                 .document(user.getId())
-                .update("status", user.getStatus(),
+                .update("status", user.getBio(),
                         "image", user.getImage(),
+                        "fullName", user.getFullName(),
+                        "fullNameL", user.getFullNameL(),
                         "location", user.getLocation(),
                         "locationL", user.getLocationL(),
                         "job", user.getJob(),
@@ -298,7 +299,6 @@ public class UserActions implements UserActionsDao {
                 .document(userID)
                 .get()
                 .addOnFailureListener(e -> callBackResponse.onFailure("Failed to get the user"))
-                .addOnFailureListener(e -> Log.d("customLog", "UserActions.java:getUserByID:Line:299" + e.getMessage()))
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot != null && documentSnapshot.exists()) {
                         User user = documentSnapshot.toObject(User.class);
@@ -360,11 +360,16 @@ public class UserActions implements UserActionsDao {
             query = database.collection("users")
                     .whereGreaterThanOrEqualTo("website", input)
                     .whereLessThanOrEqualTo("website", input + "\uf8ff");
-        } else {
+        } else if (input.startsWith("@") && input.length() >= 4) {
             input = input.toLowerCase();
             query = database.collection("users")
                     .whereGreaterThanOrEqualTo("usernameL", input)
                     .whereLessThanOrEqualTo("usernameL", input + "\uf8ff");
+        } else {
+            input = input.toLowerCase();
+            query = database.collection("users")
+                    .whereGreaterThanOrEqualTo("fullNameL", input)
+                    .whereLessThanOrEqualTo("fullNameL", input + "\uf8ff");
         }
         query.limit(40)
                 .get()
