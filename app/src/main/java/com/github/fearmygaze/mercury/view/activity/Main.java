@@ -13,7 +13,6 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -27,15 +26,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.custom.CustomLinearLayout;
 import com.github.fearmygaze.mercury.custom.UIAction;
-import com.github.fearmygaze.mercury.database.AppDatabase;
-import com.github.fearmygaze.mercury.firebase.UserActions;
+import com.github.fearmygaze.mercury.database.RoomDB;
+import com.github.fearmygaze.mercury.database.model.PrevSearch;
+import com.github.fearmygaze.mercury.database.model.User1;
+import com.github.fearmygaze.mercury.firebase.Auth;
+import com.github.fearmygaze.mercury.firebase.Search;
 import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
-import com.github.fearmygaze.mercury.model.CachedQuery;
-import com.github.fearmygaze.mercury.model.User;
+import com.github.fearmygaze.mercury.firebase.interfaces.IFireCallback;
 import com.github.fearmygaze.mercury.util.Tools;
-import com.github.fearmygaze.mercury.view.adapter.AdapterCachedProfile;
-import com.github.fearmygaze.mercury.view.adapter.AdapterCachedQuery;
+import com.github.fearmygaze.mercury.view.adapter.AdapterPrevQueries;
 import com.github.fearmygaze.mercury.view.adapter.AdapterSearch;
+import com.github.fearmygaze.mercury.view.adapter.AdapterVisitedProfiles;
 import com.github.fearmygaze.mercury.view.fragment.Home;
 import com.github.fearmygaze.mercury.view.fragment.People;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -59,9 +60,8 @@ public class Main extends AppCompatActivity {
     BottomNavigationView navigation;
 
     //Utils
-    User user;
-    AppDatabase database;
-    UserActions userActions;
+    User1 user1;
+    RoomDB roomDB;
 
     //Search Sheet
     ConstraintLayout searchSheetParent;
@@ -73,11 +73,11 @@ public class Main extends AppCompatActivity {
     AdapterSearch adapterSearch;
 
     //Cached Profiles
-    AdapterCachedProfile adapterCachedProfile;
+    AdapterVisitedProfiles adapterVisitedProfiles;
     RecyclerView cachedProfileRecycler;
 
     //Cached Searches
-    AdapterCachedQuery adapterCachedQuery;
+    AdapterPrevQueries adapterPrevQueries;
     RecyclerView cachedSearchRecycler;
 
     //Search
@@ -92,7 +92,7 @@ public class Main extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
 
-        database = AppDatabase.getInstance(Main.this);
+        roomDB = RoomDB.getInstance(Main.this);
 
         frameLayout = findViewById(R.id.mainFrame);
 
@@ -119,14 +119,16 @@ public class Main extends AppCompatActivity {
         //Cached Query
         cachedSearchRecycler = findViewById(R.id.searchCachedQueryRecycler);
 
-        userActions = new UserActions(Main.this);
-
         navigation.setOnItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.mainOptionChat) {
-                replaceFragment(Home.newInstance(user), "home");
+            int id = item.getItemId();
+            if (id == R.id.mainOptionChat) {
+                replaceFragment(Home.newInstance(user1), "home");
                 return true;
-            } else if (item.getItemId() == R.id.mainOptionFriends) {
-                replaceFragment(People.newInstance(user), "people");
+            } else if (id == R.id.mainOptionSearch) {
+
+                return true;
+            } else if (id == R.id.mainOptionFriends) {
+                replaceFragment(People.newInstance(user1), "people");
                 return true;
             }
             return false;
@@ -142,13 +144,13 @@ public class Main extends AppCompatActivity {
         searchBoxClear.setOnClickListener(v -> searchBox.setText(""));
 
         //Cached Profile
-        adapterCachedProfile = new AdapterCachedProfile(user, Main.this, count -> handleCachedComps());
+        adapterVisitedProfiles = new AdapterVisitedProfiles(user1, Main.this, count -> handleCachedComps());
         cachedProfileRecycler.setLayoutManager(new CustomLinearLayout(Main.this, LinearLayoutManager.HORIZONTAL, false));
-        cachedProfileRecycler.setAdapter(adapterCachedProfile);
+        cachedProfileRecycler.setAdapter(adapterVisitedProfiles);
         cachedProfileRecycler.setItemAnimator(null);
 
         //Cached Search
-        adapterCachedQuery = new AdapterCachedQuery(Main.this, new AdapterCachedQuery.CQueryListener() {
+        adapterPrevQueries = new AdapterPrevQueries(Main.this, new AdapterPrevQueries.CQueryListener() {
             @Override
             public void send(String str) {
                 searchBox.setText(str);
@@ -159,8 +161,9 @@ public class Main extends AppCompatActivity {
                 handleCachedComps();
             }
         });
+
         cachedSearchRecycler.setLayoutManager(new CustomLinearLayout(Main.this, LinearLayoutManager.VERTICAL, false));
-        cachedSearchRecycler.setAdapter(adapterCachedQuery);
+        cachedSearchRecycler.setAdapter(adapterPrevQueries);
         cachedSearchRecycler.setItemAnimator(null);
 
         clearCache.setOnClickListener(v -> {
@@ -170,8 +173,8 @@ public class Main extends AppCompatActivity {
                     .setMessage(R.string.dialogDeleteAllCachedMessage)
                     .setNegativeButton(R.string.generalCancel, (dialog, i) -> dialog.dismiss())
                     .setPositiveButton(R.string.generalClear, (dialog, i) -> {
-                        adapterCachedProfile.clear();
-                        adapterCachedQuery.clear();
+                        adapterVisitedProfiles.clear();
+                        adapterPrevQueries.clear();
                         handleCachedComps();
                     }).show();
         });
@@ -179,15 +182,16 @@ public class Main extends AppCompatActivity {
         searchSheet();
 
         profile.setOnClickListener(v -> {
-            startActivity(new Intent(Main.this, MyProfile.class)
-                    .putExtra(User.PARCEL, user));
+//            startActivity(new Intent(Main.this, MyProfile.class)
+//                    .putExtra(User1.PARCEL, user1));
+            startActivity(new Intent(Main.this, Test.class));
         });
 
         profile.setOnLongClickListener(v -> true);
 
         createRoomBtn.setOnClickListener(v -> {
             startActivity(new Intent(Main.this, RoomCreator.class)
-                    .putExtra(User.PARCEL, user));
+                    .putExtra(User1.PARCEL, user1));
         });
 
         searchBtn.setOnClickListener(v -> {
@@ -197,31 +201,19 @@ public class Main extends AppCompatActivity {
 
         settingsBtn.setOnClickListener(v -> {
             startActivity(new Intent(Main.this, Settings.class)
-                    .putExtra(User.PARCEL, user));
+                    .putExtra(User1.PARCEL, user1));
         });
 
-        searchBehaviour.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-            @Override
-            public void onStateChanged(@NonNull View view, int state) {
-                //TODO: we want to handle the components based on the state
-                // eq cached comps, close the listeners (if we have any)
-            }
-
-            @Override
-            public void onSlide(@NonNull View view, float v) {
-
-            }
-        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        userActions.rememberMe(new CallBackResponse<User>() {
+        new Auth(Main.this).rememberMe(new CallBackResponse<User1>() {
             @Override
-            public void onSuccess(User data) {
-                user = data;
-                Tools.profileImage(user.getImage(), Main.this).into(profileImage);
+            public void onSuccess(User1 data) {
+                user1 = data;
+                Tools.profileImage(user1.getImage(), Main.this).into(profileImage);
             }
 
             @Override
@@ -231,7 +223,6 @@ public class Main extends AppCompatActivity {
 
             @Override
             public void onFailure(String message) {
-                userActions.signOut();
                 Toast.makeText(Main.this, message, Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(Main.this, Starting.class));
                 finish();
@@ -261,8 +252,7 @@ public class Main extends AppCompatActivity {
         ConstraintLayout errorLayout = findViewById(R.id.searchErrorLayout);
         TextView errorText = findViewById(R.id.searchErrorText);
 
-        adapterSearch = new AdapterSearch(user, () -> searchBox.clearFocus());
-
+        adapterSearch = new AdapterSearch(new User1(), () -> searchBox.clearFocus());
         searchRecycler.setLayoutManager(new CustomLinearLayout(Main.this, LinearLayoutManager.VERTICAL, false));
         searchRecycler.setAdapter(adapterSearch);
 
@@ -280,7 +270,7 @@ public class Main extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 String query = editable.toString().trim();
-                if (query.length() > 0) {
+                if (!query.isEmpty()) {
                     searchBoxClear.setVisibility(View.VISIBLE);
                     cachedComp.setVisibility(View.GONE);
                     cachedProfileRecycler.setVisibility(View.GONE);
@@ -296,11 +286,11 @@ public class Main extends AppCompatActivity {
                 if (query.length() >= 3) {
                     searchRecycler.setVisibility(View.VISIBLE);
                     searchHandler.removeCallbacks(searchRunnable);
-                    searchRunnable = () -> userActions.search(query, new CallBackResponse<List<User>>() {
+                    searchRunnable = () -> new Search(Main.this).search(query, new IFireCallback<List<User1>>() {
                         @Override
-                        public void onSuccess(List<User> list) {
-                            if (!list.isEmpty()) {
-                                adapterSearch.add(list);
+                        public void onSuccess(List<User1> result) {
+                            if (!result.isEmpty()) {
+                                adapterSearch.add(result);
                                 errorLayout.setVisibility(View.GONE);
                             } else {
                                 adapterSearch.clear();
@@ -310,11 +300,9 @@ public class Main extends AppCompatActivity {
 
                         @Override
                         public void onError(String message) {
-                            Toast.makeText(Main.this, message, Toast.LENGTH_SHORT).show();
-                        }
-
-                        @Override
-                        public void onFailure(String message) {
+                            //TODO: Add here a message that will look like this
+                            // `Wait we didnt find that user either you misspelled
+                            // their name or for some reason they dont use our app what a waste of their time`
                             Toast.makeText(Main.this, message, Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -322,7 +310,7 @@ public class Main extends AppCompatActivity {
                 }
                 searchBox.setOnEditorActionListener((textView, actionID, keyEvent) -> {
                     if (actionID == EditorInfo.IME_ACTION_SEARCH && query.length() >= 3) {
-                        adapterCachedQuery.set(new CachedQuery(query));
+                        adapterPrevQueries.set(new PrevSearch(user1.getId(), query));
                         UIAction.closeKeyboard(Main.this);
                         return true;
                     }
@@ -342,10 +330,10 @@ public class Main extends AppCompatActivity {
     private void rememberMe(Bundle bundle) {
         String id = Tools.getStrPreference("current", Main.this);
         if (id != null) {
-            User oldUser = User.getRoomUser(id, Main.this);
+            User1 oldUser = roomDB.users().getByID(id);
             if (oldUser != null) {
-                user = oldUser;
-                Tools.profileImage(user.getImage(), Main.this).into(profileImage);
+                user1 = oldUser;
+                Tools.profileImage(user1.getImage(), Main.this).into(profileImage);
                 if (bundle == null) {
                     navigation.setSelectedItemId(R.id.mainOptionChat);
                 }
@@ -354,13 +342,13 @@ public class Main extends AppCompatActivity {
     }
 
     private void handleCachedComps() {
-        adapterCachedProfile.set(database.cachedProfile().getAll());
-        adapterCachedQuery.set(database.cachedQueries().getAll());
+        adapterVisitedProfiles.set(roomDB.profiles().getAll());
+        adapterPrevQueries.set(roomDB.searches().getAll());
 
         if (adapterSearch.getItemCount() == 0) {
-            cachedComp.setVisibility(adapterCachedProfile.getItemCount() > 0 || adapterCachedQuery.getItemCount() > 0 ? View.VISIBLE : View.GONE);
-            cachedSearchRecycler.setVisibility(adapterCachedQuery.getItemCount() == 0 ? View.GONE : View.VISIBLE);
-            cachedProfileRecycler.setVisibility(adapterCachedProfile.getItemCount() == 0 ? View.GONE : View.VISIBLE);
+            cachedComp.setVisibility(adapterVisitedProfiles.getItemCount() > 0 || adapterPrevQueries.getItemCount() > 0 ? View.VISIBLE : View.GONE);
+            cachedSearchRecycler.setVisibility(adapterPrevQueries.getItemCount() == 0 ? View.GONE : View.VISIBLE);
+            cachedProfileRecycler.setVisibility(adapterVisitedProfiles.getItemCount() == 0 ? View.GONE : View.VISIBLE);
         }
     }
 

@@ -14,7 +14,8 @@ import androidx.appcompat.content.res.AppCompatResources;
 
 import com.bumptech.glide.Glide;
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.firebase.UserActions;
+import com.github.fearmygaze.mercury.database.model.User1;
+import com.github.fearmygaze.mercury.firebase.Auth;
 import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.RegEx;
@@ -36,7 +37,7 @@ public class ProfileEdit extends AppCompatActivity {
     TextInputEditText fullNameCell, bioCell, locationCell, jobCell, websiteCell;
 
     Bundle bundle;
-    User user;
+    User1 user;
     Uri imageData;
     boolean imageChanged = false;
 
@@ -128,7 +129,7 @@ public class ProfileEdit extends AppCompatActivity {
                         .setMessage("You need to fix the errors before updating your profile")
                         .setPositiveButton(R.string.generalOK, (dialog, i) -> dialog.dismiss())
                         .show();
-            } else if (fullName.equals(user.getFullName()) && bio.equals(user.getBio()) &&
+            } else if (fullName.equals(user.getUsername()) && bio.equals(user.getBio()) &&
                     location.equals(user.getLocation()) && job.equals(user.getJob()) &&
                     website.equals(user.getWebsite()) && imageData == null) {
                 new MaterialAlertDialogBuilder(ProfileEdit.this)
@@ -145,15 +146,13 @@ public class ProfileEdit extends AppCompatActivity {
                         .setMessage(getString(R.string.profileEditDialogMessage2))
                         .setNegativeButton(R.string.generalCancel, (dialog, i) -> dialog.dismiss())
                         .setPositiveButton(R.string.generalOK, (dialog, i) -> {
-                            user.setFullName(fullName);
-                            user.setFullNameL(fullName.toLowerCase());
                             user.setBio(bio);
                             user.setLocation(location);
                             user.setLocationL(location.toLowerCase());
                             user.setJob(job);
                             user.setJobL(job.toLowerCase());
                             user.setWebsite(website);
-                            new UserActions(ProfileEdit.this).updateProfile(user, imageData, imageChanged, new CallBackResponse<String>() {
+                            new Auth(ProfileEdit.this).updateProfile(imageData, user, new CallBackResponse<String>() {
                                 @Override
                                 public void onSuccess(String object) {
                                     dialog.dismiss();
@@ -181,7 +180,7 @@ public class ProfileEdit extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Tools.profileImage(user.getImage(), ProfileEdit.this).into(userImage);
-        fullNameCell.setText(user.getFullName());
+        fullNameCell.setText(user.getUsername());
         bioCell.setText(user.getBio());
         locationCell.setText(user.getLocation());
         jobCell.setText(user.getJob());

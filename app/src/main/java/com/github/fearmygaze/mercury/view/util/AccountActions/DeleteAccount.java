@@ -1,6 +1,5 @@
 package com.github.fearmygaze.mercury.view.util.AccountActions;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.WindowManager;
@@ -9,7 +8,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.firebase.UserActions;
+import com.github.fearmygaze.mercury.custom.UIAction;
+import com.github.fearmygaze.mercury.firebase.Auth;
 import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.PrivatePreference;
@@ -42,15 +42,13 @@ public class DeleteAccount extends AppCompatActivity {
         new Handler().postDelayed(() -> confirm.setEnabled(true), 2345);
 
         confirm.setOnClickListener(v -> {
-            new UserActions(v.getContext()).deleteAccount(new CallBackResponse<String>() {
+            new Auth(v.getContext()).deleteAccount(new CallBackResponse<String>() {
                 @Override
                 public void onSuccess(String message) {
                     User.deleteRoomUser(user, DeleteAccount.this);
                     new PrivatePreference(v.getContext()).clearAllValues();
-                    Intent intent = new Intent(DeleteAccount.this, Starting.class); //TODO: this resets the activity stack
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     Toast.makeText(DeleteAccount.this, message, Toast.LENGTH_SHORT).show();
-                    startActivity(intent);
+                    UIAction.flushActivityStuck(v.getContext(), Starting.class);
                 }
 
                 @Override

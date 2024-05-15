@@ -15,8 +15,9 @@ import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
 import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.firebase.RequestActions;
-import com.github.fearmygaze.mercury.firebase.UserActions;
+import com.github.fearmygaze.mercury.database.model.User1;
 import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
+import com.github.fearmygaze.mercury.firebase.Search;
 import com.github.fearmygaze.mercury.model.Profile;
 import com.github.fearmygaze.mercury.model.Request;
 import com.github.fearmygaze.mercury.model.User;
@@ -52,12 +53,12 @@ public class AdapterBlocked extends FirestorePagingAdapter<Request, AdapterBlock
         Tools.profileImage(profile.getImage(), holder.itemView.getContext()).into(holder.image);
         holder.username.setText(profile.getUsername());
         holder.root.setOnClickListener(v -> {
-            new UserActions(v.getContext()).getUserByID(profile.getId(), new CallBackResponse<User>() {
+            new Search(v.getContext()).getUserById(profile.getId(), new CallBackResponse<User1>() {
                 @Override
-                public void onSuccess(User object) {
+                public void onSuccess(User1 fetched) {
                     v.getContext().startActivity(new Intent(v.getContext(), ProfileViewer.class)
                             .putExtra(User.PARCEL, user)
-                            .putExtra(User.PARCEL_OTHER, object));
+                            .putExtra(User.PARCEL_OTHER, fetched));
                 }
 
                 @Override

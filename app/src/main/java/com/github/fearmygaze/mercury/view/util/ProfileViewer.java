@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.util.Patterns;
 import android.util.TypedValue;
 import android.view.View;
@@ -23,8 +22,9 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.custom.CustomLinearLayout;
 import com.github.fearmygaze.mercury.firebase.RequestActions;
-import com.github.fearmygaze.mercury.firebase.UserActions;
+import com.github.fearmygaze.mercury.database.model.User1;
 import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
+import com.github.fearmygaze.mercury.firebase.Search;
 import com.github.fearmygaze.mercury.model.Profile;
 import com.github.fearmygaze.mercury.model.Request;
 import com.github.fearmygaze.mercury.model.User;
@@ -317,9 +317,9 @@ public class ProfileViewer extends AppCompatActivity {
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(User.addHttp(visibleUser.getWebsite())))
                             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
                 } else {
-                    new UserActions(ProfileViewer.this).getUserByUsername(text, new CallBackResponse<User>() {
+                    new Search(ProfileViewer.this).getUserByUsername(text, new CallBackResponse<User1>() {
                         @Override
-                        public void onSuccess(User fetchedUser) {
+                        public void onSuccess(User1 fetchedUser) {
                             startActivity(new Intent(ProfileViewer.this, ProfileViewer.class)
                                     .putExtra(User.PARCEL, visibleUser)
                                     .putExtra(User.PARCEL_OTHER, fetchedUser));

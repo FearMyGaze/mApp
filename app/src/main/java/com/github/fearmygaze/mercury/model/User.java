@@ -19,7 +19,6 @@ import androidx.room.PrimaryKey;
 
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.custom.TimestampConverter;
-import com.github.fearmygaze.mercury.database.AppDatabase;
 import com.github.fearmygaze.mercury.util.RegEx;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -286,24 +285,18 @@ public class User implements Parcelable {
     // Helper methods
     ///////////////////////////////////////////////////////////////////////////
 
-    public static User updateRoomUser(User user, Context context) {
-        return AppDatabase.getInstance(context).userDao().transactionUpdateUser(user);
-    }
-
     public static User updateRoomToken(String id, String token, Context context) {
-        return AppDatabase.getInstance(context).userDao().transactionUpdateToken(token, id);
+//        return AppDatabase.getInstance(context).userDao().transactionUpdateToken(token, id);
+        return new User();
     }
 
     public static User getRoomUser(String id, Context context) {
-        return AppDatabase.getInstance(context).userDao().getByID(id);
+//        return AppDatabase.getInstance(context).userDao().getByID(id);
+        return new User();
     }
 
     public static void deleteRoomUser(User user, Context context) {
-        AppDatabase.getInstance(context).userDao().delete(user);
-    }
-
-    public static void deleteAllRoomUsers(Context context) {
-        AppDatabase.getInstance(context).userDao().deleteAll();
+//        AppDatabase.getInstance(context).userDao().delete(user);
     }
 
     public static void extraInfo(User user, int resourceId, ChipGroup chipGroup, Context context) {
@@ -398,7 +391,8 @@ public class User implements Parcelable {
 
     public static SpannableString formatBio(String inputText, int color, OnTextListener onClickListener) {
         SpannableString spannableString = new SpannableString(inputText);
-        for (String regex : RegEx.bio()) {
+        String[] list = RegEx.bioFilters;
+        for (String regex : list) {
             Pattern pattern = Pattern.compile(regex);
             Matcher matcher = pattern.matcher(inputText.trim());
 
@@ -411,7 +405,7 @@ public class User implements Parcelable {
                     @Override
                     public void onClick(@NonNull View view) {
                         if (onClickListener != null) {
-                            onClickListener.onClick(matchedText);
+                            onClickListener.onClick(matchedText); //TODO: Pass the type of clickable to not make the check more times
                         }
                     }
                 };

@@ -14,9 +14,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.fearmygaze.mercury.BuildConfig;
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.database.AppDatabase;
-import com.github.fearmygaze.mercury.firebase.AuthTokenRefresh;
-import com.github.fearmygaze.mercury.model.User;
+import com.github.fearmygaze.mercury.database.RoomDB;
+import com.github.fearmygaze.mercury.database.model.User1;
+import com.github.fearmygaze.mercury.firebase.AuthTokenService;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -33,17 +33,17 @@ public class Starting extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
 
         JobScheduler jobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
-        JobInfo jobInfo = new JobInfo.Builder(AuthTokenRefresh.JOB_ID, new ComponentName(Starting.this, AuthTokenRefresh.class))
+        JobInfo jobInfo = new JobInfo.Builder(AuthTokenService.JOB_ID, new ComponentName(Starting.this, AuthTokenService.class))
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
                 .setPersisted(true)
                 .setPeriodic(interval())
-                .build();
+                .build();//TODO: Put this inside the AuthTokenRefresh
         jobScheduler.schedule(jobInfo);
 
-        List<User> users = AppDatabase.getInstance(Starting.this).userDao().getAll();
+        List<User1> users = RoomDB.getInstance(Starting.this).users().getAll();
         authStateListener = firebaseAuth -> {
             FirebaseUser user = firebaseAuth.getCurrentUser();
-            if (users == null || users.size() == 0) {
+            if (users == null || users.isEmpty()) {
                 finish();
                 startActivity(new Intent(Starting.this, Welcome.class));
             } else if (user == null || !user.isEmailVerified()) {

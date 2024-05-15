@@ -10,7 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.firebase.UserActions;
+import com.github.fearmygaze.mercury.firebase.Auth;
 import com.github.fearmygaze.mercury.firebase.interfaces.SignCallBackResponse;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.RegEx;
@@ -35,7 +35,7 @@ public class ChangeInformation extends AppCompatActivity {
     Bundle bundle;
     User user;
     FirebaseUser fireUser;
-    UserActions userActions;
+    Auth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +53,7 @@ public class ChangeInformation extends AppCompatActivity {
             onBackPressed();
 
         userEmail = fireUser.getEmail();
-        userActions = new UserActions(ChangeInformation.this);
+        auth = new Auth(ChangeInformation.this);
 
         verifyPasswordError = findViewById(R.id.changeInformationVerifyPasswordError);
         verifyPassword = findViewById(R.id.changeInformationVerifyPassword);
@@ -81,9 +81,9 @@ public class ChangeInformation extends AppCompatActivity {
         });
 
         next.setOnClickListener(v -> {
-            userActions.signOut();
+            auth.signOut(false);
             String password = Objects.requireNonNull(verifyPassword.getText()).toString().trim();
-            userActions.signIn(userEmail, password, new SignCallBackResponse<String>() {
+            auth.signIn(userEmail, password, new SignCallBackResponse<String>() {
                 @Override
                 public void onSuccess(String object) {
                     switch (changeType) {

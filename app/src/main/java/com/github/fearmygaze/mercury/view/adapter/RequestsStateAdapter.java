@@ -5,17 +5,17 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.github.fearmygaze.mercury.model.User;
+import com.github.fearmygaze.mercury.database.model.User1;
 import com.github.fearmygaze.mercury.view.tab.TabFriends;
 import com.github.fearmygaze.mercury.view.tab.TabRequests;
 
 public class RequestsStateAdapter extends FragmentStateAdapter {
 
-    User user;
+    User1 user;
     TabRequests tabRequests;
     TabFriends tabFriends;
 
-    public RequestsStateAdapter(@NonNull FragmentActivity fragmentActivity, @NonNull User user) {
+    public RequestsStateAdapter(@NonNull FragmentActivity fragmentActivity, @NonNull User1 user) {
         super(fragmentActivity);
         this.user = user;
         this.tabRequests = TabRequests.newInstance(user);

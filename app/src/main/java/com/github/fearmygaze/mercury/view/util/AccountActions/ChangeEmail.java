@@ -10,7 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.firebase.UserActions;
+import com.github.fearmygaze.mercury.firebase.Auth;
 import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.RegEx;
@@ -72,7 +72,7 @@ public class ChangeEmail extends AppCompatActivity {
 
         next.setOnClickListener(v -> {
             String updatedEmail = Objects.requireNonNull(email.getText()).toString().trim();
-            new UserActions(v.getContext()).updateEmail(updatedEmail, new CallBackResponse<String>() {
+            new Auth(v.getContext()).changeEmail(updatedEmail, new CallBackResponse<String>() {
                 @Override
                 public void onSuccess(String message) {
                     Toast.makeText(ChangeEmail.this, message, Toast.LENGTH_SHORT).show();

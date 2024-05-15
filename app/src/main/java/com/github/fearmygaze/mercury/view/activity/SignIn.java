@@ -14,14 +14,13 @@ import androidx.appcompat.content.res.AppCompatResources;
 
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.custom.UIAction;
+import com.github.fearmygaze.mercury.firebase.Auth;
 import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
 import com.github.fearmygaze.mercury.firebase.interfaces.SignCallBackResponse;
-import com.github.fearmygaze.mercury.firebase.UserActions;
 import com.github.fearmygaze.mercury.util.RegEx;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -32,7 +31,7 @@ public class SignIn extends AppCompatActivity {
     TextInputEditText email, password;
     MaterialButton forgotPassword, signIn;
 
-    UserActions userActions;
+    Auth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +46,7 @@ public class SignIn extends AppCompatActivity {
         forgotPassword = findViewById(R.id.signInForgotPassword);
         signIn = findViewById(R.id.signInBtn);
 
-        userActions = new UserActions(SignIn.this);
+        auth = new Auth(SignIn.this);
         toolbar.setNavigationOnClickListener(v -> {
             startActivity(new Intent(SignIn.this, Welcome.class));
             finish();
@@ -89,7 +88,7 @@ public class SignIn extends AppCompatActivity {
         });
 
         forgotPassword.setOnClickListener(v -> {
-            userActions.passwordReset(email.getText().toString().trim(), new CallBackResponse<String>() {
+            auth.forgotPassword(email.getText().toString().trim(), new CallBackResponse<String>() {
                 @Override
                 public void onSuccess(String object) {
                     Toast.makeText(SignIn.this, getString(R.string.signInForgot), Toast.LENGTH_SHORT).show();
@@ -118,43 +117,20 @@ public class SignIn extends AppCompatActivity {
                         .setTitle(getString(R.string.signInDialogTitle))
                         .setMessage(getString(R.string.signInDialogMessage));
                 AlertDialog dialog = builder.show();
-                userActions.signIn(email.getText().toString().trim(),
-                        password.getText().toString().trim(),
-                        new SignCallBackResponse<String>() {
+                auth.signIn(email.getText().toString().trim(),
+                        password.getText().toString().trim(), new SignCallBackResponse<String>() {
                             @Override
                             public void onSuccess(String message) {
                                 dialog.dismiss();
                                 Toast.makeText(SignIn.this, message, Toast.LENGTH_SHORT).show();
-                                finish();
                                 startActivity(new Intent(SignIn.this, Main.class));
+                                finish();
                             }
 
                             @Override
-                            public void onError(int code, String message) {
+                            public void onError(int error, String message) {
                                 dialog.dismiss();
-                                if (code == 1) {
-                                    Snackbar.make(signIn, getString(R.string.signInResend), 9000)
-                                            .setAction(getString(R.string.generalSend), view ->
-                                                    userActions.verificationEmail(new CallBackResponse<String>() {
-                                                        @Override
-                                                        public void onSuccess(String message) {
-                                                            Toast.makeText(SignIn.this, message, Toast.LENGTH_SHORT).show();
-                                                        }
-
-                                                        @Override
-                                                        public void onError(String message) {
-                                                            Toast.makeText(SignIn.this, message, Toast.LENGTH_SHORT).show();
-                                                        }
-
-                                                        @Override
-                                                        public void onFailure(String message) {
-                                                            Toast.makeText(SignIn.this, message, Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    }))
-                                            .show();
-                                } else {
-                                    Toast.makeText(SignIn.this, message, Toast.LENGTH_SHORT).show();
-                                }
+                                Toast.makeText(SignIn.this, message, Toast.LENGTH_SHORT).show();
                             }
 
                             @Override

@@ -18,6 +18,7 @@
         <item name="colorError">#B00020</item>
         <item name="colorOnError">#B00020</item>
         <item name="chipStyle">@style/Chip.Style</item>
+        <item name="android:windowTranslucentStatus">true</item>
     </style>
 
     <style name="RectComponent">

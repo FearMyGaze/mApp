@@ -13,8 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.firebase.UserActions;
+import com.github.fearmygaze.mercury.database.RoomDB;
+import com.github.fearmygaze.mercury.database.model.User1;
 import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
+import com.github.fearmygaze.mercury.firebase.Search;
 import com.github.fearmygaze.mercury.model.Profile;
 import com.github.fearmygaze.mercury.model.Request;
 import com.github.fearmygaze.mercury.model.User;
@@ -62,13 +64,13 @@ public class AdapterFriendsRoom extends FirestoreRecyclerAdapter<Request, Adapte
                 }
             });
             holder.root.setOnLongClickListener(v -> {
-                new UserActions(v.getContext()).getUserByID(model.getSenderProfile().getId(), new CallBackResponse<User>() {
+                new Search(v.getContext()).getUserById(model.getSenderProfile().getId(), new CallBackResponse<User1>() {
                     @Override
-                    public void onSuccess(User object) {
-                        Profile.insertToCache(v.getContext(), object);
+                    public void onSuccess(User1 fetched) {
+                        RoomDB.getInstance(v.getContext()).profiles().insert(user.getId(), fetched);
                         v.getContext().startActivity(new Intent(v.getContext(), ProfileViewer.class)
                                 .putExtra(User.PARCEL, user)
-                                .putExtra(User.PARCEL_OTHER, object));
+                                .putExtra(User.PARCEL_OTHER, fetched));
                     }
 
                     @Override
@@ -97,13 +99,13 @@ public class AdapterFriendsRoom extends FirestoreRecyclerAdapter<Request, Adapte
                 }
             });
             holder.root.setOnLongClickListener(v -> {
-                new UserActions(v.getContext()).getUserByID(model.getReceiverProfile().getId(), new CallBackResponse<User>() {
+                new Search(v.getContext()).getUserById(model.getReceiverProfile().getId(), new CallBackResponse<User1>() {
                     @Override
-                    public void onSuccess(User object) {
-                        Profile.insertToCache(v.getContext(), object);
+                    public void onSuccess(User1 fetched) {
+                        RoomDB.getInstance(v.getContext()).profiles().insert(user.getId(), fetched);
                         v.getContext().startActivity(new Intent(v.getContext(), ProfileViewer.class)
                                 .putExtra(User.PARCEL, user)
-                                .putExtra(User.PARCEL_OTHER, object));
+                                .putExtra(User.PARCEL_OTHER, fetched));
                     }
 
                     @Override

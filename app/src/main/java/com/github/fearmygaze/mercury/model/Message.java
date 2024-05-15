@@ -17,7 +17,7 @@ public class Message implements Parcelable {
     // Body
     ///////////////////////////////////////////////////////////////////////////
 
-    public enum MsgType {TXT, IMG, SOUND, EMBED}
+    public enum MsgType {TXT, IMG, SOUND}
 
     String id;
     String roomID;
