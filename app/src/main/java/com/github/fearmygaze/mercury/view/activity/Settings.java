@@ -7,7 +7,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.firebase.UserActions;
+import com.github.fearmygaze.mercury.custom.UIAction;
+import com.github.fearmygaze.mercury.database.model.User1;
+import com.github.fearmygaze.mercury.firebase.Auth;
 import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.PrivatePreference;
@@ -40,9 +42,9 @@ public class Settings extends AppCompatActivity {
     //Danger
     MaterialCardView closeAccount;
 
-    User user;
+    User1 user;
     Bundle bundle;
-    UserActions userActions;
+    Auth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,10 +73,10 @@ public class Settings extends AppCompatActivity {
         bundle = getIntent().getExtras();
 
         if (bundle == null) onBackPressed();
-        user = bundle.getParcelable(User.PARCEL);
+        user = bundle.getParcelable(User1.PARCEL);
         if (user == null) onBackPressed();
 
-        userActions = new UserActions(Settings.this);
+        auth = new Auth(Settings.this);
 
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
         contentSwitch.setChecked(Tools.getBoolPreference("showImages", Settings.this));
@@ -98,27 +100,24 @@ public class Settings extends AppCompatActivity {
         });
 
         signOut.setOnClickListener(v -> {
-            userActions.signOut();
             new PrivatePreference(this).clearAllValues();
-            User.deleteRoomUser(user, Settings.this);
-            Intent intent = new Intent(Settings.this, Welcome.class); //This resets the activity stack
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+            auth.signOut(true);
+            UIAction.flushActivityStuck(v.getContext(), Welcome.class);
         });
 
         showBlocked.setOnClickListener(v -> {
             startActivity(new Intent(Settings.this, ShowBlockedUsers.class)
-                    .putExtra(User.PARCEL, user));
+                    .putExtra(User1.PARCEL, user));
         });
 
         closeAccount.setOnClickListener(v -> {
             startActivity(new Intent(Settings.this, ChangeInformation.class)
-                    .putExtra(User.PARCEL, user)
+                    .putExtra(User1.PARCEL, user)
                     .putExtra("type", "delete"));
         });
 
         profile.setOnClickListener(v -> {
-            userActions.updateProfileVisibility(user.getId(), !profile.isChecked(), new CallBackResponse<String>() {
+            auth.updateProfileVisibility(user.getId(), !profile.isChecked(), new CallBackResponse<String>() {
                 @Override
                 public void onSuccess(String message) {
                     profileSwitch.setChecked(!profileSwitch.isChecked());
@@ -158,11 +157,5 @@ public class Settings extends AppCompatActivity {
 
         });
 
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
     }
 }

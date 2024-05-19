@@ -8,7 +8,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.firebase.UserActions;
+import com.github.fearmygaze.mercury.firebase.Auth;
 import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
 import com.github.fearmygaze.mercury.util.RegEx;
 import com.google.android.material.button.MaterialButton;
@@ -55,12 +55,13 @@ public class ChangePassword extends AppCompatActivity {
 
         next.setOnClickListener(v -> {
             String updatedPassword = Objects.requireNonNull(password.getText()).toString().trim();
-            new UserActions(v.getContext()).updatePassword(updatedPassword, new CallBackResponse<String>() {
+            new Auth(v.getContext()).changePassword(updatedPassword, new CallBackResponse<String>() {
                 @Override
                 public void onSuccess(String object) {
                     Toast.makeText(ChangePassword.this, "Success", Toast.LENGTH_SHORT).show();
                     onBackPressed();
                 }
+
                 //TODO: change the error message to be wrong password
                 @Override
                 public void onError(String message) {

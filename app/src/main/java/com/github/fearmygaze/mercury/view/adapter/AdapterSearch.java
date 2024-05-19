@@ -9,8 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.model.Profile;
-import com.github.fearmygaze.mercury.model.User;
+import com.github.fearmygaze.mercury.database.model.User1;
 import com.github.fearmygaze.mercury.util.Tools;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -19,53 +18,56 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AdapterSearch extends RecyclerView.Adapter<AdapterSearch.SearchVH> {
-    User user;
-    List<User> search;
-    SearchActions actions;
+    private final User1 user1;
+    private final List<User1> searchResult;
+    private final ISearchActions actions;
 
-    public AdapterSearch(User user, SearchActions actions) {
-        this.user = user;
-        this.search = new ArrayList<>();
+    public AdapterSearch(User1 user1, ISearchActions actions) {
+        this.user1 = user1;
+        this.searchResult = new ArrayList<>();
         this.actions = actions;
     }
 
     @NonNull
     @Override
     public SearchVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new SearchVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_user_search, parent, false));
+        return new SearchVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_search, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull SearchVH holder, int position) {
-        User model = search.get(holder.getAbsoluteAdapterPosition());
+        User1 model = searchResult.get(holder.getAbsoluteAdapterPosition());
         Tools.profileImage(model.getImage(), holder.itemView.getContext()).into(holder.image);
         holder.username.setText(model.getUsername());
-        holder.status.setText(model.getBio());
+        holder.bio.setText(model.getBio());
         holder.root.setOnClickListener(v -> {
-            Profile.insertToCache(v.getContext(), model);
-            actions.onClick();
-            Tools.goToProfileViewer(user, model, v.getContext());
+//            Context ctx = v.getContext();
+//            Database.getInstance(ctx).profiles().insert(user1.getId(), model);
+//            actions.onClick();
+//            ctx.startActivity(new Intent(ctx, ProfileViewer.class)
+//                    .putExtra("user", user1)
+//                    .putExtra("otherUser", model));
         });
     }
 
     @Override
     public int getItemCount() {
-        return search.size();
+        return searchResult.size();
     }
 
-    public void set(List<User> list) {
-        if (list.size() >= 1) {
-            search.addAll(list);
+    public void set(List<User1> list) {
+        if (!list.isEmpty()) {
+            searchResult.addAll(list);
             notifyItemRangeChanged(0, list.size());
         } else {
             clear();
         }
     }
 
-    public void add(List<User> list) {
-        if (list.size() >= 1) {
-            search.clear();
-            search.addAll(list);
+    public void add(List<User1> list) {
+        if (!list.isEmpty()) {
+            searchResult.clear();
+            searchResult.addAll(list);
             notifyItemRangeChanged(0, list.size());
         } else {
             clear();
@@ -73,25 +75,26 @@ public class AdapterSearch extends RecyclerView.Adapter<AdapterSearch.SearchVH> 
     }
 
     public void clear() {
-        notifyItemRangeRemoved(0, search.size());
-        search.clear();
+        notifyItemRangeRemoved(0, searchResult.size());
+        searchResult.clear();
     }
 
     public static class SearchVH extends RecyclerView.ViewHolder {
         MaterialCardView root;
         ShapeableImageView image;
-        TextView username, status;
+        TextView username, bio;
 
         public SearchVH(@NonNull View itemView) {
             super(itemView);
-            root = itemView.findViewById(R.id.adapterUserSearchRoot);
-            image = itemView.findViewById(R.id.adapterUserSearchImage);
-            username = itemView.findViewById(R.id.adapterUserSearchUsername);
-            status = itemView.findViewById(R.id.adapterUserSearchStatus);
+
+            root = itemView.findViewById(R.id.adapterSearchRoot);
+            image = itemView.findViewById(R.id.adapterSearchImage);
+            username = itemView.findViewById(R.id.adapterSearchUsername);
+            bio = itemView.findViewById(R.id.adapterSearchBio);
         }
     }
 
-    public interface SearchActions {
+    public interface ISearchActions {
         void onClick();
     }
 }

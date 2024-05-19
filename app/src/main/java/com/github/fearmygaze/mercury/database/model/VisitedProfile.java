@@ -1,7 +1,5 @@
-package com.github.fearmygaze.mercury.model;
+package com.github.fearmygaze.mercury.database.model;
 
-
-import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -11,15 +9,18 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "cachedProfiles")
-public class Profile implements Parcelable {
+@Entity(tableName = "visitedProfiles")
+public class VisitedProfile implements Parcelable {
 
     ///////////////////////////////////////////////////////////////////////////
     // Body
     ///////////////////////////////////////////////////////////////////////////
 
     @NonNull
-    @PrimaryKey()
+    @PrimaryKey
+    @ColumnInfo(name = "byUserId")
+    String byUserId;
+
     @ColumnInfo(name = "id")
     String id;
 
@@ -32,17 +33,16 @@ public class Profile implements Parcelable {
     @ColumnInfo(name = "notificationToken")
     String notificationToken;
 
-    //TODO: we need to add notificationToken and publicKey for the rooms or We need to find a way to store the encryptionKey
-
     ///////////////////////////////////////////////////////////////////////////
     // Constructors
     ///////////////////////////////////////////////////////////////////////////
 
-    public Profile() {
+    public VisitedProfile() {
     }
 
     @Ignore
-    public Profile(@NonNull String id, String username, String image, String notificationToken) {
+    public VisitedProfile(@NonNull String byUserId, String id, String username, String image, String notificationToken) {
+        this.byUserId = byUserId;
         this.id = id;
         this.username = username;
         this.image = image;
@@ -53,12 +53,20 @@ public class Profile implements Parcelable {
     // Getters / Setters
     ///////////////////////////////////////////////////////////////////////////
 
-    @NonNull
+
+    public String getByUserId() {
+        return byUserId;
+    }
+
+    public void setByUserId(String byUserId) {
+        this.byUserId = byUserId;
+    }
+
     public String getId() {
         return id;
     }
 
-    public void setId(@NonNull String id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -90,19 +98,20 @@ public class Profile implements Parcelable {
     // Parcelable
     ///////////////////////////////////////////////////////////////////////////
 
-    public static final Creator<Profile> CREATOR = new Creator<Profile>() {
+    public static final Creator<VisitedProfile> CREATOR = new Creator<VisitedProfile>() {
         @Override
-        public Profile createFromParcel(Parcel in) {
-            return new Profile(in);
+        public VisitedProfile createFromParcel(Parcel in) {
+            return new VisitedProfile(in);
         }
 
         @Override
-        public Profile[] newArray(int size) {
-            return new Profile[size];
+        public VisitedProfile[] newArray(int size) {
+            return new VisitedProfile[size];
         }
     };
 
-    protected Profile(Parcel in) {
+    protected VisitedProfile(Parcel in) {
+        byUserId = in.readString();
         id = in.readString();
         username = in.readString();
         image = in.readString();
@@ -116,6 +125,7 @@ public class Profile implements Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel parcel, int i) {
+        parcel.writeString(byUserId);
         parcel.writeString(id);
         parcel.writeString(username);
         parcel.writeString(image);
@@ -123,22 +133,15 @@ public class Profile implements Parcelable {
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    // Helper methods
+    // Helper Methods
     ///////////////////////////////////////////////////////////////////////////
-
-    public static Profile create(User user) {
-        return new Profile(user.getId(), user.getUsername(), user.getImage(), user.getNotificationToken());
-    }
-
-    public static void insertToCache(Context ctx, User user) {
-//        AppDatabase.getInstance(ctx).cachedProfile().insert(create(user));
-    }
 
     @NonNull
     @Override
     public String toString() {
-        return "Profile{" +
-                "id='" + id + '\'' +
+        return "VisitedProfile{" +
+                "byUserId='" + byUserId + '\'' +
+                ", id='" + id + '\'' +
                 ", username='" + username + '\'' +
                 ", image='" + image + '\'' +
                 ", notificationToken='" + notificationToken + '\'' +

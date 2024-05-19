@@ -1,7 +1,6 @@
 package com.github.fearmygaze.mercury.view.fragment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,14 +8,13 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.custom.CustomLinearLayout;
 import com.github.fearmygaze.mercury.firebase.RoomActions;
+import com.github.fearmygaze.mercury.database.model.User1;
 import com.github.fearmygaze.mercury.model.Room;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.view.adapter.AdapterRoom;
@@ -24,7 +22,7 @@ import com.github.fearmygaze.mercury.view.adapter.AdapterRoom;
 public class Home extends Fragment {
 
     View view;
-    User user;
+    User1 user;
     SwipeRefreshLayout refreshLayout;
     RecyclerView recyclerView;
 
@@ -35,7 +33,7 @@ public class Home extends Fragment {
 
     }
 
-    public static Home newInstance(User user) {
+    public static Home newInstance(User1 user) {
         Home home = new Home();
         Bundle bundle = new Bundle();
         bundle.putParcelable(User.PARCEL, user);
@@ -47,7 +45,7 @@ public class Home extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            user = getArguments().getParcelable(User.PARCEL);
+            user = getArguments().getParcelable(User1.PARCEL);
         }
     }
 
@@ -63,20 +61,20 @@ public class Home extends Fragment {
                 .setLifecycleOwner(this)
                 .build();
 
-        adapterRoom = new AdapterRoom(user, options, recyclerView);
-        recyclerView.setLayoutManager(new CustomLinearLayout(requireActivity(), LinearLayoutManager.VERTICAL, false));
-        recyclerView.setAdapter(adapterRoom);
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                if (layoutManager != null) {
-                    Log.d("customLog", String.valueOf(layoutManager.findFirstCompletelyVisibleItemPosition() == 0));
-                    refreshLayout.setEnabled(layoutManager.findFirstCompletelyVisibleItemPosition() == 0);
-                }
-            }
-        });
+//        adapterRoom = new AdapterRoom(user, options, recyclerView);
+//        recyclerView.setLayoutManager(new CustomLinearLayout(requireActivity(), LinearLayoutManager.VERTICAL, false));
+//        recyclerView.setAdapter(adapterRoom);
+//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+//                if (layoutManager != null) {
+//                    Log.d("customLog", String.valueOf(layoutManager.findFirstCompletelyVisibleItemPosition() == 0));
+//                    refreshLayout.setEnabled(layoutManager.findFirstCompletelyVisibleItemPosition() == 0);
+//                }
+//            }
+//        });
 
         refreshLayout.setOnRefreshListener(() -> {
             adapterRoom.updateOptions(options);

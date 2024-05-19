@@ -12,23 +12,23 @@ import androidx.appcompat.content.res.AppCompatResources;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.database.AppDatabase;
-import com.github.fearmygaze.mercury.database.CQueriesDao;
-import com.github.fearmygaze.mercury.model.CachedQuery;
+import com.github.fearmygaze.mercury.database.RoomDB;
+import com.github.fearmygaze.mercury.database.dao.PrevSearchDao;
+import com.github.fearmygaze.mercury.database.model.PrevSearch;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.List;
 
-public class AdapterCachedQuery extends RecyclerView.Adapter<AdapterCachedQuery.CachedQueryVH> {
+public class AdapterPrevQueries extends RecyclerView.Adapter<AdapterPrevQueries.PrevQueriesVH> {
 
-    List<CachedQuery> queries;
+    List<PrevSearch> queries;
+    PrevSearchDao database;
     Context context;
-    CQueriesDao database;
     CQueryListener listener;
 
-    public AdapterCachedQuery(Context context, CQueryListener listener) {
-        this.database = AppDatabase.getInstance(context).cachedQueries();
+    public AdapterPrevQueries(Context context, CQueryListener listener) {
+        this.database = RoomDB.getInstance(context).searches();
         this.queries = database.getAll();
         this.context = context;
         this.listener = listener;
@@ -36,19 +36,18 @@ public class AdapterCachedQuery extends RecyclerView.Adapter<AdapterCachedQuery.
 
     @NonNull
     @Override
-    public CachedQueryVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new CachedQueryVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_cached_query, parent, false));
+    public PrevQueriesVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new PrevQueriesVH(LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_previous_searches, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CachedQueryVH holder, int position) {
+    public void onBindViewHolder(@NonNull PrevQueriesVH holder, int position) {
         holder.search.setText(queries.get(holder.getAbsoluteAdapterPosition()).getQuery());
         holder.root.setOnClickListener(v -> listener.send(holder.search.getText().toString()));
         holder.root.setOnLongClickListener(v -> {
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(v.getContext());
             builder.setBackground(AppCompatResources.getDrawable(v.getContext(), R.color.basicBackground))
-                    .setMessage(String.format("%s %s %s",
-                            v.getContext().getString(R.string.dialogDeleteCachedPart1),
+                    .setMessage(String.format("%s %s %s", v.getContext().getString(R.string.dialogDeleteCachedPart1),
                             queries.get(holder.getAbsoluteAdapterPosition()).getQuery(),
                             v.getContext().getString(R.string.dialogDeleteCachedPart2)))
                     .setNegativeButton(R.string.generalCancel, (dialog, i) -> dialog.dismiss())
@@ -58,14 +57,19 @@ public class AdapterCachedQuery extends RecyclerView.Adapter<AdapterCachedQuery.
         });
     }
 
-    public void set(CachedQuery query) {
+    @Override
+    public int getItemCount() {
+        return queries.size();
+    }
+
+    public void set(PrevSearch query) {
         int oldSize = queries.size();
         database.insert(query);
         queries = database.getAll();
         notifyItemRangeChanged(oldSize, queries.size());
     }
 
-    public void set(List<CachedQuery> list) {
+    public void set(List<PrevSearch> list) {
         if (list != null && list.size() > 1) {
             queries = list;
             notifyItemRangeChanged(0, queries.size());
@@ -86,17 +90,12 @@ public class AdapterCachedQuery extends RecyclerView.Adapter<AdapterCachedQuery.
         listener.getCount(0);
     }
 
-    @Override
-    public int getItemCount() {
-        return queries.size();
-    }
-
-    protected static class CachedQueryVH extends RecyclerView.ViewHolder {
+    public static class PrevQueriesVH extends RecyclerView.ViewHolder {
         MaterialCardView root;
         TextView search;
         ImageView image;
 
-        public CachedQueryVH(@NonNull View itemView) {
+        public PrevQueriesVH(@NonNull View itemView) {
             super(itemView);
             root = itemView.findViewById(R.id.adapterCachedQueryRoot);
             search = itemView.findViewById(R.id.adapterCachedQueryText);

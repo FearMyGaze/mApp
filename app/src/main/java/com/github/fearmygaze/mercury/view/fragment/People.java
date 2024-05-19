@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.model.User;
+import com.github.fearmygaze.mercury.database.model.User1;
 import com.github.fearmygaze.mercury.view.adapter.RequestsStateAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -19,7 +19,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 public class People extends Fragment {
 
     View view;
-    User user;
+    User1 user;
 
     TabLayout tabLayout;
     ViewPager2 pager2;
@@ -29,10 +29,10 @@ public class People extends Fragment {
 
     }
 
-    public static People newInstance(User user) {
+    public static People newInstance(User1 user) {
         People people = new People();
         Bundle bundle = new Bundle();
-        bundle.putParcelable(User.PARCEL, user);
+        bundle.putParcelable(User1.PARCEL, user);
         people.setArguments(bundle);
         return people;
     }
@@ -41,7 +41,7 @@ public class People extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            user = getArguments().getParcelable(User.PARCEL);
+            user = getArguments().getParcelable(User1.PARCEL);
         }
     }
 

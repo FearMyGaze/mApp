@@ -10,15 +10,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.custom.CustomLinearLayout;
 import com.github.fearmygaze.mercury.firebase.RequestActions;
+import com.github.fearmygaze.mercury.database.model.User1;
 import com.github.fearmygaze.mercury.model.Request;
-import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.view.adapter.AdapterPending;
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -31,16 +29,16 @@ public class TabRequests extends Fragment {
     }
 
     View view;
-    User user;
+    User1 user;
 
     AdapterPending adapterPending;
     RecyclerView recyclerView;
     ConstraintLayout errorLayout;
 
-    public static TabRequests newInstance(User user) {
+    public static TabRequests newInstance(User1 user) {
         TabRequests fragment = new TabRequests();
         Bundle bundle = new Bundle();
-        bundle.putParcelable(User.PARCEL, user);
+        bundle.putParcelable(User1.PARCEL, user);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -49,7 +47,7 @@ public class TabRequests extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            user = getArguments().getParcelable(User.PARCEL);
+            user = getArguments().getParcelable(User1.PARCEL);
         }
     }
 
@@ -63,20 +61,20 @@ public class TabRequests extends Fragment {
 
         fetch(user);
 
-        adapterPending = new AdapterPending(user, new ArrayList<>());
-        recyclerView.setAdapter(adapterPending);
-        recyclerView.setLayoutManager(new CustomLinearLayout(requireActivity(), LinearLayoutManager.VERTICAL, false));
-        recyclerView.setItemAnimator(null);
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                if (layoutManager != null) {
-                    swipe.setEnabled(layoutManager.findFirstCompletelyVisibleItemPosition() == 0);
-                }
-            }
-        });
+//        adapterPending = new AdapterPending(user, new ArrayList<>());
+//        recyclerView.setAdapter(adapterPending);
+//        recyclerView.setLayoutManager(new CustomLinearLayout(requireActivity(), LinearLayoutManager.VERTICAL, false));
+//        recyclerView.setItemAnimator(null);
+//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+//                if (layoutManager != null) {
+//                    swipe.setEnabled(layoutManager.findFirstCompletelyVisibleItemPosition() == 0);
+//                }
+//            }
+//        });
 
         swipe.setOnRefreshListener(() -> {
             fetch(user);
@@ -85,7 +83,7 @@ public class TabRequests extends Fragment {
         return view;
     }
 
-    public void fetch(User user) {
+    public void fetch(User1 user) {
         new RequestActions(getContext()).waiting(user.getId())
                 .limit(50)
                 .get()

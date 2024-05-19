@@ -8,21 +8,19 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.github.fearmygaze.mercury.R;
-import com.github.fearmygaze.mercury.custom.CustomLinearLayout;
 import com.github.fearmygaze.mercury.firebase.RequestActions;
+import com.github.fearmygaze.mercury.database.model.User1;
 import com.github.fearmygaze.mercury.model.Request;
-import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.view.adapter.AdapterFriends;
 
 public class TabFriends extends Fragment {
     View view;
-    User user;
+    User1 user;
     RequestActions actions;
     AdapterFriends adapterFriends;
     FirestoreRecyclerOptions<Request> options;
@@ -30,10 +28,10 @@ public class TabFriends extends Fragment {
     public TabFriends() {
     }
 
-    public static TabFriends newInstance(User user) {
+    public static TabFriends newInstance(User1 user) {
         TabFriends tabFriends = new TabFriends();
         Bundle bundle = new Bundle();
-        bundle.putParcelable(User.PARCEL, user);
+        bundle.putParcelable(User1.PARCEL, user);
         tabFriends.setArguments(bundle);
         return tabFriends;
     }
@@ -42,7 +40,7 @@ public class TabFriends extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            user = getArguments().getParcelable(User.PARCEL);
+            user = getArguments().getParcelable(User1.PARCEL);
         }
     }
 
@@ -60,22 +58,22 @@ public class TabFriends extends Fragment {
                 .setLifecycleOwner(this)
                 .build();
 
-        adapterFriends = new AdapterFriends(user, user, options, count -> {
-            //TODO: If users are less than 1 then show error
-        });
-        recyclerView.setAdapter(adapterFriends);
-        recyclerView.setLayoutManager(new CustomLinearLayout(requireActivity(), LinearLayoutManager.VERTICAL, false));
-        recyclerView.setItemAnimator(null);
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                if (layoutManager != null) {
-                    swipe.setEnabled(layoutManager.findFirstCompletelyVisibleItemPosition() == 0);
-                }
-            }
-        });
+//        adapterFriends = new AdapterFriends(user, user, options, count -> {
+//            //TODO: If users are less than 1 then show error
+//        });
+//        recyclerView.setAdapter(adapterFriends);
+//        recyclerView.setLayoutManager(new CustomLinearLayout(requireActivity(), LinearLayoutManager.VERTICAL, false));
+//        recyclerView.setItemAnimator(null);
+//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+//                if (layoutManager != null) {
+//                    swipe.setEnabled(layoutManager.findFirstCompletelyVisibleItemPosition() == 0);
+//                }
+//            }
+//        });
 
         swipe.setOnRefreshListener(() -> {
             fetch(user);
@@ -85,7 +83,7 @@ public class TabFriends extends Fragment {
         return view;
     }
 
-    public void fetch(User user) {
+    public void fetch(User1 user) {
         adapterFriends.updateOptions(new FirestoreRecyclerOptions.Builder<Request>()
                 .setQuery(actions.friends(user.getId()), Request.class)
                 .setLifecycleOwner(this)

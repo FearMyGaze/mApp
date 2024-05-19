@@ -18,6 +18,9 @@
         android:theme="@style/Theme.Mercury"
         tools:targetApi="33">
         <activity
+            android:name=".view.activity.Test"
+            android:exported="false" />
+        <activity
             android:name=".view.activity.Starting"
             android:exported="true"
             android:screenOrientation="portrait"
@@ -133,14 +136,14 @@
             tools:ignore="LockedOrientationActivity" />
 
         <service
-            android:name=".firebase.Messaging"
+            android:name=".firebase.MessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
         <service
-            android:name=".firebase.AuthTokenRefresh"
+            android:name=".firebase.AuthTokenService"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>

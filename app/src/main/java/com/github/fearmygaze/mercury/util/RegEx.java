@@ -9,11 +9,24 @@ import com.github.fearmygaze.mercury.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RegEx {
+
+    public static String[] bioFilters = {"(?<!\\S)@[a-zA-Z0-9._]{6,}(?!\\S)", String.valueOf(Patterns.WEB_URL)};
+    public static HashMap<String, String> msgFormats = new HashMap<String, String>() {{
+//        put("handle", "(?<!\\S)@[a-zA-Z0-9._]{6,}(?!\\S)");
+//        put("link", Patterns.WEB_URL.toString());
+//        put("time", "");
+//        put("date", "");
+        put("phone", Patterns.PHONE.toString());
+//        put("title", "\\*{3}.*?\\*{3}");
+//        put("bold", "\\*{2}.*?\\*{2}");
+//        put("italic", "\\*(?=\\S).*?\\*");
+    }};
 
     public static boolean isPasswordValid(@NonNull TextInputEditText text, TextInputLayout layout, Context context) {
         if (Objects.requireNonNull(text.getText()).toString().isEmpty()) {
@@ -149,7 +162,4 @@ public class RegEx {
         }
     }
 
-    public static String[] bio() {
-        return new String[]{"(?<!\\S)@[a-zA-Z0-9._]{6,}(?!\\S)", String.valueOf(Patterns.WEB_URL)};
-    }
 }
