@@ -24,7 +24,7 @@ public class MessagingService extends FirebaseMessagingService {
             if (!local.getNotificationToken().equals(token)) {
                 RoomDB.getInstance(context).users()
                         .transactionUpdateToken(token, local.getId());
-                new Auth(context).updateNotificationToken(local.getId(), token);
+                new Auth(context).updateMessagingToken(local.getId(), token);
             }
         }
     }

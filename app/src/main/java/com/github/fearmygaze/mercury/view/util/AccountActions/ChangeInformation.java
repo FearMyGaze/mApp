@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.firebase.Auth;
-import com.github.fearmygaze.mercury.firebase.interfaces.SignCallBackResponse;
+import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.RegEx;
 import com.google.android.material.button.MaterialButton;
@@ -83,7 +83,7 @@ public class ChangeInformation extends AppCompatActivity {
         next.setOnClickListener(v -> {
             auth.signOut(false);
             String password = Objects.requireNonNull(verifyPassword.getText()).toString().trim();
-            auth.signIn(userEmail, password, new SignCallBackResponse<String>() {
+            auth.signIn(userEmail, password, new CallBackResponse<String>() {
                 @Override
                 public void onSuccess(String object) {
                     switch (changeType) {
@@ -106,7 +106,7 @@ public class ChangeInformation extends AppCompatActivity {
                 }
 
                 @Override
-                public void onError(int error, String message) {
+                public void onError(String message) {
                     this.onFailure(message);
                 }
 

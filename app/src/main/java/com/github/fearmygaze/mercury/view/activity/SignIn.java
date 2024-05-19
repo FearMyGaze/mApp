@@ -16,7 +16,6 @@ import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.custom.UIAction;
 import com.github.fearmygaze.mercury.firebase.Auth;
 import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
-import com.github.fearmygaze.mercury.firebase.interfaces.SignCallBackResponse;
 import com.github.fearmygaze.mercury.util.RegEx;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
@@ -88,22 +87,7 @@ public class SignIn extends AppCompatActivity {
         });
 
         forgotPassword.setOnClickListener(v -> {
-            auth.forgotPassword(email.getText().toString().trim(), new CallBackResponse<String>() {
-                @Override
-                public void onSuccess(String object) {
-                    Toast.makeText(SignIn.this, getString(R.string.signInForgot), Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onError(String message) {
-                    this.onFailure(message);
-                }
-
-                @Override
-                public void onFailure(String message) {
-                    Toast.makeText(SignIn.this, message, Toast.LENGTH_SHORT).show();
-                }
-            });
+            Toast.makeText(SignIn.this, "We are going to remove this", Toast.LENGTH_SHORT).show();
         });
 
         signIn.setOnClickListener(v -> {
@@ -118,7 +102,7 @@ public class SignIn extends AppCompatActivity {
                         .setMessage(getString(R.string.signInDialogMessage));
                 AlertDialog dialog = builder.show();
                 auth.signIn(email.getText().toString().trim(),
-                        password.getText().toString().trim(), new SignCallBackResponse<String>() {
+                        password.getText().toString().trim(), new CallBackResponse<String>() {
                             @Override
                             public void onSuccess(String message) {
                                 dialog.dismiss();
@@ -128,7 +112,7 @@ public class SignIn extends AppCompatActivity {
                             }
 
                             @Override
-                            public void onError(int error, String message) {
+                            public void onError(String message) {
                                 dialog.dismiss();
                                 Toast.makeText(SignIn.this, message, Toast.LENGTH_SHORT).show();
                             }

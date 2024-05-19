@@ -12,7 +12,7 @@ import com.google.firebase.firestore.Query;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Search {
+public class Search implements SearchDao {
 
     private final Context context;
     private final FirebaseFirestore database;
@@ -22,10 +22,7 @@ public class Search {
         this.database = FirebaseFirestore.getInstance();
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Public
-    ///////////////////////////////////////////////////////////////////////////
-
+    @Override
     public void search(String input, IFireCallback<List<User1>> callback) {
         Query query;
         String param = input.trim();
@@ -71,9 +68,10 @@ public class Search {
                 });
     }
 
-    public void getUserById(String uid, CallBackResponse<User1> callback) {
+    @Override
+    public void getUserById(String userId, CallBackResponse<User1> callback) {
         database.collection("users")
-                .document(uid)
+                .document(userId)
                 .get()
                 .addOnFailureListener(e -> callback.onFailure("Error while executing your request"))
                 .addOnSuccessListener(document -> {
@@ -90,6 +88,7 @@ public class Search {
                 });
     }
 
+    @Override
     public void getUserByUsername(String handle, CallBackResponse<User1> callback) {
         database.collection("users")
                 .whereEqualTo("handleL", handle.trim().toLowerCase())

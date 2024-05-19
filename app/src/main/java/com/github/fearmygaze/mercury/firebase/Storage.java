@@ -14,7 +14,7 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.Random;
 
-public class Storage {
+public class Storage implements StorageDao{
 
     private final Context ctx;
     private final FirebaseStorage storage;
@@ -28,21 +28,22 @@ public class Storage {
     // Public
     ///////////////////////////////////////////////////////////////////////////
 
-    public void uploadProfileImage(Uri image, CallBackResponse<String> callback) {
+    @Override
+    public void uploadProfileImage(Uri image, CallBackResponse<String> response) {
         uploadImage(image, "/profileImages", new CallBackResponse<String>() {
             @Override
             public void onSuccess(String imageUrl) {
-                callback.onSuccess(imageUrl);
+                response.onSuccess(imageUrl);
             }
 
             @Override
             public void onError(String message) {
-                callback.onError(message);
+                response.onError(message);
             }
 
             @Override
             public void onFailure(String message) {
-                callback.onFailure(message);
+                response.onFailure(message);
             }
         });
     }

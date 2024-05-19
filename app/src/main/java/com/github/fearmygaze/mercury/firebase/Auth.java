@@ -21,7 +21,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-public class Auth {
+public class Auth implements AuthDao {
 
     private final Context context;
     private final FirebaseAuth fireAuth;
@@ -40,12 +40,7 @@ public class Auth {
     // Sign Up/In/Out
     ///////////////////////////////////////////////////////////////////////////
 
-    /**
-     * @param email    The email of the user we want to send to firebase
-     * @param username The username of the user we want to send to firebase
-     * @param password The password of the user we want to send to firebase
-     * @param response The return of the firebase response
-     */
+    @Override
     public void signUp(String email, String username, String password, SignCallBackResponse<String> response) {
         if (email.trim().isEmpty() || username.trim().isEmpty() || password.trim().isEmpty()) {
             response.onFailure("Values cannot be empty");
@@ -90,12 +85,8 @@ public class Auth {
                 });
     }
 
-    /**
-     * @param email    The email of the user we want to send to firebase
-     * @param password The password of the user we want to send to firebase
-     * @param response The return of the firebase response
-     */
-    public void signIn(String email, String password, SignCallBackResponse<String> response) {
+    @Override
+    public void signIn(String email, String password, CallBackResponse<String> response) {
         fireAuth.signInWithEmailAndPassword(email, password)
                 .addOnFailureListener(e -> response.onFailure("There is no account with the parameters you gave us"))
                 .addOnSuccessListener(authResult -> {
@@ -103,7 +94,7 @@ public class Auth {
                     if (fireUser == null) {
                         response.onFailure("We couldn't find your user");
                     } else if (!fireUser.isEmailVerified()) {
-                        emailVerification(fireUser, new CallBackResponse<String>() {
+                        verifyEmail(fireUser, new CallBackResponse<String>() {
                             @Override
                             public void onSuccess(String message) {
                                 response.onSuccess(message);
@@ -111,7 +102,7 @@ public class Auth {
 
                             @Override
                             public void onError(String message) {
-                                response.onError(0, message);
+                                response.onError(message);
                             }
 
                             @Override
@@ -131,7 +122,7 @@ public class Auth {
 
                                     @Override
                                     public void onError(String message) {
-                                        response.onError(0, "There was an error getting your user please wait 1-5 minutes and try again");
+                                        response.onError("There was an error getting your user please wait 1-5 minutes and try again");
                                     }
 
                                     @Override
@@ -143,9 +134,7 @@ public class Auth {
                 });
     }
 
-    /**
-     * @param deleteLocal If we want to delete the user from inside the Room database
-     */
+    @Override
     public void signOut(boolean deleteLocal) {
         FirebaseUser user = fireAuth.getCurrentUser();
         if (user == null) return;
@@ -157,11 +146,8 @@ public class Auth {
         fireAuth.signOut();
     }
 
-    /**
-     * @param user     The FirebaseUser we want to send the email verification
-     * @param response The return of the firebase response
-     */
-    public void emailVerification(FirebaseUser user, CallBackResponse<String> response) {
+    @Override
+    public void verifyEmail(FirebaseUser user, CallBackResponse<String> response) {
         if (user != null) {
             user.sendEmailVerification()
                     .addOnFailureListener(e -> response.onFailure("Failed to send the email"))
@@ -171,9 +157,8 @@ public class Auth {
         }
     }
 
-    /**
-     * @param response The return of the firebase response
-     */
+    //TODO: We need to optimize the updateToken maybe we dont wait for it ???
+    @Override
     public void rememberMe(CallBackResponse<User1> response) {
         fireAuth.addAuthStateListener(firebaseAuth -> {
             FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -191,7 +176,7 @@ public class Auth {
                                 @Override
                                 public void onSuccess(User1 fetchedUser) {
                                     response.onSuccess(fetchedUser);
-                                    updateNotificationToken(user.getUid(), new CallBackResponse<String>() {
+                                    updateMessagingToken(user.getUid(), new CallBackResponse<String>() {
                                         @Override
                                         public void onSuccess(String empty) {
 
@@ -228,18 +213,11 @@ public class Auth {
         });
     }
 
-    /**
-     * @param email    The users email we want to send the password reset
-     * @param response The return of the firebase response
-     */
-    public void forgotPassword(String email, CallBackResponse<String> response) {
-        //TODO: We need to figure out if we want to implement it or not support it!!
-        response.onSuccess("Not Implemented yet");
-    }
+    ///////////////////////////////////////////////////////////////////////////
+    // Updates
+    ///////////////////////////////////////////////////////////////////////////
 
-    /**
-     * @param response The return of the firebase response
-     */
+    @Override
     public void deleteAccount(CallBackResponse<String> response) {
         FirebaseUser user = fireAuth.getCurrentUser();
         if (user != null) {
@@ -254,14 +232,7 @@ public class Auth {
         }
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // Updates
-    ///////////////////////////////////////////////////////////////////////////
-
-    /**
-     * @param password The new password of the current user
-     * @param response The return of the firebase response
-     */
+    @Override
     public void changePassword(String password, CallBackResponse<String> response) {
         FirebaseUser user = fireAuth.getCurrentUser();
         if (user != null) {
@@ -273,10 +244,7 @@ public class Auth {
         }
     }
 
-    /**
-     * @param email    The new email of the current user
-     * @param response The return of the firebase response
-     */
+    @Override
     public void changeEmail(String email, CallBackResponse<String> response) {
         FirebaseUser user = fireAuth.getCurrentUser();
         if (user != null) {//TODO: We need to see if this works
@@ -288,11 +256,7 @@ public class Auth {
         }
     }
 
-    /**
-     * @param imagePath The image URI path (from the device)
-     * @param user      The updated user we want to send in firebase
-     * @param response  The return of the firebase return
-     */
+    @Override
     public void updateProfile(Uri imagePath, User1 user, CallBackResponse<String> response) {
         if (imagePath != null) {
             new Storage(context).uploadProfileImage(imagePath, new CallBackResponse<String>() {
@@ -317,10 +281,41 @@ public class Auth {
         }
     }
 
-    /**
-     * @param user     The updated user (without uploading the new image) we want to send in firebase
-     * @param response The return of the firebase response
-     */
+    @Override
+    public void updateMessagingToken(String userId, String token) {
+        FirebaseMessaging.getInstance()
+                .getToken()
+                .addOnSuccessListener(nToken -> {
+                    if (nToken != null) {
+                        fireStore.collection("users")
+                                .document(userId)
+                                .update("notificationToken", token)
+                                .addOnSuccessListener(unused -> RoomDB.getInstance(context).users().updateToken(token, userId));
+                    }
+                });
+    }
+
+    @Override
+    public void updateMessagingToken(String userId, CallBackResponse<String> response) {
+        FirebaseMessaging.getInstance()
+                .getToken()
+                .addOnFailureListener(e -> response.onFailure("Failed to get the notification token"))
+                .addOnSuccessListener(nToken -> {
+                    if (nToken != null) {
+                        fireStore.collection("users")
+                                .document(userId)
+                                .update("notificationToken", nToken)
+                                .addOnFailureListener(e -> response.onFailure("Failed to update your data"))
+                                .addOnSuccessListener(unused -> response.onSuccess(User.updateRoomToken(userId, nToken, context).getNotificationToken()));
+                    }
+                    //TODO: We need to implement a better way to fix the onSuccess
+                });
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Private
+    ///////////////////////////////////////////////////////////////////////////
+
     private void updateProfilePartial(User1 user, CallBackResponse<String> response) {
         fireStore.collection("users")
                 .document(user.getId())
@@ -341,55 +336,4 @@ public class Auth {
                     response.onSuccess("Your info updated successfully");
                 });
     }
-
-    /**
-     * @param userId The users id we want to update
-     * @param token  The new token we want to update
-     */
-    public void updateNotificationToken(String userId, String token) {
-        FirebaseMessaging.getInstance()
-                .getToken()
-                .addOnSuccessListener(nToken -> {
-                    if (nToken != null) {
-                        fireStore.collection("users")
-                                .document(userId)
-                                .update("notificationToken", token)
-                                .addOnSuccessListener(unused -> RoomDB.getInstance(context).users().updateToken(token, userId));
-                    }
-                });
-    }
-
-    /**
-     * @param userId   The users id we want to update
-     * @param response The return of the firebase response
-     */
-    public void updateNotificationToken(String userId, CallBackResponse<String> response) {
-        FirebaseMessaging.getInstance()
-                .getToken()
-                .addOnFailureListener(e -> response.onFailure("Failed to get the notification token"))
-                .addOnSuccessListener(nToken -> {
-                    if (nToken != null) {
-                        fireStore.collection("users")
-                                .document(userId)
-                                .update("notificationToken", nToken)
-                                .addOnFailureListener(e -> response.onFailure("Failed to update your data"))
-                                .addOnSuccessListener(unused -> response.onSuccess(User.updateRoomToken(userId, nToken, context).getNotificationToken()));
-                    }
-                    //TODO: We need to implement a better way to fix the onSuccess
-                });
-    }
-
-    /**
-     * @param userId   The users id we want to update
-     * @param b        The boolean value of profileVisibility
-     * @param response The return of the firebase response
-     */
-    public void updateProfileVisibility(String userId, boolean b, CallBackResponse<String> response) {
-        fireStore.collection("users")
-                .document(userId)
-                .update("profileOpen", b)
-                .addOnFailureListener(e -> response.onFailure("Failed to update your user"))
-                .addOnSuccessListener(unused -> response.onSuccess("Your visibility settings has been updated"));
-    }
-
 }
