@@ -1,6 +1,6 @@
 package com.github.fearmygaze.mercury.firebase.interfaces;
 
-public interface SignCallBackResponse<T> {
+public interface FirebaseSignUpResponse<T> {
     void onSuccess(T object);
 
     void onError(int error, String message);

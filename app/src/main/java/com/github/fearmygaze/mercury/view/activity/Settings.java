@@ -2,7 +2,6 @@ package com.github.fearmygaze.mercury.view.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,7 +9,6 @@ import com.github.fearmygaze.mercury.R;
 import com.github.fearmygaze.mercury.custom.UIAction;
 import com.github.fearmygaze.mercury.database.model.User1;
 import com.github.fearmygaze.mercury.firebase.Auth;
-import com.github.fearmygaze.mercury.firebase.interfaces.CallBackResponse;
 import com.github.fearmygaze.mercury.model.User;
 import com.github.fearmygaze.mercury.util.PrivatePreference;
 import com.github.fearmygaze.mercury.util.Tools;
@@ -117,23 +115,7 @@ public class Settings extends AppCompatActivity {
         });
 
         profile.setOnClickListener(v -> {
-            auth.updateProfileVisibility(user.getId(), !profile.isChecked(), new CallBackResponse<String>() {
-                @Override
-                public void onSuccess(String message) {
-                    profileSwitch.setChecked(!profileSwitch.isChecked());
-                    this.onFailure(message);
-                }
-
-                @Override
-                public void onError(String message) {
-                    this.onFailure(message);
-                }
-
-                @Override
-                public void onFailure(String message) {
-                    Toast.makeText(Settings.this, message, Toast.LENGTH_SHORT).show();
-                }
-            });
+            
         });
 
         content.setOnClickListener(v -> {
